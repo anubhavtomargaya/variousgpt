@@ -90,6 +90,33 @@ def read_search_results(text):
 def parse_jina_reader(mkdwn):pass
 def parse_jina_search_results(mkdwn):pass
 
+# import tiktoken
+
+def estimate_cost(text):
+  """
+  This function estimates the cost (tokens) of a text prompt using tiktoken.
+
+  Args:
+      text: The text prompt for which to estimate the cost.
+
+  Returns:
+      An integer representing the estimated number of tokens in the prompt.
+  """
+  try:
+    from tiktoken import Tokenizer
+    tokenizer = Tokenizer()
+    return tokenizer.tokenize(text)
+  except ImportError:
+    print("Tiktoken library not installed. Please install using 'pip install tiktoken'")
+    return None
+
+# # Example usage
+# text_prompt = "Write a poem about a cat"
+# estimated_tokens = estimate_cost(text_prompt)
+
+# if estimated_tokens:
+#   print(f"Estimated cost (tokens) for prompt: {estimated_tokens}")
+
 if __name__ == '__main__':
     
     def test_create_expert():
@@ -106,4 +133,4 @@ if __name__ == '__main__':
         return msg
    
     # print(test_create_expert())
-    print(test_expert_advice())
+    # print(test_expert_advice())
