@@ -44,7 +44,8 @@ def create_default_expert(system_content,
 
 def query_system_expert(user_input,
                     system_content = DEFAULT_SYSTEM_CONTENT,
-                    model = DEFAULT_MODEL):
+                    model = DEFAULT_MODEL,
+                    max_tokens = DEFAULT_MAX_TOKENS):
     
     client = get_openai_client() 
 
@@ -59,15 +60,17 @@ def query_system_expert(user_input,
                                                             "content":user_input
                                                         }],
                                                 temperature=DEFAULT_TEMPERATURE,
-                                                max_tokens=DEFAULT_MAX_TOKENS,
+                                                max_tokens=max_tokens,
                                                 top_p=DEFAULT_TOP_P
                                             )
     return response , client
 
 
 def extract_message_choice(response ):
-    print("message rcvd:")
-    print(response.__dict__)
+    # print("message rcvd:")
+    # print(response.__dict__)
+    usage = response.usage.__dict__
+    print(usage)
     return response.choices[0].message.content
     
 ### jina.py
