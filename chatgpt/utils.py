@@ -17,6 +17,7 @@ def get_openai_key():
 
 def get_openai_client():
     client = OpenAI(
+        timeout=50.0,
         api_key=get_openai_key())
     return client
     

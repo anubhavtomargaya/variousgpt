@@ -9,7 +9,7 @@ __pycache__/
 
 ## 
 apikey.txt
-./data
+data
 
 
 # Distribution / packaging
@@ -168,4 +168,7 @@ cython_debug/
 #.idea/
 .DS_Store
 chatgpt/config.json
+.DS_Store
+.DS_Store
+./data
 .DS_Store
