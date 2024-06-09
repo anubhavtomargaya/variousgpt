@@ -1,6 +1,7 @@
 import subprocess
 
-def preprocess_audio_for_transcription(input_file, output_file):
+def preprocess_audio_for_transcription(input_file, output_file,
+                                       format='ogg'):
   """
   Re-encodes audio to Opus codec optimized for transcription.
 
