@@ -130,7 +130,7 @@ def transcribe_audio_in_format(client,audio_file_path,
         et = datetime.utcnow()
         total_time = et - st
         print("total time ", total_time.seconds, 'seconds')
-        print("total tokens ", round(0.006*total_time.seconds))
+        print("total cost $", round(0.006*total_time.seconds),2)
     return transcription
 
 def transcribe_audio_as_default(client,audio_file_path):
