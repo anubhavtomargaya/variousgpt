@@ -1,11 +1,9 @@
 from pathlib import Path
 from openai import OpenAI
 from pydub import AudioSegment
+from pre_process_audio import preprocess_audio_for_transcription
 
-from process_audio import preprocess_audio_for_transcription
-DATA_DIR = Path(Path(__file__).parent.resolve(), 'data')
-PROCESSED_DIR = Path(DATA_DIR, 'processed')
-CHOP_DIR = Path(PROCESSED_DIR, 'chopped')
+from dirs import *
 
 def convert_audio_to_ogg(file_name,data_dir=DATA_DIR)->Path:
     mp3_file = Path(data_dir,file_name)
@@ -39,6 +37,14 @@ def open_audio_as_segment(audio_file,dir=PROCESSED_DIR):
         raise e
     
 def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
+    """chops the given file in pieces of n minutes, saves in 
+
+    Args:
+        audio_file (Path): full file path file name 
+        n_minutes (int, optional): segment length. Defaults to 10.
+        chop_dir (_type_, optional):output directory for chopped audio. Defaults to CHOP_DIR.
+        format (str, optional): output format. Defaults to 'ogg'.
+    """
     ## lets chop the file first 
     # also make sure the size doesnt exceed 25mb for each segment
     audio = open_audio_as_segment(audio_file)
@@ -77,49 +83,75 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
     print(f"Audio file chopped into {segment_num - 1} segments successfully!")
     return output_name
 
-def transcribe_audio(client:OpenAI,audio_file_path):
+# def transcribe_audio(client:OpenAI,audio_file_path):
 
-    with open(audio_file_path, 'rb') as audio_file:
-        transcription = client.audio.transcriptions.create( model= "whisper-1",file=audio_file)
-    return transcription
-
-
+#     with open(audio_file_path, 'rb') as audio_file:
+#         transcription = client.audio.transcriptions.create( model= "whisper-1",file=audio_file)
+#     return transcription
 
 
-def transcribe_audio_as_subtitles(client,audio_file_path):
+
+def write_trx_as_subtitles(transcribed_srt,
+                            file_name,
+                            dir=PROCESSED_DIR):
+    with open(Path(dir,f'{file_name}.srt'), 'w') as f:
+        f.write(transcribed_srt)
+    return True
+
+import json
+import openai
+def write_trx_as_json(transcribed_text:openai.types.audio.transcription.Transcription, file_name,dir=PROCESSED_DIR):
+    if not transcribed_text:
+        raise ValueError("Missing arguments")
+    
+    with open(Path(dir,f'{file_name}.json'), 'w') as f:
+        json.dump(transcribed_text.__dict__,f)
+    return True
+
+from datetime import datetime,timedelta
+from enums import tsFormats
+import openai
+
+def transcribe_audio_in_format(client,audio_file_path,
+                            format:tsFormats=tsFormats.JSON,
+                            prompt="")->openai.types.audio.transcription.Transcription:
     with open(audio_file_path, 'rb') as af:
+        print("calling open api whisper started...")
+        st = datetime.utcnow()
         transcription = client.audio.transcriptions.create( model= "whisper-1", file=af,
-                                                            response_format="srt",
+                                                            response_format=format.value,
+                                                            prompt=prompt
                                                             )
+        print("calling open api end.")
+        et = datetime.utcnow()
+        total_time = et - st
+        print("total time ", total_time.seconds, 'seconds')
+        print("total tokens ", round(0.006*total_time.seconds))
     return transcription
 
 def transcribe_audio_as_default(client,audio_file_path):
     with open(audio_file_path, 'rb') as af:
         transcription = client.audio.transcriptions.create( model= "whisper-1", file=af,
-                                                            response_format="jsono",
+                                                            response_format="json",
                                                             )
     return transcription
 
-def transcribe_audio_with_ts(client,audio_file_path):
-    with open(audio_file_path, 'rb') as af:
-        transcription = client.audio.transcriptions.create( model= "whisper-1", file=af,
-                                                            response_format="verbose_json",
-                                                            timestamp_granularities=["segment"]
-                                                            )
-    return transcription # not working as expected, fall back to creating srt or normal text.
-
-def write_trx_as_subtitles(transcribed_srt, file_name,dir=PROCESSED_DIR):
-    with open(Path(dir,f'{file_name}.srt'), 'w') as f:
-        f.write(transcribed_srt)
-    return True
+# def transcribe_audio_with_ts(client,audio_file_path):
+#     with open(audio_file_path, 'rb') as af:
+#         transcription = client.audio.transcriptions.create( model= "whisper-1", file=af,
+#                                                             response_format="verbose_json",
+#                                                             timestamp_granularities=["segment"]
+#                                                             )
+#     return transcription # not working as expected, fall back to creating srt or normal text.
 
 
 if __name__ =='__main__':
     from openai import OpenAI
-    from chatgpt.utils import get_openai_client
+    from utils import get_openai_client
     client = get_openai_client()
     client.timeout=50
     f = 'earning_call_morepen.ogg'
+    f_chopped = 'earning_call_morepen_1.ogg'
     def test_pre_process_to_ogg():
 
         return convert_audio_to_ogg(f)
@@ -127,13 +159,20 @@ if __name__ =='__main__':
     def test_open_and_cost():
         audio = open_audio_as_segment(f)
         return get_trx_cost(audio=audio)
-
+    
     def test_chop():
         f = '/Users/anubhavtomar/2023_projects/chatgpt/chatgpt/data/processed/earning_call_morepen.ogg'
         return chop_audio(Path(f))
     
+    def test_open_and_cost_chopped():
+        audio = open_audio_as_segment(f_chopped,dir=CHOP_DIR)
+        return get_trx_cost(audio=audio)
+
     # print(test_pre_process_to_ogg()) 
-    print(test_chop())
     # print(test_open_and_cost())
+    # print(test_open_and_cost_chopped())
+
+
+    # print(test_chop())
     
     
