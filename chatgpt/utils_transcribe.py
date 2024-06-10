@@ -94,17 +94,21 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
 def write_trx_as_subtitles(transcribed_srt,
                             file_name,
                             dir=PROCESSED_DIR):
-    with open(Path(dir,f'{file_name}.srt'), 'w') as f:
+    fpath = Path(dir,f'{file_name}.srt')
+    print("saving subtitle  file to...", fpath)
+    with open(fpath, 'w') as f:
         f.write(transcribed_srt)
     return True
 
 import json
 import openai
-def write_trx_as_json(transcribed_text:openai.types.audio.transcription.Transcription, file_name,dir=PROCESSED_DIR):
+def write_trx_as_json(transcribed_text:openai.types.audio.transcription.Transcription, 
+                      file_name,dir=PROCESSED_DIR):
     if not transcribed_text:
         raise ValueError("Missing arguments")
-    
-    with open(Path(dir,f'{file_name}.json'), 'w') as f:
+    fpath = Path(dir,f'{file_name}.json')
+    print("saving json file to...", fpath)
+    with open(fpath, 'w') as f:
         json.dump(transcribed_text.__dict__,f)
     return True
 
