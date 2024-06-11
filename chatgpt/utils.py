@@ -21,10 +21,6 @@ def get_openai_client():
         api_key=get_openai_key())
     return client
     
-#  {
-#       "role": "user",
-#       "content": "There are many fruits that were found on the recently discovered planet Goocrux. There are neoskizzles that grow there, which are purple and taste like candy. There are also loheckles, which are a grayish blue fruit and are very tart, a little bit like a lemon. Pounits are a bright green color and are more savory than sweet. There are also plenty of loopnovas which are a neon pink flavor and taste like cotton candy. Finally, there are fruits called glowls, which have a very sour and bitter taste which is acidic and caustic, and a pale orange tinge to them."
-#     }
 
 def create_default_expert(system_content,
                           model=DEFAULT_MODEL):
@@ -110,6 +106,16 @@ def estimate_cost(text):
   except ImportError:
     print("Tiktoken library not installed. Please install using 'pip install tiktoken'")
     return None
+# whisper
+from pydub import AudioSegment
+def get_trx_cost(audio:AudioSegment):
+   
+    total_duration_milliseconds = len(audio)
+    total_duration_seconds = total_duration_milliseconds / 1000
+    total_duration_minutes = round(total_duration_seconds/60,2)
+    rate = 0.006 #  / minute
+    return round(total_duration_minutes * rate, 2)
+
 
 # # Example usage
 # text_prompt = "Write a poem about a cat"
