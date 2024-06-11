@@ -25,9 +25,9 @@ def transcribe_wth_lag_prompt(file_path:Path,
         return write_trx_as_json(trx,f'{output_prefix}{file_path.stem}',dir=output_dir)
 
 def transcribe_and_save(file_path:Path, 
-                        output_dir=TS_DIR,
-                        format:tsFormats=tsFormats.JSON,
                         prompt:str="",
+                        format:tsFormats=tsFormats.JSON,
+                        output_dir=TS_DIR,
                         output_prefix=None,):
     # client = get_openai_client()
     print("starting transcription :..")

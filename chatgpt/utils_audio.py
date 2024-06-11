@@ -3,9 +3,10 @@ from utils import get_trx_cost
 from pre_process_audio import preprocess_audio_for_transcription
 from dirs import *
 
-def convert_audio_to_ogg(file_name,data_dir=DATA_DIR)->Path:
+def convert_audio_to_ogg(file_name,data_dir=DATA_DIR,
+                         output_dir=PROCESSED_DIR)->Path:
     mp3_file = Path(data_dir,file_name)
-    output_file = Path(data_dir,'processed',f"{mp3_file.stem}.ogg" )
+    output_file = Path(output_dir,f"{mp3_file.stem}.ogg" )
     success = preprocess_audio_for_transcription(mp3_file, output_file)
     if success:
         print(f"Audio re-encoded successfully to {output_file}")
@@ -21,7 +22,7 @@ def open_audio_as_segment(audio_file,dir=PROCESSED_DIR):
         file_path = Path(dir,audio_file)
         print(file_path)
         audio = AudioSegment.from_ogg(file_path)
-        print(audio)
+
         return audio
     except FileNotFoundError as e:
         print(f"Error: Audio file '{audio_file}' not found.")
@@ -53,6 +54,7 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
     segment_num = 1
     
     print("starting chop")
+    files = []
     while start_time < total_duration:
         print("chop done ", segment_num)
 
@@ -62,6 +64,7 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
         print("segment cost :", get_trx_cost(segment))
         # Generate output filename with segment number
         output_name = f"{audio_file.stem}_{segment_num}.{format}"
+        files.append(output_name)
         # output_name = f"{audio_file.stem}_{segment_num}.{format}"
 
         # Export the segment
@@ -72,7 +75,7 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
         segment_num += 1
 
     print(f"Audio file chopped into {segment_num - 1} segments successfully!")
-    return output_name
+    return files
 
 
 if __name__ == '__main__':
