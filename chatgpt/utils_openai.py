@@ -2,6 +2,7 @@
 from typing import List
 from utils import _load_config
 from constants import OPENAI_KEY
+import tiktoken
 from openai import OpenAI
 EMBEDDING_MODEL = "text-embedding-3-small"
 
@@ -17,7 +18,7 @@ def get_embedding(client,text: str, model=EMBEDDING_MODEL, **kwargs) -> List[flo
 
     return response.data[0].embedding
 
-import tiktoken
+
 
 def count_tokens(text, model="gpt-3.5-turbo"):
     # Load the appropriate encoding for the specified model
