@@ -12,4 +12,3 @@ class RecordingFormats(Enum):
 class RecordingTypes(Enum):
    CONCALL = 'concall'
    INTERVIEW = 'interview'
-   

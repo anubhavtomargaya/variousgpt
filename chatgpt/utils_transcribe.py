@@ -1,31 +1,7 @@
-from pathlib import Path
-import json
-from datetime import datetime,timedelta
+
+from datetime import datetime
 import openai
-
 from enums import tsFormats
-from dirs import *
-
-
-def write_trx_as_subtitles(transcribed_srt,
-                            file_name,
-                            dir=PROCESSED_DIR):
-    fpath = Path(dir,f'{file_name}.srt')
-    print("saving subtitle  file to...", fpath)
-    with open(fpath, 'w') as f:
-        f.write(transcribed_srt)
-    return True
-
-
-def write_trx_as_json(transcribed_text:openai.types.audio.transcription.Transcription, 
-                      file_name,dir=PROCESSED_DIR):
-    if not transcribed_text:
-        raise ValueError("Missing arguments")
-    fpath = Path(dir,f'{file_name}.json')
-    print("saving json file to...", fpath)
-    with open(fpath, 'w') as f:
-        json.dump(transcribed_text.__dict__,f)
-    return True
 
 
 def transcribe_audio_in_format(client,audio_file_path,
@@ -45,12 +21,7 @@ def transcribe_audio_in_format(client,audio_file_path,
         print("total cost $", round(0.006*total_time.seconds),2)
     return transcription
 
-def transcribe_audio_as_default(client,audio_file_path):
-    with open(audio_file_path, 'rb') as af:
-        transcription = client.audio.transcriptions.create( model= "whisper-1", file=af,
-                                                            response_format="json",
-                                                            )
-    return transcription
+
 
 # def transcribe_audio_with_ts(client,audio_file_path):
 #     with open(audio_file_path, 'rb') as af:

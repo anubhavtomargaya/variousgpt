@@ -1,12 +1,14 @@
 from pathlib import Path
 import json
-import tiktoken
 from dirs import *
+from utils_dir import _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_summary_doc
+from utils_process_text import split_document, count_words
 from utils import get_openai_client
 from utils_openai import get_embedding
 from constants import DEFAULT_TEMPERATURE, DEFAULT_TOP_P
 from dirs import PROCESSED_DIR,TS_DIR
 from transcribe import transcribe_audio_in_chunks
+
 ogg_file= 'earning_call_morepen.ogg'
 
 def get_base_prompt(morepen=True):
@@ -17,6 +19,7 @@ def get_base_prompt(morepen=True):
                 boasts a scientifically integrated complex housing 10 plants, each tailored to produce specific product lines."
     else:
         return ""
+    
 def create_transcript_from_processed_audio(ogg_file, source_dir=PROCESSED_DIR):
     processed_audio_path = Path(source_dir,ogg_file)
 
@@ -30,46 +33,6 @@ def create_transcript_from_processed_audio(ogg_file, source_dir=PROCESSED_DIR):
 # or give to user for annotating.
 
 ## prcess-text.ipnyb
-
-def count_words(text):
-    words = text.split()
-    return len(words)
-
-
-def load_transcript_doc(filename:Path)->str:
-    if not isinstance(filename,Path):
-        filename=Path(filename)
-    path = Path(TS_DIR,filename)
-    with open(path,'r') as fr:
-        transcript_dict = json.load(fr)
-    return transcript_dict['text']
-
-
-def count_tokens(text, model="gpt-3.5-turbo"):
-    encoding = tiktoken.encoding_for_model(model)
-    tokens = encoding.encode(text)
-    return len(tokens)
-
-def split_document(doc, chunk_size=1000, overlap=200):
-    """input in # characters. Move back by 'overlap' characters for the next chunk"""
-    chunks = []
-    start = 0
-    while start < len(doc):
-        end = start + chunk_size
-        chunks.append(doc[start:end])
-        start = end - overlap 
-    return chunks
-
-def count_tokens_chunked(chunks):
-    """ chunks are the output of split document """
-
-    total_tokens = 0
-    for i, chunk in enumerate(chunks):
-        chunk_tokens = count_tokens(chunk)
-        total_tokens += chunk_tokens
-        print(f"Chunk {i+1} token count: {chunk_tokens}")
-
-    print(f"Total number of tokens: {total_tokens}")
 
 ## summarise-big-text-into-mini-corpus
 
@@ -113,31 +76,6 @@ def process_document_chunks(chunks)->dict:
         doc_meta[i]=chunk_summary_meta
     return doc_meta
 
-
-def save_summary_doc(doc_summary_dict, filename):
-    if not isinstance(filename,Path):
-        filename = Path(filename)
-    output_file = Path(SUMMARY_DIR,f'{filename.stem}.json')
-    with open(output_file,'w') as fw:
-        json.dump(doc_summary_dict,fw)
-    return output_file
-
-def _save_embedded_doc(embedded_doc_dict, filename):
-    if not isinstance(filename,Path):
-        filename = Path(filename)
-    output_file = Path(EMBEDDING_DIR,f'{filename.stem}.json')
-    with open(output_file,'w') as fw:
-        json.dump(embedded_doc_dict,fw)
-    return output_file
-
-
-## mini-corpus-chunks-into-embedding
-
-
-def _load_chunks_summary_doc(file_name)->dict:
-    file_path = Path(SUMMARY_DIR,file_name)
-    with open(file_path, 'r') as fr:
-        return json.load(fr)
     
 def create_embeddings_from_chunk_doc(client, 
                                      filename,

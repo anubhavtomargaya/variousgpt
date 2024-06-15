@@ -19,13 +19,7 @@ def get_embedding(client,text: str, model=EMBEDDING_MODEL, **kwargs) -> List[flo
     return response.data[0].embedding
 
 
-
 def count_tokens(text, model="gpt-3.5-turbo"):
-    # Load the appropriate encoding for the specified model
     encoding = tiktoken.encoding_for_model(model)
-    
-    # Encode the text using the model's tokenizer
     tokens = encoding.encode(text)
-    
-    # Return the number of tokens
     return len(tokens)
