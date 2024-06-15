@@ -2,6 +2,7 @@ from pathlib import Path
 
 
 DATA_DIR = Path(Path(__file__).parent.resolve(), 'data')
+VIDEO_DIR = Path(DATA_DIR, 'video')
 RECORD_DIR = Path(DATA_DIR, 'records')
 QA_RECORD_DIR = Path(RECORD_DIR, 'qa')
 YOUTUBE_DIR = Path(DATA_DIR, 'youtube')
