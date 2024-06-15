@@ -18,7 +18,7 @@ def save_summary(doc, file_name):
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
         filename=Path(filename)
-    path = Path(TS_DIR,filename)
+    path = Path(TS_DIR,f"{filename.stem}.json")
     with open(path,'r') as fr:
         transcript_dict = json.load(fr)
     return transcript_dict['text']
@@ -45,7 +45,9 @@ def _save_embedded_doc(embedded_doc_dict, filename):
 
 
 def _load_chunks_summary_doc(file_name)->dict:
-    file_path = Path(SUMMARY_DIR,file_name)
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_path = Path(SUMMARY_DIR,f'{file_name.stem}.json')
     with open(file_path, 'r') as fr:
         return json.load(fr)
 

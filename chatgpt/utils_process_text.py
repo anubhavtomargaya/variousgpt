@@ -9,6 +9,8 @@ def count_words(text):
 
 def split_document(doc, chunk_size=1000, overlap=200):
     """input in # characters. Move back by 'overlap' characters for the next chunk"""
+    if not doc:
+        raise ValueError("doc not present") 
     chunks = []
     start = 0
     while start < len(doc):
