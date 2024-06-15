@@ -35,7 +35,7 @@ def create_transcript_from_processed_audio(ogg_file, source_dir=PROCESSED_DIR):
 ## prcess-text.ipnyb
 
 ## summarise-big-text-into-mini-corpus
-summary_prmpt = "You are a helpful assistant to summarise an EARNINGS CONFERENCE CALL. The transcript of the call will be provided in chunks. "
+summary_prmpt = "You are a helpful assistant to summarise a quarterly EARNINGS CONFERENCE CALL. The transcript of the call will be provided in chunks as context and you have to extract information carefully and concisely in summaries.  "
 sections_interview =  ['INTRO', 'MANAGEMENT NOTE', 'ANALYST QA', 'CONCLUSION']
 
 
@@ -126,7 +126,7 @@ def create_text_meta_doc(ts_filename,
     chunks = split_document(text,chunk_size=chunk_size,overlap=overlap)
     print("num chunks", len(chunks))
     doc_sum_ = gpt_summarise_document_chunks(chunks,summariser_prompt=summariser_prompt,sections=sections) # uses openai 
-    return save_summary_doc(doc_sum_,filename=filename)
+    return save_summary_doc(doc_sum_,filename=ts_filename)
 
 
 if __name__ =='__main__':

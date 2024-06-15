@@ -4,7 +4,7 @@ from transcribe import transcribe_audio_in_chunks
 from utils_audio import convert_audio_to_ogg
 from dirs import DATA_DIR,  PROCESSED_DIR, YOUTUBE_DIR
 
-def create_text_from_audio(file_name,
+def create_text_from_audio(file_name:Path,
                             base_prompt='',
                             youtube=False
                                   ):
