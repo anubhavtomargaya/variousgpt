@@ -94,6 +94,7 @@ def create_embeddings_from_chunk_doc(client,
 
 if __name__ =='__main__':
     filename = 'conc_earning_call_morepen.json'
+    filename = 'Neuland_Laboratories_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
     def test_load_ts():
         tx = load_transcript_doc(filename)
   

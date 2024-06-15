@@ -1,6 +1,6 @@
 
 
-from chatgpt.utils_openai import count_tokens
+from utils_openai import count_tokens
 
 
 def count_words(text):

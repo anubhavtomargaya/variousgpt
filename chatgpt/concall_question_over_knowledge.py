@@ -94,7 +94,7 @@ def create_summary_prompt(doc):
             prompt += f"{section}: {summary}\n\n"
             count +=1
     return prompt
-
+##
 def answer_question(doc, question):
     client = get_openai_client()
     classification = classify_question(client, question)
@@ -133,4 +133,4 @@ if __name__=='__main__':
         
         return  answer_question(doc,question)
     
-    print(test_answer_from_gpt())
+    print(test_answer_from_gpt()) 

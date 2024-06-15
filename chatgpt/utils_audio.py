@@ -3,7 +3,10 @@ from utils import get_trx_cost
 from pre_process_audio import preprocess_audio_for_transcription
 from dirs import *
 
-def convert_audio_to_ogg(file_name,data_dir=DATA_DIR,
+    
+
+def convert_audio_to_ogg(file_name,
+                         data_dir=DATA_DIR,
                          output_dir=PROCESSED_DIR)->Path:
     mp3_file = Path(data_dir,file_name)
     output_file = Path(output_dir,f"{mp3_file.stem}.ogg" )
