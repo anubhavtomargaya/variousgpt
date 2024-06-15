@@ -1,5 +1,6 @@
 
 
+from save_qa import load_qa_record,QARecord,save_qa_record
 from utils_openai import get_embedding,count_tokens
 from utils import get_openai_client
 from utils_dir import load_summary_embedded
@@ -32,7 +33,7 @@ def find_top_chunks(doc:dict, question_embedding, top_n=3):
     return top_chunks
 
 def create_prompt(top_chunks, question):
-    prompt = "You are an expert analyst. Answer the following question based on the provided sections of a document.\n\n"
+    prompt = "Answer the following question based on the provided sections of a document.\n\n"
     
     for chunk in top_chunks:
         section = chunk['section']
@@ -94,15 +95,16 @@ def create_summary_prompt(doc):
             prompt += f"{section}: {summary}\n\n"
             count +=1
     return prompt
-##
-def answer_question(doc, question):
+## add save qa handling
+def answer_question(doc, question, file_name = ''):
+    records = load_qa_record()
     client = get_openai_client()
     classification = classify_question(client, question)
     print(classification)
     if classification == "summary":
         
         prompt = create_summary_prompt(doc)
-        print(count_tokens(prompt))
+       
     else:
         question_embedding = get_embedding(client,question)
         top_chunks = find_top_chunks(doc, question_embedding,top_n=3)
@@ -111,26 +113,22 @@ def answer_question(doc, question):
         # print(summaries)
         # print(texts)
         prompt = create_prompt(top_chunks, question)
-        print(count_tokens(prompt))
+    q = f"the following documents will be provided from the transcript of the conference call of company {file_name.split('.')[0].upper()}. If the name is misspelled somewhere in the following text, correct it yourself. "
+    aided_prompt = q + prompt
+    tokens = count_tokens(aided_prompt)
+    print(tokens)
+
+
+    answer = get_answer_from_gpt(client,aided_prompt)
+    record = QARecord(filename=file_name,
+                      question=question,prompt_tokens=tokens,answer=answer)
+    record._extra['classification'] = classification
+    records.append(record.__dict__)
+    r = save_qa_record(records)
+    print("record saved ", r)
     print("ANSWER:")
-    answer = get_answer_from_gpt(client,prompt)
     return answer
 
 if __name__=='__main__':
-    filename =  'conc_earning_call_morepen.json'
-
-    def test_answer_from_gpt():
-        doc = get_context_corpus(file_name=filename)
-        question = "What was the overall performance of the company in the last quarter?"
-        question = "What will be their approximate revenue in coming two quarters comparing with YoY and this Quarter."
-        question = "what measures the management is taking to keep the revenue and margins up in coming quarters?"
-        question = "how does the management keep their employees motivated or follow work life balance? I want to understand the work culture in Morepen Lab."
-        question = "what are the main products and revenue sources of this company?"
-        question = "what are the APIs they referred to? do they make software as well!! ?"
-        question = "when is next tom cruise movie coming?"
-        question = "what are the revenues and profit numbers of their competitors this quarter? If not available then just give me the competitor companies."
-        question = "What is this Roche? was it discussed in the call?"
-        
-        return  answer_question(doc,question)
-    
-    print(test_answer_from_gpt()) 
+    # testing in files named test_rag_qa_...
+    pass
