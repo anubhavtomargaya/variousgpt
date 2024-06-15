@@ -96,7 +96,11 @@ def create_summary_prompt(doc):
             count +=1
     return prompt
 ## add save qa handling
-def answer_question(doc, question, file_name = ''):
+def answer_question(doc,
+                    question,
+                    question_prompt= '',
+                    file_name = '',
+                    _top_n=3):
     records = load_qa_record()
     client = get_openai_client()
     classification = classify_question(client, question)
@@ -107,19 +111,19 @@ def answer_question(doc, question, file_name = ''):
        
     else:
         question_embedding = get_embedding(client,question)
-        top_chunks = find_top_chunks(doc, question_embedding,top_n=3)
+        top_chunks = find_top_chunks(doc, question_embedding,top_n=_top_n)
         # summaries = [c['summary'] for c in top_chunks]
         # texts = [c['chunk_text'] for c in top_chunks]
         # print(summaries)
         # print(texts)
         prompt = create_prompt(top_chunks, question)
-    q = f"the following documents will be provided from the transcript of the conference call of company {file_name.split('.')[0].upper()}. If the name is misspelled somewhere in the following text, correct it yourself. "
-    aided_prompt = q + prompt
+    
+    aided_prompt = question_prompt + prompt
     tokens = count_tokens(aided_prompt)
     print(tokens)
 
 
-    answer = get_answer_from_gpt(client,aided_prompt)
+    answer = get_answer_from_gpt(client,prompt=prompt,system_content=question_prompt)
     record = QARecord(filename=file_name,
                       question=question,prompt_tokens=tokens,answer=answer)
     record._extra['classification'] = classification

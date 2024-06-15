@@ -16,9 +16,12 @@ def test_answer_from_gpt_neuland():
     # question = "Summarise the analyst QnA of the call in around 600 words?"
     # question = "when is next tom cruise movie coming?"
     question = "what are the revenues and profit numbers of their competitors this quarter? If not available then just give me the competitor companies."
+    question = "what does this company do? "
 
-    
-    return  answer_question(doc,question,file_name=filename)
+    question_prompt = f"the following documents will be provided from the transcript of the conference call of company {filename.split('.')[0].upper()}. If the name is misspelled somewhere in the following text, correct it yourself. "
+    return  answer_question(doc,question,
+                            file_name=filename,
+                            question_prompt=question_prompt)
 
 if __name__=='__main__':
     print(test_answer_from_gpt_neuland()) 
