@@ -4,6 +4,7 @@ creating the flask application. due to which some routes are also inside this
 function. They can be added as a blueprint but I am using these as tools while 
 developement. Run this with run.py" 
 """
+from blueprints.gptube import gpt_app
 from flask import Flask
 from flask_cors import CORS
 import logging
@@ -27,6 +28,9 @@ def create_app():
 
     app.register_blueprint(google_auth, url_prefix='/google')
     app.logger.info('Flask bp registerd, %s',"/google")
+
+    app.register_blueprint(gpt_app, url_prefix='/api/v1/gptube')
+    app.logger.info('Flask bp registerd, %s',"/gptube")
 
 
     
