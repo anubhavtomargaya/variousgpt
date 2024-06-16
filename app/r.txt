@@ -1,0 +1,9 @@
+Flask==2.2.3
+Flask-Cors==3.0.10
+google-api-core==2.19.0
+google-api-python-client==2.58.0
+google-auth==2.29.0
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==0.5.2
+googleapis-common-protos==1.63.0
+gunicorn==21.2.0

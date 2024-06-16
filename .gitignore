@@ -174,3 +174,4 @@ chatgpt/config.json
 ./data
 .DS_Store
 chatgpt/f.json
+app/common/env.json
