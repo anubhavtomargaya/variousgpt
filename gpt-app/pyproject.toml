@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "gpt-app"
+version = "0.1.0"
+description = ""
+authors = ["Anubha Tomar <anubhav.s@redbus.com>"]
+readme = "README.md"
+packages = [{include = "gpt_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

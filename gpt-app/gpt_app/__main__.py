@@ -17,7 +17,7 @@
 
 
 from flask import jsonify
-from  app import create_app
+from  flask_app import create_app
 from common.session_manager import get_session_items
 app = create_app() 
 
