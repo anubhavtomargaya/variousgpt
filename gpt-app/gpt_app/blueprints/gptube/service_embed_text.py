@@ -78,11 +78,26 @@ def gpt_summarise_document_chunks(chunks,
                                              summariser_prompt=summariser_prompt,
                                              sections=sections) ## return a json but in string -> make the above func better by 21
         try:
-            doc_t = res.removeprefix('```json') # try catch
-            ddict =json.loads( doc_t.removesuffix('```'))
+            print("res:",res)
+            if res.startswith("```json") and res.endswith("`"):
+  # Remove starting and ending markers (without using removeprefix/removesuffix)
+                start = len("```json")
+                end = res.rfind("```")
+                doc_t = res[start:end]  # Extract text between markers
+
+                # Load JSON data
+                try:
+                    ddict = json.loads(doc_t)
+                    # Process the loaded dictionary (ddict)
+                    print("Dictionary:", ddict)
+                except json.JSONDecodeError:
+                    print("Invalid JSON format")
+            else:
+                print("String does not start or end with markers")
         except Exception as e:
             print(e)
             print(":::",res) 
+            res = json.loads(res)
             ddict = {'section':None, 'summary':None}
 
         chunk_summary_meta =  {'chunk_text':current_chunk ,
