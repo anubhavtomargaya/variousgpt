@@ -5,7 +5,7 @@ from pathlib import Path
 import json 
 
 def load_summary_embedded(file_name)->dict:
-    file_path = Path(EMBEDDING_DIR,file_name)
+    file_path = Path(EMBEDDING_DIR,f"{Path(file_name).stem}.json")
     with open(file_path, 'r') as fr:
         return json.load(fr)
     

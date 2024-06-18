@@ -1,24 +1,22 @@
 
 
 from pathlib import Path
-from authlib.client import OAuth2Session
 from http.client import HTTPException
 
 from gpt_app.common.utils_dir import _load_chunks_summary_doc, load_transcript_doc
  
 
+from .service_answer_with_corpus import answer_question, get_context_corpus
 from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_meta_doc,create_embeddings_from_chunk_doc
 from .load_youtube_audio import download_youtube_audio
 from flask import current_app as app,jsonify,request, url_for, redirect,render_template
-import flask 
-import ast
-import json 
+
 
 from  gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
 
 
-from . import gpt_app, no_cache
+from . import gpt_app
 
 @gpt_app.route('/')
 def index():
@@ -114,7 +112,37 @@ def get_summary(file_name):
     text = _load_chunks_summary_doc(f'{file_name}')
     return jsonify(text)
 
-@gpt_app.route('/question/{file_name}')
-def answer_question():
-    return 
+from .service_answer_with_corpus import question_prompt
+@gpt_app.route('/question/<file_name>')
+def answer_question_(file_name):
+    
+    mthd = request.method 
+    args = request.args
+    app.logger.info('method: %s',mthd)
+    app.logger.info('args: %s',args)
+    if not mthd =='GET':
+        print("get wont work in reality")
+        # raise HTTPException("Invalid HTTP Method for the endpoing %s",mthd)
+    
+    ###prcess arguements 
+
+    # title = args.get('title') or None
+    print(file_name)
+    question = args.get('question') or None
+
+    if not (file_name or question):
+        raise HTTPException("Please input args")
+    
+    try:
+        doc = get_context_corpus(file_name=file_name,)
+    except Exception as e:
+        raise HTTPException(f"{file_name}: file not present, Error : {e}")
+    
+    a = answer_question(file_name=file_name,
+                    doc=doc,
+                    question=question,
+                    question_prompt=question_prompt,
+                    _top_n=3
+                    )
+    return jsonify(a)
 

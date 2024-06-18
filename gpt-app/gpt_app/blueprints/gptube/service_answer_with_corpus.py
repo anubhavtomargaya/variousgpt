@@ -1,10 +1,9 @@
 
 
-from save_qa import load_qa_record,QARecord,save_qa_record
-from utils_openai import get_embedding,count_tokens
-from utils import get_openai_client
-from utils_dir import load_summary_embedded
-from constants import DEFAULT_TEMPERATURE, DEFAULT_TOP_P, DEFAULT_MODEL
+from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
+from gpt_app.common.utils_openai import get_openai_client,get_embedding,count_tokens
+from gpt_app.common.utils_dir import load_summary_embedded
+from gpt_app.common.constants import DEFAULT_TEMPERATURE, DEFAULT_TOP_P, DEFAULT_MODEL
 
 import numpy as np
 
@@ -134,6 +133,20 @@ def answer_question(doc,
     print("ANSWER:")
     return answer
 
+
+question_prompt = " You will be provided with transcript chunks of a conference call. \
+                    Followed by a question from an investor who is either invested in the  company or is looking to invest for mid to long term. Answer such that \
+                    you are expert stocks analyst. All currency are in INDIAN RUPEES (INR). \
+                    Answer without any starting phrases like '..here are the' etc. Only reply with the required information in concise but detailed manner \
+                     \n  ORGANISATION : {organisation} \n FILENAME : {filename}"
+
+def get_question_prompt(filename, org=None):
+    return question_prompt.format(org,filename)
+
+organisation = 'Delhivery'
+filename =  'Delhivery_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
+
 if __name__=='__main__':
     # testing in files named test_rag_qa_...
+    doc = get_context_corpus(file_name=filename,)
     pass
