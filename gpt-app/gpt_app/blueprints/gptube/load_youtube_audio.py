@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from pytube import YouTube
-from common.dirs import YOUTUBE_DIR
+from gpt_app.common.dirs import YOUTUBE_DIR
 import json 
 
 class YoutubeMetadata:

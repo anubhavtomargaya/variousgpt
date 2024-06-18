@@ -1,7 +1,7 @@
 from flask import  current_app
 import googleapiclient.discovery
 
-from  common.utils import build_credentials
+from  gpt_app.common.utils import build_credentials
 
 def get_user_info():
     try:

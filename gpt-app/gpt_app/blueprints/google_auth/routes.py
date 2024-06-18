@@ -6,8 +6,8 @@ import flask
 import ast
 import json 
 
-from common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
-from common.constants import *
+from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
+from gpt_app.common.constants import *
 from .auth import get_user_info
 
 
