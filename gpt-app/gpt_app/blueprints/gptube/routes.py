@@ -31,13 +31,19 @@ def submit_youtube():
     args = request.args
     app.logger.info('method: %s',mthd)
     app.logger.info('args: %s',args)
-    if not mthd =='GET':
+    if mthd =='GET':
         print("get wont work in reality")
+        url = args.get('url') or None
         # raise HTTPException("Invalid HTTP Method for the endpoing %s",mthd)
-    
+    elif mthd=='POST':
+     
+        data = request.get_json() 
+        url = data.get('url') or None
+
+    else:raise Exception("Invalid Method")
     ###prcess arguements 
 
-    url = args.get('url') or None
+   
 
     if not url:
         raise HTTPException("Submit a valid youtube URL")

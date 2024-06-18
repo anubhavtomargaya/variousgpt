@@ -5,6 +5,11 @@ from . import view_app
 def index():
     return render_template('index.html')
 
+@view_app.route('/chat/')
+def chat(file_name):
+    
+    return render_template('index.html',title=file_name)
+
 @view_app.route('/submit')
 def submit():
     return render_template('submit.html')
