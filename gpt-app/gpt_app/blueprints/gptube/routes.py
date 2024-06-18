@@ -49,7 +49,8 @@ def submit_youtube():
         raise HTTPException("Submit a valid youtube URL")
     ## download url 
     result = download_youtube_audio(url=url) # saves to YOUTUBE_DIR returns a meta
-    print(result.__dict__)
+    print(result)
+    print(result.__dict__ )
     audio_file = Path(result.file_path).name
     result.file_path
     file = Path(result.file_path).name
@@ -63,19 +64,28 @@ def transcribe_youtube():
     args = request.args
     app.logger.info('method: %s',mthd)
     app.logger.info('args: %s',args)
-    if not mthd =='GET':
+    if mthd =='GET':
         print("get wont work in reality")
-        # raise HTTPException("Invalid HTTP Method for the endpoing %s",mthd)
+        title = args.get('title') or None
+        
+    elif mthd=='POST':
+        data = request.get_json()
+
+        title  = data.get('title') or None
+        user_input= data.get('user_prompt') or ''
+        base_prompt = f"{title}"  + user_input
+
+    else:raise HTTPException("Invalid Method")
     
     ###prcess arguements 
+    if not title:
+        raise HTTPException("title not provided ") 
     
-
-    title = args.get('title') or None
 
     
     return jsonify(create_text_from_audio(youtube=True,
                                             file_name=title,
-                                            base_prompt=title))
+                                            base_prompt=base_prompt))
     
     # return the text from json if create is true
     
@@ -118,6 +128,7 @@ def get_summary(file_name):
 
     text = _load_chunks_summary_doc(f'{file_name}')
     return jsonify(text)
+
 from flask import current_app as app
 from .service_answer_with_corpus import question_prompt
 @gpt_app.route('/question/<file_name>', methods=['GET','POST'])

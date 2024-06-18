@@ -18,6 +18,7 @@ class YoutubeMetadata:
         self.thumbnail_url = thumbnail_url
         self.description = description
         self.length_minutes = length_minutes
+        self.whisper_approx_cost = round(0.006 * self.length_minutes ,4)
 
 YOUTUBE_META_FILE = Path(YOUTUBE_DIR,'index.json')
 def update_youtube_index_meta(meta:YoutubeMetadata):
@@ -63,10 +64,11 @@ def download_youtube_audio(url,
        
 
         meta = YoutubeMetadata(title=yt.title,
-                               file_path=output_file,
+                               file_path=Path(output_file).name,
                                thumbnail_url=yt.thumbnail_url,
                                description=yt.description,
-                               length_minutes= round(yt.length / 60, 2) )
+                               length_minutes= round(yt.length / 60, 2),
+                               )
        
         w = update_youtube_index_meta(meta)
         print("meta updated ", w, meta.__dict__)    

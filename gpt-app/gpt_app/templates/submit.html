@@ -4,42 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit YouTube Link</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/submit.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        /* Basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .input-container {
-            margin-bottom: 20px;
-        }
-
-        /* Loader styling */
-        #loader {
-            display: none; /* Hide loader by default */
-            border: 8px solid #f3f3f3; /* Light grey */
-            border-top: 8px solid #3498db; /* Blue */
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <script defer src="{{ url_for('static', filename='js/yt.submit.js') }}"></script>
 </head>
 <body>
     <div class="container">
@@ -48,42 +15,12 @@
             <input type="text" id="youtubeUrl" placeholder="Enter YouTube URL">
             <button onclick="submitYouTube()">Go</button>
         </div>
+        <div class="input-container">
+            <input type="text" id="contextContent" placeholder="Enter Context Content (optional)">
+            <button onclick="transcribeYouTube()">Transcribe</button>
+        </div>
         <div id="loader"></div>
         <div id="response"></div>
     </div>
-
-    <script>
-        function submitYouTube() {
-            var url = document.getElementById('youtubeUrl').value.trim();
-            if (!url) {
-                alert('Please enter a YouTube URL.');
-                return;
-            }
-
-            var loader = document.getElementById('loader');
-            var responseDiv = document.getElementById('response');
-            loader.style.display = 'block'; // Show the loader
-            responseDiv.innerHTML = ''; // Clear previous responses
-
-            axios.post('/api/v1/gptube/yt/submit', { url: url })
-            .then(function (response) {
-                // Handle success response
-                console.log(response.data);
-                loader.style.display = 'none'; // Hide the loader
-                responseDiv.innerHTML = `
-                <p>Title: ${response.data.title}</p>
-                <p>: ${response.data.file_path}</p>
-                <p>: ${response.data.description}</p>
-                <img src="${response.data.thumbnail_url}">
-                                        `;
-            })
-            .catch(function (error) {
-                // Handle error
-                console.error('Error:', error.response.data);
-                loader.style.display = 'none'; // Hide the loader
-                responseDiv.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
-            });
-        }
-    </script>
 </body>
 </html>

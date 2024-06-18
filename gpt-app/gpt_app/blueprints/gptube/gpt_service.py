@@ -15,6 +15,6 @@ def transcribe_audio_in_format(client,audio_file_path,
         print("calling open api end.")
         et = datetime.utcnow()
         total_time = et - st
-        print("total time ", total_time.seconds, 'seconds')
+        print("total processing time ", total_time.seconds, 'seconds')
         print("total cost $", round(0.006*total_time.seconds),2)
     return transcription
