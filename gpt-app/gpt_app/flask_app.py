@@ -34,7 +34,7 @@ def create_app():
     app.register_blueprint(gpt_app, url_prefix='/api/v1/gptube')
     app.logger.info('Flask bp registerd, %s',"/gptube")
 
-    app.register_blueprint(view_app, url_prefix='/api/v1/view')
+    app.register_blueprint(view_app, url_prefix='/view')
     app.logger.info('Flask bp registerd, %s',"/view")
 
     @app.route('/session',methods=['GET'])
