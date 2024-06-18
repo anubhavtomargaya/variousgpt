@@ -78,7 +78,7 @@ def gpt_summarise_document_chunks(chunks,
         res = identify_section_and_summarize(client=client,
                                              chunk=current_chunk,
                                              summariser_prompt=summariser_prompt,
-                                             sections=sections) ## return a json but in string -> make the above func better by 21
+                                             sections=sections)
         try:
             doc_t = res.removeprefix('```json') # try catch
             ddict =json.loads( doc_t.removesuffix('```'))
