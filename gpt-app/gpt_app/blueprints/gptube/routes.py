@@ -62,6 +62,7 @@ def transcribe_youtube():
         # raise HTTPException("Invalid HTTP Method for the endpoing %s",mthd)
     
     ###prcess arguements 
+    
 
     title = args.get('title') or None
 
@@ -111,24 +112,30 @@ def get_summary(file_name):
 
     text = _load_chunks_summary_doc(f'{file_name}')
     return jsonify(text)
-
+from flask import current_app as app
 from .service_answer_with_corpus import question_prompt
-@gpt_app.route('/question/<file_name>')
+@gpt_app.route('/question/<file_name>', methods=['GET','POST'])
 def answer_question_(file_name):
     
     mthd = request.method 
     args = request.args
+
     app.logger.info('method: %s',mthd)
     app.logger.info('args: %s',args)
-    if not mthd =='GET':
+    if mthd =='GET':
         print("get wont work in reality")
-        # raise HTTPException("Invalid HTTP Method for the endpoing %s",mthd)
-    
+        question = args.get('question') or None
+
+    if mthd=='POST':
+        data = request.get_json() 
+        question = data.get('question')
+
+
     ###prcess arguements 
 
     # title = args.get('title') or None
     print(file_name)
-    question = args.get('question') or None
+    app.logger.info('body: %s',data)
 
     if not (file_name or question):
         raise HTTPException("Please input args")
