@@ -7,7 +7,53 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/embed.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script defer src="{{ url_for('static', filename='js/embed.js') }}"></script>
+    <style>
+        body, html {
+            margin: 0;
+            height: 100%;
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding: 20px;
+            width: 100%;
+        }
+        .input-container, .button-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"], textarea {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #loader {
+            display: none; /* Hide loader by default */
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #transcript, #response {
+            margin-top: 20px;
+            font-size: 18px;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,8 +62,105 @@
             <input type="text" id="fileName" placeholder="Enter file name...">
             <button id="viewButton">View Transcript</button>
         </div>
-        <div id="loader">Loading...</div>
+       
         <div id="transcript"></div>
+        <div class="button-container">
+            <label for="userPrompt">Summary Prompt:</label>
+            <textarea id="userPrompt" readonly>You are a helpful assistant to summarise a quarterly EARNINGS CONFERENCE CALL. The transcript of the call will be provided in chunks as context and you have to extract information carefully in summaries.</textarea>
+            <br>
+            <label for="chunkSize">Chunk Size:</label>
+            <input type="text" id="chunkSize" value="2000" readonly>
+            <button id="embedButton">EMBED</button>
+            </div>
+        <div id="loader"></div>
+        <div id="response"></div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const viewButton = document.getElementById('viewButton');
+            const embedButton = document.getElementById('embedButton');
+            const fileNameInput = document.getElementById('fileName');
+            const userPrompt = document.getElementById('userPrompt');
+            const chunkSizeInput = document.getElementById('chunkSize');
+            const transcriptDiv = document.getElementById('transcript');
+            const responseDiv = document.getElementById('response');
+            const loaderDiv = document.getElementById('loader');
+            const embedLoaderDiv = document.getElementById('embedLoader');
+
+            const showLoader = (loaderElement) => {
+                loaderElement.style.display = 'block';
+            };
+
+            const hideLoader = (loaderElement) => {
+                loaderElement.style.display = 'none';
+            };
+
+            viewButton.addEventListener('click', async () => {
+                const fileName = fileNameInput.value.trim();
+
+                if (!fileName) {
+                    transcriptDiv.textContent = 'Please enter a file name.';
+                    return;
+                }
+
+                try {
+                    // showLoader(loaderDiv);
+                    transcriptDiv.textContent = '';
+
+                    const response = await axios.get(`/view/transcript/${fileName}`);
+
+                    if (response.status !== 200) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    transcriptDiv.textContent = response.data;
+                } catch (error) {
+                    console.error('Error fetching transcript:', error);
+                    transcriptDiv.textContent = 'Error fetching transcript. Please try again later.';
+                } finally {
+                    // hideLoader(loaderDiv);
+                }
+            });
+
+            userPrompt.addEventListener('click', () => {
+                userPrompt.removeAttribute('readonly');
+            });
+
+            chunkSizeInput.addEventListener('click', () => {
+                chunkSizeInput.removeAttribute('readonly');
+            });
+
+            embedButton.addEventListener('click', async () => {
+                const fileName = fileNameInput.value.trim();
+                const userInput = userPrompt.value.trim();
+                const chunkSize = chunkSizeInput.value.trim();
+
+                if (!fileName) {
+                    responseDiv.textContent = 'Please enter a file name.';
+                    return;
+                }
+
+                try {
+                    showLoader(loaderDiv);
+                    const response = await axios.post('/api/v1/gptube/embed/', {
+                        title: fileName,
+                        user_prompt: userInput,
+                        chunk: chunkSize
+                    });
+
+                    if (response.status !== 200) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    responseDiv.textContent = 'Embedding created: ' + response.data;
+                } catch (error) {
+                    console.error('Error creating embedding:', error);
+                    responseDiv.textContent = 'Error creating embedding. Please try again later.';
+                } finally {
+                    hideLoader(loaderDiv);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

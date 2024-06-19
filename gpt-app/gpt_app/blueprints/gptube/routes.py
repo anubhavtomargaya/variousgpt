@@ -114,7 +114,7 @@ def create_embedding():
     if not title: raise HTTPException("File name of transcript not provided")
 
     summariser = create_text_meta_doc(ts_filename=title,
-                                      chunk_size=chunk_size,
+                                      chunk_size=int(chunk_size),
                                       summariser_prompt=user_input,
                                       sections=sections_default)
     if summariser:

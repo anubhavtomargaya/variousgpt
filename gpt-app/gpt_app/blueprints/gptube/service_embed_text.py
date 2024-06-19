@@ -56,12 +56,13 @@ def identify_section_and_summarize(client,
                                                         },
                                                         {"role": "user", "content": f"Identify the section and summarize the following text:\n\n{chunk}\n\n"
                                                         }],
-                                                temperature=DEFAULT_TEMPERATURE,
+                                                temperature=1.2,
                                                 max_tokens=300,
-                                                top_p=DEFAULT_TOP_P
+                                                top_p=DEFAULT_TOP_P,response_format={'type': 'json_object'}
                                             )
   
     response_content = response.choices[0].message.content
+    
     return response_content
 
 def gpt_summarise_document_chunks(chunks,
@@ -79,6 +80,7 @@ def gpt_summarise_document_chunks(chunks,
                                              sections=sections) ## return a json but in string -> make the above func better by 21
         try:
             print("res:",res)
+            print("type",type(res))
             if res.startswith("```json") and res.endswith("`"):
   # Remove starting and ending markers (without using removeprefix/removesuffix)
                 start = len("```json")
@@ -93,6 +95,7 @@ def gpt_summarise_document_chunks(chunks,
                 except json.JSONDecodeError:
                     print("Invalid JSON format")
             else:
+                ddict = json.loads(res)
                 print("String does not start or end with markers")
         except Exception as e:
             print(e)
