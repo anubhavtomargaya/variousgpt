@@ -83,6 +83,13 @@ def check_ts_dir(file_name:Path):
     file = Path(TS_DIR,f"{file_stem}.json")
     return file.exists()
 
+def check_summary_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(SUMMARY_DIR,f"{file_stem}.json")
+    return file.exists()
+
     
 if __name__ == '__main__':
     def test_check_ts_dir():

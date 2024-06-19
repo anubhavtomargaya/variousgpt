@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const queryInput = document.getElementById('query');
+    const fileTitle = document.getElementById('title');
     const askButton = document.getElementById('askButton');
     const responseDiv = document.getElementById('response');
-
+    console.log(fileTitle)
+    console.log(fileTitle.textContent)
+    console.log(fileTitle.value)
     askButton.addEventListener('click', async () => {
         const query = queryInput.value.trim(); 
         console.log("query", query)
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`/api/v1/gptube/question/Vedant_Fashions_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4`, {
+            const response = await fetch(`/api/v1/gptube/question/${fileTitle.textContent.trim()}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

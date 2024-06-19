@@ -3,7 +3,7 @@
 from pathlib import Path
 from http.client import HTTPException
 
-from gpt_app.common.utils_dir import _load_chunks_summary_doc, load_transcript_doc
+from gpt_app.common.utils_dir import _load_chunks_summary_doc, check_summary_dir, load_transcript_doc
  
 
 from .service_answer_with_corpus import answer_question, get_context_corpus
@@ -112,7 +112,8 @@ def create_embedding():
     ###prcess arguements 
 
     if not title: raise HTTPException("File name of transcript not provided")
-
+    if check_summary_dir(title):
+        return jsonify(title)
     summariser = create_text_meta_doc(ts_filename=title,
                                       chunk_size=int(chunk_size),
                                       summariser_prompt=user_input,

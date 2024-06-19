@@ -7,7 +7,7 @@ from . import view_app
 def index():
     return render_template('conch.html')
 
-@view_app.route('/chat/')
+@view_app.route('/chat/<file_name>')
 def chat(file_name):
     
     return render_template('conch.html',title=file_name)
