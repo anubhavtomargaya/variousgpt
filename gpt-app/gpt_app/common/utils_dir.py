@@ -75,3 +75,18 @@ def save_transcript_text_json(transcribed_text:openai.types.audio.transcription.
     with open(fpath, 'w') as f:
         json.dump(transcribed_text.__dict__,f)
     return True
+
+def check_ts_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(TS_DIR,f"{file_stem}.json")
+    return file.exists()
+
+    
+if __name__ == '__main__':
+    def test_check_ts_dir():
+        f = 'Avanti_Feeds_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4'
+        return check_ts_dir(f)
+    
+    print(test_check_ts_dir())

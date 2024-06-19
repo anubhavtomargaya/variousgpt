@@ -91,28 +91,35 @@ def transcribe_youtube():
     
 @gpt_app.route('/embed/', methods=['POST','GET'])
 def create_embedding():
-    summary_prmpt = "You are a helpful assistant to summarise a quarterly EARNINGS CONFERENCE CALL. The transcript of the call will be provided in chunks as context and you have to extract information carefully and concisely in summaries.  "
-    sections_interview =  ['INTRO', 'MANAGEMENT NOTE', 'ANALYST QA', 'CONCLUSION']
-
+    summary_prmpt = "You are a helpful assistant to summarise a quarterly EARNINGS CONFERENCE CALL. The transcript of the call will be provided in chunks as context and you have to extract information carefully in summaries.  "
+    sections_default =  ['INTRO', 'MANAGEMENT NOTE', 'ANALYST QA', 'CONCLUSION']
+    default_chunk_embedding  = 2000
     mthd = request.method 
     args = request.args
     app.logger.info('method: %s',mthd)
     app.logger.info('args: %s',args)
-    if not mthd =='GET':
-        print("get wont work in reality")
-        # raise HTTPException("Invalid HTTP Method for the endpoing %s",mthd)
-    
+    if mthd =='GET':
+        title = args.get('title') or None
+        chunk_size = args.get('chunk') or default_chunk_embedding  
+        
+    elif mthd=='POST':
+        data = request.get_json()
+
+        title = data.get('title') or None
+        chunk_size = data.get('chunk') or default_chunk_embedding  
+        user_input= data.get('user_prompt') or summary_prmpt
+        
     ###prcess arguements 
 
-    title = args.get('title') or None
-    chunk_size = args.get('chunk') or 2000
+    if not title: raise HTTPException("File name of transcript not provided")
 
     summariser = create_text_meta_doc(ts_filename=title,
                                       chunk_size=chunk_size,
-                                      summariser_prompt=summary_prmpt,
-                                      sections=sections_interview)
+                                      summariser_prompt=user_input,
+                                      sections=sections_default)
     if summariser:
         embedding = create_embeddings_from_chunk_doc(filename=title)
+        
     return jsonify(embedding.stem.__str__())
 
 ### get text at various stage 
