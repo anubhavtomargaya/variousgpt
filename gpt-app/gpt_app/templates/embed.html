@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Transcript</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/embed.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/embed.js') }}"></script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>View Transcript</h1>
+        <div class="input-container">
+            <input type="text" id="fileName" placeholder="Enter file name...">
+            <button id="viewButton">View Transcript</button>
+        </div>
+        <div id="loader">Loading...</div>
+        <div id="transcript"></div>
+    </div>
+</body>
+</html>

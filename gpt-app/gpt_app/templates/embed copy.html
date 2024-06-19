@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Transcript</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/embed.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/embed.js') }}"></script>
+    <style>
+        body, html {
+            margin: 0;
+            height: 100%;
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .split {
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .left {
+            flex: 1;
+            border-right: 1px solid #ccc;
+        }
+        .right {
+            flex: 1;
+        }
+        .resizer {
+            width: 5px;
+            background: #000;
+            cursor: ew-resize;
+            position: relative;
+            z-index: 1;
+        }
+        .input-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #loader {
+            display: none;
+        }
+        #response, #embedResponse {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+        #transcript, #apiData {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="split left">
+            <div class="input-container">
+                <input type="text" id="fileName" placeholder="Enter file name...">
+                <button id="viewButton">View Transcript</button>
+            </div>
+            <div id="loader">Loading...</div>
+            <div id="transcript"></div>
+            <button id="fetchDataButton">Fetch Data</button>
+        </div>
+        <div class="resizer"></div>
+        <div class="split right">
+            <div id="apiData">Right side content will appear here.</div>
+        </div>
+    </div>
+    <script>
+        const resizer = document.querySelector('.resizer');
+        const leftSide = resizer.previousElementSibling;
+        const rightSide = resizer.nextElementSibling;
+
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        });
+
+        function resize(e) {
+            if (!isResizing) return;
+            const offsetRight = document.body.offsetWidth - (e.clientX - document.body.offsetLeft);
+            leftSide.style.flex = `0 0 ${document.body.offsetWidth - offsetRight}px`;
+            rightSide.style.flex = `0 0 ${offsetRight}px`;
+        }
+
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+    </script>
+</body>
+</html>

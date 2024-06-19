@@ -119,22 +119,9 @@ def create_embedding():
                                       sections=sections_default)
     if summariser:
         embedding = create_embeddings_from_chunk_doc(filename=title)
-        
+
     return jsonify(embedding.stem.__str__())
 
-### get text at various stage 
-
-@gpt_app.route('/view/transcript/<file_name>')
-def get_transcript(file_name):
-
-    text = load_transcript_doc(f'{file_name}')
-    return jsonify(text)
-
-@gpt_app.route('/view/summary/<file_name>')
-def get_summary(file_name):
-
-    text = _load_chunks_summary_doc(f'{file_name}')
-    return jsonify(text)
 
 from flask import current_app as app
 from .service_answer_with_corpus import question_prompt
