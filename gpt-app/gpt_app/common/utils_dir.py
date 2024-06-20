@@ -13,7 +13,20 @@ def save_summary(doc, file_name):
      file_path =  Path(SUMMARY_DIR,file_name)
      with open(file_path, 'w') as fw:
         return json.dump(doc,fw)
+     
+def check_ts_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(TS_DIR,f"{file_stem}.json")
+    return file.exists()
 
+def check_summary_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(SUMMARY_DIR,f"{file_stem}.json")
+    return file.exists()
 ## transcript text
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
@@ -22,6 +35,30 @@ def load_transcript_doc(filename:Path)->str:
     with open(path,'r') as fr:
         transcript_dict = json.load(fr)
     return transcript_dict['text']
+
+def update_transcript_doc(filename:Path,text:str)->str:
+    if not isinstance(filename,Path):
+        filename=Path(filename)
+
+    print("file updating ")
+    
+    if not check_ts_dir(file_name=filename):
+        raise Exception("No File by that name in transcripts: %s",filename.stem)
+    
+    path = Path(TS_DIR,f"{filename.stem}.json")
+    with open(path,'r') as fr:
+        transcript_dict = json.load(fr)
+    if len(text) < (0.8* len(transcript_dict['text'])):
+        raise Exception("Updated Text too less, please check!")
+    print(text)
+    transcript_dict['text']=text
+
+    print(path.__str__())
+    print(transcript_dict['text'])
+    with open(path,'w') as fw:
+        json.dump(transcript_dict,fw)
+        return filename
+       
 
 
 def save_summary_doc(doc_summary_dict, filename):
@@ -78,19 +115,7 @@ def save_transcript_text_json(transcribed_text:openai.types.audio.transcription.
         json.dump(transcribed_text.__dict__,f)
     return True
 
-def check_ts_dir(file_name:Path):
-    if not isinstance(file_name,Path):
-        file_name = Path(file_name)
-    file_stem = file_name.stem
-    file = Path(TS_DIR,f"{file_stem}.json")
-    return file.exists()
 
-def check_summary_dir(file_name:Path):
-    if not isinstance(file_name,Path):
-        file_name = Path(file_name)
-    file_stem = file_name.stem
-    file = Path(SUMMARY_DIR,f"{file_stem}.json")
-    return file.exists()
 
     
 if __name__ == '__main__':

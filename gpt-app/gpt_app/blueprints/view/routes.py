@@ -2,7 +2,7 @@ from http.client import HTTPException
 from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 
-from gpt_app.common.utils_dir import _load_chunks_summary_doc, list_embedding_dir, load_transcript_doc
+from gpt_app.common.utils_dir import _load_chunks_summary_doc, list_embedding_dir, load_transcript_doc, update_transcript_doc
 from . import view_app
 
 @view_app.route('/')
@@ -48,6 +48,26 @@ def get_transcript(file_name):
 
     text = load_transcript_doc(f'{file_name}')
     return jsonify(text)
+
+@view_app.route('/transcript/update/<file_name>',methods=['POST'])
+def update_transcript(file_name):
+    mthd = request.method
+   
+    app.logger.info('method: %s',mthd)
+   
+    if mthd =='POST':
+        print("POST")
+        args = request.get_json()
+        updated_text = args.get('updated_text') or None
+    else:raise HTTPException("Invalid Method")
+
+    up_file = update_transcript_doc(filename=file_name,text=updated_text)
+
+
+    return jsonify(up_file.stem)
+    # return redirect(url_for('view_app.embed'))
+
+
 
 @view_app.route('/summary/<file_name>')
 def get_summary(file_name):

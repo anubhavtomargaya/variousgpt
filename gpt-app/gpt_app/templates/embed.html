@@ -218,9 +218,10 @@
 
                 try {
                     showLoader(loaderDiv);
+                    console.log("file", fileName)
+                    const response = await axios.post(`/view/transcript/update/${fileName}`, {
 
-                    const response = await axios.post(`/transcript/update/${fileName}`, {
-                        transcript: updatedTranscript
+                        updated_text: updatedTranscript
                     });
 
                     if (response.status !== 200) {
@@ -234,6 +235,13 @@
                 } finally {
                     hideLoader(loaderDiv);
                 }
+            });
+            // Listen for input changes in transcriptDiv to update updatedTranscript dynamically
+            transcriptDiv.addEventListener('input', () => {
+                // Update updatedTranscript whenever user edits the transcript
+                console.log("updating text")
+                updatedTranscript = transcriptDiv.innerText.trim(); 
+                console.log(updatedTranscript) // or transcriptDiv.innerHTML.trim() if HTML content is needed
             });
 
             userPrompt.addEventListener('click', () => {
