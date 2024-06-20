@@ -1,19 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const viewButton = document.getElementById('viewButton');
     const fetchDataButton = document.getElementById('fetchDataButton');
     const transcriptDiv = document.getElementById('transcript');
     const apiDataDiv = document.getElementById('apiData');
     const loaderDiv = document.getElementById('loader');
-
-    viewButton.addEventListener('click', async () => {
-        const fileNameInput = document.getElementById('fileName');
-        const fileName = fileNameInput.value.trim();
-
-        if (!fileName) {
-            transcriptDiv.textContent = 'Please enter a file name.';
-            return;
-        }
-
+    const fileNameInput = document.getElementById('fileName');
+    
+    const fetchTranscript = async (fileName) => {
         try {
             loaderDiv.style.display = 'block';
             transcriptDiv.textContent = '';
@@ -31,7 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             loaderDiv.style.display = 'none';
         }
+    };
+
+    viewButton.addEventListener('click', () => {
+        const fileName = fileNameInput.value.trim();
+        if (!fileName) {
+            transcriptDiv.textContent = 'Please enter a file name.';
+            return;
+        }
+        fetchTranscript(fileName);
     });
+
+    // Automatically fetch transcript on page load
+    const initialFileName = fileNameInput.value.trim();
+    if (initialFileName) {
+        fetchTranscript(initialFileName);
+    }
 
     fetchDataButton.addEventListener('click', async () => {
         try {
