@@ -67,6 +67,7 @@ function transcribeYouTube() {
             <p>Transcription Result:</p>
             <pre>${response.data}</pre>
         `;
+        window.location.href = "/view/embed?pl="+ titleElement.textContent.trim();
     })
     .catch(function (error) {
         // Handle error
