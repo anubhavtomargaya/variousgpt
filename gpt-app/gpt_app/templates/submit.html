@@ -9,18 +9,24 @@
     <script defer src="{{ url_for('static', filename='js/yt.submit.js') }}"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Submit YouTube Link</h1>
+    <DIV class="outer-container">
+
+        <div class="container">
+            <h1>Submit YouTube Link</h1>
         <div class="input-container">
             <input type="text" id="youtubeUrl" placeholder="Enter YouTube URL">
             <button onclick="submitYouTube()">Go</button>
         </div>
         <div class="input-container">
             <input type="text" id="contextContent" placeholder="Enter Context Content (optional)">
-            <button onclick="transcribeYouTube()">Transcribe</button>
+        <button onclick="transcribeYouTube()">Transcribe</button>
         </div>
         <div id="loader"></div>
-        <div id="response"></div>
-    </div>
+        </div>
+        <div class="response-container">
+            <div id="response"></div>
+        <div id="video-container"></div>
+        </div>
+</DIV>
 </body>
 </html>

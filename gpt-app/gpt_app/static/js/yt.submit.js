@@ -1,9 +1,8 @@
 // static/js/yt.submit.js
 function getYouTubeID(url) {
-    var regex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/|.*v=)?([^&\n?#]+)|(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^&\n?#]+)/;
-    var match = url.match(regex);
-    return match && (match[1] || match[2]);
-
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length == 11) ? match[7] : false;
 }
 
 function submitYouTube() {
@@ -15,8 +14,11 @@ function submitYouTube() {
 
     var loader = document.getElementById('loader');
     var responseDiv = document.getElementById('response');
+    var videoContainer = document.getElementById('video-container');
+
     loader.style.display = 'block'; // Show the loader
     responseDiv.innerHTML = ''; // Clear previous responses
+    videoContainer.innerHTML = ''; // Clear previous video
 
     axios.post('/api/v1/gptube/yt/submit', { url: url })
     .then(function (response) {
@@ -27,9 +29,11 @@ function submitYouTube() {
             <p id="title">Title: ${response.data.title}</p>
             <p id="file_path">${response.data.file_path}</p>
             <h3 id="cost">Approx Cost:  $${response.data.whisper_approx_cost}</h3>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/${getYouTubeID(url)}" frameborder="0" allowfullscreen></iframe>
-            <p >Description: ${response.data.description}</p>
-           
+            <p>Description: ${response.data.description}</p>
+        `;
+
+        videoContainer.innerHTML = `
+            <iframe src="https://www.youtube.com/embed/${getYouTubeID(url)}" frameborder="0" allowfullscreen></iframe>
         `;
     })
     .catch(function (error) {
@@ -39,6 +43,7 @@ function submitYouTube() {
         responseDiv.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
     });
 }
+
 
 function transcribeYouTube() {
     var title = document.getElementById('youtubeUrl').value.trim();
