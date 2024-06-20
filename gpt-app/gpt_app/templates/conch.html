@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPTUBE</title>
+    <title>Ask the Management</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
- 
+    <script defer src="{{ url_for('static', filename='js/main.chat.js') }}"></script>
 </head>
 <body>
-    <div id="app" >
-        <h1>Chat with Concall </h1>
-        <h2 id="title"> {{ title }} </h2>
+    <div id="app">
+        <h1>Chat with Concall</h1>
+        <h2 id="title">{{ title }}</h2>
         <div>
             <input type="text" id="query" placeholder="Ask a question on selected concall">
             <button id="askButton">Shoot</button>
         </div>
+        <div id="loader"></div> <!-- Loader element -->
     </div><br/>
     <div id="response"></div>
 </body>
