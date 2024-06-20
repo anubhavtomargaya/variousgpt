@@ -51,6 +51,8 @@ def _load_chunks_summary_doc(file_name)->dict:
     with open(file_path, 'r') as fr:
         return json.load(fr)
 
+def list_embedding_dir():
+    return [str(item.stem) for item in EMBEDDING_DIR.iterdir()]
 ## audio-text-processing
 
 from  gpt_app.common.dirs import *

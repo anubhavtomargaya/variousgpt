@@ -2,7 +2,7 @@ from http.client import HTTPException
 from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 
-from gpt_app.common.utils_dir import _load_chunks_summary_doc, load_transcript_doc
+from gpt_app.common.utils_dir import _load_chunks_summary_doc, list_embedding_dir, load_transcript_doc
 from . import view_app
 
 @view_app.route('/')
@@ -54,6 +54,13 @@ def get_summary(file_name):
 
     text = _load_chunks_summary_doc(f'{file_name}')
     return jsonify(text)
+
+@view_app.route('/docs/list')
+def list_calls():
+    list = list_embedding_dir()
+    import time
+    time.sleep(.1)
+    return jsonify(list)
 
 @view_app.route('/<path:path>')
 def catch_all(path):
