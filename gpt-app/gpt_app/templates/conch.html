@@ -47,45 +47,7 @@
 
 
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Function to fetch and display list of calls
-            function fetchAndDisplayCalls() {
-                const loader = document.getElementById('loader2');
-                loader.classList.add('loader2'); // Show loader
 
-                fetch('/view/docs/list')
-                    .then(response => response.json())
-                    .then(data => {
-                        const listDiv = document.getElementById('callList');
-                        listDiv.innerHTML = ''; // Clear previous content
-                        const ul = document.createElement('ul');
-                        data.forEach(item => {
-                            const li = document.createElement('li');
-                            li.textContent = item; // Assuming each item is a string
-                            li.addEventListener('click', () => updateTitle(item)); // Add click event listener
-                            ul.appendChild(li);
-                        });
-                        listDiv.appendChild(ul);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching call list:', error);
-                    })
-                    .finally(() => {
-                        loader.classList.remove('loader2'); // Hide loader
-                    });
-            }
-
-            // Function to update title
-            function updateTitle(newTitle) {
-                const titleElement = document.getElementById('title');
-                titleElement.textContent = newTitle;
-            }
-
-            // Automatically fetch and display calls when window is loaded
-            fetchAndDisplayCalls();
-        });
-    </script>
 </head>
 <body>
     <div id="app">
