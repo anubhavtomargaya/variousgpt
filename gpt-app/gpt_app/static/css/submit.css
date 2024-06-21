@@ -13,7 +13,7 @@ body {
     box-sizing: border-box;
 }
 .outer-container {
-    display: flex;
+    /* display: flex; */
     flex-grow: 1;
     column-gap: .8rem;
 }

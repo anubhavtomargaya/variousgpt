@@ -53,12 +53,6 @@
     <div id="app">
         <h1>Chat with Concall</h1>
         <h2 id="title">{{ title }}</h2>
-        <div>
-            <input type="text" id="query" placeholder="Ask a question on selected concall">
-            <button id="askButton">Shoot</button>
-        </div>
-        </div>
-        <br/>
         <div id="callList">
             <!-- New div for displaying list of calls -->
             <div id="loader2"></div> 
@@ -66,6 +60,12 @@
     <!-- Loader element for individual items -->
             </div>
             
+        <div>
+            <input type="text" id="query" placeholder="Ask a question on selected concall">
+            <button id="askButton">Shoot</button>
+        </div>
+        </div>
+        <br/>
             
             <div id="loader"></div> <!-- Loader element -->
             <div id="response"></div> <!-- answer from gpt -->
