@@ -17,3 +17,35 @@ stream_handler = logging.StreamHandler(sys.stdout)
 stream_handler.setFormatter(logging.Formatter(LOG_FORMAT))
 
 
+from .dirs import *
+import os
+print(DATA_DIR)
+for directory in [DATA_DIR, VIDEO_DIR, RECORD_DIR, QA_RECORD_DIR, YOUTUBE_DIR, PROCESSED_DIR, CHOP_DIR, TS_DIR, SUMMARY_DIR, EMBEDDING_DIR]:
+    try:
+        os.makedirs(directory, exist_ok=True)  # Avoids errors if directory already exists
+        print(f"Directory created: {directory}")
+    except OSError as e:
+        print(f"Error creating directory {directory}: {e}")
+
+
+
+def create_qa_records_file(file= QA_RECORD_FILE):
+    try:
+        with open(file, "x") as f:
+            f.write('')
+    except FileExistsError:
+        print("File already exists.",file)
+    return True
+
+        
+def create_yt_index(file=YOUTUBE_META_FILE):
+    try:
+        with open(file, "x") as f:
+            f.write('')
+    except FileExistsError:
+        print("File already exists.",file)
+    
+    return True
+
+create_yt_index()
+create_qa_records_file()

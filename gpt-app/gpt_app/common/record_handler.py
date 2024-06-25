@@ -4,10 +4,8 @@ from typing import List
 import json 
 
 from .enums import Experiments
-from .dirs import QA_RECORD_DIR
+from .dirs import QA_RECORD_FILE
 
-QA_RECORD_FILENAME = 'qa_chat_records.json'
-qa_records_file = Path(QA_RECORD_DIR,QA_RECORD_FILENAME)
 
 class QARecord:
     def __init__(self,
@@ -30,7 +28,7 @@ class QARecord:
 
 
 def load_qa_record()->List[QARecord]:
-    with open(qa_records_file, 'r+') as f:
+    with open(QA_RECORD_FILE, 'r+') as f:
         try:
             existing_data = json.load(f)
         except json.JSONDecodeError:
@@ -38,7 +36,7 @@ def load_qa_record()->List[QARecord]:
     return existing_data
 
 def save_qa_record(updated_data:List[QARecord]):
-    with open(qa_records_file, 'w+') as f:
+    with open(QA_RECORD_FILE, 'w+') as f:
         json.dump(updated_data,f,indent=4)
     return True
 
