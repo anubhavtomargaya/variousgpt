@@ -58,14 +58,15 @@ def open_audio_as_segment(audio_file,dir=PROCESSED_DIR):
     try:
         file_path = Path(dir,audio_file)
         print(file_path)
-        audio = AudioSegment.from_ogg(file_path)
+        audio = AudioSegment.from_file(file_path)
+        # audio = AudioSegment.from_ogg(file_path)
 
         return audio
     except FileNotFoundError as e:
         print(f"Error: Audio file '{audio_file}' not found.")
         raise e
     
-def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
+def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, source_dir=PROCESSED_DIR,format='ogg'):
     """chops the given file in pieces of n minutes, saves in 
 
     Args:
@@ -76,7 +77,7 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, format='ogg'):
     """
     ## lets chop the file first 
     # also make sure the size doesnt exceed 25mb for each segment
-    audio = open_audio_as_segment(audio_file)
+    audio = open_audio_as_segment(audio_file,dir=source_dir)
     total_duration_milliseconds = len(audio)
     total_duration_seconds = total_duration_milliseconds / 1000
 

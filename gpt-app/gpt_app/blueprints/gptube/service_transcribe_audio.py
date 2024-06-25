@@ -12,6 +12,7 @@ from gpt_app.blueprints.gptube.gpt_service import transcribe_audio_in_format
 
 def transcribe_audio_in_chunks(audio_path:Path,
                                 base_prompt:str,
+                                source_dir = YOUTUBE_DIR,
                                 output_dir=TS_DIR): # save text of each chunk (audio chunk)
     
     """ chop file and save chunks in chop dir. Finish transcription, concat transcripts and save in a AudioTranscript object to a json.
@@ -21,7 +22,8 @@ def transcribe_audio_in_chunks(audio_path:Path,
     """
     meta = TranscriptMetadata(audio_file_name=audio_path.stem,
                               transcript_format=tsFormats.JSON)
-    chunk_files = chop_audio(audio_path)
+    fmt = audio_path.name.split('.')[-1]
+    chunk_files = chop_audio(audio_path,source_dir=source_dir,format=fmt)
     meta.num_chunks = len(chunk_files)
     # start transcription of chunks, 
     client = get_openai_client()
@@ -55,7 +57,8 @@ def transcribe_audio_in_chunks(audio_path:Path,
 
         print(id, "file processsed as ts: ", file_path.stem)
         return f'{out_file_name}.json'
-            
+    else:
+         raise Exception("Error while saving text as json")
 
 
         
@@ -68,11 +71,11 @@ def create_text_from_audio(file_name:Path,
         print(check_ts_dir(file_name))
         return file_name
     else:
-        ogg_file = convert_audio_to_ogg(file_name=file_name,data_dir=source_dir)
-        if ogg_file:
-            print(ogg_file)
+        # ogg_file = convert_audio_to_ogg(file_name=file_name,data_dir=source_dir)
+        # if ogg_file:
+            # print(ogg_file)
 
-            return transcribe_audio_in_chunks(audio_path=Path(PROCESSED_DIR,ogg_file   ), 
+            return transcribe_audio_in_chunks(audio_path=Path(source_dir,file_name   ), 
                                         base_prompt=base_prompt) 
     
 

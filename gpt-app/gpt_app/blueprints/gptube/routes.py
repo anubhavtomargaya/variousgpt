@@ -79,10 +79,8 @@ def transcribe_youtube():
     
     ###prcess arguements 
     if not title:
-        raise HTTPException("title not provided ") 
-    
-
-    
+        raise HTTPException("title not provided ")
+        
     return jsonify(create_text_from_audio(youtube=True,
                                             file_name=title,
                                             base_prompt=base_prompt))
