@@ -83,7 +83,8 @@ def transcribe_youtube():
         
     return jsonify(create_text_from_audio(youtube=True,
                                             file_name=title,
-                                            base_prompt=base_prompt))
+                                            base_prompt=base_prompt,
+                                            ogg=True))
     
     # return the text from json if create is true
     

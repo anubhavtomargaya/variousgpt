@@ -58,8 +58,8 @@ def open_audio_as_segment(audio_file,dir=PROCESSED_DIR):
     try:
         file_path = Path(dir,audio_file)
         print(file_path)
-        audio = AudioSegment.from_file(file_path)
-        # audio = AudioSegment.from_ogg(file_path)
+        # audio = AudioSegment.from_file(file_path)
+        audio = AudioSegment.from_ogg(file_path)
 
         return audio
     except FileNotFoundError as e:

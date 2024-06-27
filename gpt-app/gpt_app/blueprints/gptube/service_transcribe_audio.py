@@ -20,6 +20,7 @@ def transcribe_audio_in_chunks(audio_path:Path,
         Transcribe each chunk sequentially reading from disk. 
         
     """
+    print("AUDIOP ",audio_path)
     meta = TranscriptMetadata(audio_file_name=audio_path.stem,
                               transcript_format=tsFormats.JSON)
     fmt = audio_path.name.split('.')[-1]
@@ -64,18 +65,22 @@ def transcribe_audio_in_chunks(audio_path:Path,
         
 def create_text_from_audio(file_name:Path,
                             base_prompt='',
-                            youtube=False
+                            youtube=False,
+                            ogg=True
                                   ):
     source_dir = YOUTUBE_DIR if youtube else DATA_DIR
     if check_ts_dir(file_name):
         print(check_ts_dir(file_name))
         return file_name
     else:
-        # ogg_file = convert_audio_to_ogg(file_name=file_name,data_dir=source_dir)
-        # if ogg_file:
-            # print(ogg_file)
-
-            return transcribe_audio_in_chunks(audio_path=Path(source_dir,file_name   ), 
+        if ogg:
+            
+            fname = convert_audio_to_ogg(file_name=file_name,data_dir=source_dir)
+            source_dir = PROCESSED_DIR
+        else:
+            fname = file_name
+        print("FILEN ",fname)
+        return transcribe_audio_in_chunks(audio_path=Path(source_dir,fname), 
                                         base_prompt=base_prompt) 
     
 
