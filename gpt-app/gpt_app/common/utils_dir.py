@@ -27,6 +27,13 @@ def check_summary_dir(file_name:Path):
     file_stem = file_name.stem
     file = Path(SUMMARY_DIR,f"{file_stem}.json")
     return file.exists()
+
+def check_diz_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(DIARIZE_DIR,f"{file_stem}.json")
+    return file.exists()
 ## transcript text
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
@@ -69,6 +76,14 @@ def save_summary_doc(doc_summary_dict, filename):
         json.dump(doc_summary_dict,fw)
     return output_file
 
+def save_diarize_doc(doc_summary_dict, filename):
+    if not isinstance(filename,Path):
+        filename = Path(filename)
+    output_file = Path(DIARIZE_DIR,f'{filename.stem}.json')
+    with open(output_file,'w') as fw:
+        json.dump(doc_summary_dict,fw)
+    return output_file
+
 def _save_embedded_doc(embedded_doc_dict, filename):
     if not isinstance(filename,Path):
         filename = Path(filename)
@@ -87,6 +102,17 @@ def _load_chunks_summary_doc(file_name)->dict:
     file_path = Path(SUMMARY_DIR,f'{file_name.stem}.json')
     with open(file_path, 'r') as fr:
         return json.load(fr)
+    
+def _load_chunks_diarized_doc(file_name)->dict:
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_path = Path(DIARIZE_DIR,f'{file_name.stem}.json')
+    with open(file_path, 'r') as fr:
+        text =  json.load(fr)
+    full_text= []
+    for i in text:
+        full_text.append(text[i]['diarize'])
+    return ' '.join(full_text)
 
 def list_embedding_dir():
     return [str(item.stem) for item in EMBEDDING_DIR.iterdir()]
