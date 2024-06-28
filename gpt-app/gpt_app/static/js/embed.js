@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             loaderDiv.style.display = 'block';
             transcriptDiv.textContent = '';
 
-            const response = await axios.get(`/view/transcript/${fileName}`);
+            const response = await axios.get(`/view/dized/${fileName}`);
 
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
@@ -41,18 +41,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchTranscript(initialFileName);
     }
 
-    fetchDataButton.addEventListener('click', async () => {
-        try {
-            const response = await axios.get(`/view/transcript/${fileName}`);
-
-            if (response.status !== 200) {
-                throw new Error('Network response was not ok');
-            }
-
-            apiDataDiv.textContent = JSON.stringify(response.data, null, 2);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            apiDataDiv.textContent = 'Error fetching data. Please try again later.';
-        }
-    });
+    
 });
