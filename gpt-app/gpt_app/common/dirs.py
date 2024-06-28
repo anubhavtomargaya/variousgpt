@@ -11,6 +11,7 @@ PROCESSED_DIR = Path(DATA_DIR, 'processed')
 CHOP_DIR = Path(PROCESSED_DIR, 'chopped')
 SUMMARY_DIR = Path(TS_DIR, 'summary')
 DIARIZE_DIR = Path(TS_DIR, 'diarized')
+SEGMENT_DIR = Path(TS_DIR, 'segments')
 EMBEDDING_DIR = Path(SUMMARY_DIR, 'embeddings')
 
 RECORD_DIR = Path(DATA_DIR, 'records')

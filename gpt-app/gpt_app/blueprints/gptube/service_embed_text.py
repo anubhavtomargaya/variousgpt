@@ -4,7 +4,7 @@ import tiktoken
 from openai import OpenAIError
 
 from gpt_app.common.dirs import *
-from gpt_app.common.utils_dir  import _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_summary_doc
+from gpt_app.common.utils_dir  import _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_segment_doc, save_summary_doc
 from gpt_app.common.utils_text import split_document, count_words
 from gpt_app.common.utils_openai import get_openai_client, get_embedding
 
@@ -61,7 +61,8 @@ def identify_section_and_summarize(client,
                                                         }],
                                                 temperature=1.2,
                                                 max_tokens=300,
-                                                top_p=DEFAULT_TOP_P,response_format={'type': 'json_object'}
+                                                top_p=DEFAULT_TOP_P,
+                                                response_format={'type': 'json_object'}
                                             )
   
     response_content = response.choices[0].message.content
@@ -103,6 +104,45 @@ def gpt_diarize_chunks(client,
     except OpenAIError as e:
         print(f"An error occurred: {e}")
         return None
+
+def gpt_segment_chunks(client,
+                        chunk,
+                        prev_diz=None,
+                        dizer_prompt="you are a helpful assistant to diarize the provided transcript text.",
+                        model="gpt-3.5-turbo")->str:
+    my_messages = [
+                    {   "role": "system", "content": f"{dizer_prompt}",  },
+                    {   "role": "system", "content": f"segmented previous chunk {prev_diz}. ",},
+                    {   "role": "user", "content": f"Return the diarized text IN ABOVE JSON FORMAT ONLY .\
+                                                    Extract the described segments in format for the following trascript  chunk:\n\n{chunk}\n\n "}
+                ]
+    all_content = " ".join([msg["content"] for msg in my_messages])
+
+    # Tokenize the concatenated content
+    encoding = tiktoken.get_encoding("cl100k_base")
+    tokens = encoding.encode(all_content)
+
+    # Print the tokens
+    print(f"Number of tokens: {len(tokens)}")
+    # print(f"Tokens: {tokens}")
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=my_messages,
+            temperature=1.2,
+            max_tokens=1000,
+            top_p=DEFAULT_TOP_P,
+            response_format={'type': 'json_object'}
+        )
+
+        response_content = response.choices[0].message.content
+
+        return response_content
+    except OpenAIError as e:
+        print(f"An error occurred: {e}")
+        return None
+    
 def gpt_summarise_document_chunks(chunks,
                                   summariser_prompt,
                                   sections)->dict:
@@ -181,6 +221,39 @@ def gpt_diarize_document_chunks(chunks,
         doc_meta[i]=chunk_diarized
     return doc_meta
 
+def gpt_segment_document_chunks(chunks,
+                                  segger_prompt,
+                                  )->dict:
+    client = get_openai_client()
+    doc_meta = { }
+    print("running gpt on the chunks, num chunks :", len(chunks))
+    prev_segment = None
+    for i in range(len(chunks)):
+        print("processing: ",i,'...') 
+        current_chunk = chunks[i]
+        res = gpt_segment_chunks(client=client,
+                                 prev_diz=prev_segment,
+                                chunk=current_chunk,
+                                dizer_prompt=segger_prompt,
+                                            )
+        try:
+            print("res:",res)
+            print("type",type(res))
+           
+            ddict = json.loads(res)
+
+        except Exception as e:
+            print(e)
+    
+            ddict = {'t':''}
+
+        chunk_diarized =  {'chunk_text':current_chunk ,
+                                'diarize':list(ddict.keys())
+                          }
+        prev_segment = ddict
+        doc_meta[i]=chunk_diarized
+    return doc_meta
+
     
 def create_embeddings_from_chunk_doc( filename,
                                      text_column='chunk_text'):
@@ -234,6 +307,25 @@ def create_text_diarized_doc(ts_filename,
     print("num chunks", len(chunks))
     doc_sum_ = gpt_diarize_document_chunks( chunks,dizer_prompt==dizer_prompt) # uses openai 
     return save_diarize_doc(doc_sum_,filename=ts_filename)
+
+def create_text_segment_doc(ts_filename,
+                        chunk_size=2000,
+                        overlap= 100,
+                        segger_prompt=None,
+                       ):
+
+    text = load_transcript_doc(ts_filename)
+  
+    words = count_words(text)
+    char = len(text)
+    print(words, char )
+    if (char / chunk_size) > 15:
+        chunk_size = int(chunk_size*1.45)
+        print("new chunk size",chunk_size)
+    chunks = split_document(text,chunk_size=chunk_size,overlap=overlap)
+    print("num chunks", len(chunks))
+    doc_sum_ = gpt_segment_document_chunks( chunks,segger_prompt=segger_prompt) # uses openai 
+    return save_segment_doc(doc_sum_,filename=ts_filename)
 
 
 if __name__ =='__main__':

@@ -34,6 +34,13 @@ def check_diz_dir(file_name:Path):
     file_stem = file_name.stem
     file = Path(DIARIZE_DIR,f"{file_stem}.json")
     return file.exists()
+
+def check_segment_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(SEGMENT_DIR,f"{file_stem}.json")
+    return file.exists()
 ## transcript text
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
@@ -80,6 +87,14 @@ def save_diarize_doc(doc_summary_dict, filename):
     if not isinstance(filename,Path):
         filename = Path(filename)
     output_file = Path(DIARIZE_DIR,f'{filename.stem}.json')
+    with open(output_file,'w') as fw:
+        json.dump(doc_summary_dict,fw)
+    return output_file
+
+def save_segment_doc(doc_summary_dict, filename):
+    if not isinstance(filename,Path):
+        filename = Path(filename)
+    output_file = Path(SEGMENT_DIR,f'{filename.stem}.json')
     with open(output_file,'w') as fw:
         json.dump(doc_summary_dict,fw)
     return output_file

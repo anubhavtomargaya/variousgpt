@@ -3,12 +3,12 @@
 from pathlib import Path
 from http.client import HTTPException
 
-from gpt_app.common.utils_dir import _load_chunks_summary_doc, check_diz_dir, check_summary_dir, load_transcript_doc
+from gpt_app.common.utils_dir import _load_chunks_summary_doc, check_diz_dir, check_segment_dir, check_summary_dir, load_transcript_doc
  
 
 from .service_answer_with_corpus import answer_question, get_context_corpus
 from .service_transcribe_audio import create_text_from_audio
-from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc
+from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc
 from .load_youtube_audio import download_youtube_audio
 from flask import current_app as app,jsonify,request, url_for, redirect,render_template
 
@@ -128,6 +128,50 @@ def create_diarization():
     
 
     return jsonify(dts_file.name)
+
+    
+@gpt_app.route('/segment/', methods=['POST','GET'])
+def create_segments():
+    segger_prompt = "You are a helpful assistant to segment a quarterly EARNINGS CONFERENCE CALL from text. \
+                    The transcript of the con-call will be provided in chunks as context \
+                    The concall may start with an intro and then some speech from the management \
+                     which may include multiple members as multiple CXOs may talk. At the end there \
+                     is a QnA where different fund houses representatives ask questions. And the it ends. \
+                     SEGMENT THE TEXT INTO EITHER : INTRO, PRESENTATION, QA  \
+                     Remember that the call has a flow and the sections will occur in the same order normally. \
+                    Previous chunk's segment will be provided for context if no previous then assume its the start, \
+                     otherwise its a continuted convo so be intelligent. \
+                   Return the text as it is but extract it as segment in the json format : { intro: text, presentation: text, qa:text } \
+                    if the text only has one section make the others as None but keep schema same. "
+
+    default_chunk_embedding  = 2000
+    mthd = request.method 
+    args = request.args
+    app.logger.info('method: %s',mthd)
+    app.logger.info('args: %s',args)
+    if mthd =='GET':
+        title = args.get('title') or None
+        chunk_size = args.get('chunk') or default_chunk_embedding  
+        user_input = segger_prompt
+        
+    elif mthd=='POST':
+        data = request.get_json()
+
+        title = data.get('title') or None
+        chunk_size = data.get('chunk') or default_chunk_embedding  
+        user_input= data.get('user_prompt') or segger_prompt
+        
+    ###prcess arguements 
+
+    if not title: raise HTTPException("File name of transcript not provided")
+    # if check_segment_dir(title):
+    #     return jsonify(title)
+    sts_file = create_text_segment_doc(ts_filename=title,
+                                      chunk_size=int(chunk_size),
+                                      segger_prompt=user_input )
+    
+
+    return jsonify(sts_file.name)
 
 
 @gpt_app.route('/embed/', methods=['POST','GET'])
