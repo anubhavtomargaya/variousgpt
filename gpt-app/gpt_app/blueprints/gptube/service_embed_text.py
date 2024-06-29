@@ -4,7 +4,7 @@ import tiktoken
 from openai import OpenAIError
 
 from gpt_app.common.dirs import *
-from gpt_app.common.utils_dir  import _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_segment_doc, save_summary_doc
+from gpt_app.common.utils_dir  import _load_chunks_segment_doc, _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_segment_doc, save_summary_doc
 from gpt_app.common.utils_text import split_document, count_words
 from gpt_app.common.utils_openai import get_openai_client, get_embedding
 
@@ -107,13 +107,16 @@ def gpt_diarize_chunks(client,
 
 def gpt_segment_chunks(client,
                         chunk,
-                        prev_diz=None,
+                        prev_seg=None,
+                        prev_chunk=None,
                         dizer_prompt="you are a helpful assistant to diarize the provided transcript text.",
                         model="gpt-3.5-turbo")->str:
     my_messages = [
                     {   "role": "system", "content": f"{dizer_prompt}",  },
-                    {   "role": "system", "content": f"segmented previous chunk {prev_diz}. ",},
-                    {   "role": "user", "content": f"Return the diarized text IN ABOVE JSON FORMAT ONLY .\
+                    {   "role": "system", "content": f"previous chunk: {prev_chunk} \
+                                                    identified segment of previous chunk {prev_seg}. ",},
+
+                    {   "role": "user", "content": f"Return the response text IN ABOVE JSON FORMAT ONLY .\
                                                     Extract the described segments in format for the following trascript  chunk:\n\n{chunk}\n\n "}
                 ]
     all_content = " ".join([msg["content"] for msg in my_messages])
@@ -134,6 +137,82 @@ def gpt_segment_chunks(client,
             max_tokens=1000,
             top_p=DEFAULT_TOP_P,
             response_format={'type': 'json_object'}
+        )
+
+        response_content = response.choices[0].message.content
+
+        return response_content
+    except OpenAIError as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def gpt_qa_digest_chunks(client,
+                        chunk,
+                        prev_chunk=None,
+                        dizer_prompt="you are a helpful assistant to diarize the provided transcript text.",
+                        model="gpt-3.5-turbo")->str:
+    my_messages = [
+                    {   "role": "system", "content": f"{dizer_prompt}",  },
+                    {   "role": "system", "content": f"previous: {prev_chunk} \
+                                                    ",},
+
+                    {   "role": "user", "content": f"chunk:\n\n{chunk}\n\n "}
+                ]
+    all_content = " ".join([msg["content"] for msg in my_messages])
+
+    # Tokenize the concatenated content
+    encoding = tiktoken.get_encoding("cl100k_base")
+    tokens = encoding.encode(all_content)
+
+    # Print the tokens
+    print(f"Number of tokens: {len(tokens)}")
+    # print(f"Tokens: {tokens}")
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=my_messages,
+            temperature=1.2,
+            max_tokens=2000,
+            top_p=DEFAULT_TOP_P,
+           
+        )
+
+        response_content = response.choices[0].message.content
+
+        return response_content
+    except OpenAIError as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def gpt_summarise_qa_digest_doc(client,
+                        chunk,
+
+                        dizer_prompt="you are a helpful assistant to diarize the provided transcript text.",
+                        model="gpt-3.5-turbo")->str:
+    my_messages = [
+                    {   "role": "system", "content": f"{dizer_prompt}",  },
+
+                    {   "role": "user", "content": f"chunk :\n\n{chunk}\n\n "}
+                ]
+    all_content = " ".join([msg["content"] for msg in my_messages])
+
+    # Tokenize the concatenated content
+    encoding = tiktoken.get_encoding("cl100k_base")
+    tokens = encoding.encode(all_content)
+
+    # Print the tokens
+    print(f"Number of tokens: {len(tokens)}")
+    # print(f"Tokens: {tokens}")
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=my_messages,
+            temperature=1.2,
+            max_tokens=2000,
+            top_p=DEFAULT_TOP_P,
+           
         )
 
         response_content = response.choices[0].message.content
@@ -222,17 +301,19 @@ def gpt_diarize_document_chunks(chunks,
     return doc_meta
 
 def gpt_segment_document_chunks(chunks,
-                                  segger_prompt,
+                                segger_prompt,
                                   )->dict:
     client = get_openai_client()
     doc_meta = { }
     print("running gpt on the chunks, num chunks :", len(chunks))
     prev_segment = None
+    prev_chunk = None
     for i in range(len(chunks)):
         print("processing: ",i,'...') 
         current_chunk = chunks[i]
         res = gpt_segment_chunks(client=client,
-                                 prev_diz=prev_segment,
+                                 prev_seg =prev_segment,
+                                 prev_chunk=prev_chunk,
                                 chunk=current_chunk,
                                 dizer_prompt=segger_prompt,
                                             )
@@ -245,14 +326,95 @@ def gpt_segment_document_chunks(chunks,
         except Exception as e:
             print(e)
     
-            ddict = {'t':''}
+            ddict = {'segment':'',
+                      'questions':[]
+                     }
 
-        chunk_diarized =  {'chunk_text':current_chunk ,
-                                'diarize':list(ddict.keys())
+        chunk_diarized =  {'chunk':{ 'text': current_chunk ,
+                                        'segment': ddict['segment'],
+                                        'questions':ddict['questions']
+                                    }
                           }
-        prev_segment = ddict
+        prev_segment = ddict['segment']
+        prev_chunk = current_chunk[:1000]
         doc_meta[i]=chunk_diarized
     return doc_meta
+
+def gpt_qa_digest_document_chunks(chunks,
+                                digest_prompt,
+                                  )->dict:
+    client = get_openai_client()
+    doc_meta = { }
+    print("running gpt on the chunks, num chunks :", len(chunks))
+
+    prev_chunk = None
+    for i in range(len(chunks)):
+        print("processing: ",i,'...') 
+        current_chunk = chunks[i]
+        res = gpt_qa_digest_chunks(client=client,
+                                 prev_chunk=prev_chunk,
+                                chunk=current_chunk,
+                            dizer_prompt=digest_prompt,
+                                            )
+        
+
+        chunk_diarized =  {'chunk':{ 'text': current_chunk ,
+                                       'digest':res
+                                    }
+                          }
+    
+        prev_chunk = current_chunk[:1000]
+        doc_meta[i]=chunk_diarized
+    return doc_meta
+
+def gpt_qa_digest_document_chain_chunks(chunks,
+                                digest_prompt,
+                                  )->dict:
+    client = get_openai_client()
+    doc_meta = { }
+    print("running gpt on the chunks, num chunks :", len(chunks))
+
+    prev_chunk_summary = None
+    for i in range(len(chunks)-1):
+        print("processing: ",i,'...') 
+        current_chunk = chunks[i] + chunks[i+1]
+        res = gpt_qa_digest_chunks(client=client,
+                                 prev_chunk=prev_chunk_summary,
+                                chunk=current_chunk,
+                            dizer_prompt=digest_prompt,
+                                            )
+        
+
+        chunk_diarized =  {'chunk':{ 'text': current_chunk ,
+                                       'digest':res
+                                    }
+                          }
+    
+        prev_chunk_summary = res
+        doc_meta[i]=chunk_diarized
+    return doc_meta
+
+def gpt_summarise_qa_digest(chunks,
+                                digest_summary_prompt,
+                                  )->dict:
+    client = get_openai_client()
+    sub_chunks = []
+    sub_chunks.append(chunks[-1])
+
+    sub_chunks.append(chunks[-2])
+
+    print("running gpt on the chunks, num chunks :", len(chunks))
+    concat_chunks = ' '.join(sub_chunks)
+
+    res = gpt_summarise_qa_digest_doc(client=client,
+                                        chunk=concat_chunks,
+                                        dizer_prompt=digest_summary_prompt,
+                                        )
+    
+
+    summary = {'qa_summary':res}
+
+    return summary
 
     
 def create_embeddings_from_chunk_doc( filename,
@@ -309,7 +471,7 @@ def create_text_diarized_doc(ts_filename,
     return save_diarize_doc(doc_sum_,filename=ts_filename)
 
 def create_text_segment_doc(ts_filename,
-                        chunk_size=2000,
+                        chunk_size=5000,
                         overlap= 100,
                         segger_prompt=None,
                        ):
@@ -326,6 +488,34 @@ def create_text_segment_doc(ts_filename,
     print("num chunks", len(chunks))
     doc_sum_ = gpt_segment_document_chunks( chunks,segger_prompt=segger_prompt) # uses openai 
     return save_segment_doc(doc_sum_,filename=ts_filename)
+
+def get_summary_of_qa_doc(qa_digest):
+    chunks  = [qa_digest[x]['chunk']['digest']  for x in qa_digest.keys()]
+    prompt = f"""You are a helpful assistant to create the DETAILED SUMMARY a LONG QUARTERLY EARNINGS CONFERENCE CALL from text. \
+                I have summarised many chunks of the QA section. Based on the summaries provide a comprehensive passage on the QA of \
+              the con-call to summarise finally. Keep it around 800 words, avoid mentioning names of analysts as it is not important."""
+    
+    qa_summary = gpt_summarise_qa_digest(chunks=chunks,digest_summary_prompt=prompt)
+    return qa_summary 
+
+def get_qa_digest( ts_filename,
+                    qa_digest_prompt=None,
+                       ):
+    digest_chain_prompt = "You are a helpful assistant to create the DETAILED SUMMARY a LONG QUARTERLY EARNINGS CONFERENCE CALL from text. \
+                    The QA sections of the con-call will be provided in chunks.\
+                    At the end there is a QnA where different fund houses representatives ask questions to the management \
+                    I will provide you with the previous summary as context. Give increasingly detailed answer each time to enahnce the previous summary based on the new content. \
+                    In case of no previous context it is the first chunk. Make a detailed digest that includes a summary of answers for the questions asked.  \
+                    mentioned by management and concerns raised from the questions by the analyst \
+                    . Avoid adding repetitive details and unnecessary opening texts like 'heres the answer..' etc. "
+    
+    text = _load_chunks_segment_doc(ts_filename)
+    chunks  = [text[x]['chunk']['text']  for x in text.keys() if text[x]['chunk']['segment']=='QA']
+    qdg = gpt_qa_digest_document_chain_chunks( chunks, digest_prompt=digest_chain_prompt) # uses openai 
+    doc = {'qa_digest':qdg }
+    summary = get_summary_of_qa_doc(qdg)
+    doc['qa_summary'] =summary
+    return doc
 
 
 if __name__ =='__main__':

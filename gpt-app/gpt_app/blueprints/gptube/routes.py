@@ -3,12 +3,12 @@
 from pathlib import Path
 from http.client import HTTPException
 
-from gpt_app.common.utils_dir import _load_chunks_summary_doc, check_diz_dir, check_segment_dir, check_summary_dir, load_transcript_doc
+from gpt_app.common.utils_dir import _load_chunks_summary_doc, check_digest_dir, check_diz_dir, check_segment_dir, check_summary_dir, load_transcript_doc, save_digest_doc
  
 
 from .service_answer_with_corpus import answer_question, get_context_corpus
 from .service_transcribe_audio import create_text_from_audio
-from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc
+from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
 from .load_youtube_audio import download_youtube_audio
 from flask import current_app as app,jsonify,request, url_for, redirect,render_template
 
@@ -133,18 +133,20 @@ def create_diarization():
 @gpt_app.route('/segment/', methods=['POST','GET'])
 def create_segments():
     segger_prompt = "You are a helpful assistant to segment a quarterly EARNINGS CONFERENCE CALL from text. \
-                    The transcript of the con-call will be provided in chunks as context \
-                    The concall may start with an intro and then some speech from the management \
-                     which may include multiple members as multiple CXOs may talk. At the end there \
-                     is a QnA where different fund houses representatives ask questions. And the it ends. \
-                     SEGMENT THE TEXT INTO EITHER : INTRO, PRESENTATION, QA  \
-                     Remember that the call has a flow and the sections will occur in the same order normally. \
-                    Previous chunk's segment will be provided for context if no previous then assume its the start, \
-                     otherwise its a continuted convo so be intelligent. \
-                   Return the text as it is but extract it as segment in the json format : { intro: text, presentation: text, qa:text } \
-                    if the text only has one section make the others as None but keep schema same. "
-
-    default_chunk_embedding  = 2000
+                    The transcript of the con-call will be provided in chunks.\
+                    The concall may start with an intro and then some presentation from the management \
+                    which can include multiple members as multiple CXOs may talk. At the end there \
+                    is a QnA where different fund houses representatives ask questions. And then it ends. \
+                    SEGMENT THE TEXT INTO EITHER : PRESENTATION or  QA  \
+                    The analyst qa section may have long intervals of a person from management answering the question of the analyst. \
+                    when that happens do not call it as Presentation as that is part of the whole QA section. If the section is QA then extract the \
+                    questions RELATED TO COMPANY in that text in a list properly and return. Do not extract common conversational questions like 'am I audible?' etc \
+                    Otherwise return an empty list in case of presentation : [ ]  \
+                    I will provide you with the previous chunk and it's identified SEGMENT as context to make it easy \
+                    Response only in json format : { segment: 'PRESNTATION | QA', 'questions':[ {'question':'extracted_concall_question' } , { }, ] }  Note that once the QA section starts \
+                    all the other text chunks after that are most probably QA"
+    
+    default_chunk_embedding  = 5000
     mthd = request.method 
     args = request.args
     app.logger.info('method: %s',mthd)
@@ -164,14 +166,53 @@ def create_segments():
     ###prcess arguements 
 
     if not title: raise HTTPException("File name of transcript not provided")
-    # if check_segment_dir(title):
-    #     return jsonify(title)
+    if check_segment_dir(title):
+        return jsonify(title)
     sts_file = create_text_segment_doc(ts_filename=title,
                                       chunk_size=int(chunk_size),
                                       segger_prompt=user_input )
     
 
     return jsonify(sts_file.name)
+    
+@gpt_app.route('/digest/', methods=['POST','GET'])
+def create_qa_digest():
+    # segger_prompt = "You are a helpful assistant to create the QnA Digest a quarterly EARNINGS CONFERENCE CALL from text. \
+    #                 The QA sections of the con-call will be provided in chunks.\
+    #                 At the end there is a QnA where different fund houses representatives ask questions to the management \
+    #                 I will provide you with the previous chunk as context to make it easy \
+    #                 Make a detailed digest that includes a summary of answers for the questions asked. Highlight the key points in the digest \
+    #                 mentioned by management and concerns raised from the questions by the analyst. Avoid adding repetitive details and unnecessary opening texts. Return direct concise answer in around 400 words"
+    
+  
+    mthd = request.method 
+    args = request.args
+    app.logger.info('method: %s',mthd)
+    app.logger.info('args: %s',args)
+    if mthd =='GET':
+        title = args.get('title') or None
+       
+        user_input = None
+        
+    elif mthd=='POST':
+        data = request.get_json()
+
+        title = data.get('title') or None
+        user_input= data.get('user_prompt') or None
+        
+    ###prcess arguements 
+
+    if not title: raise HTTPException("File name of transcript not provided")
+    if check_digest_dir(title):
+        return jsonify(title)
+    
+    if not check_segment_dir(title):
+        raise HTTPException("Segmented doc not found to get QA Section. Run /segment/?{ }")
+    qa_digest_doc = get_qa_digest(ts_filename=title, )
+    filn = save_digest_doc(qa_digest_doc,title)
+    print(filn)
+
+    return jsonify(qa_digest_doc)
 
 
 @gpt_app.route('/embed/', methods=['POST','GET'])

@@ -2,7 +2,7 @@ from http.client import HTTPException
 from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 
-from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_summary_doc, list_embedding_dir, load_transcript_doc, update_transcript_doc
+from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, list_embedding_dir, load_transcript_doc, update_transcript_doc
 from . import view_app
 
 @view_app.route('/')
@@ -79,6 +79,13 @@ def get_summary(file_name):
 def get_diarized_transcript(file_name):
 
     text = _load_chunks_diarized_doc(f'{file_name}')
+    
+    return jsonify(text)
+
+@view_app.route('/segments/<file_name>')
+def get_segmented_transcript(file_name):
+
+    text = _load_chunks_segment_doc(f'{file_name}')
     
     return jsonify(text)
 
