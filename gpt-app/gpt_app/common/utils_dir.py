@@ -47,6 +47,15 @@ def check_digest_dir(file_name:Path):
     file_stem = file_name.stem
     file = Path(DIGEST_DIR,f"{file_stem}.json")
     return file.exists()
+
+
+
+def check_question_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(QUESTIONS_DIR,f"{file_stem}.json")
+    return file.exists()
 ## transcript text
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
@@ -55,6 +64,14 @@ def load_transcript_doc(filename:Path)->str:
     with open(path,'r') as fr:
         transcript_dict = json.load(fr)
     return transcript_dict['text']
+
+def load_question_doc(filename:Path)->str:
+    if not isinstance(filename,Path):
+        filename=Path(filename)
+    path = Path(QUESTIONS_DIR,f"{filename.stem}.json")
+    with open(path,'r') as fr:
+        questions = json.load(fr)
+    return questions
 
 def update_transcript_doc(filename:Path,text:str)->str:
     if not isinstance(filename,Path):
@@ -112,6 +129,16 @@ def save_segment_doc(doc_summary_dict, filename):
     print("saving output file to: ",output_file)
     with open(output_file,'w') as fw:
         json.dump(doc_summary_dict,fw)
+    print("SAVED")
+    return output_file
+
+def save_questions_doc(questions, filename):
+    if not isinstance(filename,Path):
+        filename = Path(filename)
+    output_file = Path(QUESTIONS_DIR,f'{filename.stem}.json')
+    print("saving output file to: ",output_file)
+    with open(output_file,'w') as fw:
+        json.dump(questions,fw)
     print("SAVED")
     return output_file
 

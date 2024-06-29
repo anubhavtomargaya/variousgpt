@@ -13,6 +13,7 @@ SUMMARY_DIR = Path(TS_DIR, 'summary')
 DIGEST_DIR = Path(TS_DIR, 'digest')
 DIARIZE_DIR = Path(TS_DIR, 'diarized')
 SEGMENT_DIR = Path(TS_DIR, 'segments')
+QUESTIONS_DIR = Path(SEGMENT_DIR, 'questions')
 EMBEDDING_DIR = Path(SUMMARY_DIR, 'embeddings')
 
 RECORD_DIR = Path(DATA_DIR, 'records')
