@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script defer src="{{ url_for('static', filename='js/main.chat.js') }}"></script>
     <style>
-        /* CSS for loader */
-        .loader2 {
+        /* CSS for loader and other styles */
+        .loader2, .loader3 {
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left-color: #3498db;
             border-radius: 50%;
@@ -22,7 +22,8 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        #app, #callList, #response, #digest {
+
+        #app, #callList, #response, #digest, #questionList {
             text-align: center;
             margin-bottom: 20px;
             background: white;
@@ -31,14 +32,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Adjustments specific to callList and response */
-        #callList {
+        /* Adjustments specific to callList, response, digest and questionList */
+        #callList, #questionList {
             background-color: #f0f0f0; /* Light gray background */
         }
 
         #response {
             background-color: #e6f7ff; /* Light blue background */ 
-            /* width: 40%; */
             font-size: medium;
             font-weight: 400;
         }
@@ -49,18 +49,33 @@
             font-size: medium;
             font-weight: 400;
         }
-    </style>
 
+        /* Styling for expandable section */
+        #expandableSection {
+            width: 100%;
+            height: 50px; /* Initial height */
+            background-color: #f0f0f0; /* Light gray background */
+            overflow: hidden;
+            transition: height 0.3s ease;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #expandableContent {
+            padding: 10px;
+            background-color: #ffffff; /* White background */
+        }
+    </style>
 </head>
 <body>
     <div id="app">
         <h1>Chat with Concall</h1>
         <h2 id="title">{{ title }}</h2>
-        <h2 id="title">{{ title }}</h2>
         <div id="callList">
             <!-- New div for displaying list of calls -->
-            <div id="loader2"></div> 
-            <!-- Loader element for individual items -->
+            <div id="loader2"></div> <!-- Loader element for individual items -->
         </div>
         
         <div>
@@ -69,13 +84,24 @@
         </div>
         
         <div id="loader"></div> <!-- Loader element -->
-        <div id="response"></div> <!-- answer from gpt -->
+        <div id="response"></div> <!-- Answer from GPT -->
 
-        <!-- New section for QA Digest -->
+        <!-- QA Digest section -->
+        <div id="getDigest">
+            <button id="getDigestButton" style="display: none;">GET QA DIGEST</button>
+        </div>
+        <div id="digestResponse"></div> <!-- QA Digest response -->
+
+        <!-- Questions section -->
+        <div id="questions">
+            <button id="getQuestionsButton">GET QUESTIONS</button>
+            <div id="questionList">
+                <!-- Loader for questions -->
+                <div id="loader3"></div>
+            </div>
+        </div>
     </div>
-    <div id="getDigest">
-        <button id="getDigestButton" style="display: none;">GET QA DIGEST</button>
-    </div>
-    <div id="digestResponse"></div> <!-- QA Digest response -->
+
+    <script defer src="{{ url_for('static', filename='js/main.chat.js') }}"></script>
 </body>
 </html>

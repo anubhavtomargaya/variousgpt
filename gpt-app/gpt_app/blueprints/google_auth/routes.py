@@ -7,7 +7,8 @@ import ast
 import json 
 
 from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
-from gpt_app.common.constants import *
+from gpt_app.common.constants import CLIENT_ID,CLIENT_SECRET,AUTHORIZATION_SCOPE,AUTHORIZATION_URL,ACCESS_TOKEN_URI,BASE_URI
+print("CLIENT_ID",CLIENT_ID)
 from .auth import get_user_info
 
 
