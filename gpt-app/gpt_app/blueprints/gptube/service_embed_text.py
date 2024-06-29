@@ -4,7 +4,7 @@ import tiktoken
 from openai import OpenAIError
 
 from gpt_app.common.dirs import *
-from gpt_app.common.utils_dir  import _load_chunks_segment_doc, _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_segment_doc, save_summary_doc
+from gpt_app.common.utils_dir  import _load_chunks_segment_doc, _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_questions_doc, save_segment_doc, save_summary_doc
 from gpt_app.common.utils_text import split_document, count_words
 from gpt_app.common.utils_openai import get_openai_client, get_embedding
 
@@ -175,6 +175,44 @@ def gpt_qa_digest_chunks(client,
             temperature=1.2,
             max_tokens=2000,
             top_p=DEFAULT_TOP_P,
+           
+        )
+
+        response_content = response.choices[0].message.content
+
+        return response_content
+    except OpenAIError as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def gpt_filter_analyst_questions(client,
+                       text,
+
+                        system_prompt="you are a helpful assistant to diarize the provided transcript text.",
+                        model="gpt-3.5-turbo")->str:
+    my_messages = [
+                    {   "role": "system", "content": f"{system_prompt}",  },
+
+                    {   "role": "user", "content": f":\n\n{text}\n\n "}
+                ]
+    all_content = " ".join([msg["content"] for msg in my_messages])
+
+    # Tokenize the concatenated content
+    encoding = tiktoken.get_encoding("cl100k_base")
+    tokens = encoding.encode(all_content)
+
+    # Print the tokens
+    print(f"Number of tokens: {len(tokens)}")
+    # print(f"Tokens: {tokens}")
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=my_messages,
+            temperature=1.2,
+            max_tokens=2000,
+            top_p=DEFAULT_TOP_P,
+            response_format={'type': 'json_object'}
            
         )
 
@@ -497,6 +535,30 @@ def get_summary_of_qa_doc(qa_digest):
     
     qa_summary = gpt_summarise_qa_digest(chunks=chunks,digest_summary_prompt=prompt)
     return qa_summary 
+
+def get_analyst_questions(file_name): # being used by /view/ directly
+    text = _load_chunks_segment_doc(file_name)
+    # print(text)
+    qa = [text[x]['chunk']['questions']  for x in text.keys() if text[x]['chunk']['segment']=='QA']
+    questions = [ ]
+
+    # print("QA",questions)
+    for x in qa:
+        questions.extend(x)
+    if not len(questions) >0:
+        return { 'questions': []}
+
+    s_prompt = "I will give you a list of questions extracted by an LLM from a transcript text. \
+                Your job is to filter out the junk questions like 'can you hear me?' etc \
+                declutter the questions. and return  \
+                the list of questions in a json { question: '', } similar to the json given by me. "
+    client = get_openai_client()
+    res = gpt_filter_analyst_questions(client=client,text=questions,system_prompt=s_prompt)
+    data = json.loads(res)
+    # print("DATA",data)
+    question_dict = { 'questions':data['questions'], 'raw_questions': questions}
+   
+    return question_dict
 
 def get_qa_digest( ts_filename,
                     qa_digest_prompt=None,
