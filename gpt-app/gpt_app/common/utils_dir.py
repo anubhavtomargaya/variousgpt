@@ -109,8 +109,10 @@ def save_segment_doc(doc_summary_dict, filename):
     if not isinstance(filename,Path):
         filename = Path(filename)
     output_file = Path(SEGMENT_DIR,f'{filename.stem}.json')
+    print("saving output file to: ",output_file)
     with open(output_file,'w') as fw:
         json.dump(doc_summary_dict,fw)
+    print("SAVED")
     return output_file
 
 def _save_embedded_doc(embedded_doc_dict, filename):
@@ -147,6 +149,15 @@ def _load_chunks_segment_doc(file_name)->dict:
     if not isinstance(file_name,Path):
         file_name = Path(file_name)
     file_path = Path(SEGMENT_DIR,f'{file_name.stem}.json')
+    print("opening FILE",file_path )
+    with open(file_path, 'r') as fr:
+        text =  json.load(fr)
+    return text
+
+def _load_digest_doc(file_name)->dict:
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_path = Path(DIGEST_DIR,f'{file_name.stem}.json')
     with open(file_path, 'r') as fr:
         text =  json.load(fr)
     

@@ -22,7 +22,7 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        #app, #callList, #response {
+        #app, #callList, #response, #digest {
             text-align: center;
             margin-bottom: 20px;
             background: white;
@@ -38,14 +38,17 @@
 
         #response {
             background-color: #e6f7ff; /* Light blue background */ 
+            /* width: 40%; */
+            font-size: medium;
+            font-weight: 400;
+        }
+
+        #digest {
+            background-color: #e6ffe6; /* Light green background */
             width: 40%;
             font-size: medium;
             font-weight: 400;
-
-        } 
-            
-
-
+        }
     </style>
 
 </head>
@@ -53,21 +56,26 @@
     <div id="app">
         <h1>Chat with Concall</h1>
         <h2 id="title">{{ title }}</h2>
+        <h2 id="title">{{ title }}</h2>
         <div id="callList">
             <!-- New div for displaying list of calls -->
             <div id="loader2"></div> 
-        <!-- Loader element -->
-    <!-- Loader element for individual items -->
-            </div>
-            
+            <!-- Loader element for individual items -->
+        </div>
+        
         <div>
             <input type="text" id="query" placeholder="Ask a question on selected concall">
             <button id="askButton">Shoot</button>
         </div>
-        </div>
-        <br/>
-            
-            <div id="loader"></div> <!-- Loader element -->
-            <div id="response"></div> <!-- answer from gpt -->
+        
+        <div id="loader"></div> <!-- Loader element -->
+        <div id="response"></div> <!-- answer from gpt -->
+
+        <!-- New section for QA Digest -->
+    </div>
+    <div id="getDigest">
+        <button id="getDigestButton" style="display: none;">GET QA DIGEST</button>
+    </div>
+    <div id="digestResponse"></div> <!-- QA Digest response -->
 </body>
 </html>

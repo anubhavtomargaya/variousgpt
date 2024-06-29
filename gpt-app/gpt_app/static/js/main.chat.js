@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const askButton = document.getElementById('askButton');
     const responseDiv = document.getElementById('response');
     const loader = document.getElementById('loader');
+    
 
     askButton.addEventListener('click', async () => {
         const query = queryInput.value.trim(); 
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function fetchAndDisplayCalls() {
         const loader = document.getElementById('loader2');
         loader.classList.add('loader2'); // Show loader
-
+        
         fetch('/view/docs/list')
             .then(response => response.json())
             .then(data => {
@@ -75,10 +76,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to update title
     function updateTitle(newTitle) {
         const titleElement = document.getElementById('title');
+        getDigestButton.style.display='block';
         titleElement.textContent = newTitle;
+        responseDiv.textContent = '';
     }
 
     // Automatically fetch and display calls when window is loaded
     fetchAndDisplayCalls();
-});
 
+    // Add functionality for GET QA DIGEST
+    const getDigestButton = document.getElementById('getDigestButton');
+    const digestResponseDiv = document.getElementById('digestResponse');
+
+    getDigestButton.addEventListener('click', async () => {
+        const fileTitle = fileTitleElement.textContent; // Get the title text content
+        console.log("fileTitle", fileTitle);
+
+        // Show loader
+
+        console.log(fileTitle)
+        loader.style.display = 'block';
+        try {
+            const response = await fetch(`/api/v1/gptube/digest/?title=${fileTitle}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Response from server:', data); 
+            loader.style.display = 'none';
+            getDigestButton.style.display='none';
+            responseDiv.textContent = data;  // Display the summary from the digest
+        } catch (error) {
+            console.error('Error fetching QA Digest:', error);
+            loader.style.display = 'none';
+            responseDiv.textContent  = 'Please select a title.';
+        }
+    });
+});

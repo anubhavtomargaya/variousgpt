@@ -17,6 +17,7 @@ body {
     background: white;
     padding: 20px;
     border-radius: 8px;
+    width: 86%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -30,6 +31,13 @@ body {
     margin-top: 20px; 
     font-size: 1.2em;
     color: #333;
+    width: calc(100% - 40px);
+}
+#digestResponse {
+    
+    margin-top: 20px; 
+    font-size: 1.2em;
+    color: #656565;
     width: calc(100% - 40px);
 }
 
