@@ -41,6 +41,12 @@ def check_segment_dir(file_name:Path):
     file_stem = file_name.stem
     file = Path(SEGMENT_DIR,f"{file_stem}.json")
     return file.exists()
+def check_digest_dir(file_name:Path):
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_stem = file_name.stem
+    file = Path(DIGEST_DIR,f"{file_stem}.json")
+    return file.exists()
 ## transcript text
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
@@ -81,6 +87,14 @@ def save_summary_doc(doc_summary_dict, filename):
     output_file = Path(SUMMARY_DIR,f'{filename.stem}.json')
     with open(output_file,'w') as fw:
         json.dump(doc_summary_dict,fw)
+    return output_file
+
+def save_digest_doc(digest_dict, filename):
+    if not isinstance(filename,Path):
+        filename = Path(filename)
+    output_file = Path(DIGEST_DIR,f'{filename.stem}.json')
+    with open(output_file,'w') as fw:
+        json.dump(digest_dict,fw)
     return output_file
 
 def save_diarize_doc(doc_summary_dict, filename):
@@ -129,6 +143,14 @@ def _load_chunks_diarized_doc(file_name)->dict:
         full_text.append(text[i]['diarize'])
     return ' '.join(full_text)
 
+def _load_chunks_segment_doc(file_name)->dict:
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
+    file_path = Path(SEGMENT_DIR,f'{file_name.stem}.json')
+    with open(file_path, 'r') as fr:
+        text =  json.load(fr)
+    
+    return text
 def list_embedding_dir():
     return [str(item.stem) for item in EMBEDDING_DIR.iterdir()]
 ## audio-text-processing
