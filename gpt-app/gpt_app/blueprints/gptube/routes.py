@@ -3,7 +3,7 @@
 from pathlib import Path
 from http.client import HTTPException
 
-from gpt_app.common.utils_dir import _load_chunks_summary_doc, _load_digest_doc, check_digest_dir, check_diz_dir, check_segment_dir, check_summary_dir, load_transcript_doc, save_digest_doc
+from gpt_app.common.utils_dir import _load_chunks_segment_doc, _load_chunks_summary_doc, _load_digest_doc, check_digest_dir, check_diz_dir, check_segment_dir, check_summary_dir, load_transcript_doc, save_digest_doc
  
 
 from .service_answer_with_corpus import answer_question, get_context_corpus
@@ -167,7 +167,8 @@ def create_segments():
 
     if not title: raise HTTPException("File name of transcript not provided")
     if check_segment_dir(title):
-        return jsonify(title)
+        doc = _load_chunks_segment_doc(file_name=title)
+        return jsonify(doc)
     sts_file = create_text_segment_doc(ts_filename=title,
                                       chunk_size=int(chunk_size),
                                       segger_prompt=user_input )
