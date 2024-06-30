@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd 
+
 def fetch_html_from_url(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -36,15 +37,13 @@ def parse_react_table(html):
         raise ValueError("React table not found in the HTML content.")
     
     row_data = pd.DataFrame()
-    # Iterate through each row in the table
-    a = []
-    b= [ ]
+
+    a = [ ]
+    b = [ ]
     c = [ ]
     for row_div in table_div.find_all('div', class_='swReactTableCell'):
         
-        # print(row_div.get_text(strip=True))
-        
-        # Extract data from each cell in the row
+     
         for cell_div in row_div.find_all('div'):
             keyword_span = cell_div.find('span', class_='search-keyword')
             if keyword_span:
@@ -85,7 +84,7 @@ def read_html_file(file_path):
     return html_content
 
 html_path = Path('scrape')
-table_file = 'similar_web_table.html'
+table_file = 'alphastreet_ranking.html'
 # with open('scrape/div_sample.html','r') as f:
 # print(all_span)
     
@@ -94,6 +93,6 @@ df = parse_react_table(html_content)
 print(df)
 # all_span = extract_span_content(html_content)
 # print([ {k: len(set(v))} for k,v in all_span.items()] )
-# required_class = 'search-keyword' #gpt will figure this out from the samples
+required_class = 'search-keyword' #gpt will figure this out from the samples
 # keyword_for_alphastreet = all_span[required_class]
 # print(keyword_for_alphastreet)
