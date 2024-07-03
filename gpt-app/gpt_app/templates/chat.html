@@ -1,0 +1,296 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Chat with Concall</title>
+ <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
+      <script defer src="{{ url_for('static', filename='js/main.chat.js') }}" />
+</script> <style> /* ... (existing CSS styles) ... */
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #87CEEB;
+            height: 100%;
+        }
+        .app {
+            background-color: #D3D3D3;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #4682B4;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        #answer-area {
+            background-color: #98FB98;
+            min-height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #askButton { background-color: #FFD700; }
+        #getQuestionsButton { background-color: #20B2AA; }
+        #getCallsButton { background-color: #FF6347; }
+        .panel {
+            position: fixed;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #F0F8FF;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+        #left-panel { 
+            left: -250px; 
+            background-color: rgba(240, 248, 255, 0.9);
+        }
+        #right-panel { right: -250px; }
+        .panel.open { transform: translateX(250px); }
+        #right-panel.open { transform: translateX(-250px); }
+        .panel-content {
+            padding: 20px;
+        }
+        .panel-content a {
+            display: block;
+            padding: 10px;
+            color: #4682B4;
+            text-decoration: none;
+        }
+        .panel-content a:hover {
+            background-color: #E6E6FA;
+        }
+        .back-arrow {
+            position: absolute;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #left-panel .back-arrow {
+            left: 10px;
+        }
+        #loader {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* New styles for call list and digest section */
+        #callList, #digest {
+            text-align: center;
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #callList {
+            background-color: #f0f0f0;
+        }
+        #digest {
+            background-color: #e6ffe6;
+            width: 40%;
+            font-size: medium;
+            font-weight: 400;
+        }
+    
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 5px;
+    }
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #askButton { background-color: #FFD700; }
+    #leftButton { background-color: #20B2AA; }
+    #rightButton { background-color: #FF6347; }
+
+    #questionsContainer {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #questionsList {
+            height: 150px; /* Adjust to show 3 items */
+            overflow-y: auto;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #questionsList li {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #questionsList li:last-child {
+            margin-bottom: 0;
+        }
+</style>
+
+</head> 
+<body> 
+    <div class="app"> <h1>Chat with Concall</h1> <h2 id="title">File Title Here</h2> 
+    <div id="callList"> <h3>Call List</h3> <!-- New div for displaying list of calls --> 
+        <div id="loader2" class="loader" style="display: none;"></div> </div> 
+        <input type="text" id="question-input" placeholder="Ask a question on selected concall">
+     <div id="answer-area"></div> <div id="loader"><div class="loader"></div></div> 
+     <div class="footer"> 
+        <button id="leftButton">LEFT</button> 
+        <button id="askButton">Shoot</button> 
+        <button id="rightButton">RIGHT</button> 
+    </div> 
+</div>
+
+        <div id="questionsContainer">
+            <h3>Questions</h3>
+            <ul id="questionsList"></ul>
+        </div>
+<div id="left-panel" class="panel" style="display: none;">
+    <div class="back-arrow">←</div>
+    <div class="panel-content" id="call-list">
+        <!-- Call list will be dynamically populated here -->
+    </div>
+</div>
+
+<div id="right-panel" class="panel" style="display: none;">
+    <div class="back-arrow">→</div>
+    <div class="panel-content">
+        <h3>History</h3>
+        <div id="history-content"></div>
+    </div>
+</div>
+<script>
+    // Get DOM elements
+    const leftButton = document.getElementById('leftButton');
+    const rightButton = document.getElementById('rightButton');
+    const leftPanel = document.getElementById('left-panel');
+    const rightPanel = document.getElementById('right-panel');
+    const leftBackArrow = leftPanel.querySelector('.back-arrow');
+    const rightBackArrow = rightPanel.querySelector('.back-arrow');
+    const callListDiv = document.getElementById('call-list');
+    const loader2 = document.getElementById('loader2');
+    const titleElement = document.getElementById('title');
+
+    // Function to open left panel and fetch call list
+    function openLeftPanel() {
+        leftPanel.style.display = 'block';
+        setTimeout(() => leftPanel.classList.add('open'), 10);
+        fetchCallList();
+    }
+
+    // Function to open right panel
+    function openRightPanel() {
+        rightPanel.style.display = 'block';
+        setTimeout(() => rightPanel.classList.add('open'), 10);
+    }
+
+    // Function to close panels
+    function closePanels() {
+        leftPanel.classList.remove('open');
+        rightPanel.classList.remove('open');
+        setTimeout(() => {
+            leftPanel.style.display = 'none';
+            rightPanel.style.display = 'none';
+        }, 300); // Wait for transition to finish
+    }
+
+    // Function to fetch call list
+    function fetchCallList() {
+        loader2.style.display = 'block';
+        fetch('/view/docs/list')
+            .then(response => response.json())
+            .then(data => {
+                callListDiv.innerHTML = '';
+                const ul = document.createElement('ul');
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.addEventListener('click', () => updateTitle(item));
+                    ul.appendChild(li);
+                });
+                callListDiv.appendChild(ul);
+            })
+            .catch(error => {
+                console.error('Error fetching call list:', error);
+            })
+            .finally(() => {
+                loader2.style.display = 'none';
+            });
+    }
+
+    // Function to update title
+    function updateTitle(title) {
+        titleElement.textContent = title;
+        closePanels();
+    }
+
+    // Event listeners
+    leftButton.addEventListener('click', openLeftPanel);
+    rightButton.addEventListener('click', openRightPanel);
+    leftBackArrow.addEventListener('click', closePanels);
+    rightBackArrow.addEventListener('click', closePanels);
+
+    // Close panels when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!leftPanel.contains(event.target) && !rightPanel.contains(event.target) &&
+            event.target !== leftButton && event.target !== rightButton) {
+            closePanels();
+        }
+    });
+</script>
+</body> </html>

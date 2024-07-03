@@ -1,6 +1,8 @@
 
 import openai
 from  gpt_app.common.dirs import * 
+from gpt_app.common.exceptions import MissingStageFile
+
 from pathlib import Path
 import json 
 
@@ -172,15 +174,19 @@ def _load_chunks_diarized_doc(file_name)->dict:
         full_text.append(text[i]['diarize'])
     return ' '.join(full_text)
 
-def _load_chunks_segment_doc(file_name)->dict:
-    if not isinstance(file_name,Path):
-        file_name = Path(file_name)
-    file_path = Path(SEGMENT_DIR,f'{file_name.stem}.json')
-    print("opening FILE",file_path )
-    with open(file_path, 'r') as fr:
-        text =  json.load(fr)
-    return text
 
+def _load_chunks_segment_doc(file_name)->dict:
+    try:
+        if not isinstance(file_name,Path):
+            file_name = Path(file_name)
+        file_path = Path(SEGMENT_DIR,f'{file_name.stem}.json')
+        print("opening FILE",file_path )
+        with open(file_path, 'r') as fr:
+            text =  json.load(fr)
+        return text
+    except Exception as e:
+        raise MissingStageFile("Error: %s",e.__str__())
+    
 def _load_digest_doc(file_name)->dict:
     if not isinstance(file_name,Path):
         file_name = Path(file_name)

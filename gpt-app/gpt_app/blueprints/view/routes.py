@@ -8,12 +8,12 @@ from . import view_app
 
 @view_app.route('/')
 def index():
-    return render_template('conch.html')
+    return render_template('chat.html')
 
-@view_app.route('/chat/<file_name>')
+@view_app.route('chat/<file_name>')
 def chat(file_name):
     
-    return render_template('conch.html',title=file_name)
+    return render_template('chat.html',title=file_name)
 
 @view_app.route('/submit')
 def submit():
@@ -106,6 +106,6 @@ def list_calls():
     time.sleep(.1)
     return jsonify(list)
 
-@view_app.route('/<path:path>')
-def catch_all(path):
-    return render_template('conch.html')
+# @view_app.route('/<path:path>')
+# def catch_all(path):
+#     return render_template('.html')
