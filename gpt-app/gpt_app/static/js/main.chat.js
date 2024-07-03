@@ -1,12 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const queryInput = document.getElementById('query');
+    const queryInput = document.getElementById('question-input');
     const fileTitleElement = document.getElementById('title'); // Access the title element
     const askButton = document.getElementById('askButton');
-    const responseDiv = document.getElementById('response');
+    const responseDiv = document.getElementById('answer-area');
     const loader = document.getElementById('loader');
+    const loader2 = document.getElementById('loader2');
+    const loader3 = document.getElementById('loader3');
+    const getDigestButton = document.getElementById('getDigestButton');
+    const digestResponseDiv = document.getElementById('digestResponse');
+    const callListDiv = document.getElementById('callList');
+    const questionListDiv = document.getElementById('answer-area');
 
     askButton.addEventListener('click', async () => {
-        const query = queryInput.value.trim(); 
+        const query = queryInput.value.trim();
         console.log("query", query);
         if (!query) {
             responseDiv.textContent = 'Please enter a question.';
@@ -34,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            console.log('Response from server:', data); 
+            console.log('Response from server:', data);
             responseDiv.textContent = data; // Adjust based on server response structure
         } catch (error) {
             console.error('Error querying GPT:', error);
@@ -47,14 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to fetch and display list of calls
     function fetchAndDisplayCalls() {
-        const loader = document.getElementById('loader2');
-        loader.classList.add('loader2'); // Show loader
-        
+        loader2.style.display = 'block'; // Show loader
+
         fetch('/view/docs/list')
             .then(response => response.json())
             .then(data => {
-                const listDiv = document.getElementById('callList');
-                listDiv.innerHTML = ''; // Clear previous content
+                callListDiv.innerHTML = ''; // Clear previous content
                 const ul = document.createElement('ul');
                 data.forEach(item => {
                     const li = document.createElement('li');
@@ -62,38 +66,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     li.addEventListener('click', () => updateTitle(item)); // Add click event listener
                     ul.appendChild(li);
                 });
-                listDiv.appendChild(ul);
+                callListDiv.appendChild(ul);
             })
             .catch(error => {
                 console.error('Error fetching call list:', error);
             })
             .finally(() => {
-                loader.classList.remove('loader2'); // Hide loader
+                loader2.style.display = 'none'; // Hide loader
             });
     }
 
     // Function to update title
     function updateTitle(newTitle) {
-        const titleElement = document.getElementById('title');
-        getDigestButton.style.display = 'block';
-        titleElement.textContent = newTitle;
+        fileTitleElement.textContent = newTitle;
         responseDiv.textContent = '';
+        getDigestButton.style.display = 'block';
     }
 
     // Function to fetch and display list of questions
     function fetchAndDisplayQuestions(fileTitle) {
-        const loader = document.getElementById('loader3');
-        loader.classList.add('loader3'); // Show loader
-        
+        loader3.style.display = 'block'; // Show loader
+
         fetch(`/view/questions/${fileTitle}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data,'data')
-                const questionListDiv = document.getElementById('questionList');
+                console.log(data, 'data')
                 questionListDiv.innerHTML = ''; // Clear previous content
                 const ul = document.createElement('ul');
-                console.log()
-                questions = data['questions']
+                const questions = data['questions'];
                 questions.forEach(question => {
                     const li = document.createElement('li');
                     li.textContent = question['question']; // Assuming each question is a string
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error fetching question list:', error);
             })
             .finally(() => {
-                loader.classList.remove('loader3'); // Hide loader
+                loader3.style.display = 'none'; // Hide loader
             });
     }
 
@@ -113,15 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchAndDisplayCalls();
 
     // Add functionality for GET QA DIGEST
-    const getDigestButton = document.getElementById('getDigestButton');
-    const digestResponseDiv = document.getElementById('digestResponse');
-
     getDigestButton.addEventListener('click', async () => {
         const fileTitle = fileTitleElement.textContent; // Get the title text content
         console.log("fileTitle", fileTitle);
 
         // Show loader
-        console.log(fileTitle)
         loader.style.display = 'block';
         try {
             const response = await fetch(`/api/v1/gptube/digest/?title=${fileTitle}`, {
@@ -136,14 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            console.log('Response from server:', data); 
-            loader.style.display = 'none';
-            getDigestButton.style.display = 'none';
-            responseDiv.textContent = data;  // Display the summary from the digest
+            console.log('Response from server:', data);
+            digestResponseDiv.textContent = data; // Display the summary from the digest
         } catch (error) {
             console.error('Error fetching QA Digest:', error);
-            loader.style.display = 'none';
-            responseDiv.textContent  = 'Please select a title.';
+            digestResponseDiv.textContent = 'Error fetching digest. Please try again later.';
+        } finally {
+            loader.style.display = 'none'; // Hide loader
         }
     });
 
@@ -157,4 +152,5 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('No title selected');
         }
     });
+    
 });
