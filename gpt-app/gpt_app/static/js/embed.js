@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             loaderDiv.style.display = 'block';
             transcriptDiv.textContent = '';
 
+            // const response = await axios.get(`/view/transcript/${fileName}`);
             const response = await axios.get(`/view/dized/${fileName}`);
 
             if (response.status !== 200) {

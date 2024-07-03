@@ -246,7 +246,17 @@ def create_embedding():
     if summariser:
         embedding = create_embeddings_from_chunk_doc(filename=title)
 
-    return jsonify(embedding.stem.__str__())
+    ## segment 
+    segment_chunk_size = 5000
+    print("segmenting start")
+    if check_segment_dir(title):
+        doc = _load_chunks_segment_doc(file_name=title)
+        return jsonify(doc)
+    sts_file = create_text_segment_doc(ts_filename=title,
+                                      chunk_size=int(segment_chunk_size ),
+                                      segger_prompt=SEGGER_PROMPT )
+    print("segment done")
+    return jsonify(sts_file.stem.__str__())
 
 
 from flask import current_app as app

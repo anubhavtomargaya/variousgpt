@@ -1,0 +1,2 @@
+http://localhost:5000/api/v1/gptube/diarize?title=Deepak_Nitrite_Earnings_Call_for_Q4FY24.mp4
+http://localhost:5000/api/v1/gptube/segment?title=Deepak_Nitrite_Earnings_Call_for_Q4FY24.mp4
