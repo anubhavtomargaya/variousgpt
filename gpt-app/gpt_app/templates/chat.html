@@ -5,20 +5,26 @@
 
         body, html {
             margin: 0;
+            background: rgb(229, 228, 226);
+            background-image: radial-gradient(rgb(120, 120, 120) .75px, transparent 0);
+            background-size: 35px 35px;
+            /* background-position: -19px -19px; */
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #87CEEB;
+            /* background-color: #87CEEB; */
             height: 100%;
         }
         .app {
-            background-color: #D3D3D3;
-            max-width: 800px;
+            
+            max-width: 95vw;
+            max-height: 95vh;
             /* display: flex;
             flex-direction: column; */
-            margin: 20px auto;
-            padding: 20px;
+            
+            margin:0;
+            padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(233, 233, 233, 0.1);
         }
         h1, h2 {
             color: #4682B4;
@@ -58,6 +64,7 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        #blueprintButton { background-color: #da0c4a;}
         #askButton { background-color: #FFD700; }
         #getQuestionsButton { background-color: #20B2AA; }
         #getCallsButton { background-color: #FF6347; }
@@ -174,6 +181,7 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
+            cursor: pointer;
         }
 
         #questionsList li {
@@ -195,8 +203,8 @@
         <h4 id="email">{{user}}</h2> 
         <h2 id="title">File Title Here</h2> 
         <div id="questionsContainer">
-            <h3>Questions</h3>
-            <ul id="questionsList"></ul>
+            <h4>Analyst's Questions</h4>
+            <ul id="questionsList" ></ul>
         </div>
         <input type="text" id="question-input" placeholder="Ask a question on selected concall">
      <div id="answer-area"></div> <div id="loader"><div class="loader"></div></div> 
@@ -207,13 +215,19 @@
     </div> 
         </div>      
 <div id="left-panel" class="panel" style="display: none;">
+   
     <div class="back-arrow">←</div>
-    <div class="panel-content" id="call-list">
-        <div id="callList"> <h3>Call List</h3> 
-            <div id="loader2" class="loader" style="display: none;">
-
-            </div> 
-        </div> 
+    <div class="panel-content" >
+        <div id="call-list"> 
+        <div id="callList" > 
+            <h3>Call List</h3> 
+            <div id="loader2" class="loader" style="display: none;"></div> 
+        
+            
+        </div>
+        
+    </div>
+    <button id="blueprintButton"> NEW </button> 
         <!-- Call list will be dynamically populated here -->
     </div>
 </div>
@@ -238,6 +252,10 @@
     const titleElement = document.getElementById('title');
     const questionInput = document.getElementById('question-input');
     const answerArea = document.getElementById('answer-area');
+
+    function navigateToBlueprintRoute() {
+            window.location.href = "{{ url_for('view_app.submit') }} ";
+        }
     // Function to open left panel and fetch call list
     function openLeftPanel() {
         leftPanel.style.display = 'block';
@@ -367,6 +385,7 @@
             event.target !== leftButton && event.target !== rightButton) {
             closePanels();
         }
+    document.getElementById('blueprintButton').addEventListener('click', navigateToBlueprintRoute);
     });
 </script>
 </body> </html>
