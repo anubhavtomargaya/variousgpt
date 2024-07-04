@@ -31,25 +31,32 @@
             font-size: large;
             margin: 0;
         }
-        h5, h4 {
+        h4 {
             color: #4b4b4b;
             text-align: left;
             font-size: large;
+            /* margin: 0;  */
+        }
+        h5 {
+            color: #ededed;
+            text-align: left;
+            font-size: small;
             margin: 0;
         }
-        #email { font-size: x-small;color: #fcfff8;font-family:Arial, Helvetica, sans-serif;text-align: left;}
-        li {padding: 1rem; font-size: small;}
+        ul { list-style-type: none;}
+        #email { font-size: x-small;color: #fcfff8;font-family:Arial, Helvetica, sans-serif;text-align: left; margin: 0;}
+        li {padding: 1rem; font-size: small; text-decoration: none;}
         input[type="text"] {
-            width: 55%;
+            width: 95%;
             padding: 10px;
             margin: 10px 0;
             border: none;
-            : center;
-            
+            align-items: center;
             border-radius: 5px;
         }
         #answer-area {
-            background-color: #98FB98;
+            width: 95%;
+            background-color: #fffbf9;
             min-height: 100px;
             padding: 10px;
             border-radius: 5px;
@@ -58,7 +65,14 @@
         }
         .footer {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            padding: 0rem 2rem 0rem 2rem;
+            flex-wrap: wrap;
+        }
+        .askbuttonArea {
+            display: flex;
+            justify-content: space-around;
+            padding: 0rem 2rem 0rem 2rem;
             flex-wrap: wrap;
         }
         button {
@@ -69,20 +83,21 @@
             transition: all 0.3s ease;
             margin: 5px;
         }
+        li:hover {transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         #blueprintButton { background-color: #da0c4a;}
         #askButton { background-color: #FFD700; }
-        #getQuestionsButton { background-color: #20B2AA; }
+        #getQuestionsButton { background-color: #83c0bd; }
         #getCallsButton { background-color: #FF6347; }
         .panel {
             position: fixed;
             top: 0;
             height: 100%;
             width: 250px;
-            background-color: #F0F8FF;
+            background-color: #131313;
             transition: all 0.3s ease;
             overflow-y: auto;
         }
@@ -94,7 +109,7 @@
         .panel.open { transform: translateX(250px); }
         #right-panel.open { transform: translateX(-250px); }
         .panel-content {
-            padding: 20px;
+            padding: 2px;
         }
         .panel-content a {
             display: block;
@@ -175,12 +190,13 @@
     #rightButton { background-color: #FF6347; }
 
     #questionsContainer {
-            max-width: 800px;
+            /* max-width: 800px; */
+            width: 90%;
             margin: 20px auto;
             background-color: #f0f0f0;
             border-radius: 10px;
             padding: 10px;
-            max-height: 200px;
+
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
@@ -208,21 +224,29 @@
 
 </head> 
 <body> 
-    <div class="app"> <h5>Chat with Concall</h5> 
+    <div class="app"> <h3>Chat with Concall</h3> 
         <h4 id="email">{{user}}</h2> 
             <hr/>
         <h2 id="title">File Title Here</h2> 
+        <div class="footer"> 
+        <button id="leftButton">LIST</button>
+        <button id="rightButton">HISTORY</button> 
+        </div>
         <div id="questionsContainer">
             <h4>Analyst's Questions</h4>
             <ul id="questionsList" ></ul>
         </div>
         <input type="text" id="question-input" placeholder="Ask a question on selected concall">
-     <div id="answer-area"></div> <div id="loader"><div class="loader"></div></div> 
-     <div class="footer"> 
-        <button id="leftButton">LIST</button> 
-        <button id="askButton">Shoot</button> 
-        <button id="rightButton">RIGHT</button> 
+     <div id="answer-area"></div> 
+     <div class="askbuttonArea"> 
+     <button id="askButton">Shoot</button> 
+     <div id="loader"> <div class="loader">
+        
+     </div> 
+    </div>
+    
     </div> 
+ 
         </div>      
 <div id="left-panel" class="panel" style="display: none;">
    
@@ -258,6 +282,7 @@
     const leftBackArrow = leftPanel.querySelector('.back-arrow');
     const rightBackArrow = rightPanel.querySelector('.back-arrow');
     const callListDiv = document.getElementById('call-list');
+    const historyContent = document.getElementById('history-content');
     const loader2 = document.getElementById('loader2');
     const titleElement = document.getElementById('title');
     const questionInput = document.getElementById('question-input');
@@ -276,7 +301,9 @@
     // Function to open right panel
     function openRightPanel() {
         rightPanel.style.display = 'block';
+
         setTimeout(() => rightPanel.classList.add('open'), 10);
+        fetchQAHistory()
     }
 
     // Function to close panels
@@ -304,6 +331,40 @@
                     ul.appendChild(li);
                 });
                 callListDiv.appendChild(ul);
+            })
+            .catch(error => {
+                console.error('Error fetching call list:', error);
+            })
+            .finally(() => {
+                loader2.style.display = 'none';
+            });
+    }
+    function fetchQAHistory() {
+        const fileTitle = titleElement.textContent;
+        loader2.style.display = 'block';
+        fetch(`/view/records/${fileTitle}`)
+            .then(response => response.json())
+            .then(data => {
+                historyContent.innerHTML = '';
+                const ul = document.createElement('ul');
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    const div = document.createElement('div');
+                    const question = document.createElement('h4');
+                    const answer = document.createElement('h5');
+                    answer.textContent =  Object(item).answer
+                    question.textContent =  Object(item).question
+                    div.appendChild(question)
+                    div.appendChild(answer)
+                    li.appendChild(div)
+                    // div.appendChild(text)
+                    // div.appendChild(Object(item).question)
+                    // div.textContent  Object(item).question;
+                    // div.textContent =+ Object(item).answer;
+
+                    ul.appendChild(li);
+                });
+                historyContent.appendChild(ul);
             })
             .catch(error => {
                 console.error('Error fetching call list:', error);

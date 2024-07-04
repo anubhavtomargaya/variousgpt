@@ -73,7 +73,7 @@ def get_records(file_name):
     email =  get_user_email()
     records = load_qa_record()
     user_file_records = [ HistoryQA(**x ).__dict__ for x in records if (x['filename']==file_name and x['email']==email)]
-
+    user_file_records.reverse()
     return jsonify(user_file_records)
 
 @view_app.route('/transcript/update/<file_name>',methods=['POST'])
