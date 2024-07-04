@@ -1,6 +1,6 @@
 <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Chat with Concall</title>
  <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
-      <script defer src="{{ url_for('static', filename='js/main.chat.js') }}" />
+    //   <!-- <script defer src="{{ url_for('static', filename='js/main.chat.js') }}" /> -->
 </script> <style> /* ... (existing CSS styles) ... */
 
         body, html {
@@ -236,7 +236,8 @@
     const callListDiv = document.getElementById('call-list');
     const loader2 = document.getElementById('loader2');
     const titleElement = document.getElementById('title');
-
+    const questionInput = document.getElementById('question-input');
+    const answerArea = document.getElementById('answer-area');
     // Function to open left panel and fetch call list
     function openLeftPanel() {
         leftPanel.style.display = 'block';
@@ -283,11 +284,75 @@
                 loader2.style.display = 'none';
             });
     }
+    
+    function truncateText(text, maxLength = 15) {
+        return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
+      }
+
+    async function askQuestion(query) {
+        if (!query) {
+            answerArea.textContent = 'Please enter a question.';
+            return;
+        }
+
+        const fileTitle = titleElement.textContent;
+        loader.style.display = 'block';
+        answerArea.textContent = '';
+
+        try {
+            const response = await fetch(`/api/v1/gptube/question/${fileTitle}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: query })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            answerArea.textContent = data;
+            rightButton.textContent = truncateText(query)
+        } catch (error) {
+            console.error('Error querying GPT:', error);
+            answerArea.textContent = 'Error querying GPT. Please try again later.';
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
+    async function getQuestions(fileTitle) {
+       console.log("running get question",fileTitle)
+        loader.style.display = 'block';
+        try {
+            const response = await fetch(`/view/questions/${fileTitle}`);
+            const data = await response.json();
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+            data.questions.forEach(q => {
+                const li = document.createElement('li');
+                li.textContent = q.question;
+                console.log('q',q.question)
+                li.addEventListener('click', () => {
+                    questionInput.value = q.question;
+                    askQuestion(q.question);
+                });
+                questionsList.appendChild(li);
+            });
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+            document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
 
     // Function to update title
     function updateTitle(title) {
         titleElement.textContent = title;
         closePanels();
+        getQuestions(title); // Fetch questions for the new file
     }
 
     // Event listeners

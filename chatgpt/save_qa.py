@@ -17,6 +17,8 @@ class QARecord:
                  answer,
                  experiment=Experiments.CURRENT.value,
                  timestamp=None,
+                 user_id:str=None,
+                 email:str=None,
                  _extra:dict={},
                  ) -> None:
         self.timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')

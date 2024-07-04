@@ -4,7 +4,10 @@ from typing import List
 import json 
 
 from .enums import Experiments
-from .dirs import QA_RECORD_FILE
+from .dirs import QA_RECORD_DIR
+
+QA_RECORD_FILENAME = 'qa_chat_records.json'
+QA_RECORD_FILE = Path(QA_RECORD_DIR,QA_RECORD_FILENAME)
 
 
 class QARecord:
@@ -16,6 +19,10 @@ class QARecord:
                  answer,
                  experiment=Experiments.CURRENT.value,
                  timestamp=None,
+                 email=None,
+                 google_id=None,
+                 session_id=None,
+                 client_id = None,
                  _extra:dict={},
                  ) -> None:
         self.timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
@@ -24,6 +31,8 @@ class QARecord:
         self.prompt_tokens = prompt_tokens
         self.answer = answer
         self._extra = _extra
+        self.email = email
+        self.session_id = session_id
         self.experiment = experiment
 
 
@@ -52,5 +61,5 @@ if __name__=='__main__':
         # return new_schema_data
         return save_qa_record(new_schema_data)
 
-    print(test_load_qa_record())
-    # print(update_record_schema())
+    # print(test_load_qa_record())
+    print(update_record_schema())
