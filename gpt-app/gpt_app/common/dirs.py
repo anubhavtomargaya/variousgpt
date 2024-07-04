@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
 
+BUCKET_NAME = 'gpt-app-data'
 
 DATA_DIR = Path(Path(__file__).parent.parent.resolve(), 'data')
 VIDEO_DIR = Path(DATA_DIR, 'video')
-
+COMMON_DIR =  Path(Path(__file__).parent.parent.resolve(), 'common')
 YOUTUBE_DIR = Path(DATA_DIR, 'youtube')
 TS_DIR = Path(DATA_DIR, 'transcripts')
 PROCESSED_DIR = Path(DATA_DIR, 'processed')

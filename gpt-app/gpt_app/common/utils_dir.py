@@ -50,6 +50,30 @@ def check_digest_dir(file_name:Path):
     file = Path(DIGEST_DIR,f"{file_stem}.json")
     return file.exists()
 
+from google.cloud import storage
+
+# Assuming your service account credentials are set up properly
+client = storage.Client.from_service_account_json(Path(COMMON_DIR,Path(f'sa_gcs.json')))
+def save_summary_to_gcs(source_file:Path, file_name: str, bucket_name: str=BUCKET_NAME):
+    """Saves a dictionary as JSON to GCS bucket.
+
+    Args:
+        doc: The dictionary to save.
+        file_name: The name of the file to save.
+        bucket_name: The name of the GCS bucket.
+    """
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(f'data/transcripts/summary/{file_name}')
+
+    # Upload the dictionary as a JSON string
+    # blob.upload_from_string(json.dumps(doc))
+    blob.upload_from_filename(source_file.as_posix())
+    # Verify if the blob exists
+    exists = blob.exists()
+    print(f"Upload successful: {exists}")
+    return exists
+
+
 
 
 def check_question_dir(file_name:Path):
@@ -230,4 +254,12 @@ if __name__ == '__main__':
         f = 'Avanti_Feeds_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4'
         return check_ts_dir(f)
     
-    print(test_check_ts_dir())
+    def test_gcs_upload():
+        f = 'Morepen_Laboratories_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
+        chunk_doc = _load_chunks_summary_doc(f)
+        return save_summary_to_gcs(file_name=f,source_file=Path(SUMMARY_DIR,f))
+
+    
+
+    # print(test_check_ts_dir())
+    print(test_gcs_upload())
