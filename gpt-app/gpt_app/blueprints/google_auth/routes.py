@@ -6,7 +6,9 @@ import flask
 import ast
 import json 
 
-from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
+from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session,\
+                                          get_next_url,is_logged_in,set_google_id, \
+                                          set_user_email
 from gpt_app.common.constants import CLIENT_ID,CLIENT_SECRET,AUTHORIZATION_SCOPE,AUTHORIZATION_URL,ACCESS_TOKEN_URI,BASE_URI
 print("CLIENT_ID",CLIENT_ID)
 from .auth import get_user_info
@@ -103,6 +105,8 @@ def etc():
         name=user_info['given_name']
         expiresat=d['expires_at']
         val=d['access_token'][0:6]
+        set_google_id(user_info['id'])
+        set_user_email(user_info['email'])
         # curr_pth = pathlib.Path(__file__).resolve().parent
         # tkdir = pathlib.Path('temp','etc')
         # filename=f'token_{name}_{val}_{expiresat}_.json'

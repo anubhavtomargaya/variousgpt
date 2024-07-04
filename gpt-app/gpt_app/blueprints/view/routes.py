@@ -1,19 +1,19 @@
 from http.client import HTTPException
 from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
-
+from gpt_app.common.session_manager import get_user_email
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
 from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
 from . import view_app
 
 @view_app.route('/')
 def index():
-    return render_template('chat.html')
+    return render_template('chat.html',user=get_user_email())
 
 @view_app.route('chat/<file_name>')
 def chat(file_name):
     
-    return render_template('chat.html',title=file_name)
+    return render_template('chat.html',title=file_name,user=get_user_email())
 
 @view_app.route('/submit')
 def submit():

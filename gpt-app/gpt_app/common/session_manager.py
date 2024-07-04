@@ -57,3 +57,19 @@ def get_session_keys():
 
 def get_session_items():
     return list(session.items())
+
+## details of user / session
+
+def set_google_id(id):
+    session['google_id'] = id
+
+
+def set_user_email(email):
+    session['email'] = email
+
+
+def get_user_email():
+
+     return session.get('email', None)
+
+        
