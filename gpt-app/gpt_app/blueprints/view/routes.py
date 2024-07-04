@@ -43,12 +43,38 @@ def etc():
 
 
 ### get text at various stage 
+class HistoryQA:
+    def __init__(self,
+                 timestamp,
+                 question,
+                 answer,
+                 **args) -> None:
+        self.timestamp = timestamp
+        self.question = question
+        self.answer = answer
 
+from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
 @view_app.route('/transcript/<file_name>')
 def get_transcript(file_name):
 
     text = load_transcript_doc(f'{file_name}')
     return jsonify(text)
+
+@view_app.route('/records/<file_name>',methods=['POST','GET'])
+def get_records(file_name):
+    mthd = request.method
+   
+    app.logger.info('method: %s',mthd)
+    if mthd =='POST':
+        print("POST")
+        args = request.get_json()
+        # file_name = args.get('file_name') or None
+    # else:raise HTTPException("Invalid Method")
+    email =  get_user_email()
+    records = load_qa_record()
+    user_file_records = [ HistoryQA(**x ).__dict__ for x in records if (x['filename']==file_name and x['email']==email)]
+
+    return jsonify(user_file_records)
 
 @view_app.route('/transcript/update/<file_name>',methods=['POST'])
 def update_transcript(file_name):
