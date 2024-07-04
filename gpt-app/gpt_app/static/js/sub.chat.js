@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const leftPanel = document.getElementById('left-panel');
     const rightPanel = document.getElementById('right-panel');
+    const rightButton = document.getElementById('rightButton');
     const callList = document.getElementById('call-list');
     const loader2 = document.getElementById('loader2');
     const digestResponse = document.getElementById('digestResponse');
@@ -70,12 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 callListDiv.innerHTML = ''; // Clear previous content
                 const ul = document.createElement('ul');
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item; // Assuming each item is a string
-                    li.addEventListener('click', () => updateTitle(item)); // Add click event listener
-                    ul.appendChild(li);
-                });
+                // data.forEach(item => {
+                //     const li = document.createElement('li');
+                //     li.textContent = item; // Assuming each item is a string
+                //     li.addEventListener('click', () => updateTitle(item)); // Add click event listener
+                //     ul.appendChild(li);
+                // });
                 callListDiv.appendChild(ul);
                 // console.log(Object(data))
                 updateTitle(data[data.length - 1])
@@ -98,7 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Automatically fetch and display calls when window is loaded
     fetchAndDisplayCalls();
-
+    function truncateText(text, maxLength = 15) {
+        return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
+      }
    
 
     async function askQuestion(query) {
@@ -126,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             answerArea.textContent = data;
+            rightButton.textContent = truncateText(query)
         } catch (error) {
             console.error('Error querying GPT:', error);
             answerArea.textContent = 'Error querying GPT. Please try again later.';

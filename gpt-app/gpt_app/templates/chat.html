@@ -13,6 +13,8 @@
         .app {
             background-color: #D3D3D3;
             max-width: 800px;
+            /* display: flex;
+            flex-direction: column; */
             margin: 20px auto;
             padding: 20px;
             border-radius: 10px;
@@ -22,6 +24,8 @@
             color: #4682B4;
             text-align: center;
         }
+        #email { font-size: x-small;color: #fcfff8;font-family:Arial, Helvetica, sans-serif;text-align: left;margin: 0rem 0rem 0rem 2rem;}
+        li {padding: 1rem; font-size: small;}
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -120,8 +124,10 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #callList {
+
+            }
+
+            #callList {  /* Maintain a different background color for #callList */
             background-color: #f0f0f0;
         }
         #digest {
@@ -158,6 +164,7 @@
             background-color: #f0f0f0;
             border-radius: 10px;
             padding: 10px;
+            max-height: 200px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
@@ -184,25 +191,29 @@
 
 </head> 
 <body> 
-    <div class="app"> <h1>Chat with Concall</h1> <h2 id="title">File Title Here</h2> 
-    <div id="callList"> <h3>Call List</h3> <!-- New div for displaying list of calls --> 
-        <div id="loader2" class="loader" style="display: none;"></div> </div> 
-        <input type="text" id="question-input" placeholder="Ask a question on selected concall">
-     <div id="answer-area"></div> <div id="loader"><div class="loader"></div></div> 
-     <div class="footer"> 
-        <button id="leftButton">LEFT</button> 
-        <button id="askButton">Shoot</button> 
-        <button id="rightButton">RIGHT</button> 
-    </div> 
-</div>
-
+    <div class="app"> <h1>Chat with Concall</h1> 
+        <h4 id="email">{{user}}</h2> 
+        <h2 id="title">File Title Here</h2> 
         <div id="questionsContainer">
             <h3>Questions</h3>
             <ul id="questionsList"></ul>
         </div>
+        <input type="text" id="question-input" placeholder="Ask a question on selected concall">
+     <div id="answer-area"></div> <div id="loader"><div class="loader"></div></div> 
+     <div class="footer"> 
+        <button id="leftButton">LIST</button> 
+        <button id="askButton">Shoot</button> 
+        <button id="rightButton">RIGHT</button> 
+    </div> 
+        </div>      
 <div id="left-panel" class="panel" style="display: none;">
     <div class="back-arrow">←</div>
     <div class="panel-content" id="call-list">
+        <div id="callList"> <h3>Call List</h3> 
+            <div id="loader2" class="loader" style="display: none;">
+
+            </div> 
+        </div> 
         <!-- Call list will be dynamically populated here -->
     </div>
 </div>
