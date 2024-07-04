@@ -1,8 +1,7 @@
 <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Chat with Concall</title>
  <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
-    //   <!-- <script defer src="{{ url_for('static', filename='js/main.chat.js') }}" /> -->
-</script> <style> /* ... (existing CSS styles) ... */
-
+ 
+</script> <style> 
         body, html {
             margin: 0;
             background: rgb(229, 228, 226);
@@ -20,7 +19,7 @@
             max-height: 95vh;
             /* display: flex;
             flex-direction: column; */
-            
+      
             margin:0;
             padding: 2rem;
             border-radius: 10px;
@@ -29,14 +28,24 @@
         h1, h2 {
             color: #4682B4;
             text-align: center;
+            font-size: large;
+            margin: 0;
         }
-        #email { font-size: x-small;color: #fcfff8;font-family:Arial, Helvetica, sans-serif;text-align: left;margin: 0rem 0rem 0rem 2rem;}
+        h5, h4 {
+            color: #4b4b4b;
+            text-align: left;
+            font-size: large;
+            margin: 0;
+        }
+        #email { font-size: x-small;color: #fcfff8;font-family:Arial, Helvetica, sans-serif;text-align: left;}
         li {padding: 1rem; font-size: small;}
         input[type="text"] {
-            width: 100%;
+            width: 55%;
             padding: 10px;
             margin: 10px 0;
             border: none;
+            : center;
+            
             border-radius: 5px;
         }
         #answer-area {
@@ -199,8 +208,9 @@
 
 </head> 
 <body> 
-    <div class="app"> <h1>Chat with Concall</h1> 
+    <div class="app"> <h5>Chat with Concall</h5> 
         <h4 id="email">{{user}}</h2> 
+            <hr/>
         <h2 id="title">File Title Here</h2> 
         <div id="questionsContainer">
             <h4>Analyst's Questions</h4>
