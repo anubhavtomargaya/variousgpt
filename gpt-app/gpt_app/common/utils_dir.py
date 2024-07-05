@@ -6,6 +6,38 @@ from gpt_app.common.exceptions import MissingStageFile
 from pathlib import Path
 import json 
 
+def _read_json(file_path:Path):
+    if not isinstance(file_path,Path):
+        raise TypeError("Need a path to read json")
+    with open(file_path, 'r') as fr:
+        return json.load(fr)
+    
+
+def _save_json(json_data, file_path:Path):
+    if not isinstance(file_path,Path):
+        raise TypeError("Need a path to read json")
+    with open(file_path, 'w') as fw:
+        return json.dump(json_data,fw)
+    
+def _make_file_path(direcotry:Path,
+                    file_name:Path,
+                    format:str=None,
+                    local=True):
+    if not format:
+        format = Path(file_name).as_posix().split('.')[-1]
+    file_ = f"{Path(file_name).stem}.{format}"
+    if local:
+        return Path(direcotry,file_)
+    else:
+        parts = direcotry.parts
+        if not "data" in parts:
+            raise ValueError("DATA DIR not found in path")
+        
+        data_index = parts.index("data")
+        after_data = "/".join(parts[data_index:])
+
+        return f"{after_data}/{file_}"
+
 def load_summary_embedded(file_name)->dict:
     file_path = Path(EMBEDDING_DIR,f"{Path(file_name).stem}.json")
     with open(file_path, 'r') as fr:
@@ -43,6 +75,7 @@ def check_segment_dir(file_name:Path):
     file_stem = file_name.stem
     file = Path(SEGMENT_DIR,f"{file_stem}.json")
     return file.exists()
+
 def check_digest_dir(file_name:Path):
     if not isinstance(file_name,Path):
         file_name = Path(file_name)
@@ -62,6 +95,7 @@ def save_summary_to_gcs(source_file:Path, file_name: str, bucket_name: str=BUCKE
         file_name: The name of the file to save.
         bucket_name: The name of the GCS bucket.
     """
+
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(f'data/transcripts/summary/{file_name}')
 
@@ -74,6 +108,7 @@ def save_summary_to_gcs(source_file:Path, file_name: str, bucket_name: str=BUCKE
     return exists
 
 
+def get_gcs_path_for_file(file_path:Path):pass 
 
 
 def check_question_dir(file_name:Path):
@@ -82,6 +117,7 @@ def check_question_dir(file_name:Path):
     file_stem = file_name.stem
     file = Path(QUESTIONS_DIR,f"{file_stem}.json")
     return file.exists()
+
 ## transcript text
 def load_transcript_doc(filename:Path)->str:
     if not isinstance(filename,Path):
@@ -121,8 +157,6 @@ def update_transcript_doc(filename:Path,text:str)->str:
     with open(path,'w') as fw:
         json.dump(transcript_dict,fw)
         return filename
-       
-
 
 def save_summary_doc(doc_summary_dict, filename):
     if not isinstance(filename,Path):
@@ -255,9 +289,12 @@ if __name__ == '__main__':
         return check_ts_dir(f)
     
     def test_gcs_upload():
-        f = 'Morepen_Laboratories_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
+        # f = 'Morepen_Laboratories_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
+        f = 'Avanti_Feeds_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
         chunk_doc = _load_chunks_summary_doc(f)
-        return save_summary_to_gcs(file_name=f,source_file=Path(SUMMARY_DIR,f))
+        return _make_file_path(SUMMARY_DIR,f,local=False)
+        # return save_summary_to_gcs(file_name=f,source_file=Path(SUMMARY_DIR,f))
+
 
     
 

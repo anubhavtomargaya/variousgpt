@@ -2,7 +2,8 @@
 
 from pathlib import Path
 from pytube import YouTube
-from gpt_app.common.dirs import YOUTUBE_DIR
+from gpt_app.common.dirs import YOUTUBE_DIR,BUCKET_NAME
+from gpt_app.common.utils_dir import _make_file_path,client
 import json 
 
 class YoutubeMetadata:
@@ -11,16 +12,25 @@ class YoutubeMetadata:
                  file_path,
                  thumbnail_url,
                  description,
-                 length_minutes) -> None:
-        
+                 length_minutes,
+                 id,) -> None:
+        self.id=id
         self.title = title
         self.file_path = file_path
         self.thumbnail_url = thumbnail_url
         self.description = description
         self.length_minutes = length_minutes
-        self.whisper_approx_cost = round(0.006 * self.length_minutes ,4)
+        self.whisper_approx_cost =round( 1.1* 0.006 * self.length_minutes ,4)
 
 YOUTUBE_META_FILE = Path(YOUTUBE_DIR,'index.json')
+
+def check_yt_exists():
+    with open(YOUTUBE_META_FILE, 'r+') as f:
+        try:
+            existing_data = json.load(f)
+        except json.JSONDecodeError:
+            existing_data = []
+        
 def update_youtube_index_meta(meta:YoutubeMetadata):
     with open(YOUTUBE_META_FILE, 'r+') as f:
         try:
@@ -38,8 +48,30 @@ def get_file_name(title):
 
 def generate_yt_file_meta(yt):pass 
 
+def download_local():pass
+
+def download_to_gcs(stream,client):
+    print("Starting gcs...")
+     
+    filename = stream.default_filename.replace(' ','_')
+
+    bucket = client.bucket(BUCKET_NAME)
+    destination_blob_name = _make_file_path(YOUTUBE_DIR,filename,local=False)
+    print("gcs name,",destination_blob_name)
+    blob = bucket.blob(destination_blob_name)
+
+    # Download audio stream to a byte stream
+    video_data = stream.download()
+
+    # Upload audio data to the GCS blob
+    upload = blob.upload_from_string(video_data)
+    print("gcs up,",upload)
+    return destination_blob_name
+
+
 def download_youtube_audio(url,
-                            dir = YOUTUBE_DIR):
+                            dir = YOUTUBE_DIR,
+                            local=False):
     
     """Downloads the audio from a YouTube video and saves it as an MP3 file using pytube.
 
@@ -52,16 +84,18 @@ def download_youtube_audio(url,
     """
 
     try:
+        #TODO: check if url exists downloaded 
         yt = YouTube(url)
 
         print("starting stream check")
         print("made yt:",yt.__dict__)
         stream = yt.streams.filter(only_audio=True, ).order_by('abr').asc().first() # select stream by lowest bit rate 
-
-        print("starting download....", stream.__dict__)
-        output_file = stream.download(output_path=dir,
-                                      filename=stream.default_filename.replace(' ','_'))
-       
+        print("starting download....", stream.__dict__) 
+        if local:
+            output_file = stream.download(output_path=dir,
+                                        filename=stream.default_filename.replace(' ','_'))
+        else:
+            output_file = download_to_gcs(stream,client)
 
         meta = YoutubeMetadata(title=yt.title,
                                file_path=Path(output_file).name,
@@ -82,4 +116,4 @@ def download_youtube_audio(url,
 if __name__ == '__main__':
     youtube_url = 'https://youtu.be/qsnXSd4iRYI?si=tck7vSlH4sXMhvfp'
 
-    download_youtube_audio(youtube_url)
+    download_youtube_audio(youtube_url,local=False)
