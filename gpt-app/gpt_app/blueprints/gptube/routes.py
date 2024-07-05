@@ -27,6 +27,7 @@ def index():
 
 @gpt_app.route('/yt/submit', methods=['POST','GET'])
 def submit_youtube():
+    GCS = True
     mthd = request.method 
     args = request.args
     app.logger.info('method: %s',mthd)
@@ -48,7 +49,8 @@ def submit_youtube():
     if not url:
         raise HTTPException("Submit a valid youtube URL")
     ## download url 
-    result = download_youtube_audio(url=url) # saves to YOUTUBE_DIR returns a meta
+    # check if alreayd downloaded: fetch meta if exists and return 
+    result = download_youtube_audio(url=url,local= not GCS) # saves to YOUTUBE_DIR returns a meta
     print(result)
     print(result.__dict__ )
     audio_file = Path(result.file_path).name

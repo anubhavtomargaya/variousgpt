@@ -3,7 +3,7 @@
 from pathlib import Path
 from pytube import YouTube
 from gpt_app.common.dirs import YOUTUBE_DIR,BUCKET_NAME
-from gpt_app.common.utils_dir import _make_file_path,client
+from gpt_app.common.utils_dir import _make_file_path, check_ts_dir,client
 import json 
 
 class YoutubeMetadata:
@@ -31,6 +31,14 @@ def check_yt_exists():
         except json.JSONDecodeError:
             existing_data = []
         
+def open_youtube_index_meta():
+     with open(YOUTUBE_META_FILE, 'r+') as f:
+        try:
+            existing_data = json.load(f)
+        except json.JSONDecodeError:
+            existing_data = []
+        return existing_data
+
 def update_youtube_index_meta(meta:YoutubeMetadata):
     with open(YOUTUBE_META_FILE, 'r+') as f:
         try:
@@ -59,14 +67,17 @@ def download_to_gcs(stream,client):
     destination_blob_name = _make_file_path(YOUTUBE_DIR,filename,local=False)
     print("gcs name,",destination_blob_name)
     blob = bucket.blob(destination_blob_name)
+    if blob.exists():
+        print("blob exists")
+        return destination_blob_name
+    else:
+        # Download audio stream to a byte stream
+        video_data = stream.download()
 
-    # Download audio stream to a byte stream
-    video_data = stream.download()
-
-    # Upload audio data to the GCS blob
-    upload = blob.upload_from_string(video_data)
-    print("gcs up,",upload)
-    return destination_blob_name
+        # Upload audio data to the GCS blob
+        upload = blob.upload_from_string(video_data)
+        print("gcs up,",upload)
+        return destination_blob_name
 
 
 def download_youtube_audio(url,
@@ -91,14 +102,18 @@ def download_youtube_audio(url,
         print("made yt:",yt.__dict__)
         stream = yt.streams.filter(only_audio=True, ).order_by('abr').asc().first() # select stream by lowest bit rate 
         print("starting download....", stream.__dict__) 
+        
         if local:
             output_file = stream.download(output_path=dir,
                                         filename=stream.default_filename.replace(' ','_'))
         else:
             output_file = download_to_gcs(stream,client)
-            output_file = stream.download(output_path=dir,
+            if not Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_')).exists():
+                output_file = stream.download(output_path=dir,
                                         filename=stream.default_filename.replace(' ','_')) #tmp fix to save to local as well
-
+            else:
+                print("local exists VIDEO")
+                output_file = Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_'))
         meta = YoutubeMetadata(id=url,title=yt.title,
                                file_path=Path(output_file).name,
                                thumbnail_url=yt.thumbnail_url,
