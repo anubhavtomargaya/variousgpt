@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             transcriptDiv.textContent = '';
 
             // const response = await axios.get(`/view/transcript/${fileName}`);
-            const response = await axios.get(`/view/dized/${fileName}`);
+            const response = await axios.get(`/view/transcript/${fileName}`);
 
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');

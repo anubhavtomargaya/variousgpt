@@ -57,7 +57,7 @@ from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
 @view_app.route('/transcript/<file_name>')
 def get_transcript(file_name):
 
-    text = load_transcript_doc(f'{file_name}')
+    text = load_transcript_doc(f'{file_name}',gcs=True)
     return jsonify(text)
 
 @view_app.route('/records/<file_name>',methods=['POST','GET'])

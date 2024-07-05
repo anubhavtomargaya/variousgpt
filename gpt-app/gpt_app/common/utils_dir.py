@@ -160,13 +160,30 @@ def check_question_dir(file_name:Path):
     return file.exists()
 
 ## transcript text
-def load_transcript_doc(filename:Path)->str:
+from gpt_app.common.utils_dir import client as gcs_client
+def load_transcript_doc(filename:Path,gcs=False)->str:
+
     if not isinstance(filename,Path):
         filename=Path(filename)
-    path = Path(TS_DIR,f"{filename.stem}.json")
-    with open(path,'r') as fr:
-        transcript_dict = json.load(fr)
-    return transcript_dict['text']
+    if gcs:
+        blob_path = _make_file_path(TS_DIR,filename,format='json',local=False)
+
+  
+        bucket = gcs_client.bucket(BUCKET_NAME)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            blob = bucket.blob(blob_path)
+            exists = blob.exists()
+            print(f"Exists: {exists}")
+            blob.download_to_filename(temp_file.name)
+            with open(temp_file.name,'r') as fr:
+                transcript_dict = json.load(fr)
+                return transcript_dict['text']
+    else:
+            
+        path = Path(TS_DIR,f"{filename.stem}.json")
+        with open(path,'r') as fr:
+            transcript_dict = json.load(fr)
+        return transcript_dict['text']
 
 def load_question_doc(filename:Path)->str:
     if not isinstance(filename,Path):
