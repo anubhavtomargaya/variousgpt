@@ -38,6 +38,11 @@ def _make_file_path(direcotry:Path,
         after_data = "/".join(parts[data_index:])
 
         return f"{after_data}/{file_}"
+def check_blob(destination_blob_name,gcs_client):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(destination_blob_name)
+    exists = blob.exists()
+    return exists
 
 def upload_blob_to_gcs_bucket_by_filename(gcs_client,
                             source_filename:Path,
@@ -53,7 +58,7 @@ def upload_blob_to_gcs_bucket_by_filename(gcs_client,
     print("gcs name,",destination_blob_name)
     exists = blob.exists()
     print(f"Upload successful: {exists}")
-    return exists
+    return destination_blob_name
 
 def download_blob_to_tmpfile(gcs_client,
                             source_filename:Path,
@@ -310,7 +315,7 @@ def save_transcript_text_json(transcribed_text:openai.types.audio.transcription.
                       file_name,dir=TS_DIR):
     if not transcribed_text:
         raise ValueError("Missing arguments")
-    fpath = Path(dir,f'{file_name}.json')
+    fpath = Path(dir,f'{file_name.stem}.json')
     print("saving json file to...", fpath)
     with open(fpath, 'w') as f:
         json.dump(transcribed_text.__dict__,f)

@@ -5,7 +5,7 @@ import tempfile
 import google
 from  gpt_app.common.utils_audio import convert_audio_to_ogg,open_audio_as_segment,chop_audio
 from  gpt_app.common.utils_openai import get_openai_client
-from  gpt_app.common.utils_dir import _make_file_path, check_ts_dir, save_transcript_text_json, upload_blob_to_gcs_bucket_by_filename
+from  gpt_app.common.utils_dir import _make_file_path, check_blob, check_ts_dir, save_transcript_text_json, upload_blob_to_gcs_bucket_by_filename
 from  gpt_app.common.dirs import BUCKET_NAME, DATA_DIR,  PROCESSED_DIR, YOUTUBE_DIR,TS_DIR,CHOP_DIR
 from  gpt_app.common.models import  AudioTranscript, TranscriptMetadata
 from  gpt_app.common.enums import  tsFormats
@@ -15,7 +15,7 @@ def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,pro
     try:
         
         bucket = gcs_client.bucket(BUCKET_NAME)
-
+        
       
         audio_file_gcs = _make_file_path(dir,
                                         audio_file,
@@ -38,17 +38,19 @@ def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,pro
        
         with open(afile, 'rb') as af:
 
+            print("calling open api start.")
             transcription = openai_client.audio.transcriptions.create( model= "whisper-1", file=af,
                                                         response_format=tsFormats.JSON.value,
                                                         prompt=prompt
                                                             )
+            transcript_final.text=transcription
         print("calling open api end.")
         et = datetime.utcnow()
         total_time = et - st
         print("total processing time ", total_time.seconds, 'seconds')
         print("total cost $", round(0.006*total_time.seconds),2)
 
-        fpath = save_transcript_text_json(transcript_final,
+        fpath = save_transcript_text_json(transcription,
                         audio_file,
                         dir=TS_DIR)
         if fpath:
@@ -56,7 +58,7 @@ def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,pro
             return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR)
             return f'{out_file_name}.json'
         else:
-            return transcription
+            raise Exception("Error! not fpath")
     
 
 
@@ -126,35 +128,57 @@ def transcribe_audio_in_chunks(audio_path:Path,
          raise Exception("Error while saving text as json")
 
 
-        
+from gpt_app.common.utils_dir import client as gcs_client,_make_file_path
 def create_text_from_audio(file_name:Path,
                             base_prompt='',
                             youtube=False,
-                            ogg=True
+                            ogg=True,
+                            gcs=False,
                                   ):
     #TODO 
-    # checks locally
+
     # local false in convert to ogg ie uses gcs 
     # source dir is local ie uses local disk
-
+    if not isinstance(file_name,Path):
+        file_name = Path(file_name)
     source_dir = YOUTUBE_DIR if youtube else DATA_DIR
-    if check_ts_dir(file_name):
-        print(check_ts_dir(file_name))
-        return file_name
-    else:
-        if ogg:
+    if gcs:
+        destination_blob_path  = _make_file_path(TS_DIR,
+                                    file_name,
+                                    local=False)
+        if not check_blob(gcs_client=gcs_client,destination_blob_name=destination_blob_path):
+            if ogg:
             
-            fname = convert_audio_to_ogg(file_name=file_name,
-                                         source_dir=source_dir,
-                                         local=False)
-            source_dir = PROCESSED_DIR
+                fname = convert_audio_to_ogg(file_name=file_name,
+                                            source_dir=source_dir,
+                                            local=False)
+                source_dir = PROCESSED_DIR
+                print("ogg converted!")
+                trx = transcribe_gcs_audio(gcs_client=gcs_client,audio_file=fname,dir=source_dir,prompt=file_name.name)
+                print("dest:",trx)
+
+            return trx
         else:
-            fname = file_name
-        print("FILEN ",fname)
-        print(source_dir,fname)
-        return transcribe_audio_in_chunks(audio_path=Path(source_dir,fname), 
-                                        base_prompt=base_prompt,n_mins=15) 
-    
+            return destination_blob_path
+    else:
+        #all local 
+        if check_ts_dir(file_name):
+            print(check_ts_dir(file_name))
+            return file_name
+        else:
+            if ogg:
+                
+                fname = convert_audio_to_ogg(file_name=file_name,
+                                            source_dir=source_dir,
+                                            local=True)
+                source_dir = PROCESSED_DIR
+            else:
+                fname = file_name
+            print("FILEN ",fname)
+            print(source_dir,fname)
+            return transcribe_audio_in_chunks(audio_path=Path(source_dir,fname), 
+                                            base_prompt=base_prompt,n_mins=15) 
+        
 
     
 if __name__ == '__main__':

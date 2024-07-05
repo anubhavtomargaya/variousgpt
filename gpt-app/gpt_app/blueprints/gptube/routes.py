@@ -62,6 +62,7 @@ def submit_youtube():
     
 @gpt_app.route('/transcribe/youtube', methods=['POST','GET'])
 def transcribe_youtube():
+    GCS = True 
     mthd = request.method 
     args = request.args
     app.logger.info('method: %s',mthd)
@@ -86,7 +87,8 @@ def transcribe_youtube():
     return jsonify(create_text_from_audio(youtube=True,
                                             file_name=title,
                                             base_prompt=base_prompt,
-                                            ogg=True))
+                                            ogg=True,
+                                            gcs=True))
     
     # return the text from json if create is true
     
