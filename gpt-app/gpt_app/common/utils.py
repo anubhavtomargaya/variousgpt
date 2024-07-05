@@ -1,7 +1,7 @@
 from flask import current_app as app
 import google.oauth2.credentials
-from .constants import CLIENT_ID,CLIENT_SECRET,ACCESS_TOKEN_URI
-from .session_manager import is_logged_in,get_auth_token
+from gpt_app.common.constants import CLIENT_ID,CLIENT_SECRET,ACCESS_TOKEN_URI
+from gpt_app.common.session_manager import is_logged_in,get_auth_token
 
 ## modify this to take auth tokens as input
 def build_credentials(oauth2_tokens=None):

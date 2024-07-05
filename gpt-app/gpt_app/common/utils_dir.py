@@ -1,4 +1,5 @@
 
+import tempfile
 import openai
 from  gpt_app.common.dirs import * 
 from gpt_app.common.exceptions import MissingStageFile
@@ -37,6 +38,41 @@ def _make_file_path(direcotry:Path,
         after_data = "/".join(parts[data_index:])
 
         return f"{after_data}/{file_}"
+
+def upload_blob_to_gcs_bucket_by_filename(gcs_client,
+                            source_filename:Path,
+                            source_dir:Path=PROCESSED_DIR,
+                              ):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+    destination_blob_name = _make_file_path(source_dir,
+                                            source_filename,
+                                            local=False)
+    blob = bucket.blob(destination_blob_name)
+    upload = blob.upload_from_filename(Path(source_dir,source_filename).__str__())
+    print("uploaded:",upload)
+    print("gcs name,",destination_blob_name)
+    exists = blob.exists()
+    print(f"Upload successful: {exists}")
+    return exists
+
+def download_blob_to_tmpfile(gcs_client,
+                            source_filename:Path,
+                            source_dir:Path=PROCESSED_DIR,
+                              ):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+
+      # Download the audio file to a temporary file
+    audio_file = _make_file_path(source_dir,
+                                            source_filename,
+                                            local=False)
+    
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        blob = bucket.blob(audio_file)
+        exists = blob.exists()
+        print(f"Exists: {exists}")
+        blob.download_to_filename(temp_file.name)
+    return exists
+
 
 def load_summary_embedded(file_name)->dict:
     file_path = Path(EMBEDDING_DIR,f"{Path(file_name).stem}.json")
@@ -271,14 +307,14 @@ def save_transcript_srt(transcribed_srt,
 
 
 def save_transcript_text_json(transcribed_text:openai.types.audio.transcription.Transcription, 
-                      file_name,dir=PROCESSED_DIR):
+                      file_name,dir=TS_DIR):
     if not transcribed_text:
         raise ValueError("Missing arguments")
     fpath = Path(dir,f'{file_name}.json')
     print("saving json file to...", fpath)
     with open(fpath, 'w') as f:
         json.dump(transcribed_text.__dict__,f)
-    return True
+    return fpath
 
 
 

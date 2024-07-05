@@ -1,7 +1,9 @@
 
+import tempfile
 from pydub import AudioSegment
-from .utils_openai import get_trx_cost
-from .dirs import *
+from gpt_app.common.utils_openai import get_trx_cost
+from gpt_app.common.utils_dir import _make_file_path
+from gpt_app.common.dirs import *
 
 
 import subprocess
@@ -37,28 +39,64 @@ def preprocess_audio_for_transcription(input_file, output_file,
     print("Error: ffmpeg failed to process audio.")
     return False
 
+from gpt_app.common.utils_dir import client as gcs_client
 
 
 def convert_audio_to_ogg(file_name,
-                         data_dir=DATA_DIR,
-                         output_dir=PROCESSED_DIR)->Path:
-    mp3_file = Path(data_dir,file_name)
+                         source_dir=DATA_DIR,
+                         output_dir=PROCESSED_DIR,
+                         local=True)->Path:
+    mp3_file = Path(source_dir,file_name)
     output_file = Path(output_dir,f"{mp3_file.stem}.ogg" )
+    if output_file.exists():
+        return output_file
     success = preprocess_audio_for_transcription(mp3_file, output_file)
     if success:
         print(f"Audio re-encoded successfully to {output_file}")
-        print(output_file.stem)
-        return output_file
+        if not local:
+            bucket = gcs_client.bucket(BUCKET_NAME)
+            destination_blob_name = _make_file_path(PROCESSED_DIR,output_file,local=False)
+            blob = bucket.blob(destination_blob_name)
+            upload = blob.upload_from_filename(output_file)
+            print("upload:",upload)
+            print("gcs name,",destination_blob_name)
+            print("gcs up,",upload)
+            exists = blob.exists()
+            print(f"Upload successful: {exists}")
+            return output_file
+            return exists
+            return destination_blob_name
+        else:
+            
+            print(output_file.stem)
+            return output_file
+            
     else:
         print("Re-encoding failed.")
         return False
     
 
-def open_audio_as_segment(audio_file,dir=PROCESSED_DIR):
+def open_audio_as_segment(audio_file,dir=PROCESSED_DIR,format=None,local=True):
     try:
-        file_path = Path(dir,audio_file)
-        print(file_path)
+        if local:
+            file_path = Path(dir,audio_file)
+            print(file_path)
         # audio = AudioSegment.from_file(file_path)
+        else:
+            bucket = gcs_client.bucket(BUCKET_NAME)
+
+      
+            audio_file_gcs = _make_file_path(dir,
+                                            audio_file,
+                                            format=format,
+                                            local=False)
+    
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                blob = bucket.blob(audio_file_gcs)
+                exists = blob.exists()
+                print(f"Exists: {exists}")
+                blob.download_to_filename(temp_file.name)
+                file_path = temp_file.name
         audio = AudioSegment.from_ogg(file_path)
 
         return audio
@@ -119,6 +157,7 @@ def chop_audio(audio_file:Path, n_minutes=10,chop_dir=CHOP_DIR, source_dir=PROCE
 if __name__ == '__main__':
     from openai import OpenAI
     from pathlib import Path
+    from gpt_app.common.utils_openai import get_openai_client
 
     wav_file = 'chatgpt/data/EarningsCall.wav'
     path_ = f'chatgpt/data/'
@@ -131,17 +170,24 @@ if __name__ == '__main__':
     else:
         print("Re-encoding failed.")
 
-    from utils import get_openai_client
-    client = get_openai_client()
-    client.timeout=50
-    f = 'earning_call_morepen.ogg'
+    openai_client = get_openai_client()
+    openai_client.timeout=50
+    # f = 'earning_call_morepen.ogg'
+    f = 'Raymond Ltd Q4 FY2023-24 Earnings Conference Call.mp4'
     f_chopped = 'earning_call_morepen_1.ogg'
 
     def test_pre_process_to_ogg():
         return convert_audio_to_ogg(f)  
     
+    def test_pre_process_to_ogg_gcs():
+        return convert_audio_to_ogg(f,local=False)  
+    
     def test_open_and_cost():
         audio = open_audio_as_segment(f)
+        return get_trx_cost(audio=audio)
+    
+    def test_open_and_cost_gcs():
+        audio = open_audio_as_segment(f,local=False,format='ogg')
         return get_trx_cost(audio=audio)
     
      
@@ -150,5 +196,8 @@ if __name__ == '__main__':
         return chop_audio(Path(f))
     
     def test_open_and_cost_chopped():
-        audio = open_audio_as_segment(f_chopped,dir=CHOP_DIR)
+        audio = open_audio_as_segment(f,dir=PROCESSED_DIR)
         return get_trx_cost(audio=audio)
+    
+    # print(test_pre_process_to_ogg_gcs())
+    print(test_open_and_cost_gcs())
