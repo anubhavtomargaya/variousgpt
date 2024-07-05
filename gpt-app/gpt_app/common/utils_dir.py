@@ -47,13 +47,25 @@ def check_blob(destination_blob_name,gcs_client):
 def upload_blob_to_gcs_bucket_by_filename(gcs_client,
                             source_filename:Path,
                             source_dir:Path=PROCESSED_DIR,
+                            format=None,
+                            data=None
+                            
                               ):
     bucket = gcs_client.bucket(BUCKET_NAME)
+    print("FILNEAME",source_filename )
     destination_blob_name = _make_file_path(source_dir,
                                             source_filename,
+                                            format=format,
                                             local=False)
+    print("DESTBLOB",destination_blob_name)
     blob = bucket.blob(destination_blob_name)
-    upload = blob.upload_from_filename(Path(source_dir,source_filename).__str__())
+    
+    if blob.exists():
+        return destination_blob_name
+    if not data:
+        upload = blob.upload_from_filename(Path(source_dir,source_filename).__str__())
+    else:
+        upload = blob.upload_from_string(str(data))
     print("uploaded:",upload)
     print("gcs name,",destination_blob_name)
     exists = blob.exists()
@@ -128,25 +140,25 @@ from google.cloud import storage
 
 # Assuming your service account credentials are set up properly
 client = storage.Client.from_service_account_json(Path(COMMON_DIR,Path(f'sa_gcs.json')))
-def save_summary_to_gcs(source_file:Path, file_name: str, bucket_name: str=BUCKET_NAME):
-    """Saves a dictionary as JSON to GCS bucket.
+# def save_summary_to_gcs(source_file:Path, file_name: str, bucket_name: str=BUCKET_NAME):
+#     """Saves a dictionary as JSON to GCS bucket.
 
-    Args:
-        doc: The dictionary to save.
-        file_name: The name of the file to save.
-        bucket_name: The name of the GCS bucket.
-    """
+#     Args:
+#         doc: The dictionary to save.
+#         file_name: The name of the file to save.
+#         bucket_name: The name of the GCS bucket.
+#     """
 
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(f'data/transcripts/summary/{file_name}')
+#     bucket = client.bucket(bucket_name)
+#     blob = bucket.blob(f'data/transcripts/summary/{file_name}')
 
-    # Upload the dictionary as a JSON string
-    # blob.upload_from_string(json.dumps(doc))
-    blob.upload_from_filename(source_file.as_posix())
-    # Verify if the blob exists
-    exists = blob.exists()
-    print(f"Upload successful: {exists}")
-    return exists
+#     # Upload the dictionary as a JSON string
+#     # blob.upload_from_string(json.dumps(doc))
+#     blob.upload_from_filename(source_file.as_posix())
+#     # Verify if the blob exists
+#     exists = blob.exists()
+#     print(f"Upload successful: {exists}")
+#     return exists
 
 
 def get_gcs_path_for_file(file_path:Path):pass 
@@ -272,12 +284,31 @@ def _save_embedded_doc(embedded_doc_dict, filename):
 ## mini-corpus-chunks-into-embedding
 
 
-def _load_chunks_summary_doc(file_name)->dict:
+def _load_chunks_summary_doc(file_name,gcs=False)->dict:
+    print("openingchunks summary")
     if not isinstance(file_name,Path):
         file_name = Path(file_name)
-    file_path = Path(SUMMARY_DIR,f'{file_name.stem}.json')
-    with open(file_path, 'r') as fr:
-        return json.load(fr)
+    if gcs:
+        blob_path = _make_file_path(SUMMARY_DIR,file_name,format='json',local=False)
+
+  
+        bucket = gcs_client.bucket(BUCKET_NAME)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            blob = bucket.blob(blob_path)
+            exists = blob.exists()
+            print(blob_path)
+            print(f"Exists: {exists}")
+            blob.download_to_filename(Path(SUMMARY_DIR,file_name))
+            print(json.load( open(Path(SUMMARY_DIR,file_name),'r')))
+   
+            with open(Path(SUMMARY_DIR,file_name),'r') as fr:
+                summary_doc = json.load(fr)
+                print(summary_doc,"summary doc")
+                return summary_doc
+    else:
+        file_path = Path(SUMMARY_DIR,f'{file_name.stem}.json')
+        with open(file_path, 'r') as fr:
+            return json.load(fr)
     
 def _load_chunks_diarized_doc(file_name)->dict:
     if not isinstance(file_name,Path):
@@ -353,8 +384,11 @@ if __name__ == '__main__':
         return _make_file_path(SUMMARY_DIR,f,local=False)
         # return save_summary_to_gcs(file_name=f,source_file=Path(SUMMARY_DIR,f))
 
-
+    def test_gcs_read():
+        fs = 'Bharti_Airtel_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
+        return _load_chunks_summary_doc(fs,gcs=True)
     
 
     # print(test_check_ts_dir())
-    print(test_gcs_upload())
+    # print(test_gcs_upload())
+    print(test_gcs_read())

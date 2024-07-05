@@ -220,6 +220,7 @@ def create_qa_digest():
 
 @gpt_app.route('/embed/', methods=['POST','GET'])
 def create_embedding():
+    gcs = True
     summary_prmpt = "You are a helpful assistant to summarise a quarterly EARNINGS CONFERENCE CALL. The transcript of the call will be provided in chunks as context and you have to extract information carefully in summaries.  "
     sections_default =  ['INTRO', 'MANAGEMENT NOTE', 'ANALYST QA', 'CONCLUSION']
     default_chunk_embedding  = 2000
@@ -241,14 +242,15 @@ def create_embedding():
     ###prcess arguements 
 
     if not title: raise HTTPException("File name of transcript not provided")
-    if check_summary_dir(title):
+    if check_summary_dir(title): #1 check summary dir in gcs 
         return jsonify(title)
     summariser = create_text_meta_doc(ts_filename=title,
                                       chunk_size=int(chunk_size),
                                       summariser_prompt=user_input,
-                                      sections=sections_default)
+                                      sections=sections_default,gcs=gcs)
     if summariser:
-        embedding = create_embeddings_from_chunk_doc(filename=title)
+        print("creating embeddings")
+        embedding = create_embeddings_from_chunk_doc(filename=title,gcs=gcs)
 
     ## segment 
     segment_chunk_size = 5000

@@ -4,7 +4,7 @@ import tiktoken
 from openai import OpenAIError
 
 from gpt_app.common.dirs import *
-from gpt_app.common.utils_dir  import _load_chunks_segment_doc, _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_questions_doc, save_segment_doc, save_summary_doc
+from gpt_app.common.utils_dir  import _load_chunks_segment_doc, _load_chunks_summary_doc, _save_embedded_doc, load_transcript_doc, save_diarize_doc, save_questions_doc, save_segment_doc, save_summary_doc, upload_blob_to_gcs_bucket_by_filename
 from gpt_app.common.utils_text import split_document, count_words
 from gpt_app.common.utils_openai import get_openai_client, get_embedding
 
@@ -456,26 +456,34 @@ def gpt_summarise_qa_digest(chunks,
 
     
 def create_embeddings_from_chunk_doc( filename,
-                                     text_column='chunk_text'):
+                                     text_column='chunk_text',
+                                     gcs=False):
     # uses openai
-    doc = _load_chunks_summary_doc(filename)
+    doc = _load_chunks_summary_doc(filename,gcs=gcs)
     embedded_doc = doc
     client = get_openai_client()
     for k,v in doc.items():
         print("embedding k",k)
         embedded_doc[k]['embedding'] = get_embedding(client,
                                                      embedded_doc[k][text_column]) 
-        
-    return _save_embedded_doc(embedded_doc,filename)
+    if not gcs:
+        return _save_embedded_doc(embedded_doc,filename)
+    else:
+        print("GCS EMBEDDED upload",gcs)
+        return upload_blob_to_gcs_bucket_by_filename(gcs_client=gcs_client,
+                                              source_dir=EMBEDDING_DIR,
+                                              source_filename=filename,
+                                              data=embedded_doc)
 
-
+from gpt_app.common.utils_dir import client as gcs_client
 def create_text_meta_doc(ts_filename,
                         chunk_size=1000,
                         overlap= 100,
                         summariser_prompt=None,
-                        sections=None):
-
-    text = load_transcript_doc(ts_filename)
+                        sections=None,
+                        gcs=False): # add gcs
+    print("gcs",gcs)
+    text = load_transcript_doc(ts_filename,gcs)
   
     words = count_words(text)
     char = len(text)
@@ -486,8 +494,16 @@ def create_text_meta_doc(ts_filename,
     chunks = split_document(text,chunk_size=chunk_size,overlap=overlap)
     print("num chunks", len(chunks))
     doc_sum_ = gpt_summarise_document_chunks(chunks,summariser_prompt=summariser_prompt,sections=sections) # uses openai 
-    return save_summary_doc(doc_sum_,filename=ts_filename)
-
+    if not gcs:
+        return save_summary_doc(doc_sum_,filename=ts_filename)
+    else:
+        print("GCS",gcs)
+        print("fname",ts_filename)
+        return upload_blob_to_gcs_bucket_by_filename(gcs_client=gcs_client,
+                                              source_dir=SUMMARY_DIR,
+                                              source_filename=ts_filename,
+                                              format='json',
+                                              data=doc_sum_)
 
 def create_text_diarized_doc(ts_filename,
                         chunk_size=2000,
@@ -512,9 +528,10 @@ def create_text_segment_doc(ts_filename,
                         chunk_size=5000,
                         overlap= 100,
                         segger_prompt=None,
+                        gcs=False
                        ):
 
-    text = load_transcript_doc(ts_filename)
+    text = load_transcript_doc(ts_filename,gcs=gcs)
   
     words = count_words(text)
     char = len(text)
@@ -525,7 +542,18 @@ def create_text_segment_doc(ts_filename,
     chunks = split_document(text,chunk_size=chunk_size,overlap=overlap)
     print("num chunks", len(chunks))
     doc_sum_ = gpt_segment_document_chunks( chunks,segger_prompt=segger_prompt) # uses openai 
-    return save_segment_doc(doc_sum_,filename=ts_filename)
+    if not gcs:
+        return save_segment_doc(doc_sum_,filename=ts_filename)
+
+    else:
+        print("GCS",gcs)
+        print("fname",ts_filename)
+        return upload_blob_to_gcs_bucket_by_filename(gcs_client=gcs_client,
+                                            source_dir=SEGMENT_DIR,
+                                            source_filename=ts_filename,
+                                            format='json',
+                                            data=doc_sum_)
+
 
 def get_summary_of_qa_doc(qa_digest):
     chunks  = [qa_digest[x]['chunk']['digest']  for x in qa_digest.keys()]
