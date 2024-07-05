@@ -96,8 +96,10 @@ def download_youtube_audio(url,
                                         filename=stream.default_filename.replace(' ','_'))
         else:
             output_file = download_to_gcs(stream,client)
+            output_file = stream.download(output_path=dir,
+                                        filename=stream.default_filename.replace(' ','_')) #tmp fix to save to local as well
 
-        meta = YoutubeMetadata(title=yt.title,
+        meta = YoutubeMetadata(id=url,title=yt.title,
                                file_path=Path(output_file).name,
                                thumbnail_url=yt.thumbnail_url,
                                description=yt.description,
