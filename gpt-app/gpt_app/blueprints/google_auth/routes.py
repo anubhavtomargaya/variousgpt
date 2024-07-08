@@ -9,7 +9,7 @@ import json
 from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session,\
                                           get_next_url,is_logged_in,set_google_id, \
                                           set_user_email
-from gpt_app.common.constants import CLIENT_ID,CLIENT_SECRET,AUTHORIZATION_SCOPE,AUTHORIZATION_URL,ACCESS_TOKEN_URI,BASE_URI
+from gpt_app.common.constants import AUTH_REDIRECT_URI_HTTPS, CLIENT_ID,CLIENT_SECRET,AUTHORIZATION_SCOPE,AUTHORIZATION_URL,ACCESS_TOKEN_URI,BASE_URI
 print("CLIENT_ID",CLIENT_ID)
 from .auth import get_user_info
 
@@ -31,11 +31,13 @@ def login():
     print("auth url")
     print(url_for('google_auth.google_auth_redirect',
                                             _external=True))
+    print('url base',AUTH_REDIRECT_URI_HTTPS)
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
-                            redirect_uri= url_for('google_auth.google_auth_redirect',
-                                                 _external=True)) #no need to use 
-                                                        #AUTH_REDIRECT_URI
+                            redirect_uri=AUTH_REDIRECT_URI_HTTPS,
+                            _external=True)
+                            #   url_for('google_auth.google_auth_redirect',
+                                                #  _external=True)) #no need to use 
 
     uri, state = session.create_authorization_url(AUTHORIZATION_URL)
     current_app.logger.debug("state %s",state )
