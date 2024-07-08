@@ -10,7 +10,7 @@ AUTHORIZATION_SCOPE =["https://www.googleapis.com/auth/gmail.readonly","https://
 # ['https://www.googleapis.com/auth/gmail.readonly','openid','email']
 
 AUTH_REDIRECT_URI ="http://localhost:5000/google/auth"
-AUTH_REDIRECT_URI_HTTPS ="https://localhost:5000/google/auth"
+AUTH_REDIRECT_URI_HTTPS ="https://wallartlabs.tech/google/auth"
 #  os.environ.get("FN_AUTH_REDIRECT_URI", default=False)
 BASE_URI =   "http://localhost:5000/"
 BASE_REDIRECT_URI =   "http://localhost:5000/fetch"
