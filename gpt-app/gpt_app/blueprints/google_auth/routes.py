@@ -9,7 +9,7 @@ import json
 from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session,\
                                           get_next_url,is_logged_in,set_google_id, \
                                           set_user_email
-from gpt_app.common.constants import AUTH_REDIRECT_URI_HTTPS, CLIENT_ID,CLIENT_SECRET,AUTHORIZATION_SCOPE,AUTHORIZATION_URL,ACCESS_TOKEN_URI,BASE_URI
+from gpt_app.common.constants import AUTH_REDIRECT_URI, AUTH_REDIRECT_URI_HTTPS, CLIENT_ID,CLIENT_SECRET,AUTHORIZATION_SCOPE,AUTHORIZATION_URL,ACCESS_TOKEN_URI,BASE_URI
 print("CLIENT_ID",CLIENT_ID)
 from .auth import get_user_info
 
@@ -31,10 +31,10 @@ def login():
     print("auth url")
     print(url_for('google_auth.google_auth_redirect',
                                             _external=True))
-    print('url base',AUTH_REDIRECT_URI_HTTPS)
+    print('url base',AUTH_REDIRECT_URI)
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
-                            redirect_uri=AUTH_REDIRECT_URI_HTTPS,
+                            redirect_uri=AUTH_REDIRECT_URI,
                             _external=True)
                             #   url_for('google_auth.google_auth_redirect',
                                                 #  _external=True)) #no need to use 
@@ -61,7 +61,7 @@ def google_auth_redirect():
                                 scope=AUTHORIZATION_SCOPE,
                                 state=req_state,
                                 redirect_uri=
-                                        AUTH_REDIRECT_URI_HTTPS)
+                                        AUTH_REDIRECT_URI)
     except Exception as e:
         return flask.jsonify(e)
     current_app.logger.debug(' session built')
@@ -94,21 +94,34 @@ def logout():
     
     return flask.redirect(BASE_URI, code=302)
 
-
+from gpt_app.common.supabase_handler import check_user_exist, save_user
 @google_auth.route('/etc')
 def etc():
     
     d=flask.request.args['data']
    
+    current_app.logger.info('body: %s',d)
     d = ast.literal_eval(d)
     current_app.logger.info('body: %s',d)
     current_app.logger.info('type: %s',type(d))
     if is_logged_in():
         user_info = get_user_info()
-        current_app.logger.info(user_info)
-        name=user_info['given_name']
-        expiresat=d['expires_at']
-        val=d['access_token'][0:6]
+        name=user_info['name']
+        print('saving user ')
+        user = check_user_exist(user_info['email'])
+        if user:
+            # get last login
+            pass 
+        else:
+            if not save_user(email=user_info['email'],
+                      name=name,
+                      google_id=user_info['id']):
+                raise Exception("Unable to save user to database ")
+            else:
+
+                current_app.logger.info("user saved %s",user_info)
+        # expiresat=d['expires_at']
+        # val=d['access_token'][0:6]
         set_google_id(user_info['id'])
         set_user_email(user_info['email'])
         # curr_pth = pathlib.Path(__file__).resolve().parent

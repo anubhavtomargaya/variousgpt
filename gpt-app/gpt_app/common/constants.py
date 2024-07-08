@@ -23,6 +23,10 @@ CLIENT_ID = env.get('CLIENT_ID')
 # os.environ.get("FN_CLIENT_ID", default=False)
 CLIENT_SECRET = env.get('CLIENT_SECRET')
 OPENAI_KEY = env.get('OPENAI_KEY')
+SUPABASE_URL = env.get('SUPABASE_URL')
+SUPABASE_SERVICE_KEY = env.get('SUPABASE_SERVICE_KEY')
+SUPABASE_ANON_KEY = env.get('SUPABASE_ANON_KEY')
+
 # os.environ.get("FN_CLIENT_SECRET", default=False)
 
 ########## ------------------------------- ############
