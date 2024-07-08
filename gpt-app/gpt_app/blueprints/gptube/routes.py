@@ -52,11 +52,17 @@ def submit_youtube():
     # check if alreayd downloaded: fetch meta if exists and return 
     result = download_youtube_audio(url=url,local= not GCS) # saves to YOUTUBE_DIR returns a meta
     print(result)
-    print(result.__dict__ )
-    audio_file = Path(result.file_path).name
-    result.file_path
-    file = Path(result.file_path).name
-    return jsonify(result.__dict__)
+    # print(result.__dict__ )
+    if not isinstance(result,dict):
+        r = result.__dict__
+    else:
+        r = result
+    # audio_file = Path(result.file_path).name
+    # result.file_path
+    # file = Path(result.file_path).name
+    print("rerrrrr")
+    print(r)
+    return jsonify(r['meta'])
 
    
     
@@ -88,7 +94,8 @@ def transcribe_youtube():
                                             file_name=title,
                                             base_prompt=base_prompt,
                                             ogg=True,
-                                            gcs=True))
+                                            gcs=False,
+                                            db=True))
     
     # return the text from json if create is true
     

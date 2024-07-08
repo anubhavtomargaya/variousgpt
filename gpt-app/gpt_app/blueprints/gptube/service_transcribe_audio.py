@@ -10,8 +10,10 @@ from  gpt_app.common.dirs import BUCKET_NAME, DATA_DIR,  PROCESSED_DIR, YOUTUBE_
 from  gpt_app.common.models import  AudioTranscript, TranscriptMetadata
 from  gpt_app.common.enums import  tsFormats
 from gpt_app.blueprints.gptube.gpt_service import transcribe_audio_in_format
+from gpt_app.common.supabase_handler import check_ts_exist, insert_ts_entry
+from gpt_app.common.session_manager import get_user_email
 
-def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,prompt=""):
+def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,prompt="",db=False):
     try:
         
         bucket = gcs_client.bucket(BUCKET_NAME)
@@ -43,22 +45,25 @@ def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,pro
                                                         response_format=tsFormats.JSON.value,
                                                         prompt=prompt
                                                             )
-            transcript_final.text=transcription
-        print("calling open api end.")
-        et = datetime.utcnow()
-        total_time = et - st
-        print("total processing time ", total_time.seconds, 'seconds')
-        print("total cost $", round(0.006*total_time.seconds),2)
-
-        fpath = save_transcript_text_json(transcription,
-                        audio_file,
-                        dir=TS_DIR)
-        if fpath:
-            print(id, "file processsed as ts: ", fpath.stem)
-            return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR)
-            return f'{out_file_name}.json'
+        if db:
+            return transcription
         else:
-            raise Exception("Error! not fpath")
+            transcript_final.text=transcription
+            print("calling open api end.")
+            et = datetime.utcnow()
+            total_time = et - st
+            print("total processing time ", total_time.seconds, 'seconds')
+            print("total cost $", round(0.006*total_time.seconds),2)
+
+            fpath = save_transcript_text_json(transcription,
+                            audio_file,
+                            dir=TS_DIR)
+            if fpath:
+                print(id, "file processsed as ts: ", fpath.stem)
+                return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR)
+                return f'{out_file_name}.json'
+            else:
+                raise Exception("Error! not fpath")
     
 
 
@@ -134,6 +139,7 @@ def create_text_from_audio(file_name:Path,
                             youtube=False,
                             ogg=True,
                             gcs=False,
+                            db=True
                                   ):
     #TODO 
 
@@ -142,6 +148,25 @@ def create_text_from_audio(file_name:Path,
     if not isinstance(file_name,Path):
         file_name = Path(file_name)
     source_dir = YOUTUBE_DIR if youtube else DATA_DIR
+
+    if db:
+        existing_ts = check_ts_exist(title=file_name.as_posix().split('.')[0])
+        if not existing_ts:
+            if ogg:
+            
+                fname = convert_audio_to_ogg(file_name=file_name,
+                                            source_dir=source_dir,
+                                            local=False)
+                source_dir = PROCESSED_DIR
+                print("ogg converted!")
+                
+                trx = transcribe_gcs_audio(gcs_client=gcs_client,audio_file=fname,dir=source_dir,prompt=file_name.name)
+                print("dest:",trx)
+
+            # return trx
+            e_ = insert_ts_entry(title=file_name.as_posix().split('.')[0],text=trx,added_by=get_user_email())
+            print(e_)
+            return file_name.as_posix().split('.')[0]
     if gcs:
         destination_blob_path  = _make_file_path(TS_DIR,
                                     file_name,
@@ -164,7 +189,7 @@ def create_text_from_audio(file_name:Path,
         #all local 
         if check_ts_dir(file_name):
             print(check_ts_dir(file_name))
-            return file_name
+            return file_name.as_posix().split('.')[0]
         else:
             if ogg:
                 

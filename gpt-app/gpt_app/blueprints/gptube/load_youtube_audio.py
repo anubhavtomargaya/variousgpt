@@ -4,6 +4,7 @@ from pathlib import Path
 from pytube import YouTube
 from gpt_app.common.dirs import YOUTUBE_DIR,BUCKET_NAME
 from gpt_app.common.utils_dir import _make_file_path, check_ts_dir,client
+from gpt_app.common.session_manager import get_user_email
 import json 
 
 class YoutubeMetadata:
@@ -79,7 +80,7 @@ def download_to_gcs(stream,client):
         print("gcs up,",upload)
         return destination_blob_name
 
-
+from gpt_app.common.supabase_handler import check_yt_exist,insert_yt_entry
 def download_youtube_audio(url,
                             dir = YOUTUBE_DIR,
                             local=False):
@@ -97,9 +98,13 @@ def download_youtube_audio(url,
     try:
         #TODO: check if url exists downloaded 
         yt = YouTube(url)
-
+        yt_meta =  check_yt_exist(url)
+        if yt_meta:
+            return yt_meta[0]
+        else:
+            pass 
         print("starting stream check")
-        print("made yt:",yt.__dict__)
+        print("made yt:",)
         stream = yt.streams.filter(only_audio=True, ).order_by('abr').asc().first() # select stream by lowest bit rate 
         print("starting download....", stream.__dict__) 
         
@@ -114,18 +119,19 @@ def download_youtube_audio(url,
             else:
                 print("local exists VIDEO")
                 output_file = Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_'))
-        meta = YoutubeMetadata(id=url,title=yt.title,
+        m = YoutubeMetadata(id=url,title=yt.title,
                                file_path=Path(output_file).name,
                                thumbnail_url=yt.thumbnail_url,
                                description=yt.description,
                                length_minutes= round(yt.length / 60, 2),
                                )
+        insert_yt_entry(meta=m.__dict__,link=f"{url}",added_by=get_user_email())
        
-        w = update_youtube_index_meta(meta)
-        print("meta updated ", w, meta.__dict__)    
+        w = update_youtube_index_meta(m)
+        print("meta updated ", w, m.__dict__)    
 
         print(f'Downloaded audio from "{yt.title}" to "{output_file}"')
-        return meta
+        return m
 
     except Exception as e:
         print(f"Unexpected error: {e}")
