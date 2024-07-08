@@ -61,8 +61,7 @@ def google_auth_redirect():
                                 scope=AUTHORIZATION_SCOPE,
                                 state=req_state,
                                 redirect_uri=
-                                        url_for('google_auth.google_auth_redirect',
-                                        _external=True))
+                                        AUTH_REDIRECT_URI_HTTPS)
     except Exception as e:
         return flask.jsonify(e)
     current_app.logger.debug(' session built')
