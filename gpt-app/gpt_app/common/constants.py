@@ -13,6 +13,7 @@ AUTH_REDIRECT_URI ="http://localhost:5000/google/auth"
 AUTH_REDIRECT_URI_HTTPS ="https://wallartlabs.tech/google/auth"
 #  os.environ.get("FN_AUTH_REDIRECT_URI", default=False)
 BASE_URI =   "http://localhost:5000/"
+BASE_URI_HTTPS =   "https://wallartlabs.tech/"
 BASE_REDIRECT_URI =   "http://localhost:5000/fetch"
 # os.environ.get("FN_BASE_URI", default=False)
 with open(Path(Path(__file__).parent.resolve(), 'env.json')) as f:
