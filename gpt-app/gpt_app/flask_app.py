@@ -18,7 +18,9 @@ import logging
 logging.basicConfig(level=logging.INFO)  
 
 def create_app():
+    
     app = Flask(__name__)
+    app.config['PREFERRED_URL_SCHEME'] = 'https'
     # app.logger.addHandler(file_handler)
     # app.logger.addHandler(fh)
     app.logger.info('Flask app started')

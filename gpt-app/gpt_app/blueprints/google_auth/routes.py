@@ -28,6 +28,9 @@ def login():
     # redirect(url_for('index'))
     current_app.logger.info("RUNNING LOGIN")
     current_app.logger.info('building session')
+    print("auth url")
+    print(url_for('google_auth.google_auth_redirect',
+                                            _external=True))
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
                             redirect_uri= url_for('google_auth.google_auth_redirect',
