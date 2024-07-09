@@ -135,7 +135,8 @@ def etc():
         
         ###check if not able to save file in ec2
 
-        return '<div>You are currently logged in as ' + user_info['given_name'] + '<div><pre>' + json.dumps(user_info, indent=4) + "</pre>"
+        return flask.redirect(url_for('view_app.index'))
+        # return '<div>You are currently logged in as ' + user_info['given_name'] + '<div><pre>' + json.dumps(user_info, indent=4) + "</pre>"
     # flask.redirect(BASE_URI, code=302)
     else:
         # return render_template("index.html")
