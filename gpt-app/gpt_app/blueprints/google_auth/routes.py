@@ -103,7 +103,7 @@ def etc():
     current_app.logger.info('body: %s',d)
     d = ast.literal_eval(d)
     current_app.logger.info('body: %s',d)
-    current_app.loggLOGIer.info('type: %s',type(d))
+    current_app.logger.info('type: %s',type(d))
     if is_logged_in():
         user_info = get_user_info()
         name=user_info['name']
