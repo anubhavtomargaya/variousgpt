@@ -31,10 +31,10 @@ def login():
     print("auth url")
     print(url_for('google_auth.google_auth_redirect',
                                             _external=True))
-    print('url base',AUTH_REDIRECT_URI)
+    print('url base',AUTH_REDIRECT_URI_HTTPS)
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
-                            redirect_uri=AUTH_REDIRECT_URI,
+                            redirect_uri=AUTH_REDIRECT_URI_HTTPS,
                             _external=True)
                             #   url_for('google_auth.google_auth_redirect',
                                                 #  _external=True)) #no need to use 
@@ -61,7 +61,7 @@ def google_auth_redirect():
                                 scope=AUTHORIZATION_SCOPE,
                                 state=req_state,
                                 redirect_uri=
-                                        AUTH_REDIRECT_URI)
+                                        AUTH_REDIRECT_URI_HTTPS)
     except Exception as e:
         return flask.jsonify(e)
     current_app.logger.debug(' session built')
@@ -103,16 +103,17 @@ def etc():
     current_app.logger.info('body: %s',d)
     d = ast.literal_eval(d)
     current_app.logger.info('body: %s',d)
-    current_app.logger.info('type: %s',type(d))
+    current_app.loggLOGIer.info('type: %s',type(d))
     if is_logged_in():
         user_info = get_user_info()
         name=user_info['name']
-        print('saving user ')
         user = check_user_exist(user_info['email'])
         if user:
+            print('user exist')
             # get last login
             pass 
         else:
+            print('saving user ')
             if not save_user(email=user_info['email'],
                       name=name,
                       google_id=user_info['id']):
