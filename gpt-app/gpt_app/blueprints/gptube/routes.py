@@ -71,14 +71,6 @@ from  gpt_app.common.utils_dir import client as gcs_client
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf'
 
-BUCKET_NAME = 'gpt-app-data'
-
-def upload_to_gcp(file, filename):
-    storage_client = gcs_client
-    bucket = storage_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(filename)
-    blob.upload_from_file(file)
-    return blob.public_url
 
 @gpt_app.route('/upload', methods=['POST'])
 def upload_file():

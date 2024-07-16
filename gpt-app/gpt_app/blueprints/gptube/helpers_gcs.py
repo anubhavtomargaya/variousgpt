@@ -23,3 +23,16 @@ def upload_data_to_gcs(data,
     upload = blob.upload_from_string(data)
     print("gcs up,",upload)
     return blob.public_url
+
+def download_gcs_file_as_bytes(source_blob_name):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(source_blob_name)
+    print(blob)
+    return blob.download_as_bytes()
+
+def download_gcs_file(source_blob_name, destination_file_name):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(source_blob_name)
+    print(blob)
+    blob.download_to_filename(destination_file_name)
+    return True
