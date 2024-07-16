@@ -10,6 +10,7 @@ from .service_answer_with_corpus import answer_question, get_context_corpus
 from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
 from .load_youtube_audio import download_youtube_audio
+from .load_pdf import load_pdf_into_bucket
 from flask import current_app as app,jsonify,request, url_for, redirect,render_template
 
 
@@ -64,7 +65,39 @@ def submit_youtube():
     print(r)
     return jsonify(r['meta'])
 
-   
+from werkzeug.utils import secure_filename
+from google.cloud import storage
+from  gpt_app.common.utils_dir import client as gcs_client
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf'
+
+BUCKET_NAME = 'gpt-app-data'
+
+def upload_to_gcp(file, filename):
+    storage_client = gcs_client
+    bucket = storage_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(filename)
+    blob.upload_from_file(file)
+    return blob.public_url
+
+@gpt_app.route('/upload', methods=['POST'])
+def upload_file():
+    print("starting upload file")
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['file']
+    print("type of file")
+    print(type(file))
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    file_url = load_pdf_into_bucket(file)
+    return jsonify({'message': 'File successfully uploaded', 'file_url': file_url}), 200
+    # else:
+    #     return jsonify({'error': 'Invalid file type'}), 400
+
     
 @gpt_app.route('/transcribe/youtube', methods=['POST','GET'])
 def transcribe_youtube():

@@ -5,6 +5,7 @@ BUCKET_NAME = 'gpt-app-data'
 
 DATA_DIR = Path(Path(__file__).parent.parent.resolve(), 'data')
 VIDEO_DIR = Path(DATA_DIR, 'video')
+PDF_DIR = Path(DATA_DIR, 'pdf')
 COMMON_DIR =  Path(Path(__file__).parent.parent.resolve(), 'common')
 YOUTUBE_DIR = Path(DATA_DIR, 'youtube')
 TS_DIR = Path(DATA_DIR, 'transcripts')
@@ -26,7 +27,7 @@ QA_RECORD_FILENAME = 'qa_chat_records.json'
 QA_RECORD_FILE = Path(QA_RECORD_DIR,QA_RECORD_FILENAME)
 if __name__=='__main__':
     print(DATA_DIR)
-    for directory in [DATA_DIR, VIDEO_DIR, RECORD_DIR, QA_RECORD_DIR, YOUTUBE_DIR, PROCESSED_DIR, CHOP_DIR, TS_DIR, SUMMARY_DIR, EMBEDDING_DIR]:
+    for directory in [DATA_DIR,PDF_DIR, VIDEO_DIR, RECORD_DIR, QA_RECORD_DIR, YOUTUBE_DIR, PROCESSED_DIR, CHOP_DIR, TS_DIR, SUMMARY_DIR, EMBEDDING_DIR]:
         try:
             os.makedirs(directory, exist_ok=True)  # Avoids errors if directory already exists
             print(f"Directory created: {directory}")

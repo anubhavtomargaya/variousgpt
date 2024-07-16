@@ -19,6 +19,10 @@ def chat(file_name):
 def submit():
     return render_template('submit.html')
 
+@view_app.route('/file')
+def file_upload():
+    return render_template('getfile.html')
+
 @view_app.route('/embed')
 def embed():
     pl = request.args.get('pl', "FileName")
