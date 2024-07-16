@@ -19,4 +19,5 @@ def extract_text_from_pdf_bytes(pdf_bytes):
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
         text += page.get_text()
-    return text
+    return text.replace('\n',' ')
+

@@ -1,6 +1,7 @@
 
 
 from gpt_app.common.utils_openai import count_tokens
+import hashlib
 
 def count_words(text):
     words = text.split()
@@ -18,6 +19,9 @@ def split_document(doc, chunk_size=1000, overlap=200):
         start = end - overlap 
     return chunks
 
+def generate_hash_key(text):
+    """Generates a hash key for a given text."""
+    return hashlib.sha256(text.encode()).hexdigest()
 def count_tokens_chunked(chunks):
     """ chunks are the output of split document """
 

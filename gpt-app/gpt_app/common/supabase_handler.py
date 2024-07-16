@@ -56,6 +56,15 @@ def insert_ts_entry(title,text,added_by):
     supabase.table('transcripts').insert(user_document).execute()
     return True 
 
+def insert_chunk_doc_entry(doc,added_by):
+
+    user_document = doc
+    user_document['added_by'] =added_by
+
+        # Insert user into the users table
+    supabase.table('chunkdocs').insert(user_document).execute()
+    return True 
+
 def insert_yt_entry(link,meta,added_by):
 
     user_document = {
