@@ -6,6 +6,7 @@ from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket
 
 def process(file):
     bdata = download_pdf_from_bucket(file)
+    
 
 if __name__=='__main__':
     f = 'Investors-call-transcript-for-Q4-FY-2023-24.pdf'
