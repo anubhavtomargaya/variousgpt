@@ -4,6 +4,13 @@ from gpt_app.common.constants import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def get_chunk_doc(filename)->dict:
+    rows =  supabase.table('chunk_docs').select('*').eq('file_name', filename).execute()
+    if not rows.data:
+        return False
+    else:
+        return rows.data[0]['chunks']
+    
 def check_user_exist(email):
     existing_user = supabase.table('users').select('*').eq('email', email).execute()
     print(existing_user)
@@ -56,14 +63,20 @@ def insert_ts_entry(title,text,added_by):
     supabase.table('transcripts').insert(user_document).execute()
     return True 
 
-def insert_chunk_doc_entry(doc,added_by):
+def insert_chunk_doc_entry(doc:dict,added_by):
 
     user_document = doc
-    user_document['added_by'] =added_by
-
-        # Insert user into the users table
-    supabase.table('chunkdocs').insert(user_document).execute()
+    user_document['metadata']['added_by'] =added_by
+    supabase.table('chunk_docs').insert(user_document).execute()
     return True 
+
+
+def update_doc_chunk(file,rich_chunks):
+    response = (supabase.table("chunk_docs")
+                .update({"chunks": rich_chunks})
+                .eq("file_name", file)
+                .execute())
+    return response
 
 def insert_yt_entry(link,meta,added_by):
 
