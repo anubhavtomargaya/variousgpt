@@ -7,6 +7,7 @@ from gpt_app.common.utils_text import split_document, count_words,generate_hash_
 from gpt_app.common.supabase_handler import insert_chunk_doc_entry
 
 CHUNK_PARAMS  = (2000,100)
+
 def create_doc_for_file(filename, chunks:list, meta:dict={}):
     """ insert the file dict in first stage of storing doc (towards common format)
     """

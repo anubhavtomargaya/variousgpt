@@ -13,7 +13,12 @@ from gpt_app.blueprints.gptube.gpt_service import transcribe_audio_in_format
 from gpt_app.common.supabase_handler import check_ts_exist, insert_ts_entry
 from gpt_app.common.session_manager import get_user_email
 
-def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,prompt="",db=False):
+def transcribe_gcs_audio(gcs_client,
+                         audio_file,
+                         dir=PROCESSED_DIR,
+                         format=None,
+                         prompt="",
+                         db=False):
     try:
         
         bucket = gcs_client.bucket(BUCKET_NAME)
@@ -46,7 +51,12 @@ def transcribe_gcs_audio(gcs_client,audio_file,dir=PROCESSED_DIR,format=None,pro
                                                         prompt=prompt
                                                             )
         if db:
-            return transcription
+            ttl = Path(audio_file).as_posix().split('.')[0]
+            e_ = insert_ts_entry(title=ttl,
+                                 text=transcription,
+                                 added_by=get_user_email())
+            print("E_",e_)
+            return ttl if e_ else False
         else:
             transcript_final.text=transcription
             print("calling open api end.")
@@ -164,8 +174,8 @@ def create_text_from_audio(file_name:Path,
                 print("dest:",trx)
 
             # return trx
-            e_ = insert_ts_entry(title=file_name.as_posix().split('.')[0],text=trx,added_by=get_user_email())
-            print(e_)
+            # e_ = insert_ts_entry(title=file_name.as_posix().split('.')[0],text=trx,added_by=get_user_email())
+            # print(e_)
             return file_name.as_posix().split('.')[0]
     if gcs:
         destination_blob_path  = _make_file_path(TS_DIR,
