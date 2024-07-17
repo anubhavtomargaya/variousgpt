@@ -4,6 +4,7 @@ from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
 from gpt_app.common.utils_openai import get_openai_client,get_embedding,count_tokens
 from gpt_app.common.session_manager import get_user_email
 from gpt_app.common.utils_dir import load_summary_embedded
+from gpt_app.common.supabase_handler import get_chunk_doc
 from gpt_app.common.constants import DEFAULT_TEMPERATURE, DEFAULT_TOP_P, DEFAULT_MODEL
 
 import numpy as np
@@ -12,6 +13,23 @@ client = get_openai_client()
 
 def get_context_corpus(file_name):
     return load_summary_embedded(file_name)
+
+def get_context_corpus_database(file):
+    chunks_dict = get_chunk_doc(file)
+    return chunks_dict
+
+def find_top_chunks_database(chunk_dict, question_emb, top_n = 3):
+    similarities = []
+    for key, value in chunk_dict.items():
+        chunk_embedding = value['chunk_embedding']
+        similarity = cosine_similarity(question_emb, chunk_embedding)
+        similarities.append((key, similarity))
+    
+    similarities.sort(key=lambda x: x[1], reverse=True)
+    top_chunks = [chunk_dict[k]['chunk_text'] for k, _ in similarities[:top_n]]
+    print()
+    return top_chunks
+
 
 def embed_question(question):
     return get_embedding(client,question)
@@ -35,11 +53,11 @@ def find_top_chunks(doc:dict, question_embedding, top_n=3):
 def create_prompt(top_chunks, question):
     prompt = "Answer the following question based on the provided sections of a document.\n\n"
     
-    for chunk in top_chunks:
-        section = chunk['section']
+    for i,chunk in enumerate(top_chunks):
+        # section = chunk['section']
         # summary = chunk['summary']
-        texts = chunk['chunk_text']
-        prompt += f"{section}: {texts}\n\n"
+        texts = chunk
+        prompt += f"{i}: {texts}\n\n"
     
     prompt += f"Question: {question}\n"
     return prompt
@@ -102,7 +120,7 @@ def answer_question(doc,
                     question_prompt= '',
                     file_name = '',
                     _top_n=3):
-    records = load_qa_record()
+    # records = load_qa_record()
     client = get_openai_client()
     classification = classify_question(client, question)
     print(classification)
@@ -112,7 +130,7 @@ def answer_question(doc,
        
     else:
         question_embedding = get_embedding(client,question)
-        top_chunks = find_top_chunks(doc, question_embedding,top_n=_top_n)
+        top_chunks = find_top_chunks_database(doc, question_embedding,top_n=_top_n)
         # summaries = [c['summary'] for c in top_chunks]
         # texts = [c['chunk_text'] for c in top_chunks]
         # print(summaries)
@@ -125,13 +143,13 @@ def answer_question(doc,
 
 
     answer = get_answer_from_gpt(client,prompt=prompt,system_content=question_prompt)
-    record = QARecord(filename=file_name,
-                      email=get_user_email(),
-                      question=question,prompt_tokens=tokens,answer=answer)
-    record._extra['classification'] = classification
-    records.append(record.__dict__)
-    r = save_qa_record(records)
-    print("record saved ", r)
+    # record = QARecord(filename=file_name,
+    #                   email=get_user_email(),
+    #                   question=question,prompt_tokens=tokens,answer=answer)
+    # record._extra['classification'] = classification
+    # records.append(record.__dict__)
+    # r = save_qa_record(records)
+    # print("record saved ", r)
     print("ANSWER:")
     return answer
 
@@ -150,5 +168,28 @@ filename =  'Delhivery_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
 
 if __name__=='__main__':
     # testing in files named test_rag_qa_...
-    doc = get_context_corpus(file_name=filename,)
+    # doc = get_context_corpus(file_name=filename,)
     pass
+    f = 'Investors-call-transcript-for-Q4-FY-2023-24.pdf'
+
+    def test_embed_question(qtext):
+        return embed_question(qtext)
+
+    def test_corpus_load_from_db():
+        return get_context_corpus_database(f)
+    
+    def test_top_chunks():
+        chunks = get_context_corpus_database(f)
+        q  = "How is the ebitda of this company?"
+        emb = embed_question(q) 
+        return find_top_chunks_database(chunk_dict=chunks,
+                                        question_emb=emb,
+                                        top_n=3)
+    
+    def test_answer_question():
+        chunks = get_context_corpus_database(f)
+        return answer_question(doc=chunks,question="What does this company do?")
+    # print(test_corpus_load_from_db())
+    # print(test_embed_question("How is the ebitda of this company?"))
+    # print(test_top_chunks())
+    print(test_answer_question())
