@@ -28,6 +28,14 @@ def embed():
     pl = request.args.get('pl', "FileName")
     return render_template('embed.html',placeholder=pl)
 
+@view_app.route('/procpdf')
+def proc_pdf():
+    file = request.args.get('file', None)
+    if not file:
+        raise HTTPException("File not found")
+    
+    return render_template('nembd.html',title=file)
+
 
 @view_app.route('/etc')
 def etc():

@@ -11,6 +11,13 @@ def get_chunk_doc(filename)->dict:
     else:
         return rows.data[0]['chunks']
     
+def get_list_docs():
+    rows =  supabase.table('chunk_docs').select('file_name').execute()
+    if not rows.data:
+        return False
+    else:
+        return rows.data
+
 def check_user_exist(email):
     existing_user = supabase.table('users').select('*').eq('email', email).execute()
     print(existing_user)

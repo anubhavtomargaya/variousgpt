@@ -9,7 +9,7 @@ from gpt_app.common.supabase_handler import insert_chunk_doc_entry
 CHUNK_PARAMS  = (2000,100)
 
 def create_doc_for_file(filename, chunks:list, meta:dict={}):
-    """ insert the file dict in first stage of storing doc (towards common format)
+    """ make the dict in first stage of storing doc (towards common format)
     """
     meta['chunks_num']= len(chunks)
     c = {n:{
@@ -21,21 +21,24 @@ def create_doc_for_file(filename, chunks:list, meta:dict={}):
            'chunks':c,
            'metadata':meta
            }
-
-    sp = insert_chunk_doc_entry(doc=doc,added_by='test')
-    
-    return sp
+   
+    return doc
 
 def process_pdf_to_doc(file):
     bdata = download_pdf_from_bucket(file)
     txt = extract_text_from_pdf_bytes(bdata)
     meta = {'chunk_params':CHUNK_PARAMS}
     chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
-    sp = create_doc_for_file(chunks=chunks,
+    doc = create_doc_for_file(chunks=chunks,
                              filename=file,
                              meta=meta)
+    sp = insert_chunk_doc_entry(doc=doc,added_by='test')
     print(sp)
+
+    return True 
    
+
+
 if __name__=='__main__':
     f = 'Investors-call-transcript-for-Q4-FY-2023-24.pdf'
 

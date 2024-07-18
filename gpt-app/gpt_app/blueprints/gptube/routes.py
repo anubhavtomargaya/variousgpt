@@ -6,6 +6,8 @@ from http.client import HTTPException
 from gpt_app.common.utils_dir import _load_chunks_segment_doc, _load_chunks_summary_doc, _load_digest_doc, check_digest_dir, check_diz_dir, check_segment_dir, check_summary_dir, load_transcript_doc, save_digest_doc
  
 
+from .service_process_pdf import process_pdf_to_doc
+from .service_create_embedding import create_embedding_for_doc
 from .service_answer_with_corpus import answer_question, get_context_corpus
 from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
@@ -65,12 +67,6 @@ def submit_youtube():
     print(r)
     return jsonify(r['meta'])
 
-from werkzeug.utils import secure_filename
-from google.cloud import storage
-from  gpt_app.common.utils_dir import client as gcs_client
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf'
-
 
 @gpt_app.route('/upload', methods=['POST'])
 def upload_file():
@@ -86,9 +82,56 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
 
     file_url = load_pdf_into_bucket(file)
-    return jsonify({'message': 'File successfully uploaded', 'file_url': file_url}), 200
+    file_name = str(file_url).split('/')[-1]
+    return jsonify({'message': 'File successfully uploaded', 'file_name': file_name}), 200
     # else:
     #     return jsonify({'error': 'Invalid file type'}), 400
+
+    
+@gpt_app.route('/process/pdf', methods=['POST','GET'])
+def process_pdf():
+    GCS = True 
+    mthd = request.method 
+    args = request.args
+    app.logger.info('method: %s',mthd)
+    app.logger.info('args: %s',args)
+    if mthd =='GET':
+        print("get wont work in reality")
+        file = args.get('file') or None
+        
+    elif mthd=='POST':
+        data = request.get_json()
+        file = data.get('file') or None
+
+    else:raise HTTPException("Invalid Method")
+
+    if not file:
+        raise HTTPException("title not provided ")
+        
+    return jsonify(process_pdf_to_doc(file=file))
+
+    
+@gpt_app.route('/embed/pdf', methods=['POST','GET'])
+def embed_pdf():
+
+    mthd = request.method 
+    args = request.args
+    app.logger.info('method: %s',mthd)
+    app.logger.info('args: %s',args)
+    if mthd =='GET':
+        print("get wont work in reality")
+        file = args.get('file') or None
+        
+    elif mthd=='POST':
+        data = request.get_json()
+        file = data.get('file') or None
+
+    else:raise HTTPException("Invalid Method")
+
+    if not file:
+        raise HTTPException("title not provided ")
+        
+    return jsonify(create_embedding_for_doc(file=file))
 
     
 @gpt_app.route('/transcribe/youtube', methods=['POST','GET'])
@@ -334,7 +377,7 @@ def answer_question_(file_name):
                     doc=doc,
                     question=question,
                     question_prompt=question_prompt,
-                    _top_n=3
-                    )
+                    _top_n=3)
+    
     return jsonify(a)
 
