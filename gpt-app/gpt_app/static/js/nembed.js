@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 // Show second tick
                 tick2.style.display = 'inline';
+                window.location.href = "/view/";
             })
             .catch(error => {
                 console.error('Error embedding PDF:', error);
