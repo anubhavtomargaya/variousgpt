@@ -71,12 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 callListDiv.innerHTML = ''; // Clear previous content
                 const ul = document.createElement('ul');
-                // data.forEach(item => {
-                //     const li = document.createElement('li');
-                //     li.textContent = item; // Assuming each item is a string
-                //     li.addEventListener('click', () => updateTitle(item)); // Add click event listener
-                //     ul.appendChild(li);
-                // });
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item; // Assuming each item is a string
+                    li.addEventListener('click', () => updateTitle(item)); // Add click event listener
+                    ul.appendChild(li);
+                });
                 callListDiv.appendChild(ul);
                 // console.log(Object(data))
                 updateTitle(data[data.length - 1])
@@ -89,12 +89,39 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // Function to update title
-    function updateTitle(newTitle) {
-        fileTitleElement.textContent = newTitle;
-        responseDiv.textContent = '';
-        // getDigestButton.style.display = 'block';
+    function fetchCallList() {
+        loader2.style.display = 'block';
+        fetch('/view/docs/list')
+            .then(response => response.json())
+            .then(data => {
+                callListDiv.innerHTML = '';
+                const ul = document.createElement('ul');
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.addEventListener('click', () => updateTitle(item));
+                    ul.appendChild(li);
+                });
+                callListDiv.appendChild(ul);
+            })
+            .catch(error => {
+                console.error('Error fetching call list:', error);
+            })
+            .finally(() => {
+                loader2.style.display = 'none';
+            });
     }
+    function openLeftPanel() {
+        leftPanel.style.display = 'block';
+        setTimeout(() => leftPanel.classList.add('open'), 10);
+        fetchCallList();
+    }
+    // Function to update title
+    // function updateTitle(newTitle) {
+    //     fileTitleElement.textContent = newTitle;
+    //     responseDiv.textContent = '';
+    //     // getDigestButton.style.display = 'block';
+    // }
 
 
     // Automatically fetch and display calls when window is loaded
@@ -162,40 +189,60 @@ document.addEventListener('DOMContentLoaded', () => {
     //         loader.style.display = 'none';
     //     }
     // }
-    async function getQuestions() {
-        const fileTitle = titleElement.textContent;
-        loader.style.display = 'block';
-        try {
-            const response = await fetch(`/view/questions/${fileTitle}`);
-            const data = await response.json();
-            const questionsList = document.getElementById('questionsList');
-            questionsList.innerHTML = '';
-            data.questions.forEach(q => {
-                const li = document.createElement('li');
-                li.textContent = q.question;
-                li.addEventListener('click', () => {
-                    questionInput.value = q.question;
-                    askQuestion(q.question);
-                });
-                questionsList.appendChild(li);
-            });
-        } catch (error) {
-            console.error('Error fetching questions:', error);
-            document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
-        } finally {
-            loader.style.display = 'none';
-        }
-    }
+    // async function getQuestions() {
+    //     const fileTitle = titleElement.textContent;
+    //     loader.style.display = 'block';
+    //     try {
+    //         const response = await fetch(`/view/questions/${fileTitle}`);
+    //         const data = await response.json();
+    //         const questionsList = document.getElementById('questionsList');
+    //         questionsList.innerHTML = '';
+    //         data.questions.forEach(q => {
+    //             const li = document.createElement('li');
+    //             li.textContent = q.question;
+    //             li.addEventListener('click', () => {
+    //                 questionInput.value = q.question;
+    //                 askQuestion(q.question);
+    //             });
+    //             questionsList.appendChild(li);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error fetching questions:', error);
+    //         document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
+    //     } finally {
+    //         loader.style.display = 'none';
+    //     }
+    // }
+    // async function getDocument() {
+    //     const fileTitle = titleElement.textContent;
+    //     console.log("running get question",fileTitle)
+    //      loader.style.display = 'block';
+    //      try {
+    //          const response = await fetch(`/view/document/${fileTitle}`); //  instead of this add view for view/transcript/ here
+    //          const data = await response.json();
+    //          const transcript = document.getElementById('transcript');
+    //          console.log('data')
+    //          console.log(data)
+    //          console.log(data.text)
+    //          transcript.innerHTML = data.text;
+             
+    //      } catch (error) {
+    //          console.error('Error fetching questions:', error);
+    //          document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
+    //      } finally {
+    //          loader.style.display = 'none';
+    //      }
+    //  }
 
-    // Call getQuestions when the page loads
-    window.addEventListener('load', getQuestions);
+    // // Call getQuestions when the page loads
+    // window.addEventListener('load', getDocument);
 
-    // Update getQuestions call when a new file is selected
-    function updateTitle(title) {
-        titleElement.textContent = title;
-        closePanels();
-        getQuestions(); // Fetch questions for the new file
-    }
+    // // Update getQuestions call when a new file is selected
+    // function updateTitle(title) {
+    //     titleElement.textContent = title;
+    //     closePanels();
+    //     getDocument(); // Fetch questions for the new file
+    // }
 
     // async function getQuestions() {
     //     const fileTitle = titleElement.textContent;

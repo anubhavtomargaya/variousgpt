@@ -220,6 +220,34 @@
         #questionsList li:last-child {
             margin-bottom: 0;
         }
+        #transcript-container {
+            /* position: relative; */
+            /* margin-top: 20px; */
+            /* height: 30%; */
+            overflow-y: scroll;
+            border: 1px solid #ced4da;
+            /* padding: .5rem; */
+            font-size: 18px;
+            white-space: pre-wrap;
+            height: 40vh;
+        }
+
+        #transcript-container #transcript {
+            border: none;
+            height: 20vh;
+            
+           
+            /* background-color: #fff; Set background color to white */
+            background-color: #ffffff; /* Add slight background change on focus (optional) */
+            resize: none; /* Disable resize functionality (optional) */
+            cursor: text; /* Set cursor to text for reader-like experience */
+            
+          
+        }
+       
+        #transcript:focus {
+             background-color: #f8f9fa; /* Add slight background change on focus (optional) */
+        }
 </style>
 
 </head> 
@@ -232,10 +260,13 @@
         <button id="leftButton">LIST</button>
         <button id="rightButton">HISTORY</button> 
         </div>
-        <div id="questionsContainer">
-            <h4>Analyst's Questions</h4>
-            <ul id="questionsList" ></ul>
-        </div>
+        <!-- <div id="questionsContainer"> -->
+            <!-- <ul id="questionsList" ></ul> -->
+            <div id="transcript-container">
+                <!-- <h4>Document Text</h4> -->
+                <div id="transcript" ></div>
+            </div>
+        <!-- </div> -->
         <input type="text" id="question-input" placeholder="Ask a question on selected concall">
      <div id="answer-area"></div> 
      <div class="askbuttonArea"> 
@@ -373,7 +404,37 @@
                 loader2.style.display = 'none';
             });
     }
-    
+    async function getDocument() {
+        const fileTitle = titleElement.textContent;
+        console.log("running get question",fileTitle)
+         loader.style.display = 'block';
+         try {
+             const response = await fetch(`/view/document/${fileTitle}`); //  instead of this add view for view/transcript/ here
+             const data = await response.json();
+             const transcript = document.getElementById('transcript');
+             console.log('data')
+             console.log(data)
+             console.log(data.text)
+             transcript.innerHTML = data.text;
+             
+         } catch (error) {
+             console.error('Error fetching questions:', error);
+             document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
+         } finally {
+             loader.style.display = 'none';
+         }
+     }
+
+    // Call getQuestions when the page loads
+    window.addEventListener('load', getDocument);
+
+    // Update getQuestions call when a new file is selected
+    function updateTitle(title) {
+        titleElement.textContent = title;
+        closePanels();
+        getDocument(); // Fetch questions for the new file
+    }
+
     function truncateText(text, maxLength = 15) {
         return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
       }
@@ -411,38 +472,31 @@
             loader.style.display = 'none';
         }
     }
-    async function getQuestions(fileTitle) {
-       console.log("running get question",fileTitle)
-        loader.style.display = 'block';
-        try {
-            const response = await fetch(`/view/questions/${fileTitle}`);
-            const data = await response.json();
-            const questionsList = document.getElementById('questionsList');
-            questionsList.innerHTML = '';
-            data.questions.forEach(q => {
-                const li = document.createElement('li');
-                li.textContent = q.question;
-                console.log('q',q.question)
-                li.addEventListener('click', () => {
-                    questionInput.value = q.question;
-                    askQuestion(q.question);
-                });
-                questionsList.appendChild(li);
-            });
-        } catch (error) {
-            console.error('Error fetching questions:', error);
-            document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
-        } finally {
-            loader.style.display = 'none';
-        }
-    }
-
-    // Function to update title
-    function updateTitle(title) {
-        titleElement.textContent = title;
-        closePanels();
-        getQuestions(title); // Fetch questions for the new file
-    }
+    // async function getQuestions(fileTitle) {
+    //    console.log("running get question",fileTitle)
+    //     loader.style.display = 'block';
+    //     try {
+    //         const response = await fetch(`/view/questions/${fileTitle}`); //  instead of this add view for view/transcript/ here
+    //         const data = await response.json();
+    //         const questionsList = document.getElementById('questionsList');
+    //         questionsList.innerHTML = '';
+    //         data.questions.forEach(q => {
+    //             const li = document.createElement('li');
+    //             li.textContent = q.question;
+    //             console.log('q',q.question)
+    //             li.addEventListener('click', () => {
+    //                 questionInput.value = q.question;
+    //                 askQuestion(q.question);
+    //             });
+    //             questionsList.appendChild(li);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error fetching questions:', error);
+    //         document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
+    //     } finally {
+    //         loader.style.display = 'none';
+    //     }
+    // }
 
     // Event listeners
     leftButton.addEventListener('click', openLeftPanel);

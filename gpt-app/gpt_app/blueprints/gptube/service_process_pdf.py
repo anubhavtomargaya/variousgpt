@@ -24,9 +24,15 @@ def create_doc_for_file(filename, chunks:list, meta:dict={}):
    
     return doc
 
-def process_pdf_to_doc(file):
+def get_pdf_txt(file):
     bdata = download_pdf_from_bucket(file)
     txt = extract_text_from_pdf_bytes(bdata)
+    print('text')
+    print(txt)
+    return txt
+
+def process_pdf_to_doc(file):
+    txt = get_pdf_txt(file)
     meta = {'chunk_params':CHUNK_PARAMS}
     chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
     doc = create_doc_for_file(chunks=chunks,
