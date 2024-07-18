@@ -8,7 +8,7 @@ from gpt_app.common.utils_dir import _load_chunks_segment_doc, _load_chunks_summ
 
 from .service_process_pdf import process_pdf_to_doc
 from .service_create_embedding import create_embedding_for_doc
-from .service_answer_with_corpus import answer_question, get_context_corpus
+from .service_answer_with_corpus import answer_question, get_context_corpus, get_context_corpus_database
 from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
 from .load_youtube_audio import download_youtube_audio
@@ -342,6 +342,7 @@ def create_embedding():
 
 from flask import current_app as app
 from .service_answer_with_corpus import question_prompt
+
 @gpt_app.route('/question/<file_name>', methods=['GET','POST'])
 def answer_question_(file_name):
     
@@ -369,7 +370,11 @@ def answer_question_(file_name):
         raise HTTPException("Please input args")
     
     try:
-        doc = get_context_corpus(file_name=file_name,)
+        # doc = get_context_corpus(file_name=file_name,)
+        doc = get_context_corpus_database(file_name)
+        print("got corpus")
+        # print(doc)
+        # return jsonify(doc)
     except Exception as e:
         raise HTTPException(f"{file_name}: file not present, Error : {e}")
     

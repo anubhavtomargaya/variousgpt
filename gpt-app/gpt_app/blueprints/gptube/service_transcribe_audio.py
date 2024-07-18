@@ -233,4 +233,4 @@ if __name__ == '__main__':
                              audio_file=Path(fk),format='ogg',prompt=' '.join(fk.split('_')[0:-1]))
     
     # print(test_service_create_text_from_audio())
-    print(test_gcs_transcribe())
+    # print(test_gcs_transcribe())

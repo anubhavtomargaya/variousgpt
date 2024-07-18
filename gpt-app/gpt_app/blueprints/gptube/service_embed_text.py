@@ -415,6 +415,7 @@ def gpt_qa_digest_document_chain_chunks(chunks,
     prev_chunk_summary = None
     for i in range(len(chunks)-1):
         print("processing: ",i,'...') 
+        print(chunks)
         current_chunk = chunks[i] + chunks[i+1]
         res = gpt_qa_digest_chunks(client=client,
                                  prev_chunk=prev_chunk_summary,
@@ -557,9 +558,9 @@ def create_text_segment_doc(ts_filename,
 
 def get_summary_of_qa_doc(qa_digest):
     chunks  = [qa_digest[x]['chunk']['digest']  for x in qa_digest.keys()]
-    prompt = f"""You are a helpful assistant to create the DETAILED SUMMARY a LONG QUARTERLY EARNINGS CONFERENCE CALL from text. \
-                I have summarised many chunks of the QA section. Based on the summaries provide a comprehensive passage on the QA of \
-              the con-call to summarise finally. Keep it around 800 words, avoid mentioning names of analysts as it is not important."""
+    prompt = f"""You are a helpful assistant to create the DETAILED SUMMARY a LONG DOCUMENT. \
+                I have summarised many chunks. Based on the summaries, provide a comprehensive passage on the topics and subject of the \
+              document to summarise finally. Keep it around 800 words."""
     
     qa_summary = gpt_summarise_qa_digest(chunks=chunks,digest_summary_prompt=prompt)
     return qa_summary 

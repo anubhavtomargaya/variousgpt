@@ -16,7 +16,9 @@ def get_list_docs():
     if not rows.data:
         return False
     else:
-        return rows.data
+        print("sup")
+        print(rows.data)
+        return [x['file_name']for x in rows.data]
 
 def check_user_exist(email):
     existing_user = supabase.table('users').select('*').eq('email', email).execute()

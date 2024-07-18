@@ -3,6 +3,7 @@ from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
+from gpt_app.common.supabase_handler import get_list_docs
 from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
 from . import view_app
 
@@ -139,7 +140,8 @@ def get_analyst_questions_transcript(file_name):
     return jsonify(doc)  
 @view_app.route('/docs/list')
 def list_calls():
-    list = list_embedding_dir()
+    # list = list_embedding_dir()
+    list = get_list_docs()
     import time
     time.sleep(.1)
     return jsonify(list)

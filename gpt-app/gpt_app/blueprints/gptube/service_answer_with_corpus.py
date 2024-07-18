@@ -6,7 +6,8 @@ from gpt_app.common.session_manager import get_user_email
 from gpt_app.common.utils_dir import load_summary_embedded
 from gpt_app.common.supabase_handler import get_chunk_doc
 from gpt_app.common.constants import DEFAULT_TEMPERATURE, DEFAULT_TOP_P, DEFAULT_MODEL
-
+from gpt_app.blueprints.gptube.tool_summarise import get_chained_summary
+from gpt_app.blueprints.gptube.service_embed_text import get_summary_of_qa_doc
 import numpy as np
 
 client = get_openai_client()
@@ -16,6 +17,11 @@ def get_context_corpus(file_name):
 
 def get_context_corpus_database(file):
     chunks_dict = get_chunk_doc(file)
+    print("chunks dict")
+    print(chunks_dict.keys())
+    x = [v.keys() for k,v in chunks_dict.items()]
+    print(x)
+    # print(chunks_dict)
     return chunks_dict
 
 def find_top_chunks_database(chunk_dict, question_emb, top_n = 3):
@@ -114,44 +120,50 @@ def create_summary_prompt(doc):
             count +=1
     return prompt
 
+def summarise_in_chunks(doc):
+    print('doc')
+    print(doc)
+
+    qdg = get_chained_summary(doc)
+    summary = get_summary_of_qa_doc(qdg)
+    return summary['qa_summary']
+
 ## add save qa handling
 def answer_question(doc,
                     question,
+                    
                     question_prompt= '',
                     file_name = '',
                     _top_n=3):
     # records = load_qa_record()
-    client = get_openai_client()
+    # client = get_openai_client()
     classification = classify_question(client, question)
+    question_embedding = get_embedding(client,question)
     print(classification)
     if classification == "summary":
         
-        prompt = create_summary_prompt(doc)
-       
+        # prompt = create_summary_prompt(doc)
+        text_chunks = [ v['chunk_text'] for k,v in doc.items()]
+        return summarise_in_chunks(text_chunks)
     else:
-        question_embedding = get_embedding(client,question)
         top_chunks = find_top_chunks_database(doc, question_embedding,top_n=_top_n)
-        # summaries = [c['summary'] for c in top_chunks]
-        # texts = [c['chunk_text'] for c in top_chunks]
-        # print(summaries)
-        # print(texts)
         prompt = create_prompt(top_chunks, question)
     
-    aided_prompt = question_prompt + prompt
-    tokens = count_tokens(aided_prompt)
-    print(tokens)
+        aided_prompt = question_prompt + prompt
+        tokens = count_tokens(aided_prompt)
+        print(tokens)
 
 
-    answer = get_answer_from_gpt(client,prompt=prompt,system_content=question_prompt)
-    # record = QARecord(filename=file_name,
-    #                   email=get_user_email(),
-    #                   question=question,prompt_tokens=tokens,answer=answer)
-    # record._extra['classification'] = classification
-    # records.append(record.__dict__)
-    # r = save_qa_record(records)
-    # print("record saved ", r)
-    print("ANSWER:")
-    return answer
+        answer = get_answer_from_gpt(client,prompt=prompt,system_content=question_prompt)
+        # record = QARecord(filename=file_name,
+        #                   email=get_user_email(),
+        #                   question=question,prompt_tokens=tokens,answer=answer)
+        # record._extra['classification'] = classification
+        # records.append(record.__dict__)
+        # r = save_qa_record(records)
+        # print("record saved ", r)
+        print("ANSWER:")
+        return answer
 
 
 question_prompt = " You will be provided with transcript chunks of a conference call. \
