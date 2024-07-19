@@ -55,6 +55,8 @@ def submit_youtube():
     # check if alreayd downloaded: fetch meta if exists and return 
     result = download_youtube_audio(url=url,local= not GCS) # saves to YOUTUBE_DIR returns a meta
     print(result)
+    if not result:
+        raise HTTPException("Unable to download the audio")
     # print(result.__dict__ )
     if not isinstance(result,dict):
         r = result.__dict__

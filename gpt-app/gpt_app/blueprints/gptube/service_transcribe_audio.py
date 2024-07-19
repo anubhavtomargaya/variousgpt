@@ -170,7 +170,7 @@ def create_text_from_audio(file_name:Path,
                 source_dir = PROCESSED_DIR
                 print("ogg converted!")
                 
-                trx = transcribe_gcs_audio(gcs_client=gcs_client,audio_file=fname,dir=source_dir,prompt=file_name.name)
+                trx = transcribe_gcs_audio(gcs_client=gcs_client,audio_file=fname,dir=source_dir,prompt=file_name.name,db=db)
                 print("dest:",trx)
 
             # return trx

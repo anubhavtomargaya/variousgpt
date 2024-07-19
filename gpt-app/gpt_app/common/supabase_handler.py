@@ -19,6 +19,15 @@ def get_list_docs():
         print("sup")
         print(rows.data)
         return [x['file_name']for x in rows.data]
+    
+def get_list_transcripts():
+    rows =  supabase.table('transcripts').select('title').execute()
+    if not rows.data:
+        return False
+    else:
+        print("sup")
+        print(rows.data)
+        return [x['title']for x in rows.data]
 
 def check_user_exist(email):
     existing_user = supabase.table('users').select('*').eq('email', email).execute()
