@@ -3,26 +3,13 @@
 from gpt_app.common.utils_dir import _make_file_path
 from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket
 from  gpt_app.blueprints.gptube.helpers_pdf import extract_text_from_pdf_bytes
+from  gpt_app.blueprints.gptube.helpers_db import create_doc_for_file
 from gpt_app.common.utils_text import split_document, count_words,generate_hash_key
 from gpt_app.common.supabase_handler import insert_chunk_doc_entry
 
 CHUNK_PARAMS  = (2000,100)
 
-def create_doc_for_file(filename, chunks:list, meta:dict={}):
-    """ make the dict in first stage of storing doc (towards common format)
-    """
-    meta['chunks_num']= len(chunks)
-    c = {n:{
-        'chunk_text':v,
-        'chunk_embedding':None,
-        'chunk_meta':{ }} for n,v in enumerate(chunks)}
 
-    doc = {'file_name':filename,
-           'chunks':c,
-           'metadata':meta
-           }
-   
-    return doc
 
 def get_pdf_txt(file):
     bdata = download_pdf_from_bucket(file)

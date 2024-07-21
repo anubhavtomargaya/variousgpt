@@ -7,6 +7,8 @@ from gpt_app.common.utils_dir import _load_chunks_segment_doc, _load_chunks_summ
  
 
 from .service_process_pdf import process_pdf_to_doc
+from .service_process_tdoc import process_transcripton_doc_to_rag
+
 from .service_create_embedding import create_embedding_for_doc
 from .service_answer_with_corpus import answer_question, get_context_corpus, get_context_corpus_database
 from .service_transcribe_audio import create_text_from_audio
@@ -111,6 +113,28 @@ def process_pdf():
         raise HTTPException("title not provided ")
         
     return jsonify(process_pdf_to_doc(file=file))
+
+@gpt_app.route('/process/tdoc', methods=['POST','GET'])
+def process_transcription_doc():
+    GCS = True 
+    mthd = request.method 
+    args = request.args
+    app.logger.info('method: %s',mthd)
+    app.logger.info('args: %s',args)
+    if mthd =='GET':
+        print("get wont work in reality")
+        file = args.get('file') or None
+        
+    elif mthd=='POST':
+        data = request.get_json()
+        file = data.get('file') or None
+
+    else:raise HTTPException("Invalid Method")
+
+    if not file:
+        raise HTTPException("title not provided ")
+        
+    return jsonify(process_transcripton_doc_to_rag(file=file))
 
     
 @gpt_app.route('/embed/pdf', methods=['POST','GET'])

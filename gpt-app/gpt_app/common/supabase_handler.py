@@ -47,11 +47,19 @@ def check_yt_exist(link):
     
 def check_ts_exist(title):
     existing_ts = supabase.table('transcripts').select('*').eq('title', title).execute()
-    print("exsiting vdo",existing_ts)
+    print("exsiting doc",existing_ts)
     if not existing_ts.data:
         return False
     else:
         return existing_ts.data 
+    
+def check_tdoc_exist(filename):
+    existing_tdoc = supabase.table('chunk_docs').select('*').eq('file_name', filename).execute()
+    # print("exsiting vdo",existing_tdoc)
+    if not existing_tdoc.data:
+        return False
+    else:
+        return existing_tdoc.data 
     
 def insert_yt_entry(link,meta,added_by):
 

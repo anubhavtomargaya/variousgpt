@@ -79,17 +79,40 @@ def download_blob_to_tmpfile(gcs_client,
     bucket = gcs_client.bucket(BUCKET_NAME)
 
       # Download the audio file to a temporary file
-    audio_file = _make_file_path(source_dir,
+    blob_path = _make_file_path(source_dir,
                                             source_filename,
                                             local=False)
-    
+    print(blob_path)
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        blob = bucket.blob(audio_file)
+        blob = bucket.blob(blob_path)
         exists = blob.exists()
         print(f"Exists: {exists}")
         blob.download_to_filename(temp_file.name)
     return exists
 
+def download_blob_to_memory(gcs_client,
+                            source_filename: Path,
+                            source_dir: Path = PROCESSED_DIR):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+
+    # Create the blob path
+    blob_path = _make_file_path(source_dir, source_filename, local=False)
+    print(blob_path)
+    
+    # Get the blob
+    blob = bucket.blob(blob_path)
+    exists = blob.exists()
+    print(f"Exists: {exists}")
+
+    if exists:
+        # Download the blob's content as a string
+        blob_content = blob.download_as_string()
+
+        # Parse the string content as JSON
+        json_content = json.loads(blob_content)
+        return json_content
+    else:
+        return None
 
 def load_summary_embedded(file_name)->dict:
     file_path = Path(EMBEDDING_DIR,f"{Path(file_name).stem}.json")
