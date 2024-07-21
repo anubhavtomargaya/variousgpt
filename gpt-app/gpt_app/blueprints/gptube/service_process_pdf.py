@@ -5,7 +5,7 @@ from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket, downlo
 from  gpt_app.blueprints.gptube.helpers_pdf import extract_text_from_pdf_bytes
 from  gpt_app.blueprints.gptube.helpers_db import create_doc_for_file
 from gpt_app.common.utils_text import split_document, count_words,generate_hash_key
-from gpt_app.common.supabase_handler import insert_chunk_doc_entry
+from gpt_app.common.supabase_handler import check_tdoc_exist, insert_chunk_doc_entry
 
 CHUNK_PARAMS  = (2000,100)
 
@@ -31,16 +31,23 @@ def get_transcript_text(file):
     return txt_
 
 def process_pdf_to_doc(file):
-    txt = get_pdf_txt(file)
-    meta = {'chunk_params':CHUNK_PARAMS}
-    chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
-    doc = create_doc_for_file(chunks=chunks,
-                             filename=file,
-                             meta=meta)
-    sp = insert_chunk_doc_entry(doc=doc,added_by='test')
-    print(sp)
+    tdoc = check_tdoc_exist(file)
+    if  tdoc:
+        return False
+    else:
+            
+        txt = get_pdf_txt(file)
+        print("file",file)
+        meta = {'chunk_params':CHUNK_PARAMS}
+        chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
+        doc = create_doc_for_file(chunks=chunks,
+                                filename=file,
+                                e='pdf',
+                                meta=meta)
+        sp = insert_chunk_doc_entry(doc=doc,added_by='test')
+        print(sp)
 
-    return True 
+        return True 
    
 
 

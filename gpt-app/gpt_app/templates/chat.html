@@ -255,7 +255,7 @@
     <div class="app"> <h3>Chat with Concall</h3> 
         <h4 id="email">{{user}}</h2> 
             <hr/>
-        <h2 id="title">File Title Here</h2> 
+        <h2 id="title">{{title}}</h2> 
         <div class="footer"> 
         <button id="leftButton">LIST</button>
         <button id="rightButton">HISTORY</button> 
@@ -430,8 +430,9 @@
 
     // Update getQuestions call when a new file is selected
     function updateTitle(title) {
-        titleElement.textContent = title;
-        closePanels();
+        // titleElement.textContent = title;
+        window.location.href = "/view/chat/"+ title;
+        // closePanels();
         getDocument(); // Fetch questions for the new file
     }
 

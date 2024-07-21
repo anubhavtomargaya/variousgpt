@@ -26,7 +26,7 @@ function submitYouTube() {
         console.log(response.data);
         loader.style.display = 'none'; // Hide the loader
         responseDiv.innerHTML = `
-            <p id="title">Title: ${response.data.title}</p>
+            <p id="title">${response.data.title}</p>
             <p id="file_path">${response.data.file_path}</p>
             <h3 id="cost">Approx Cost:  $${response.data.whisper_approx_cost}</h3>
             <p>Description: ${response.data.description}</p>
@@ -60,7 +60,7 @@ function transcribeYouTube() {
     console.log(titleElement.textContent)
     loader.style.display = 'block'; // Show the loader
     responseDiv.innerHTML = ''; // Clear previous responses
-    console.log("calling api")
+    console.log("calling transcripton api")
     axios.post('/api/v1/gptube/transcribe/youtube', { title: titleElement.textContent, user_prompt: userPrompt } )
     .then(function (response) {
         
@@ -72,8 +72,10 @@ function transcribeYouTube() {
             <p>Transcription Result:</p>
             <pre>${response.data}</pre>
         `;
-        window.location.href = "/view/embed?pl="+ titleElement.textContent.trim();
-    })
+        // window.location.href = "/view/embed?pl="+ titleElement.textContent.trim();
+    window.location.href = "/view/procpdf?extn=json&file="+ titleElement.textContent.split('.')[0];
+    }
+)
     .catch(function (error) {
         // Handle error
         console.error('Error:', error.response.data);

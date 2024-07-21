@@ -11,6 +11,7 @@ def process_transcripton_doc_to_rag(file_name):
     if check_tdoc_exist(file_name):
         return False #use this func when the process is called
     sth = download_blob_to_memory(gcs_client,file_name,TS_DIR)
+    print("type",type(sth))
     if not sth or not isinstance(sth,dict):
         raise Exception("file not present in bucket")
     text = sth.get('text',None)

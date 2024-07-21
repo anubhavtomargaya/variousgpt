@@ -10,11 +10,13 @@ def create_embedding_for_doc(file):
     chunks_dict = get_chunk_doc(file)
     for k,v in chunks_dict.items():
         chnk = v['chunk_text']
-        chunks_dict[k]['chunk_embedding'] = get_embedding(client=openai_client,
+        if not chunks_dict[k]['chunk_embedding']:
+            chunks_dict[k]['chunk_embedding'] = get_embedding(client=openai_client,
                                                           text=chnk)
-
-    ures = update_doc_chunk(file=file,rich_chunks=chunks_dict)
-    print(ures)
+            ures = update_doc_chunk(file=file,rich_chunks=chunks_dict)
+            print(ures)
+        else:
+            pass
     return True
 
 if __name__ == '__main__':

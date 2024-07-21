@@ -21,14 +21,14 @@ def load_pdf_into_bucket(file):
     except Exception as e:
         raise Exception("LoadError: couldnt upload pdf : %s",e.__str__())
     
-def download_pdf_from_bucket(file_name, dir=PDF_DIR):
+def download_pdf_from_bucket(file_name, dir=PDF_DIR,format='pdf'):
     source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,
-                                       local=False)   
+                                       local=False,format=format)   
  
     return download_gcs_file_as_bytes(source_blob_name=source_blob_name)
 
 def download_transcript_json_from_bucket(file_name, dir=TS_DIR):
     source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,format='json',
                                        local=False)   
- 
+    
     return download_gcs_file_as_bytes(source_blob_name=source_blob_name)

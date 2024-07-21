@@ -82,7 +82,8 @@
                     console.log(data.file_name)
                     console.log(Object(data.file_name))
                     alert('File uploaded successfully: ' + Object(data.file_name));
-                    window.location.href = "/view/procpdf?file="+ Object(data.file_name);
+                    // can add extn=pdf&file=''
+                    window.location.href = "/view/procpdf?file="+ Object(data.file_name).split('.')[0];
                     
                 }
             })

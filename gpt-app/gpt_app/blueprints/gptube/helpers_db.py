@@ -12,7 +12,7 @@ class RAGDoc(BaseModel):
     metadata:dict
 
 
-def create_doc_for_file(filename, chunks:list, meta:dict={}):
+def create_doc_for_file(filename, chunks:list,e='pdf', meta:dict={}):
     """ make the dict in first stage of storing doc (towards common format)
     """
     meta['chunks_num']= len(chunks)
@@ -23,7 +23,7 @@ def create_doc_for_file(filename, chunks:list, meta:dict={}):
 
     doc = {'file_name':filename.split('.')[0],
            'chunks':c,
-           'extn':filename.split('.')[-1],
+           'extn':e,
            'metadata':meta
            }
    

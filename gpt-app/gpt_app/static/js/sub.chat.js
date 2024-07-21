@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 callListDiv.appendChild(ul);
                 // console.log(Object(data))
-                updateTitle(data[data.length - 1])
+                // updateTitle(data[data.length - 1])
             })
             .catch(error => {
             console.error('Error fetching call list:', error);

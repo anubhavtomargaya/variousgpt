@@ -7,10 +7,24 @@ document.addEventListener("DOMContentLoaded", function() {
     // Extract the filename from the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const filename = urlParams.get('file');
+    const extn = urlParams.get('extn');
+    console.log('extn')
+    console.log(extn)
 
     if (filename) {
         // Call the process PDF API
-        fetch('/api/v1/gptube/process/pdf', {
+        if (extn === 'pdf') {
+
+
+            baseUrl = '/api/v1/gptube/process/pdf';
+        } else if (extn === 'json') {
+            baseUrl = '/api/v1/gptube/process/tdoc';
+        } else {
+            // Handle other extensions or provide a default base URL if needed
+            baseUrl = '/api/v1/gptube/process/pdf';
+        }
+        const url = 
+        fetch(baseUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
             tick1.style.display = 'inline';
 
             // Call the embed PDF API
-            fetch('/api/v1/gptube/embed/pdf', {
+            fetch('/api/v1/gptube/embed/doc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -36,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 // Show second tick
                 tick2.style.display = 'inline';
-                window.location.href = "/view/";
+                window.location.href = "/view/chat/"+ filename;
             })
             .catch(error => {
                 console.error('Error embedding PDF:', error);

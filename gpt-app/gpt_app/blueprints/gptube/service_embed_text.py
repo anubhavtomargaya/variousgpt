@@ -542,7 +542,8 @@ def create_text_segment_doc(ts_filename,
         print("new chunk size",chunk_size)
     chunks = split_document(text,chunk_size=chunk_size,overlap=overlap)
     print("num chunks", len(chunks))
-    doc_sum_ = gpt_segment_document_chunks( chunks,segger_prompt=segger_prompt) # uses openai 
+    doc_sum_ = gpt_segment_document_chunks(chunks, 
+                                           segger_prompt=segger_prompt) # uses openai 
     if not gcs:
         return save_segment_doc(doc_sum_,filename=ts_filename)
 

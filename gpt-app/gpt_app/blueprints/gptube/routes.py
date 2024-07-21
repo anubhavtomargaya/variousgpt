@@ -134,11 +134,11 @@ def process_transcription_doc():
     if not file:
         raise HTTPException("title not provided ")
         
-    return jsonify(process_transcripton_doc_to_rag(file=file))
+    return jsonify(process_transcripton_doc_to_rag(file))
 
     
-@gpt_app.route('/embed/pdf', methods=['POST','GET'])
-def embed_pdf():
+@gpt_app.route('/embed/doc', methods=['POST','GET'])
+def embed_doc():
 
     mthd = request.method 
     args = request.args

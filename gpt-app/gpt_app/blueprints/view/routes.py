@@ -89,6 +89,9 @@ def get_document(file_name): #process pdf and show
 
         print("json inside")
         txt = get_transcript_text(file_name)
+    else:
+        txt =  get_pdf_txt(file_name)
+    
     return {'text':txt}
 
 @view_app.route('/records/<file_name>',methods=['POST','GET'])
