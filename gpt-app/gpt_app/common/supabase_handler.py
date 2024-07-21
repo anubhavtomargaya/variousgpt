@@ -11,6 +11,13 @@ def get_chunk_doc(filename)->dict:
     else:
         return rows.data[0]['chunks']
     
+def get_file_extn_doc(filename)->dict:
+    rows =  supabase.table('chunk_docs').select('extn').eq('file_name', filename).execute()
+    if not rows.data:
+        return False
+    else:
+        return rows.data[0]
+    
 def get_list_docs():
     rows =  supabase.table('chunk_docs').select('file_name').execute()
     if not rows.data:
@@ -18,7 +25,7 @@ def get_list_docs():
     else:
         print("sup")
         print(rows.data)
-        return [x['file_name']for x in rows.data]
+        return [x['file_name'] for x in rows.data]
     
 def get_list_transcripts():
     rows =  supabase.table('transcripts').select('title').execute()

@@ -21,8 +21,9 @@ def create_doc_for_file(filename, chunks:list, meta:dict={}):
         'chunk_embedding':None,
         'chunk_meta':{ }} for n,v in enumerate(chunks)}
 
-    doc = {'file_name':filename,
+    doc = {'file_name':filename.split('.')[0],
            'chunks':c,
+           'extn':filename.split('.')[-1],
            'metadata':meta
            }
    

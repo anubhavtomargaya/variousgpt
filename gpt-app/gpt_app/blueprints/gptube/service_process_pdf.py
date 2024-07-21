@@ -1,7 +1,7 @@
 
 
 from gpt_app.common.utils_dir import _make_file_path
-from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket
+from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket, download_transcript_json_from_bucket
 from  gpt_app.blueprints.gptube.helpers_pdf import extract_text_from_pdf_bytes
 from  gpt_app.blueprints.gptube.helpers_db import create_doc_for_file
 from gpt_app.common.utils_text import split_document, count_words,generate_hash_key
@@ -16,7 +16,19 @@ def get_pdf_txt(file):
     txt = extract_text_from_pdf_bytes(bdata)
     print('text')
     print(txt)
-    return txt
+    return txt 
+import json
+def get_transcript_text(file):
+    print("file")
+    print(file)
+    bdata = download_transcript_json_from_bucket(file)
+    print('text')
+    print(bdata)
+    txt = json.loads(bdata)
+    txt_ = txt['text']
+    # txt = extract_text_from_pdf_bytes(bdata)
+    print(txt_)
+    return txt_
 
 def process_pdf_to_doc(file):
     txt = get_pdf_txt(file)

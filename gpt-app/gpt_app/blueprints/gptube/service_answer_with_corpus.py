@@ -18,6 +18,8 @@ def get_context_corpus(file_name):
 def get_context_corpus_database(file):
     chunks_dict = get_chunk_doc(file)
     print("chunks dict")
+    if not chunks_dict:
+        raise Exception("file not found, %s,",file)
     print(chunks_dict.keys())
     x = [v.keys() for k,v in chunks_dict.items()]
     print(x)
@@ -28,6 +30,8 @@ def find_top_chunks_database(chunk_dict, question_emb, top_n = 3):
     similarities = []
     for key, value in chunk_dict.items():
         chunk_embedding = value['chunk_embedding']
+        if not chunk_embedding:
+            raise Exception("embedding not found : %s",value)
         similarity = cosine_similarity(question_emb, chunk_embedding)
         similarities.append((key, similarity))
     
