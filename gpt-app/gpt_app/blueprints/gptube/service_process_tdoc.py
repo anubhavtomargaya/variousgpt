@@ -20,6 +20,7 @@ def process_transcripton_doc_to_rag(file_name):
     meta = {'chunk_params':CHUNK_PARAMS_TDOC}
     chunks = split_document(text,CHUNK_PARAMS_TDOC[0],CHUNK_PARAMS_TDOC[1])
     doc = create_doc_for_file(chunks=chunks,
+                              e='json',
                              filename=file_name,
                              meta=meta)
     
