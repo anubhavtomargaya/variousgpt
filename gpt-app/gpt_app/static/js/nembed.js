@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", function() {
             tick1.style.display = 'inline';
 
             // Call the embed PDF API
+            loader.style.display = 'block';
+      
             fetch('/api/v1/gptube/embed/doc', {
                 method: 'POST',
                 headers: {
@@ -49,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 // Show second tick
+                loader.style.display = 'none';
                 tick2.style.display = 'inline';
                 window.location.href = "/view/chat/"+ filename;
             })
