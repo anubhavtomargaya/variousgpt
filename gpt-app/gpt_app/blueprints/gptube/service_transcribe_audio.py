@@ -66,8 +66,9 @@ def transcribe_gcs_audio(gcs_client,
             print("total cost $", round(0.006*total_time.seconds),2)
 
             fpath = save_transcript_text_json(transcription,
-                            audio_file,
-                            dir=TS_DIR)
+                                            audio_file,
+                                            dir=TS_DIR,
+                                            added_by=get_user_email())
             if fpath:
                 print(id, "file processsed as ts: ", fpath.stem)
                 return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR,format='json')

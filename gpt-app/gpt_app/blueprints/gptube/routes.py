@@ -15,10 +15,10 @@ from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
 from .load_youtube_audio import download_youtube_audio
 from .load_pdf import load_pdf_into_bucket, load_pdf_link_into_bucket
-from flask import current_app as app,jsonify,request, url_for, redirect,render_template
+from flask import current_app as app,jsonify,request
 
 
-from  gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
+from  gpt_app.common.session_manager import get_user_email, login_required,is_logged_in
 
 
 from . import gpt_app
@@ -31,6 +31,7 @@ def index():
         return "Please Login to continue"
 
 @gpt_app.route('/yt/submit', methods=['POST','GET'])
+@login_required
 def submit_youtube():
     GCS = True
     mthd = request.method 
@@ -105,6 +106,7 @@ def upload_file():
 
     
 @gpt_app.route('/process/pdf', methods=['POST','GET'])
+@login_required
 def process_pdf():
     GCS = True 
     mthd = request.method 
@@ -123,10 +125,11 @@ def process_pdf():
 
     if not file:
         raise HTTPException("title not provided ")
-        
-    return jsonify(process_pdf_to_doc(file=file))
+    
+    return jsonify(process_pdf_to_doc(file=file,added_by=get_user_email()))
 
 @gpt_app.route('/process/tdoc', methods=['POST','GET'])
+@login_required
 def process_transcription_doc():
     GCS = True 
     mthd = request.method 
@@ -146,7 +149,7 @@ def process_transcription_doc():
     if not file:
         raise HTTPException("title not provided ")
         
-    return jsonify(process_transcripton_doc_to_rag(file))
+    return jsonify(process_transcripton_doc_to_rag(file,added_by=get_user_email()))
 
     
 @gpt_app.route('/embed/doc', methods=['POST','GET'])
@@ -173,6 +176,7 @@ def embed_doc():
 
     
 @gpt_app.route('/transcribe/youtube', methods=['POST','GET'])
+@login_required
 def transcribe_youtube():
     GCS = True 
     mthd = request.method 

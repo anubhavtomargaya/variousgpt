@@ -1,7 +1,7 @@
 from http.client import HTTPException
 from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
-from gpt_app.common.session_manager import get_user_email
+from gpt_app.common.session_manager import get_user_email, login_required
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
 from gpt_app.common.supabase_handler import get_file_extn_doc, get_list_docs, get_list_transcripts, get_qa_records
 from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
@@ -9,15 +9,23 @@ from gpt_app.blueprints.gptube.service_process_pdf import get_pdf_txt, get_trans
 from . import view_app
 
 @view_app.route('/')
+@login_required
 def index():
     return render_template('chat.html',user=get_user_email())
 
-@view_app.route('chat/<file_name>')
+@view_app.route('/chat')
+@login_required
+def chat_app():
+    return render_template('chat.html',user=get_user_email())
+
+@view_app.route('/chat/<file_name>')
+@login_required
 def chat(file_name):
     
     return render_template('chat.html',title=file_name,user=get_user_email())
 
 @view_app.route('/submit')
+@login_required
 def submit():
     return render_template('submit.html')
 
@@ -26,6 +34,7 @@ def file_upload():
     return render_template('getfile.html')
 
 @view_app.route('/new')
+@login_required
 def new():
     return render_template('nsubmit.html')
 
@@ -35,6 +44,7 @@ def embed():
     return render_template('embed.html',placeholder=pl)
 
 @view_app.route('/procpdf')
+@login_required
 def proc_pdf():
     file = request.args.get('file', None)
     extn = request.args.get('extn', None)
@@ -75,6 +85,7 @@ class HistoryQA:
 
 from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
 @view_app.route('/transcript/<file_name>')
+@login_required
 def get_transcript(file_name):
 
     text = load_transcript_doc(f'{file_name}',gcs=True)
@@ -82,6 +93,7 @@ def get_transcript(file_name):
 
 
 @view_app.route('/document/<file_name>')
+@login_required
 def get_document(file_name): #process pdf and show
     print('fil')
     print(file_name)
@@ -101,6 +113,7 @@ def get_document(file_name): #process pdf and show
     return {'text':txt}
 
 @view_app.route('/records/<file_name>',methods=['POST','GET'])
+@login_required
 def get_records(file_name):
     mthd = request.method
    
@@ -120,6 +133,7 @@ def get_records(file_name):
     return jsonify(user_file_records)
 
 @view_app.route('/transcript/update/<file_name>',methods=['POST'])
+@login_required
 def update_transcript(file_name):
     mthd = request.method
    
@@ -160,6 +174,7 @@ def get_segmented_transcript(file_name):
     return jsonify(text)
  
 @view_app.route('/questions/<file_name>') #instead of this add view for view/transcript/ here
+@login_required
 def get_analyst_questions_transcript(file_name):
     if check_question_dir(file_name):
         doc = load_question_doc(filename=file_name)
@@ -171,6 +186,7 @@ def get_analyst_questions_transcript(file_name):
 
 
 @view_app.route('/docs/list')
+@login_required
 def list_calls():
     # list = list_embedding_dir()
     list = get_list_docs()

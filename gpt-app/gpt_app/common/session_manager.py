@@ -72,4 +72,13 @@ def get_user_email():
 
      return session.get('email', None)
 
-        
+from functools import wraps
+from flask import redirect, url_for, request, jsonify
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not is_logged_in():
+            return jsonify({'error': 'Authentication required'}), 401
+        return f(*args, **kwargs)
+    return decorated_function

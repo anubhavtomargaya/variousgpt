@@ -30,7 +30,7 @@ def get_transcript_text(file):
     print(txt_)
     return txt_
 
-def process_pdf_to_doc(file):
+def process_pdf_to_doc(file,added_by=None):
     tdoc = check_tdoc_exist(file)
     if  tdoc:
         return False
@@ -44,7 +44,7 @@ def process_pdf_to_doc(file):
                                 filename=file,
                                 e='pdf',
                                 meta=meta)
-        sp = insert_chunk_doc_entry(doc=doc,added_by='test')
+        sp = insert_chunk_doc_entry(doc=doc,added_by=added_by)
         print(sp)
 
         return True 

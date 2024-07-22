@@ -7,7 +7,7 @@ from gpt_app.common.supabase_handler import check_tdoc_exist, insert_chunk_doc_e
 
 CHUNK_PARAMS_TDOC = (1000,100)
 
-def process_transcripton_doc_to_rag(file_name):
+def process_transcripton_doc_to_rag(file_name,added_by=None):
     if check_tdoc_exist(file_name):
         return False #use this func when the process is called
     tdoc = download_blob_to_memory(gcs_client,file_name,TS_DIR,fmt='json')
@@ -24,7 +24,7 @@ def process_transcripton_doc_to_rag(file_name):
                              filename=file_name,
                              meta=meta)
     
-    sp = insert_chunk_doc_entry(doc=doc,added_by='test')
+    sp = insert_chunk_doc_entry(doc=doc,added_by=added_by)
     print(sp)
 
     return True 

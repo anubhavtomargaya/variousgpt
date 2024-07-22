@@ -385,13 +385,16 @@ def save_transcript_srt(transcribed_srt,
 
 
 def save_transcript_text_json(transcribed_text:openai.types.audio.transcription.Transcription, 
-                      file_name,dir=TS_DIR):
+                      file_name,dir=TS_DIR,
+                      added_by=None):
     if not transcribed_text:
         raise ValueError("Missing arguments")
     fpath = Path(dir,f'{file_name.stem}.json')
     print("saving json file to...", fpath)
+    ts_dict = transcribed_text.__dict__
+    ts_dict['added_by'] = added_by
     with open(fpath, 'w') as f:
-        json.dump(transcribed_text.__dict__,f)
+        json.dump(ts_dict,f)
     return fpath
 
 
