@@ -92,11 +92,13 @@ def download_blob_to_tmpfile(gcs_client,
 
 def download_blob_to_memory(gcs_client,
                             source_filename: Path,
-                            source_dir: Path = PROCESSED_DIR):
+                            source_dir: Path = PROCESSED_DIR,
+                            fmt=None):
     bucket = gcs_client.bucket(BUCKET_NAME)
 
     # Create the blob path
-    blob_path = _make_file_path(source_dir, source_filename, local=False)
+    blob_path = _make_file_path(source_dir, source_filename, local=False,
+                                format=fmt)
     print(blob_path)
     
     # Get the blob

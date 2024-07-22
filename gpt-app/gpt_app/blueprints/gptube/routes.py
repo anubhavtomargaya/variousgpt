@@ -200,8 +200,8 @@ def transcribe_youtube():
                                             file_name=title,
                                             base_prompt=base_prompt,
                                             ogg=True,
-                                            gcs=False,
-                                            db=True))
+                                            gcs=True,
+                                            db=False))
     
     # return the text from json if create is true
     

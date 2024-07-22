@@ -10,11 +10,11 @@ CHUNK_PARAMS_TDOC = (1000,100)
 def process_transcripton_doc_to_rag(file_name):
     if check_tdoc_exist(file_name):
         return False #use this func when the process is called
-    sth = download_blob_to_memory(gcs_client,file_name,TS_DIR)
-    print("type",type(sth))
-    if not sth or not isinstance(sth,dict):
+    tdoc = download_blob_to_memory(gcs_client,file_name,TS_DIR,fmt='json')
+    print("type",type(tdoc))
+    if not tdoc or not isinstance(tdoc,dict):
         raise Exception("file not present in bucket")
-    text = sth.get('text',None)
+    text = tdoc.get('text',None)
     if not text:
         raise Exception("unable to find 'text' in the transcript doc tdoc")
     meta = {'chunk_params':CHUNK_PARAMS_TDOC}

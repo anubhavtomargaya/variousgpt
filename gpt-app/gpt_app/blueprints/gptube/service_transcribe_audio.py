@@ -53,7 +53,7 @@ def transcribe_gcs_audio(gcs_client,
         if db:
             ttl = Path(audio_file).as_posix().split('.')[0]
             e_ = insert_ts_entry(title=ttl,
-                                 text=transcription,
+                                 text=transcription.text,
                                  added_by=get_user_email())
             print("E_",e_)
             return ttl if e_ else False
@@ -70,7 +70,7 @@ def transcribe_gcs_audio(gcs_client,
                             dir=TS_DIR)
             if fpath:
                 print(id, "file processsed as ts: ", fpath.stem)
-                return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR)
+                return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR,format='json')
                 return f'{out_file_name}.json'
             else:
                 raise Exception("Error! not fpath")
