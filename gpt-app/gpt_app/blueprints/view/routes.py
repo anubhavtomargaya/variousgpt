@@ -25,6 +25,10 @@ def submit():
 def file_upload():
     return render_template('getfile.html')
 
+@view_app.route('/new')
+def new():
+    return render_template('nsubmit.html')
+
 @view_app.route('/embed')
 def embed():
     pl = request.args.get('pl', "FileName")
@@ -33,6 +37,8 @@ def embed():
 @view_app.route('/procpdf')
 def proc_pdf():
     file = request.args.get('file', None)
+    extn = request.args.get('extn', None)
+
     if not file:
         raise HTTPException("File not found")
     

@@ -29,6 +29,11 @@
         Drop files here or click to upload
     </div>
     <input type="file" id="fileInput" multiple>
+    <div>
+        <label for="pdfLinkInput">Or enter PDF link:</label>
+        <input type="text" id="pdfLinkInput" placeholder="Enter PDF link">
+        <button onclick="uploadLink()">Upload Link</button>
+    </div>
     <script>
         document.getElementById('uploadArea').addEventListener('click', () => {
             document.getElementById('fileInput').click();
@@ -79,12 +84,38 @@
                 if (data.error) {
                     alert('Error: ' + data.error);
                 } else {
-                    console.log(data.file_name)
-                    console.log(Object(data.file_name))
-                    alert('File uploaded successfully: ' + Object(data.file_name));
-                    // can add extn=pdf&file=''
-                    window.location.href = "/view/procpdf?file="+ Object(data.file_name).split('.')[0];
-                    
+                    alert('File uploaded successfully: ' + data.file_name);
+                    window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function uploadLink() {
+            const pdfLink = document.getElementById('pdfLinkInput').value;
+            if (!pdfLink) {
+                alert('Please enter a PDF link.');
+                return;
+            }
+
+            const url = 'http://localhost:5000/api/v1/gptube/upload';
+            const formData = new FormData();
+            console.log(url)
+            formData.append('pdf_link', pdfLink);
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('PDF link uploaded successfully: ' + data.file_name);
+                    window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
                 }
             })
             .catch(error => {

@@ -14,7 +14,7 @@ from .service_answer_with_corpus import answer_question, get_context_corpus, get
 from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
 from .load_youtube_audio import download_youtube_audio
-from .load_pdf import load_pdf_into_bucket
+from .load_pdf import load_pdf_into_bucket, load_pdf_link_into_bucket
 from flask import current_app as app,jsonify,request, url_for, redirect,render_template
 
 
@@ -75,21 +75,33 @@ def submit_youtube():
 @gpt_app.route('/upload', methods=['POST'])
 def upload_file():
     print("starting upload file")
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
 
-    file = request.files['file']
-    print("type of file")
-    print(type(file))
+    if 'file' in request.files:
+        file = request.files['file']
+        print("type of file")
+        print(type(file))
 
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
 
-    file_url = load_pdf_into_bucket(file)
-    file_name = str(file_url).split('/')[-1]
-    return jsonify({'message': 'File successfully uploaded', 'file_name': file_name}), 200
-    # else:
-    #     return jsonify({'error': 'Invalid file type'}), 400
+        file_url = load_pdf_into_bucket(file)
+        file_name = str(file_url).split('/')[-1]
+        return jsonify({'message': 'File successfully uploaded', 'file_name': file_name}), 200
+    
+    elif 'pdf_link' in request.form:
+        pdf_link = request.form['pdf_link']
+        print("type of pdf_link")
+        print(type(pdf_link))
+
+        if pdf_link == '':
+            return jsonify({'error': 'No PDF link provided'}), 400
+
+        file_url = load_pdf_link_into_bucket(pdf_link)  # Implement this function to handle the link
+        file_name = str(file_url).split('/')[-1]
+        return jsonify({'message': 'PDF link successfully uploaded', 'file_name': file_name}), 200
+    
+    else:
+        return jsonify({'error': 'No file or link part'}), 400
 
     
 @gpt_app.route('/process/pdf', methods=['POST','GET'])

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .upload-area {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+            background-color: #ecf0f1;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover, .upload-area.hover {
+            border-color: #2980b9;
+            background-color: #e0e6e8;
+        }
+        .input-container {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="file"] {
+            width: calc(100% - 110px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 3px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #response, #video-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #loader {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New File</h1>
+    
+    <div class="upload-area" id="uploadArea">
+        Drop PDF files here or click to upload
+    </div>
+    <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
+    
+    <div class="input-container">
+        <input type="text" id="pdfLinkInput" placeholder="Enter PDF link">
+        <button onclick="uploadPdfLink()">Upload PDF Link</button>
+    </div>
+    
+    <div class="input-container">
+        <input type="text" id="youtubeUrl" placeholder="Enter YouTube URL">
+        <button onclick="submitYouTube()">Fetch YouTube</button>
+    </div>
+    
+    <div class="input-container">
+        <input type="text" id="contextContent" placeholder="Enter Context Content (optional)">
+        <button onclick="transcribeYouTube()">Transcribe YouTube</button>
+    </div>
+    
+    <div id="loader"><div class="loader"></div></div>
+    <div id="response"></div>
+    <div id="video-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // File upload event listeners
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        ['dragover', 'dragleave', 'drop'].forEach(eventName => {
+            document.getElementById('uploadArea').addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        document.getElementById('uploadArea').addEventListener('dragover', () => {
+            document.getElementById('uploadArea').classList.add('hover');
+        });
+
+        document.getElementById('uploadArea').addEventListener('dragleave', () => {
+            document.getElementById('uploadArea').classList.remove('hover');
+        });
+
+        document.getElementById('uploadArea').addEventListener('drop', (event) => {
+            document.getElementById('uploadArea').classList.remove('hover');
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (event) => {
+            const files = event.target.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                uploadFile(files[i]);
+            }
+        }
+
+        function uploadFile(file) {
+            const url = 'http://localhost:5000/api/v1/gptube/upload';
+            const formData = new FormData();
+            formData.append('file', file);
+
+            showLoader();
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoader();
+                if (data.error) {
+                    showResponse('Error: ' + data.error);
+                } else {
+                    showResponse('File uploaded successfully: ' + data.file_name);
+                    window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                }
+            })
+            .catch(error => {
+                hideLoader();
+                console.error('Error:', error);
+                showResponse('An error occurred while uploading the file.');
+            });
+        }
+
+        function uploadPdfLink() {
+            const pdfLink = document.getElementById('pdfLinkInput').value;
+            if (!pdfLink) {
+                showResponse('Please enter a PDF link.');
+                return;
+            }
+
+            const url = 'http://localhost:5000/api/v1/gptube/upload';
+            const formData = new FormData();
+            formData.append('pdf_link', pdfLink);
+
+            showLoader();
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoader();
+                if (data.error) {
+                    showResponse('Error: ' + data.error);
+                } else {
+                    showResponse('PDF link uploaded successfully: ' + data.file_name);
+                    window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                }
+            })
+            .catch(error => {
+                hideLoader();
+                console.error('Error:', error);
+                showResponse('An error occurred while uploading the PDF link.');
+            });
+        }
+
+        function getYouTubeID(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length == 11) ? match[7] : false;
+        }
+
+        function submitYouTube() {
+            var url = document.getElementById('youtubeUrl').value.trim();
+            if (!url) {
+                alert('Please enter a YouTube URL.');
+                return;
+            }
+
+            var loader = document.getElementById('loader');
+            var responseDiv = document.getElementById('response');
+            var videoContainer = document.getElementById('video-container');
+
+            loader.style.display = 'block';
+            responseDiv.innerHTML = '';
+            videoContainer.innerHTML = '';
+
+            axios.post('/api/v1/gptube/yt/submit', { url: url })
+            .then(function (response) {
+                console.log(response.data);
+                loader.style.display = 'none';
+                responseDiv.innerHTML = `
+                    <p id="title">${response.data.title}</p>
+                    <p id="file_path">${response.data.file_path}</p>
+                    <h3 id="cost">Approx Cost: $${response.data.whisper_approx_cost}</h3>
+                    <p>Description: ${response.data.description}</p>
+                `;
+
+                videoContainer.innerHTML = `
+                    <iframe src="https://www.youtube.com/embed/${getYouTubeID(url)}" frameborder="0" allowfullscreen></iframe>
+                `;
+            })
+            .catch(function (error) {
+                console.error('Error:', error.response.data);
+                loader.style.display = 'none';
+                responseDiv.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
+            });
+        }
+
+        function transcribeYouTube() {
+            var title = document.getElementById('youtubeUrl').value.trim();
+            var userPrompt = document.getElementById('contextContent').value.trim();
+            if (!title) {
+                alert('Please enter a YouTube URL.');
+                return;
+            }
+            
+            console.log(userPrompt);
+            var loader = document.getElementById('loader');
+            var responseDiv = document.getElementById('response');
+            var titleElement = responseDiv.querySelector('#file_path');
+            console.log(titleElement.textContent);
+            loader.style.display = 'block';
+            responseDiv.innerHTML = '';
+            console.log("calling transcription api");
+            axios.post('/api/v1/gptube/transcribe/youtube', { title: titleElement.textContent, user_prompt: userPrompt })
+            .then(function (response) {
+                console.log("response");
+                console.log(response.data);
+                loader.style.display = 'none';
+                responseDiv.innerHTML = `
+                    <p>Transcription Result:</p>
+                    <pre>${response.data}</pre>
+                `;
+                window.location.href = "/view/procpdf?extn=json&file="+ titleElement.textContent.split('.')[0];
+            })
+            .catch(function (error) {
+                console.error('Error:', error.response.data);
+                loader.style.display = 'none';
+                responseDiv.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
+            });
+        }
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function showResponse(message) {
+            document.getElementById('response').innerText = message;
+        }
+    </script>
+</body>
+</html>

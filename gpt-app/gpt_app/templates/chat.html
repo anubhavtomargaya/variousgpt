@@ -88,7 +88,7 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        #blueprintButton { background-color: #da0c4a;}
+        #newButton { background-color: #da0c4a;}
         #askButton { background-color: #FFD700; }
         #getQuestionsButton { background-color: #83c0bd; }
         #getCallsButton { background-color: #FF6347; }
@@ -292,7 +292,7 @@
         </div>
         
     </div>
-    <button id="blueprintButton"> NEW </button> 
+    <button id="newButton"> NEW </button> 
         <!-- Call list will be dynamically populated here -->
     </div>
 </div>
@@ -320,7 +320,7 @@
     const answerArea = document.getElementById('answer-area');
 
     function navigateToBlueprintRoute() {
-            window.location.href = "{{ url_for('view_app.submit') }} ";
+            window.location.href = "{{ url_for('view_app.new') }} ";
         }
     // Function to open left panel and fetch call list
     function openLeftPanel() {
@@ -511,7 +511,7 @@
             event.target !== leftButton && event.target !== rightButton) {
             closePanels();
         }
-    document.getElementById('blueprintButton').addEventListener('click', navigateToBlueprintRoute);
+    document.getElementById('newButton').addEventListener('click', navigateToBlueprintRoute);
     });
 </script>
 </body> </html>
