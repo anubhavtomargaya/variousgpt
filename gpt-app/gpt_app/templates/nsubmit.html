@@ -158,30 +158,27 @@
         }
 
         function uploadFile(file) {
-            const url = 'http://localhost:5000/api/v1/gptube/upload';
+            const url = '/api/v1/gptube/upload';
             const formData = new FormData();
             formData.append('file', file);
 
             showLoader();
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                hideLoader();
-                if (data.error) {
-                    showResponse('Error: ' + data.error);
-                } else {
-                    showResponse('File uploaded successfully: ' + data.file_name);
-                    window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
-                }
-            })
-            .catch(error => {
-                hideLoader();
-                console.error('Error:', error);
-                showResponse('An error occurred while uploading the file.');
-            });
+            axios.post(url, formData)
+                .then(function (response) {
+                    hideLoader();
+                    const data = response.data;
+                    if (data.error) {
+                        showResponse('Error: ' + data.error);
+                    } else {
+                        showResponse('File uploaded successfully: ' + data.file_name);
+                        window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                    }
+                })
+                .catch(function (error) {
+                    hideLoader();
+                    console.error('Error:', error.response ? error.response.data : error);
+                    showResponse('An error occurred while uploading the file.');
+                });
         }
 
         function uploadPdfLink() {
@@ -191,31 +188,29 @@
                 return;
             }
 
-            const url = 'http://localhost:5000/api/v1/gptube/upload';
+            const url = '/api/v1/gptube/upload';
             const formData = new FormData();
             formData.append('pdf_link', pdfLink);
 
             showLoader();
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                hideLoader();
-                if (data.error) {
-                    showResponse('Error: ' + data.error);
-                } else {
-                    showResponse('PDF link uploaded successfully: ' + data.file_name);
-                    window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
-                }
-            })
-            .catch(error => {
-                hideLoader();
-                console.error('Error:', error);
-                showResponse('An error occurred while uploading the PDF link.');
-            });
+            axios.post(url, formData)
+                .then(function (response) {
+                    hideLoader();
+                    const data = response.data;
+                    if (data.error) {
+                        showResponse('Error: ' + data.error);
+                    } else {
+                        showResponse('PDF link uploaded successfully: ' + data.file_name);
+                        window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                    }
+                })
+                .catch(function (error) {
+                    hideLoader();
+                    console.error('Error:', error.response ? error.response.data : error);
+                    showResponse('An error occurred while uploading the PDF link.');
+                });
         }
+
 
         function getYouTubeID(url) {
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
