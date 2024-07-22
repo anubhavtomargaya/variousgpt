@@ -4,7 +4,7 @@ from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
 from gpt_app.common.utils_openai import get_openai_client,get_embedding,count_tokens
 from gpt_app.common.session_manager import get_user_email
 from gpt_app.common.utils_dir import load_summary_embedded
-from gpt_app.common.supabase_handler import get_chunk_doc
+from gpt_app.common.supabase_handler import get_chunk_doc, insert_qa_entry
 from gpt_app.common.constants import DEFAULT_TEMPERATURE, DEFAULT_TOP_P, DEFAULT_MODEL
 from gpt_app.blueprints.gptube.tool_summarise import get_chained_summary
 from gpt_app.blueprints.gptube.service_embed_text import get_summary_of_qa_doc
@@ -161,11 +161,28 @@ def answer_question(doc,
         answer = get_answer_from_gpt(client,prompt=prompt,system_content=question_prompt)
         # record = QARecord(filename=file_name,
         #                   email=get_user_email(),
-        #                   question=question,prompt_tokens=tokens,answer=answer)
-        # record._extra['classification'] = classification
-        # records.append(record.__dict__)
-        # r = save_qa_record(records)
-        # print("record saved ", r)
+        #                   question=question,
+        #                   prompt_tokens=tokens,
+        #                   answer=answer)
+        try:
+                
+            qa_document = QARecord(filename=file_name,
+                            question=question,
+                            prompt_tokens=tokens,
+                            email=get_user_email(),
+                            answer=answer
+                            ) 
+
+            print(qa_document.__dict__)
+            qa_document._extra['classification'] = classification
+            print(qa_document.__dict__)
+            # records.append(record.__dict__)
+            entry = insert_qa_entry(qa_document=qa_document.__dict__)
+            # r = save_qa_record(records)
+            print("record saved ", entry)
+        except Exception as e:
+            print("logging qa record failed")
+            print(e)
         print("ANSWER:")
         return answer
 
@@ -179,8 +196,8 @@ question_prompt = " You will be provided with transcript chunks of a conference 
 def get_question_prompt(filename, org=None):
     return question_prompt.format(org,filename)
 
-organisation = 'Delhivery'
-filename =  'Delhivery_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
+# organisation = 'Delhivery'
+# filename =  'Delhivery_Ltd_Q4_FY2023-24_Earnings_Conference_Call.json'
 
 if __name__=='__main__':
     # testing in files named test_rag_qa_...

@@ -3,7 +3,7 @@ from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
-from gpt_app.common.supabase_handler import get_file_extn_doc, get_list_docs, get_list_transcripts
+from gpt_app.common.supabase_handler import get_file_extn_doc, get_list_docs, get_list_transcripts, get_qa_records
 from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
 from gpt_app.blueprints.gptube.service_process_pdf import get_pdf_txt, get_transcript_text
 from . import view_app
@@ -111,7 +111,10 @@ def get_records(file_name):
         # file_name = args.get('file_name') or None
     # else:raise HTTPException("Invalid Method")
     email =  get_user_email()
-    records = load_qa_record()
+    # records = load_qa_record()
+    records = get_qa_records(email=email,filename=file_name)
+    print('records')
+    print(records)
     user_file_records = [ HistoryQA(**x ).__dict__ for x in records if (x['filename']==file_name and x['email']==email)]
     user_file_records.reverse()
     return jsonify(user_file_records)

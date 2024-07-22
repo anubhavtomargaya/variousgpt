@@ -10,6 +10,13 @@ def get_chunk_doc(filename)->dict:
         return False
     else:
         return rows.data[0]['chunks']
+        
+def get_qa_records(filename,email)->dict:
+    rows =  supabase.table('qa_records').select('*').eq('filename', filename).eq('email', email).execute()
+    if not rows.data:
+        return False
+    else:
+        return rows.data
     
 def get_file_extn_doc(filename)->dict:
     rows =  supabase.table('chunk_docs').select('extn').eq('file_name', filename).execute()
@@ -94,6 +101,14 @@ def insert_ts_entry(title,text,added_by):
 
         # Insert user into the users table
     supabase.table('transcripts').insert(user_document).execute()
+    return True 
+from gpt_app.common.record_handler import QARecord
+def insert_qa_entry(qa_document
+                    ):
+
+
+        # Insert user into the users table
+    supabase.table('qa_records').insert(qa_document).execute()
     return True 
 
 def insert_chunk_doc_entry(doc:dict,added_by):
