@@ -74,11 +74,20 @@ def get_user_email():
 
 from functools import wraps
 from flask import redirect, url_for, request, jsonify
-
+default_error_page = """<body >  
+                                <p>Oops... Login first</p>
+                                <br>
+                                <div style="text-align: center;"> 
+                                    <h1 style="color: #ffaaaa; font-size: 3em;">:(</h1>
+                                    <a href="{login}"> LOGIN </a>
+                                </div>
+                            </body>"""
+   
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not is_logged_in():
-            return jsonify({'error': 'Authentication required'}), 401
+            # return jsonify({'error': 'Authentication required'}), 401
+            return default_error_page.format(login=url_for('google_auth.login'))
         return f(*args, **kwargs)
     return decorated_function
