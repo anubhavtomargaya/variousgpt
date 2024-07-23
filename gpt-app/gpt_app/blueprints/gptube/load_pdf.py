@@ -8,7 +8,10 @@ from gpt_app.common.utils_dir import _make_file_path
 
 def load_pdf_link_into_bucket(pdf_link):
     try:
-        response = requests.get(pdf_link)
+        response = requests.get(pdf_link,timeout=15)
+        print("response ")
+        print(response)
+        print(response.content)
         response.raise_for_status()  # Ensure the request was successful
 
         if 'application/pdf' in response.headers.get('Content-Type', ''):

@@ -207,7 +207,7 @@
                 .catch(function (error) {
                     hideLoader();
                     console.error('Error:', error.response ? error.response.data : error);
-                    showResponse('An error occurred while uploading the PDF link.');
+                    showResponse('An error occurred while uploading the PDF link. Please upload manually.');
                 });
         }
 
