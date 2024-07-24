@@ -3,6 +3,7 @@
 from pathlib import Path
 from pytube import YouTube
 from gpt_app.common.dirs import YOUTUBE_DIR,BUCKET_NAME
+from gpt_app.blueprints.gptube.helpers_gcs import upload_file_to_gcs
 from gpt_app.common.utils_dir import _make_file_path, check_ts_dir,client
 from gpt_app.common.session_manager import get_user_email
 import json 
@@ -127,6 +128,7 @@ def download_to_gcs(stream,client):
     else:
         # Download audio stream to a byte stream
         video_data = stream.download()
+        upload_file_to_gcs()
 
         # Upload audio data to the GCS blob
         upload = blob.upload_from_string(video_data)
@@ -135,8 +137,7 @@ def download_to_gcs(stream,client):
 
 from gpt_app.common.supabase_handler import check_yt_exist,insert_yt_entry
 def download_youtube_audio(url,
-                            dir = YOUTUBE_DIR,
-                            local=False):
+                            dir = YOUTUBE_DIR):
     
     """Downloads the audio from a YouTube video and saves it as an MP3 file using pytube.
 
@@ -151,7 +152,7 @@ def download_youtube_audio(url,
     try:
         #TODO: check if url exists downloaded 
         yt = YouTube(url)
-        yt_meta =  check_yt_exist(url)
+        yt_meta = check_yt_exist(url)
         if yt_meta:
             return yt_meta[0]
         else:
@@ -161,37 +162,56 @@ def download_youtube_audio(url,
         print(yt)
         stream = yt.streams.filter(only_audio=True, ).order_by('abr').asc().first() # select stream by lowest bit rate 
         print("starting download....", stream.__dict__) 
-        
-        if local:
+        if not Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_')).exists():
             output_file = stream.download(output_path=dir,
-                                        filename=stream.default_filename.replace(' ','_'))
+                                    filename=stream.default_filename.replace(' ','_')) #tmp fix to save to local as well
         else:
-            output_file = download_to_gcs(stream,client)
-            if not Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_')).exists():
-                output_file = stream.download(output_path=dir,
-                                        filename=stream.default_filename.replace(' ','_')) #tmp fix to save to local as well
-            else:
-                print("local exists VIDEO")
-                output_file = Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_'))
+            print("local exists VIDEO")
+            output_file = Path(YOUTUBE_DIR,stream.default_filename.replace(' ','_'))
+        
+        
+        filename = stream.default_filename.replace(' ','_')
+
+        bucket = client.bucket(BUCKET_NAME)
+        destination_blob_name = _make_file_path(YOUTUBE_DIR,filename,local=False)
+        print("gcs name,",destination_blob_name)
+        blob = bucket.blob(destination_blob_name)
+        print(blob)
+        if blob.exists():
+            print("blob exists")
+            pass
+        else:
+            print("blob  no exists")
+            # Download audio stream to a byte stream
+            with open(output_file, 'rb') as file_data:
+                blob.upload_from_file(file_data)
+        print("File uploaded")
+            # video_up  = upload_file_to_gcs(file=filename,filename=destination_blob_name)
+        # output_file = download_to_gcs(stream,client)
+        # print()
         m = YoutubeMetadata(id=url,title=yt.title,
                                file_path=Path(output_file).name,
                                thumbnail_url=yt.thumbnail_url,
                                description=yt.description,
                                length_minutes= round(yt.length / 60, 2),
                                )
+        print(f'Downloaded audio from "{yt.title}" to "{output_file}"')
         insert_yt_entry(meta=m.__dict__,link=f"{url}",added_by=get_user_email())
+        return {'meta': m.__dict__}
        
         w = update_youtube_index_meta(m)
         print("meta updated ", w, m.__dict__)    
 
-        print(f'Downloaded audio from "{yt.title}" to "{output_file}"')
-        return m
-
     except Exception as e:
         print(f"Unexpected error: {e}")
+        return False
 
 if __name__ == '__main__':
     youtube_url = 'https://youtu.be/qsnXSd4iRYI?si=tck7vSlH4sXMhvfp'
     # utl ='https://www.youtube.com/watch?v=bf7RjMUXomE'
     utl ='https://www.youtube.com/watch?v=sP1w5jXz1Mc'
-    download_youtube_audio(utl,local=False)
+    utl ='https://www.youtube.com/watch?v=kLVRnHykI8o'
+    utl ='https://www.youtube.com/watch?v=lactCnL7lFM'
+    # utl ='https://www.youtube.com/watch?v=QqqU88-71cQ'
+
+    download_youtube_audio(utl)
