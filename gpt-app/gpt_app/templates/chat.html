@@ -88,7 +88,7 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        #newButton { background-color: #da0c4a;}
+        #newButton { background-color: #da0c4a;float: right;}
         #askButton { background-color: #FFD700; }
         #getQuestionsButton { background-color: #83c0bd; }
         #getCallsButton { background-color: #FF6347; }
@@ -110,6 +110,7 @@
         #right-panel.open { transform: translateX(-250px); }
         .panel-content {
             padding: 2px;
+            
         }
         .panel-content a {
             display: block;
@@ -282,7 +283,14 @@
 <div id="left-panel" class="panel" style="display: none;">
    
     <div class="back-arrow">←</div>
+   
     <div class="panel-content" >
+        <br/>
+        <br/>
+        
+        <button id="newButton"> NEW </button> 
+        <br/>
+        <br/>
         <div id="call-list"> 
         <div id="callList" > 
             <h3>Call List</h3> 
@@ -292,7 +300,7 @@
         </div>
         
     </div>
-    <button id="newButton"> NEW </button> 
+    
         <!-- Call list will be dynamically populated here -->
     </div>
 </div>
