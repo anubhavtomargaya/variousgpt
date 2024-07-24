@@ -10,6 +10,7 @@ from  gpt_app.common.dirs import BUCKET_NAME, DATA_DIR,  PROCESSED_DIR, YOUTUBE_
 from  gpt_app.common.models import  AudioTranscript, TranscriptMetadata
 from  gpt_app.common.enums import  tsFormats
 from gpt_app.blueprints.gptube.gpt_service import transcribe_audio_in_format
+from gpt_app.blueprints.gptube.service_process_to_ogg import convert_local_path_to_ogg_with_ffmpeg
 from gpt_app.common.supabase_handler import check_ts_exist, insert_ts_entry
 from gpt_app.common.session_manager import get_user_email
 
@@ -50,32 +51,32 @@ def transcribe_gcs_audio(gcs_client,
                                                         response_format=tsFormats.JSON.value,
                                                         prompt=prompt
                                                             )
-        if db:
-            ttl = Path(audio_file).as_posix().split('.')[0]
-            e_ = insert_ts_entry(title=ttl,
-                                 text=transcription.text,
-                                 added_by=get_user_email())
-            print("E_",e_)
-            return ttl if e_ else False
-        else:
-            transcript_final.text=transcription
-            print("calling open api end.")
-            et = datetime.utcnow()
-            total_time = et - st
-            print("total processing time ", total_time.seconds, 'seconds')
-            print("total cost $", round(0.006*total_time.seconds),2)
+        # if db:
+            # ttl = Path(audio_file).as_posix().split('.')[0]
+            # e_ = insert_ts_entry(title=ttl,
+            #                      text=transcription.text,
+            #                      added_by=get_user_email())
+            # print("E_",e_)
+            # return ttl if e_ else False
+        # else:
+        transcript_final.text=transcription
+        print("calling open api end.")
+        et = datetime.utcnow()
+        total_time = et - st
+        print("total processing time ", total_time.seconds, 'seconds')
+        print("total cost $", round(0.006*total_time.seconds),2)
 
-            fpath = save_transcript_text_json(transcription,
-                                            audio_file,
-                                            dir=TS_DIR,
-                                            added_by=get_user_email())
-            if fpath:
-                print(id, "file processsed as ts: ", fpath.stem)
-                return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR,format='json')
-                return f'{out_file_name}.json'
-            else:
-                raise Exception("Error! not fpath")
-    
+        fpath = save_transcript_text_json(transcription,
+                                        audio_file,
+                                        dir=TS_DIR,
+                                        added_by=get_user_email())
+        if fpath:
+            print(id, "file processsed as ts: ", fpath.stem)
+            return upload_blob_to_gcs_bucket_by_filename(gcs_client,fpath,TS_DIR,format='json')
+            return f'{out_file_name}.json'
+        else:
+            raise Exception("Error! not fpath")
+
 
 
     except google.api_core.exceptions.NotFound as e:
@@ -147,73 +148,52 @@ def transcribe_audio_in_chunks(audio_path:Path,
 from gpt_app.common.utils_dir import client as gcs_client,_make_file_path
 def create_text_from_audio(file_name:Path,
                             base_prompt='',
-                            youtube=False,
-                            ogg=True,
-                            gcs=False,
-                            db=True
-                                  ):
+                            source_dir= YOUTUBE_DIR 
+                        ):
     #TODO 
 
-    # local false in convert to ogg ie uses gcs 
-    # source dir is local ie uses local disk
-    if not isinstance(file_name,Path):
-        file_name = Path(file_name)
-    source_dir = YOUTUBE_DIR if youtube else DATA_DIR
 
-    if db:
-        existing_ts = check_ts_exist(title=file_name.as_posix().split('.')[0])
-        if not existing_ts:
-            if ogg:
+    file_name = Path(file_name)
+    destination_blob_path  = _make_file_path(TS_DIR,
+                                file_name,
+                                local=False)
+    print('dest path:')
+    print(destination_blob_path) 
+    # check if the transcript exists in TS DIR , return the path if it does
+    if check_blob(gcs_client=gcs_client,
+                  destination_blob_name=destination_blob_path):
+        return destination_blob_path
+    
+    ogg_dir = PROCESSED_DIR
+    fname = convert_local_path_to_ogg_with_ffmpeg(file_path=Path(source_dir,file_name),output_dir=ogg_dir)
+    print("ogg converted!")
+    trx = transcribe_gcs_audio(gcs_client=gcs_client,
+                               audio_file=Path(fname),
+                               dir=ogg_dir,
+                               format='ogg',
+                               prompt=f"{base_prompt} : {Path(file_name).name} ")
+    print("dest:",trx)
+
+    return trx
+
+    
+        # #all local 
+        # # if check_ts_dir(file_name):
+        #     # print(check_ts_dir(file_name))
+        #     # return file_name.as_posix().split('.')[0]
+        # # else:
+        # if ogg:
             
-                fname = convert_audio_to_ogg(file_name=file_name,
-                                            source_dir=source_dir,
-                                            local=False)
-                source_dir = PROCESSED_DIR
-                print("ogg converted!")
-                
-                trx = transcribe_gcs_audio(gcs_client=gcs_client,audio_file=fname,dir=source_dir,prompt=file_name.name,db=db)
-                print("dest:",trx)
-
-            # return trx
-            # e_ = insert_ts_entry(title=file_name.as_posix().split('.')[0],text=trx,added_by=get_user_email())
-            # print(e_)
-            return file_name.as_posix().split('.')[0]
-    if gcs:
-        destination_blob_path  = _make_file_path(TS_DIR,
-                                    file_name,
-                                    local=False)
-        if not check_blob(gcs_client=gcs_client,destination_blob_name=destination_blob_path):
-            if ogg:
-            
-                fname = convert_audio_to_ogg(file_name=file_name,
-                                            source_dir=source_dir,
-                                            local=False)
-                source_dir = PROCESSED_DIR
-                print("ogg converted!")
-                trx = transcribe_gcs_audio(gcs_client=gcs_client,audio_file=fname,dir=source_dir,prompt=file_name.name)
-                print("dest:",trx)
-
-            return trx
-        else:
-            return destination_blob_path
-    else:
-        #all local 
-        if check_ts_dir(file_name):
-            print(check_ts_dir(file_name))
-            return file_name.as_posix().split('.')[0]
-        else:
-            if ogg:
-                
-                fname = convert_audio_to_ogg(file_name=file_name,
-                                            source_dir=source_dir,
-                                            local=True)
-                source_dir = PROCESSED_DIR
-            else:
-                fname = file_name
-            print("FILEN ",fname)
-            print(source_dir,fname)
-            return transcribe_audio_in_chunks(audio_path=Path(source_dir,fname), 
-                                            base_prompt=base_prompt,n_mins=15) 
+        #     fname = convert_audio_to_ogg(file_name=file_name,
+        #                                 source_dir=source_dir,
+        #                                 local=True)
+        #     source_dir = PROCESSED_DIR
+        # else:
+        #     fname = file_name
+        # print("FILEN ",fname)
+        # print(source_dir,fname)
+        # return transcribe_audio_in_chunks(audio_path=Path(source_dir,fname), 
+        #                                     base_prompt=base_prompt,n_mins=15) 
         
 
     
@@ -224,14 +204,15 @@ if __name__ == '__main__':
         # file = "Neuland_Laboratories_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4"
         # base_prmpt_neu = "Conference Call Insights Unlock the Future of Market Intelligence with AlphaStreet! Our revolutionary global ecosystem connects public companies, investors, analysts, and experts. At AlphaStreet, our mission is to empower our constituents to build robust connections and harness cutting-edge technology for insightful, data-driven decision making.\n\n\nDiscover the power of AI-driven AlphaStreet Intelligence, your gateway to services, research, and insights. Get real-time access to earnings and conference calls, interact with experts, engage with management/analysts/investor, all within one platform. Embrace innovation with our latest AI technology that allows for precision research from live and historical information and data. Zero in on insights from automatic topic categorization and on-demand summaries from a wealth of financial content. Additionally, experience generative AI for conversational interaction.\n\nAlphaStreet levels the playing field, giving you a strategic advantage in market intelligence. Join AlphaStreet, where we are uniting companies, analysts, investors, and experts to foster valuable interactions and shared insights."
         # file = "Juan_Camilo_Avendano_and_Ankit_Gupta.mp3"
-        file = 'Avanti_Feeds_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4'
-        base_prmpt = "INTERVIEW CALL BETWEEN TWO PEOPLE:" + file 
-        return create_text_from_audio(file_name=file,base_prompt=base_prmpt,youtube=False)
+        f= 'Avanti_Feeds_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4'
+        # f = 'Budget_पर_Kharge_ने_Rajya_Sabha_में__सुनाया_गुस्से_में_Nirmala_Sitharaman_ने_क्या_गिना_दिया.webm'
+        # base_prmpt = "INTERVIEW CALL BETWEEN TWO PEOPLE:" + file 
+        return create_text_from_audio(file_name=f)
     
-    fk ='Raymond Ltd Q4 FY2023-24 Earnings Conference Call.ogg'
+    # fk ='Raymond Ltd Q4 FY2023-24 Earnings Conference Call.ogg'
     def test_gcs_transcribe():
         return transcribe_gcs_audio(gcs_client=gcs_client,
-                             audio_file=Path(fk),format='ogg',prompt=' '.join(fk.split('_')[0:-1]))
+                             audio_file=Path(f),format='ogg',prompt=' '.join(fk.split('_')[0:-1]))
     
-    # print(test_service_create_text_from_audio())
+    print(test_service_create_text_from_audio())
     # print(test_gcs_transcribe())
