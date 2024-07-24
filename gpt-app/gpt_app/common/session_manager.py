@@ -67,8 +67,12 @@ def set_google_id(id):
 def set_user_email(email):
     session['email'] = email
 
-
+# ENV='LOCAL'
+ENV='PROD'
 def get_user_email():
+     if ENV=='LOCAL':
+         return 'test'
+     
 
      return session.get('email', None)
 
