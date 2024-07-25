@@ -17,7 +17,7 @@ substitutions:
   _REGION: asia-southeast1
   _BUCKET_NAME: gpt-app-data
   _FUNCTION_NAME: process_audio
-  _SOURCE_PATH: ./audio_compress
+  _SOURCE_PATH: ./workers/audio_compress
   _ENTRY_POINT: process_file
 
 options:
