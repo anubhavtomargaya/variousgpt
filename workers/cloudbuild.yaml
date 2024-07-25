@@ -1,0 +1,24 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud functions deploy $_FUNCTION_NAME \
+        --runtime python39 \
+        --trigger-resource $_BUCKET_NAME \
+        --trigger-event google.storage.object.finalize \
+        --source=$_SOURCE_PATH \
+        --entry-point=$_ENTRY_POINT \
+        --region=$_REGION
+
+substitutions:
+  _PROJECT_ID: gmailapi-test-361320
+  _REGION: asia-southeast1
+  _BUCKET_NAME: gpt-app-data
+  _FUNCTION_NAME: process_audio
+  _SOURCE_PATH: ./workers/audio_compress
+  _ENTRY_POINT: process_file
+
+options:
+  logging: CLOUD_LOGGING_ONLY
