@@ -14,7 +14,7 @@ steps:
 
 substitutions:
   _PROJECT_ID: gmailapi-test-361320
-  _REGION: asia-east1
+  _REGION: asia-southeast1
   _BUCKET_NAME: gpt-app-data
   _FUNCTION_NAME: process_audio
   _SOURCE_PATH: ./workers/audio_compress
