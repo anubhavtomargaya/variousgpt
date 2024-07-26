@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 BUCKET_NAME = 'gpt-app-data'
+YOUTUBE_BUCKET_NAME = 'youtube-bucket-audio'
 
 DATA_DIR = Path(Path(__file__).parent.parent.resolve(), 'data')
 VIDEO_DIR = Path(DATA_DIR, 'video')

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from pytube import YouTube
-from gpt_app.common.dirs import YOUTUBE_DIR,BUCKET_NAME
+from gpt_app.common.dirs import YOUTUBE_BUCKET_NAME, YOUTUBE_DIR,BUCKET_NAME
 from gpt_app.blueprints.gptube.helpers_gcs import upload_file_to_gcs
 from gpt_app.common.utils_dir import _make_file_path, check_ts_dir,client
 from gpt_app.common.session_manager import get_user_email
@@ -172,7 +172,7 @@ def download_youtube_audio(url,
         
         filename = stream.default_filename.replace(' ','_')
 
-        bucket = client.bucket(BUCKET_NAME)
+        bucket = client.bucket(YOUTUBE_BUCKET_NAME)
         destination_blob_name = _make_file_path(YOUTUBE_DIR,filename,local=False)
         print("gcs name,",destination_blob_name)
         blob = bucket.blob(destination_blob_name)
