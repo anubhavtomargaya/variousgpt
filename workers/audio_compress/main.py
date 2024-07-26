@@ -12,7 +12,7 @@ gcs_client = storage.Client()
 def download_video_file_gcs(file_name, dir=YOUTUBE_DIR) -> Path:
     # Use /tmp directory for temporary storage
     tmp_dir = Path('/tmp')
-    tmp_file_path = tmp_dir / file_name
+    tmp_file_path = Path(tmp_dir,file_name)
     if tmp_file_path.exists():
         print("tmp exists")
         return tmp_file_path
@@ -20,6 +20,7 @@ def download_video_file_gcs(file_name, dir=YOUTUBE_DIR) -> Path:
     bucket = gcs_client.bucket(SRC_BUCKET)
     blob = bucket.blob(src_blob_name)
     print(blob)
+    print("down to ", tmp_file_path)
     blob.download_to_filename(tmp_file_path)
     return tmp_file_path
 
@@ -44,7 +45,8 @@ def process_file(event, context=None):
         request_json = event.get_json()
         file_name = request_json['name']
     else:
-        file_name = event['name']
+        file_path = event['name']
+        file_name = Path(file_path).name
         bucket_name = event['bucket']
         print(f"Processing file: {file_name} in bucket: {bucket_name}")
 

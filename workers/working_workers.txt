@@ -3,6 +3,19 @@
 - gcloud auth login
 - set project name/id
 
+#build n run locally
+docker build -t my-python-function .
+docker run -p 8080:8080 ffmpeg-python-function
+
+
+#build in gcr
+docker build -t gcr.io/gmailapi-test-361320/ffmpeg-python-function .
+
+#push in gcr 
+docker push gcr.io/gmailapi-test-361320/ffmpeg-python-function
+! setup repo first if not alrdy
+
+
 # deploy to trigger by http 
 gcloud functions deploy process_file     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=process_file     --timeout=540s
 
