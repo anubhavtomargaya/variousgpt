@@ -1,4 +1,4 @@
-from flask import Request
+from flask import Request, jsonify
 from pathlib import Path
 from google.cloud import storage
 from .utils import _make_file_path
@@ -6,6 +6,7 @@ from .dirs import YOUTUBE_DIR, PROCESSED_DIR
 from .ffmpeg_compress import preprocess_audio_for_transcription
 
 BUCKET_NAME = 'gpt-app-data'
+SRC_BUCKET = 'youtube-bucket-audio'
 gcs_client = storage.Client()
 
 def download_video_file_gcs(file_name, dir=YOUTUBE_DIR) -> Path:
@@ -16,7 +17,7 @@ def download_video_file_gcs(file_name, dir=YOUTUBE_DIR) -> Path:
         print("tmp exists")
         return tmp_file_path
     src_blob_name = _make_file_path(dir, file_name, local=False)
-    bucket = gcs_client.bucket(BUCKET_NAME)
+    bucket = gcs_client.bucket(SRC_BUCKET)
     blob = bucket.blob(src_blob_name)
     print(blob)
     blob.download_to_filename(tmp_file_path)
@@ -49,6 +50,11 @@ def process_file(event, context=None):
 
     try:
         file_path = download_video_file_gcs(file_name)
-        convert_local_path_to_ogg_with_ffmpeg(file_path)
+        optah =  convert_local_path_to_ogg_with_ffmpeg(file_path)
+        return jsonify(optah.name) if optah else jsonify(False), 200
+
     except Exception as e:
+
+
         print(f"Error processing file {file_name}: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500

@@ -1,0 +1,4 @@
+- create docker file 
+- install gcloud sdk/cli --classic
+- gcloud auth login
+- set project name/id
