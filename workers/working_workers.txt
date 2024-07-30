@@ -3,6 +3,15 @@
 - gcloud auth login
 - set project name/id
 
+#create dockerfile which should have sa creds json
+
+    # Copy the service account key file into the container
+    COPY path/to/your/keyfile.json /app/keyfile.json
+
+    # Set the environment variable for Google Cloud credentials
+    ENV GOOGLE_APPLICATION_CREDENTIALS=/app/keyfile.json
+
+
 #build n run locally
 docker build -t my-python-function .
 docker run -p 8080:8080 ffmpeg-python-function

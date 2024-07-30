@@ -2,7 +2,28 @@
 from datetime import datetime
 import openai
 from enums import tsFormats
-
+import io
+def transcribe_segment_memory(segment,
+                              prompt='',
+                              fmt=None):
+    audio_buffer = io.BytesIO()
+    segment.export(audio_buffer)  # Adjust format as needed
+    audio_buffer.seek(0)  # Reset buffer position to the beginning
+    print("calling openai whisper started...")
+    st = datetime.utcnow()
+    transcription = client.audio.transcriptions.create(
+        model="whisper-1",
+        file=audio_buffer,
+        response_format='json',
+        prompt=prompt
+    )
+    print("calling openai end.")
+    et = datetime.utcnow()
+    total_time = et - st
+    print("total time ", total_time.seconds, 'seconds')
+    print("total cost $", round(0.006 * total_time.seconds, 2))
+    
+    return transcription
 
 def transcribe_audio_in_format(client,audio_file_path,
                             format:tsFormats=tsFormats.JSON,
