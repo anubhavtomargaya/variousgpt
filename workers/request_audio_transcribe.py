@@ -18,14 +18,14 @@ def build_audio_transcribe_request(audio_filename):
   return response
 
 if __name__=='__main__':
-    sp_file = ''
+    sp_file = 'World_Exclusive!_CZINGER_21C_FIRST_DRIVE_2m_1233bhp_3D-printed_hypercar__Top_Gear.webm'
     def trigger_sample_worker():
         print("STARTING TRANSCRIPTION...")
         response = build_audio_transcribe_request(sp_file)
 
         
         if response.status_code == 200:
-            print(response.json())
+            print(response.__dict__)
             print("Audio transcription successful!")
         else:
             print(f"Error transcribing audio: {response.status_code}")
