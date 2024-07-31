@@ -16,8 +16,8 @@ client = get_openai_client()
 
 BUCKET_NAME = 'gpt-app-data'
 SRC_BUCKET = 'youtube-bucket-audio'
-# gcs_client = storage.Client()
-gcs_client = storage.Client.from_service_account_json(Path(f'sa_gcs.json'))
+gcs_client = storage.Client()
+# gcs_client = storage.Client.from_service_account_json(Path(f'sa_gcs.json'))
 
 def save_transcript_text_json(transcribed_text, 
                             file_name,
@@ -49,6 +49,9 @@ def _make_file_path(direcotry:Path,
 
         return f"{after_data}/{file_}"
     
+
+
+
 def open_audio_as_segment(audio_file,dir=YOUTUBE_DIR,
                           format=None,
                           local=True):
@@ -67,11 +70,7 @@ def open_audio_as_segment(audio_file,dir=YOUTUBE_DIR,
                                             audio_file,
                                             format=format,
                                             local=False)
-            audio_file_local = _make_file_path(dir,
-                                            audio_file,
-                                            format=format,
-                                            local=True)
-            
+        
             print('aduo file path', audio_file_gcs)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 blob = bucket.blob(audio_file_gcs)
