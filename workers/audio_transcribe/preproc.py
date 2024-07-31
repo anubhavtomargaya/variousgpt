@@ -9,11 +9,11 @@ from dirs import CHOP_DIR, PROCESSED_DIR, TS_DIR, YOUTUBE_DIR
 # from db_supabase import check_ts_exist,insert_transcript_entry,update_transcript_entry
 import json
 
-from utils import upload_blob_to_gcs_bucket_by_filename 
-from utils import get_openai_client
+from utils_ts import upload_blob_to_gcs_bucket_by_filename ,get_openai_client
 from transcribe_chunks import transcribe_segment_memory
-client = get_openai_client()
 
+client = get_openai_client()
+TMP_DIR = Path('/tmp')
 BUCKET_NAME = 'gpt-app-data'
 SRC_BUCKET = 'youtube-bucket-audio'
 gcs_client = storage.Client()
@@ -28,7 +28,7 @@ def save_transcript_text_json(transcribed_text,
     print("saving json file to...", fpath)
     with open(fpath, 'w') as f:
         json.dump(transcribed_text,f)
-    return True
+    return fpath
 
 def _make_file_path(direcotry:Path,
                     file_name:Path,
@@ -86,7 +86,7 @@ def open_audio_as_segment(audio_file,dir=YOUTUBE_DIR,
         print(f"Error: Audio file '{audio_file}' not found.")
         raise e
     
-def chop_audio(audio_file:Path,audio_segment:AudioSegment, n_minutes=10, chop_dir=Path('/tmp'), source_dir=PROCESSED_DIR, format='ogg'):
+def chop_audio(audio_file:Path,audio_segment:AudioSegment, n_minutes=10, chop_dir=TMP_DIR, source_dir=PROCESSED_DIR, format='ogg'):
     """Chops the given file in pieces of n minutes, yields each chunk."""
     # audio = open_audio_as_segment(audio_file, dir=source_dir,local=)
     total_duration_milliseconds = len(audio_segment)
@@ -142,12 +142,15 @@ def service_audio_to_gcs_transcript(f):
 
 
     fpath = save_transcript_text_json(transcription,
-                                        f,dir=TS_DIR)
+                                        f,dir=TMP_DIR)
     
     if fpath:
 
         print('id', "file processsed as ts: ", f)
-        return upload_blob_to_gcs_bucket_by_filename(gcs_client,Path(f).stem.split('.')[0],TS_DIR,format='json')
+        return upload_blob_to_gcs_bucket_by_filename(gcs_client,
+                                                     fpath,
+                                                     TS_DIR,
+                                                     format='json')
         
 
 

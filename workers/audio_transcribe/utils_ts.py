@@ -14,17 +14,18 @@ class tsFormats(Enum):
 
 
 def upload_blob_to_gcs_bucket_by_filename(gcs_client,
-                            source_filename:Path,
-                            source_dir:Path=None,
+                            source_filepath:Path,
+                            dest_dir:Path=None,
                             bucket=BUCKET_NAME,
                             format=None,
                             data=None
                             
                               ):
     bucket = gcs_client.bucket(bucket)
-    print("FILNEAME",source_filename )
-    destination_blob_name = _make_file_path(source_dir,
-                                            source_filename,
+    src_file = Path(source_filepath).stem
+    print("FILNEAME",src_file )
+    destination_blob_name = _make_file_path(dest_dir,
+                                            src_file,
                                             format=format,
                                             local=False)
     print("DESTBLOB",destination_blob_name)
@@ -33,7 +34,7 @@ def upload_blob_to_gcs_bucket_by_filename(gcs_client,
     if blob.exists():
         return destination_blob_name
     if not data:
-        upload = blob.upload_from_filename(Path(source_dir,f'{source_filename}.{format}').__str__())
+        upload = blob.upload_from_filename(Path(source_filepath).__str__())
     else:
         upload = blob.upload_from_string(str(data))
     print("uploaded:",upload)

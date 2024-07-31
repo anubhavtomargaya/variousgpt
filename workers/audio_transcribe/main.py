@@ -11,6 +11,6 @@ def transcribe_audio_file(event, context=None):
     else:
         file_path = event['name']
         file_name = Path(file_path).name
-        bucket_name = event['bucket']
-        print(f"Processing file: {file_name} in sbucket: {bucket_name}")
-        return service_audio_to_gcs_transcript(file_name)
+    # bucket_name = event['bucket']
+    # print(f"Processing file: {file_name} in sbucket: {bucket_name}")
+    return service_audio_to_gcs_transcript(file_name)
