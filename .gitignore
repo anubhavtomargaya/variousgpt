@@ -194,3 +194,13 @@ workers/audio_transcribe/env.json
 workers/audio_transcribe/sa_gcs.json
 workers/download_youtube/env.json
 workers/download_youtube/sa_gcs.json
+workers/pdf_extraction/EASEMYTRIP_30052022232300_Transcript3.pdf
+workers/pdf_extraction/gpt_1_Tata Consumer q4 concall.pdf.json
+workers/pdf_extraction/gpt_2_EASEMYTRIP_30052022232300_Transcript3.pdf.json
+workers/pdf_extraction/gpt_3_EASEMYTRIP_30052022232300_Transcript3.pdf.json
+workers/pdf_extraction/gpt_4_EASEMYTRIP_30052022232300_Transcript3.pdf.json
+workers/pdf_extraction/gpt_5_EASEMYTRIP_30052022232300_Transcript3.pdf.json
+workers/pdf_extraction/gpt_EASEMYTRIP_30052022232300_Transcript3.pdf.json
+workers/pdf_extraction/Tata Consumer q4 concall.pdf
+workers/pdf_extraction/sa_gcs.json
+workers/pdf_extraction/env.json
