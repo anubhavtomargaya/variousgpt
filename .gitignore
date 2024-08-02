@@ -190,3 +190,13 @@ gpt-app/Hindustan Aeronautics Ltd Q4 FY2023-24 Earnings Conference Call.webm
 .vscode/launch.json
 .vscode/tasks.json
 workers/audio_compress/sa_gcs.json
+deepgra_kye.txt
+workers/audio_transcribe/env.json
+workers/audio_transcribe/sa_gcs.json
+workers/download_youtube/env.json
+workers/download_youtube/sa_gcs.json
+workers/pdf_extraction/Earnings-Call-Transcript-Q1-FY-2021.pdf
+workers/pdf_extraction/env.json
+workers/pdf_extraction/sa_gcs.json
+workers/pdf_extraction/sam.json
+workers/pdf_extraction/same_2.json
