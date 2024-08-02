@@ -1,0 +1,5 @@
+google-cloud-core==2.4.1
+google-cloud-storage==2.17.0
+functions-framework==3.*
+pytube==15.0.0
+supabase==2.5.1
