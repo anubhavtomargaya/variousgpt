@@ -1,63 +1,17 @@
 import fitz
 from utils_ts import get_openai_client
-def extract_text_with_layout(pdf_bytes):
-    """Extracts text from a PDF file in memory along with layout information."""
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    pages_text = []
-
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
-        blocks = page.get_text("blocks")  # Extract text blocks
-        page_text = []
-
-        for block in blocks:
-            x0, y0, x1, y1, text, _, _= block
-            print('nums')
-            print(x0)
-            print(y0)
-            print(_)
-            print(x1)
-            print(y1)
-            print(text)
-            if is_relevant_text(y0, y1, page_num, len(doc)):
-                page_text.append(text)
-
-        pages_text.append(" ".join(page_text))
-
-    return " ".join(pages_text).replace('\n', ' ')
-
-def is_relevant_text(y0, y1, page_num, total_pages):
-    """Heuristic to filter out headers and footers based on y-coordinates and page position."""
-    # Adjust thresholds based on your document's layout
-    header_threshold = 600  # Pixels from the top of the page
-    footer_threshold = 600  # Pixels from the bottom of the page
-
-    if page_num == 0 or page_num == total_pages - 1:
-        # First and last pages might have different layout, adjust accordingly
-        return True
-
-    # Filter out text blocks that are likely headers or footers
-    return y0 > header_threshold and y1 < (page_num * 792 - footer_threshold)
-
-def extract_text_from_pdf_bytes(pdf_bytes):
-    """Extracts text from a PDF file in memory."""
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    text = ""
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
-        text += page.get_text("text")
-    return text
-
-import fitz
+from db_supabase import check_pdf_exist, check_transcript_extracted, get_transcript_row,insert_initial_transcript_entry, update_transcript_pdf_entry
 import json
 from typing import List, Dict,Generator
-
 import tiktoken
+
 def count_tokens(text, model="gpt-3.5-turbo"):
     encoding = tiktoken.encoding_for_model(model)
     tokens = encoding.encode(text)
     return len(tokens)
+
 client = get_openai_client()
+
 def chunk_text(text: str, chunk_size: int = 3000, overlap: int = 500) -> List[str]:
     if chunk_size <= 0:
         raise ValueError("chunk_size must be greater than 0")
@@ -170,6 +124,7 @@ def post_process_transcript(transcript: Dict[str, Dict[str, str]], chunk_size: i
     merged_transcript = {}
     counter = 0
     for chunk in processed_chunks:
+        print("chunk",chunk)
         for _, entry in chunk.items():
             merged_transcript[str(counter)] = entry
             counter += 1
@@ -220,23 +175,41 @@ def extract_transcript_from_pdf(pdf_path: str) -> Dict[str, Dict[str, Dict[str, 
 
 
 if __name__=='__main__':
-    fl = "EASEMYTRIP_30052022232300_Transcript3.pdf"
+    # fl = "EASEMYTRIP_30052022232300_Transcript3.pdf"
     fl = "Tata Consumer q4 concall.pdf"
-    def test_extract_with_layout():
-        with open(fl, "rb") as f:
-            pdf_bytes = f.read()
+    # def test_extract_with_layout():
+    #     with open(fl, "rb") as f:
+    #         pdf_bytes = f.read()
 
-        text = extract_text_with_layout(pdf_bytes)
-        print(text)
+    #     text = extract_text_with_layout(pdf_bytes)
+    #     print(text)
 
-    def test_extract_with_gpt():
-        # Usage example
+    # def test_extract_with_gpt():
+    #     # Usage example
+    #     pdf_path = fl
+    #     transcript_data = extract_transcript_from_pdf(pdf_path)
+    #     print(json.dumps(transcript_data, indent=2))
+    #     with open(f"gpt_2_{fl}.json", 'w') as file:
+    #         json.dump(transcript_data, file, indent=4)
+
+    #     return transcript_data
+    import datetime
+    def test_update_entry_with_transcript_text():
         pdf_path = fl
-        transcript_data = extract_transcript_from_pdf(pdf_path)
-        print(json.dumps(transcript_data, indent=2))
-        with open(f"gpt_1_{fl}.json", 'w') as file:
-            json.dump(transcript_data, file, indent=4)
+        if not check_transcript_extracted(1):
+            print(datetime.datetime.now())
+            transcript_data = extract_transcript_from_pdf(pdf_path)
+            print(json.dumps(transcript_data, indent=2))
+            entry_up = {"transcript_id":1,
+                        "extracted_transcript":transcript_data['transcript'],
+                        "extra_text":transcript_data['extra']
+                        }
+            print(datetime.datetime.now())
+            
+            return update_transcript_pdf_entry(**entry_up)
+        else:
+            return get_transcript_row(1)
 
-        return transcript_data
+    # print(test_extract_with_gpt())
+    print(test_update_entry_with_transcript_text())
     
-    print(test_extract_with_gpt())
