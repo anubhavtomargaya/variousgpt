@@ -206,3 +206,6 @@ workers/pdf_extraction/sa_gcs.json
 workers/pdf_extraction/env.json
 deepgra_kye.txt
 workers/pdf_extraction/gpt_2_Tata Consumer q4 concall.pdf.json
+workers/pdf_extraction/sam.json
+workers/pdf_extraction/same_2.json
+workers/pdf_extraction/Earnings-Call-Transcript-Q1-FY-2021.pdf

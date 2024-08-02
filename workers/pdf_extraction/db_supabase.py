@@ -70,7 +70,7 @@ def update_transcript_pdf_entry(transcript_id, extracted_transcript, extra_text)
     }
 
     result = supabase.table('pdf-transcripts').update(update_document).eq('id', transcript_id).execute()
-    print("Updated document:", result)
+    print("Updated document:")
     return result
 
 
