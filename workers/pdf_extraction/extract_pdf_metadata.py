@@ -70,6 +70,7 @@ def extract_metadata(pdf_path: str, num_pages: int = 2) -> Dict:
     
     response = openai_client.chat.completions.create(
         model="gpt-3.5-turbo",
+        response_format={ "type": "json_object" },
         temperature=0.4,
         messages=[{"role": "user", "content": prompt}]
     )
@@ -80,7 +81,34 @@ def extract_metadata(pdf_path: str, num_pages: int = 2) -> Dict:
         print(f"Error decoding JSON: {response.choices[0].message.content}...")
         return {}
 
+def service_extract_pdf_metadata(fl):
+    
+    metadata = extract_metadata(fl)
+    # print(json.dumps(metadata, indent=2)) 
+    reques = {
+        "company_name":metadata['company_name'],
+        "doc_type":metadata['doc_type'],
+        "financial_year":metadata['financial_year'],
+        "quarter":metadata['quarter'],
+        }
+    existing= check_pdf_exist(**reques)
+    if not existing:
+        entry =    {
+            "company_name":metadata['company_name'],
+            "quarter":metadata['quarter'],
+            "financial_year":metadata['financial_year'],
+            "doc_type":metadata['doc_type'],
+            "description":metadata['description'],
+            "key_people":metadata['key_people'],
+        
+         }
+        row_id = insert_initial_transcript_entry(**entry)
+        print("new row id",row_id)
+        return row_id
 
+    else:
+        print("existing",existing)
+        return existing['id']
 
 
 if __name__ == "__main__":

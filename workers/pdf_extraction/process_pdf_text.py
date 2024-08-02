@@ -4,7 +4,7 @@ from db_supabase import check_pdf_exist, check_transcript_extracted, get_transcr
 import json
 from typing import List, Dict,Generator
 import tiktoken
-
+import datetime
 def count_tokens(text, model="gpt-3.5-turbo"):
     encoding = tiktoken.encoding_for_model(model)
     tokens = encoding.encode(text)
@@ -50,7 +50,8 @@ def chunk_text_generator(text: str, chunk_size: int = 3000, overlap: int = 200) 
         print(f"start: {start}, end: {end}, chunk length: {len(chunk)}")
         start += chunk_size - overlap  # Ensure start always increments
     print("Chunking text done")
-
+# MODEL_MAIN = "gpt-3.5-turbo"
+MODEL_MAIN = "gpt-4o-mini"
 def process_chunk(chunk: str, turn_counter: int) -> Dict[str, Dict[str, str]]:
     prompt = f"""
     Extract the transcript from the following text, identifying speakers and their turns. 
@@ -65,11 +66,13 @@ def process_chunk(chunk: str, turn_counter: int) -> Dict[str, Dict[str, str]]:
     Text to process:
     {chunk}
     """
-    tokens = count_tokens(prompt)
+    tokens = count_tokens(prompt,model=MODEL_MAIN)
     print("tokens",tokens)
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        # model="gpt-3.5-turbo",
+        model=MODEL_MAIN,
         temperature=0.4,  
+        response_format={ "type": "json_object" },
         messages=[{"role": "user", "content": prompt}]
     )
     
@@ -131,7 +134,7 @@ def post_process_transcript(transcript: Dict[str, Dict[str, str]], chunk_size: i
 
     return merged_transcript
 
-def extract_transcript_from_pdf(pdf_path: str) -> Dict[str, Dict[str, Dict[str, str]]]:
+def extract_transcript_from_pdf(pdf_path: str,csize:int=3000) -> Dict[str, Dict[str, Dict[str, str]]]:
     result = {"transcript": {}, "extra": ""}
     doc = fitz.open(pdf_path)
     full_text = ""
@@ -142,7 +145,8 @@ def extract_transcript_from_pdf(pdf_path: str) -> Dict[str, Dict[str, Dict[str, 
         if not transcript_started:
             prompt = f"Identify if the following text contains the start of a transcript. If it does, return 'START'. If not, return 'NO':\n\n{text}"
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
+                # model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}]
             )
             if response.choices[0].message.content.strip() == "START":
@@ -156,12 +160,12 @@ def extract_transcript_from_pdf(pdf_path: str) -> Dict[str, Dict[str, Dict[str, 
     
     # Use either chunk_text or chunk_text_generator here
     # chunks = chunk_text(full_text) 
-    chunks = chunk_text_generator(full_text)
+    chunks = chunk_text_generator(full_text,chunk_size=csize)
     # chunks = chunk_text(full_text)  # Or: chunks = chunk_text_generator(full_text)
     turn_counter = 0
     
     for chunk in chunks:
-        print("creating transcript for chunk",len(chunk), chunk[:30])
+        print("creating transcript for chunk", chunk[:30])
         chunk_result = process_chunk(chunk, turn_counter)
         result["transcript"].update(chunk_result)
         turn_counter += len(chunk_result)
@@ -173,10 +177,29 @@ def extract_transcript_from_pdf(pdf_path: str) -> Dict[str, Dict[str, Dict[str, 
     
     return result
 
+def service_extract_transcript_texts(pdf_path, row_id):
+    if not check_transcript_extracted(row_id):
+        print("start time")
+        print(datetime.datetime.now())
+        transcript_data = extract_transcript_from_pdf(pdf_path,csize=8000)
+        # print(json.dumps(transcript_data, indent=2))
+        entry_up = {"transcript_id":row_id,
+                    "extracted_transcript":transcript_data['transcript'],
+                    "extra_text":transcript_data['extra']
+                    }
+        print("end time")
+        print(datetime.datetime.now())
+        
+        return update_transcript_pdf_entry(**entry_up)
+    else:
+        print("getting existing rows....")
+        return get_transcript_row(row_id)
+
 
 if __name__=='__main__':
     # fl = "EASEMYTRIP_30052022232300_Transcript3.pdf"
-    fl = "Tata Consumer q4 concall.pdf"
+    # fl = "Tata Consumer q4 concall.pdf"
+    fl = "Earnings-Call-Transcript-Q1-FY-2021.pdf"
     # def test_extract_with_layout():
     #     with open(fl, "rb") as f:
     #         pdf_bytes = f.read()
