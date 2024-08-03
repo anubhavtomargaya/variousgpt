@@ -262,11 +262,124 @@
         background-color: #f5f5f5;
     }
     .transcript-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .metadata {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tag {
+            background-color: #ecf0f1;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .tag:hover {
+            background-color: #e0e6e9;
+        }
+        .tag-count {
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 6px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .transcript {
+            height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+        .speaker {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .speaker-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+        }
+        .speaker-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .speaker-text {
+            margin-left: 52px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        /* Custom scrollbar for Webkit browsers */
+        .transcript::-webkit-scrollbar {
+            width: 8px;
+        }
+        .transcript::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .transcript::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        .transcript::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    /* .transcript-container {
         background-color: white;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 20px;
-    }
+        padding: 20px; */
+    /* } */
     .speaker-section {
         margin-bottom: 20px;
     }
@@ -448,6 +561,15 @@
                 loader2.style.display = 'none';
             });
     }
+
+    function getAvatarColor(name) {
+            const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return colors[Math.abs(hash) % colors.length];
+        }
     async function getDocument() {
         const fileTitle = titleElement.textContent;
         console.log("running get question", fileTitle);
@@ -477,10 +599,16 @@
                             currentSpeakerSection = document.createElement('div');
                             currentSpeakerSection.className = 'speaker-section';
                             
+                            const avatar = document.createElement('div');
+                            avatar.className = 'speaker-avatar';
+                            avatar.textContent = value.speaker[0];
+                            avatar.style.backgroundColor = getAvatarColor(value.speaker);
+                            
                             const nameDiv = document.createElement('div');
                             nameDiv.className = 'speaker-name';
                             nameDiv.textContent = currentSpeaker;
                             
+                            currentSpeakerSection.appendChild(avatar);
                             currentSpeakerSection.appendChild(nameDiv);
                             transcriptContainer.appendChild(currentSpeakerSection);
                         }
