@@ -1,6 +1,7 @@
 from  gpt_app.common.utils_dir import client as gcs_client
 
-BUCKET_NAME = 'gpt-app-data'
+# BUCKET_NAME = 'gpt-app-data'
+BUCKET_NAME = 'pdf-transcripts'
 
 def upload_file_to_gcs(file,
                         filename,
