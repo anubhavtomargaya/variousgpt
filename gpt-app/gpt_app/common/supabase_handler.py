@@ -34,6 +34,33 @@ def get_list_docs():
         print(rows.data)
         return [x['file_name'] for x in rows.data]
     
+def get_list_pdf_transcripts():
+    rows =  supabase.table('pdf-transcripts').select('company_name').execute()
+    if not rows.data:
+        return False
+    else:
+        print("sup")
+        print(rows.data)
+        return [x['company_name'] for x in rows.data]
+    
+def get_list_pdf_transcripts():
+    rows =  supabase.table('pdf-transcripts').select('company_name').execute()
+    if not rows.data:
+        return False
+    else:
+        print("sup")
+        print(rows.data)
+        return [x['company_name'] for x in rows.data]
+    
+def get_pdf_chunks_transcript(file_name):
+    rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('company_name', file_name).execute()
+    if not rows.data:
+        return False
+    else:
+        print("sup")
+        print(rows.data)
+        return rows.data[0]['extracted_transcript']
+    
 def get_list_transcripts():
     rows =  supabase.table('transcripts').select('title').execute()
     if not rows.data:

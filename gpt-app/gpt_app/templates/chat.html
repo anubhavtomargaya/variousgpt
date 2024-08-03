@@ -2,6 +2,7 @@
  <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
  
 </script> <style> 
+
         body, html {
             margin: 0;
             background: rgb(229, 228, 226);
@@ -250,7 +251,42 @@
              background-color: #f8f9fa; /* Add slight background change on focus (optional) */
         }
 </style>
-
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        /* max-width: 800px; */
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+    .transcript-container {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+    }
+    .speaker-section {
+        margin-bottom: 20px;
+    }
+    .speaker-name {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+    .speaker-text {
+        margin-left: 20px;
+    }
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+        .speaker-text {
+            margin-left: 10px;
+        }
+    }
+</style>
 </head> 
 <body> 
     <div class="app"> <h3>Chat with Concall</h3> 
@@ -414,25 +450,65 @@
     }
     async function getDocument() {
         const fileTitle = titleElement.textContent;
-        console.log("running get question",fileTitle)
-         loader.style.display = 'block';
-         try {
-             const response = await fetch(`/view/document/${fileTitle}`); //  instead of this add view for view/transcript/ here
-             const data = await response.json();
-             const transcript = document.getElementById('transcript');
-             console.log('data')
-             console.log(data)
-             console.log(data.text)
-             transcript.innerHTML = data.text;
-             
-         } catch (error) {
-             console.error('Error fetching questions:', error);
-             document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
-         } finally {
-             loader.style.display = 'none';
-         }
-     }
+        console.log("running get question", fileTitle);
 
+        loader.style.display = 'block';
+
+        try {
+            const response = await fetch(`/view/document/${fileTitle}`);
+            const data = await response.json();
+            console.log('data', data);
+
+            const transcriptContainer = document.getElementById('transcript-container');
+            transcriptContainer.innerHTML = ''; // Clear existing content
+
+            let currentSpeaker = null;
+            let currentSpeakerSection = null;
+
+            if (data.text && typeof data.text === 'object') {
+                Object.entries(data.text).forEach(([key, value]) => {
+                    if (value && typeof value === 'object') {
+                        const speakerName = value.speaker.trim();
+                        const isUnknownSpeaker = speakerName.toLowerCase().includes('unknown') || 
+                                                 speakerName.toLowerCase().includes('speaker');
+
+                        if (!isUnknownSpeaker && speakerName !== currentSpeaker) {
+                            currentSpeaker = speakerName;
+                            currentSpeakerSection = document.createElement('div');
+                            currentSpeakerSection.className = 'speaker-section';
+                            
+                            const nameDiv = document.createElement('div');
+                            nameDiv.className = 'speaker-name';
+                            nameDiv.textContent = currentSpeaker;
+                            
+                            currentSpeakerSection.appendChild(nameDiv);
+                            transcriptContainer.appendChild(currentSpeakerSection);
+                        }
+
+                        const textDiv = document.createElement('div');
+                        textDiv.className = 'speaker-text';
+                        textDiv.textContent = value.text || 'No text available';
+                        
+                        if (currentSpeakerSection) {
+                            currentSpeakerSection.appendChild(textDiv);
+                        } else {
+                            transcriptContainer.appendChild(textDiv);
+                        }
+                    } else {
+                        console.warn(`Invalid entry at key ${key}:`, value);
+                    }
+                });
+            } else {
+                throw new Error('Invalid data structure received from server');
+            }
+
+        } catch (error) {
+            console.error('Error fetching or processing transcript:', error);
+            document.getElementById('transcript-container').innerHTML = '<p>Error fetching or processing transcript. Please try again later.</p>';
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
     // Call getQuestions when the page loads
     window.addEventListener('load', getDocument);
 
