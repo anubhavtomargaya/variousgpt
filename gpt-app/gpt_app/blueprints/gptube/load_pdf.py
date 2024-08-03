@@ -16,7 +16,7 @@ from gpt_app.common.dirs import PDF_DIR,TS_DIR
 from gpt_app.common.utils_dir import _make_file_path
 
 
-def load_pdf_link_into_bucket(pdf_link):
+def load_pdf_link_into_bucket(pdf_link,bucket=None):
     try:
         # Create a session to persist parameters across requests
         session = requests.Session()
@@ -42,7 +42,7 @@ def load_pdf_link_into_bucket(pdf_link):
 
                 # Upload the temporary file to GCS
                 destination_blob_name = _make_file_path(PDF_DIR, filename, local=False)
-                file_url = upload_file_to_gcs(tmp_file, destination_blob_name)
+                file_url = upload_file_to_gcs(tmp_file, destination_blob_name,bucket=bucket)
 
             return file_url
         else:

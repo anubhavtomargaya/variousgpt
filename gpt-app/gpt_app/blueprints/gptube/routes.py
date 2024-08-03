@@ -97,7 +97,7 @@ def upload_file():
         if pdf_link == '':
             return jsonify({'error': 'No PDF link provided'}), 400
 
-        file_url = load_pdf_link_into_bucket(pdf_link)  # Implement this function to handle the link
+        file_url = load_pdf_link_into_bucket(pdf_link,bucket=APP_BUCKET)  # Implement this function to handle the link
         file_name = str(file_url).split('/')[-1]
         return jsonify({'message': 'PDF link successfully uploaded', 'file_name': file_name}), 200
     
@@ -171,8 +171,9 @@ def embed_doc():
 
     if not file:
         raise HTTPException("title not provided ")
-        
-    return jsonify(create_embedding_for_doc(file=file))
+    else:
+        f = file.split('.')[0]
+        return jsonify(create_embedding_for_doc(file=f))
 
     
 @gpt_app.route('/transcribe/youtube', methods=['POST','GET'])

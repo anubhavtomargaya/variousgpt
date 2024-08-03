@@ -75,11 +75,15 @@ def process_pdf_to_doc(file,added_by=None):
         url = load_pdf_into_bucket(path,destination_filename=classificaiton,bucket=PROC_PDF_BUCKET)
         print("url")
         print(url)
-        sp = insert_chunk_doc_entry(doc=doc,added_by=added_by)
-        print(sp)
+        try:
 
-
-        return url
+            sp = insert_chunk_doc_entry(doc=doc,added_by=added_by)
+            print(sp)
+        except Exception as e:
+            print("already exists?",e)
+        filename = url.split('/')[-1]
+        return {"url":url,
+                "filename":filename}
    
 
 def process_pdf_to_doc_v2(file,row,added_by=None):
