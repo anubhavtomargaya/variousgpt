@@ -32,6 +32,7 @@ def check_transcript_extracted(transcript_id):
     
 def insert_initial_transcript_entry(company_name,
                                     quarter, 
+                                    file_name,
                                     financial_year,
                                     doc_type,
                                     description,
@@ -40,6 +41,7 @@ def insert_initial_transcript_entry(company_name,
     ts_document = {
         'company_name': company_name,
         'quarter': quarter,
+        'file_name':file_name,
         'financial_year': financial_year,
         'doc_type': doc_type,
         'description': description,

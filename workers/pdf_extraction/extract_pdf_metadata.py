@@ -1,3 +1,4 @@
+from pathlib import Path
 import fitz
 import os
 import json
@@ -84,6 +85,8 @@ def extract_metadata(pdf_path: str, num_pages: int = 2) -> Dict:
 def service_extract_pdf_metadata(fl):
     
     metadata = extract_metadata(fl)
+    name = Path(fl).name 
+    print('name',name)
     # print(json.dumps(metadata, indent=2)) 
     reques = {
         "company_name":metadata['company_name'],
@@ -96,6 +99,7 @@ def service_extract_pdf_metadata(fl):
         entry =    {
             "company_name":metadata['company_name'],
             "quarter":metadata['quarter'],
+            "file_name":name,
             "financial_year":metadata['financial_year'],
             "doc_type":metadata['doc_type'],
             "description":metadata['description'],
