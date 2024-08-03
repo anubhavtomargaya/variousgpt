@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 import requests
 from werkzeug.utils import secure_filename
 from tempfile import NamedTemporaryFile
@@ -61,6 +63,28 @@ def download_pdf_from_bucket(file_name, dir=PDF_DIR,format='pdf'):
  
     return download_gcs_file_as_bytes(source_blob_name=source_blob_name)
 
+BUCKET_NAME = 'gpt-app-data'
+# BUCKET_NAME = 'pdf-transcripts'
+# # gcs_client = storage.Client()
+# gcs_client = storage.Client.from_service_account_json(Path(f'sa_gcs.json'))
+from  gpt_app.common.utils_dir import client as gcs_client
+def download_gcs_file(source_blob_name, destination_file_name):
+    bucket = gcs_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(source_blob_name)
+    with open(destination_file_name, 'wb') as file_obj:
+        blob.download_to_file(file_obj)
+    print("file downloaded",destination_file_name)
+    return destination_file_name
+
+def download_pdf_from_pdf_bucket_file(file_name, dir=PDF_DIR,format='pdf',bytes=False):
+    source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,
+                                       local=False,format=format)   
+    if bytes:
+        return download_gcs_file_as_bytes(source_blob_name=source_blob_name)
+    else:
+        destination_file_path = os.path.join('/tmp', file_name)
+        return download_gcs_file(source_blob_name,destination_file_name=destination_file_path)
+    
 def download_transcript_json_from_bucket(file_name, dir=TS_DIR):
     source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,format='json',
                                        local=False)   

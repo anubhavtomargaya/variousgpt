@@ -1,11 +1,12 @@
 
 
 from gpt_app.common.utils_dir import _make_file_path
-from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket, download_transcript_json_from_bucket
+from  gpt_app.blueprints.gptube.load_pdf import download_pdf_from_bucket, download_pdf_from_pdf_bucket_file, download_transcript_json_from_bucket
 from  gpt_app.blueprints.gptube.helpers_pdf import extract_text_from_pdf_bytes
 from  gpt_app.blueprints.gptube.helpers_db import create_doc_for_file
 from gpt_app.common.utils_text import split_document, count_words,generate_hash_key
 from gpt_app.common.supabase_handler import check_tdoc_exist, insert_chunk_doc_entry
+from gpt_app.blueprints.gptube.process_pdf_text import service_extract_transcript_texts
 
 CHUNK_PARAMS  = (2000,100)
 
@@ -48,6 +49,15 @@ def process_pdf_to_doc(file,added_by=None):
         print(sp)
 
         return True 
+   
+
+def process_pdf_to_doc_v2(file,row,added_by=None):
+    path = download_pdf_from_pdf_bucket_file(file)
+    print("row",row)
+    print("path",path)
+    result = service_extract_transcript_texts(path,row)
+
+    return result
    
 
 

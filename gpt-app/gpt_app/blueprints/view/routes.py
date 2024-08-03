@@ -47,6 +47,7 @@ def embed():
 @login_required
 def proc_pdf():
     file = request.args.get('file', None)
+    row = request.args.get('row', None)
     extn = request.args.get('extn', None)
 
     if not file:

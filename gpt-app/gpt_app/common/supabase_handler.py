@@ -159,3 +159,75 @@ def save_user(email, name, google_id):
         # return existing
 
 # print(save_user(email='test@test.com',name='test_user',google_id='100001000'))
+
+## PDF WORKER
+
+
+def check_pdf_exist(company_name, quarter, financial_year, doc_type):
+    existing_ts = supabase.table('pdf-transcripts') \
+                          .select('*') \
+                          .eq('company_name', company_name) \
+                          .eq('quarter', quarter) \
+                          .eq('financial_year', financial_year) \
+                          .eq('doc_type', doc_type) \
+                          .execute()
+    print("existing doc", existing_ts)
+    if not existing_ts.data:
+        return False
+    else:
+        return existing_ts.data[0]
+    
+def check_transcript_extracted(transcript_id):
+    existing_ts = supabase.table('pdf-transcripts') \
+                          .select('extracted_transcript') \
+                          .eq('id', transcript_id) \
+                          .execute()
+    print("existing extracted_transcript field:", existing_ts)
+    if existing_ts.data and existing_ts.data[0]['extracted_transcript'] is not None:
+        return True
+    else:
+        print("transcript doesnt exist")
+        return False
+    
+def insert_initial_transcript_entry(company_name,
+                                    quarter, 
+                                    financial_year,
+                                    doc_type,
+                                    description,
+                                    key_people
+                                    ):
+    ts_document = {
+        'company_name': company_name,
+        'quarter': quarter,
+        'financial_year': financial_year,
+        'doc_type': doc_type,
+        'description': description,
+        'key_people': key_people,
+    }
+
+    result = supabase.table('pdf-transcripts').insert(ts_document).execute()
+    print("Inserted document:", result)
+    return result.data[0]['id'] if result.data else None  
+
+
+def get_transcript_row(id)->dict:
+    rows =  supabase.table('pdf-transcripts').select('*').eq('id', id).execute()
+    if not rows.data:
+        print("No rows found for the id")
+        return False
+    else:
+        print("rows:",rows.data)
+        return rows.data[0]
+    
+
+
+
+def update_transcript_pdf_entry(transcript_id, extracted_transcript, extra_text):
+    update_document = {
+        'extracted_transcript': extracted_transcript,
+        'extra_text': extra_text
+    }
+
+    result = supabase.table('pdf-transcripts').update(update_document).eq('id', transcript_id).execute()
+    print("Updated document:")
+    return result
