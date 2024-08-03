@@ -20,7 +20,8 @@ from flask import current_app as app,jsonify,request
 
 from  gpt_app.common.session_manager import get_user_email, login_required,is_logged_in
 
-
+APP_BUCKET = 'gpt-app-data'
+PROC_PDF_BUCKET = 'pdf-transcripts'
 from . import gpt_app
 
 @gpt_app.route('/')
@@ -84,7 +85,7 @@ def upload_file():
         if file.filename == '':
             return jsonify({'error': 'No selected file'}), 400
 
-        file_url = load_pdf_into_bucket(file)
+        file_url = load_pdf_into_bucket(file,destination_filename=file.filename,bucket=APP_BUCKET)
         file_name = str(file_url).split('/')[-1]
         return jsonify({'message': 'File successfully uploaded', 'file_name': file_name}), 200
     

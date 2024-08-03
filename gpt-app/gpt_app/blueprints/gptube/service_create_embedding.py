@@ -8,6 +8,8 @@ openai_client = get_openai_client()
 
 def create_embedding_for_doc(file):
     chunks_dict = get_chunk_doc(file)
+    if not chunks_dict:
+        raise Exception("No chunks dict there for embedding")
     for k,v in chunks_dict.items():
         chnk = v['chunk_text']
         if not chunks_dict[k]['chunk_embedding']:

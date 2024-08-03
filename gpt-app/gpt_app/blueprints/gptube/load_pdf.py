@@ -59,45 +59,44 @@ def load_pdf_link_into_bucket(pdf_link):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf'
 
-def load_pdf_into_bucket(file):
+def load_pdf_into_bucket(file,destination_filename,bucket=None):
     try:
-        
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+        print('loading in bucket',bucket,file)
+        print('loading in bucket dest',destination_filename)
+        if file:
+            filename = Path(destination_filename)
             destination_blob_name = _make_file_path(PDF_DIR,
-                                                filename,local=False)
-            file_url = upload_file_to_gcs(file, destination_blob_name)
-            return file_url
+                                                filename,format='pdf',local=False)
+            with open(file,'rb') as tmpfile:
+                file_url = upload_file_to_gcs(tmpfile, destination_blob_name,bucket=bucket)
+                return file_url
+        else:
+            raise Exception("Loaderror",file,allowed_file(destination_filename ))
     except Exception as e:
         raise Exception("LoadError: couldnt upload pdf : %s",e.__str__())
     
-def download_pdf_from_bucket(file_name, dir=PDF_DIR,format='pdf'):
+    
+def download_pdf_from_bucket(file_name, dir=PDF_DIR,format='pdf',bucket=None):
     source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,
                                        local=False,format=format)   
  
-    return download_gcs_file_as_bytes(source_blob_name=source_blob_name)
+    return download_gcs_file_as_bytes(source_blob_name=source_blob_name,bucket=bucket)
 
 BUCKET_NAME = 'gpt-app-data'
 # BUCKET_NAME = 'pdf-transcripts'
 # # gcs_client = storage.Client()
 # gcs_client = storage.Client.from_service_account_json(Path(f'sa_gcs.json'))
-from  gpt_app.common.utils_dir import client as gcs_client
-def download_gcs_file(source_blob_name, destination_file_name):
-    bucket = gcs_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(source_blob_name)
-    with open(destination_file_name, 'wb') as file_obj:
-        blob.download_to_file(file_obj)
-    print("file downloaded",destination_file_name)
-    return destination_file_name
+from  gpt_app.blueprints.gptube.helpers_gcs import download_gcs_file
 
-def download_pdf_from_pdf_bucket_file(file_name, dir=PDF_DIR,format='pdf',bytes=False):
+def download_pdf_from_pdf_bucket_file(file_name, dir=PDF_DIR,format='pdf',bytes=False,bucket=None):
     source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,
                                        local=False,format=format)   
     if bytes:
         return download_gcs_file_as_bytes(source_blob_name=source_blob_name)
     else:
-        destination_file_path = os.path.join('/tmp', file_name)
-        return download_gcs_file(source_blob_name,destination_file_name=destination_file_path)
+        print("makking tmp path",file_name) 
+        destination_file_path = os.path.join('/tmp', f"{file_name}.pdf")
+        return download_gcs_file(source_blob_name,destination_file_name=destination_file_path,bucket=bucket)
     
 def download_transcript_json_from_bucket(file_name, dir=TS_DIR):
     source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,format='json',
