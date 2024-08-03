@@ -1,8 +1,16 @@
 import os
 from pathlib import Path
 import requests
-from werkzeug.utils import secure_filename
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 from tempfile import NamedTemporaryFile
+from werkzeug.utils import secure_filename
+import ssl
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+# Suppress only the single InsecureRequestWarning from urllib3 needed to handle SSL certificate issues
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 from .helpers_gcs import  upload_file_to_gcs, download_gcs_file_as_bytes
 from gpt_app.common.dirs import PDF_DIR,TS_DIR
 from gpt_app.common.utils_dir import _make_file_path
@@ -10,10 +18,13 @@ from gpt_app.common.utils_dir import _make_file_path
 
 def load_pdf_link_into_bucket(pdf_link):
     try:
-        response = requests.get(pdf_link,timeout=15)
-        print("response ")
-        print(response)
-        print(response.content)
+        # Create a session to persist parameters across requests
+        session = requests.Session()
+        retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
+        session.mount('https://', HTTPAdapter(max_retries=retries))
+        
+        # Make the request with verification disabled to handle SSL certificate issues
+        response = session.get(pdf_link, timeout=15, verify=False)
         response.raise_for_status()  # Ensure the request was successful
 
         if 'application/pdf' in response.headers.get('Content-Type', ''):
@@ -36,11 +47,14 @@ def load_pdf_link_into_bucket(pdf_link):
             return file_url
         else:
             raise Exception("Provided link does not contain a PDF file")
-    
+
     except requests.exceptions.RequestException as e:
-        raise Exception("LoadError: couldn't download PDF from link: %s" % e.__str__())
-    except Exception as e:
-        raise Exception("LoadError: couldn't upload PDF from link: %s" % e.__str__())
+        raise Exception("LoadError: couldn't download PDF from link: %s" % str(e))
+
+    # except requests.exceptions.RequestException as e:
+    #     raise Exception("LoadError: couldn't download PDF from link: %s" % e.__str__())
+    # except Exception as e:
+    #     raise Exception("LoadError: couldn't upload PDF from link: %s" % e.__str__())
     
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf'
