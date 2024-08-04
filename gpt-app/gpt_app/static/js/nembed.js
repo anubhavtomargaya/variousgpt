@@ -37,23 +37,25 @@ document.addEventListener("DOMContentLoaded", function() {
             loader.style.display = 'none';
             content.style.display = 'block';
             tick1.style.display = 'inline';
+            console.log('response data',data)
+            // filename = data.filename
 
             // Call the embed PDF API
             loader.style.display = 'block';
-      
+            console.log("using filename",data.filename)
             fetch('/api/v1/gptube/embed/doc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ file: filename })
+                body: JSON.stringify({ file: data.filename })
             })
             .then(response => response.json())
             .then(data => {
                 // Show second tick
                 loader.style.display = 'none';
                 tick2.style.display = 'inline';
-                window.location.href = "/view/chat/"+ filename;
+                window.location.href = "/view/chat/"+ data.filename;
             })
             .catch(error => {
                 console.error('Error embedding PDF:', error);
