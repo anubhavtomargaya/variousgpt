@@ -26,13 +26,13 @@ def get_file_extn_doc(filename)->dict:
         return rows.data[0]
     
 def get_list_docs():
-    rows =  supabase.table('chunk_docs').select('file_name').execute()
+    rows =  supabase.table('chunk_docs').select('file_name').neq('file_name', None).execute()
     if not rows.data:
         return False
     else:
-        print("sup")
-        print(rows.data)
-        return [x['file_name'] for x in rows.data]
+        # print("sup")
+        # print(rows.data)
+        return [x['file_name']  for x  in rows.data ]
     
 def get_list_pdf_transcripts():
     rows =  supabase.table('pdf-transcripts').select('company_name').execute()
@@ -41,24 +41,27 @@ def get_list_pdf_transcripts():
     else:
         print("sup")
         print(rows.data)
-        return [x['company_name'] for x in rows.data]
+        return [x['company_name']for x in rows.data]
     
 def get_list_pdf_transcripts():
-    rows =  supabase.table('pdf-transcripts').select('company_name').execute()
+    rows =  supabase.table('pdf-transcripts').select('file_name').neq('file_name',None).execute()
     if not rows.data:
         return False
     else:
         print("sup")
         print(rows.data)
-        return [x['company_name'] for x in rows.data]
+        print(rows.data[0]['file_name'])
+        return [x['file_name']  for x in rows.data]
     
 def get_pdf_chunks_transcript(file_name):
-    rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('company_name', file_name).execute()
+    print("running supabase query...")
+    rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
     if not rows.data:
+        print("no rows found")
         return False
     else:
-        print("sup")
-        print(rows.data)
+        # print("sup")
+        # print(rows.data)
         return rows.data[0]['extracted_transcript']
     
 def get_list_transcripts():
