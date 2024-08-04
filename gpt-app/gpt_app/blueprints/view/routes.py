@@ -116,7 +116,7 @@ def get_document(file_name): #process pdf and show
 @view_app.route('/document/<file_name>')
 @login_required
 def get_pdf_transcript(file_name): #process pdf and show
-    print('fil')
+    print('fil---')
     print(file_name)
     # text = load_transcript_doc(f'{file_name}',gcs=True)
     # extension = get_f

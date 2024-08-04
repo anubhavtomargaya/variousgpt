@@ -60,8 +60,8 @@ def get_pdf_chunks_transcript(file_name):
         print("no rows found")
         return False
     else:
-        # print("sup")
-        # print(rows.data)
+        print("documents supp")
+        print(rows.data)
         return rows.data[0]['extracted_transcript']
     
 def get_list_transcripts():
