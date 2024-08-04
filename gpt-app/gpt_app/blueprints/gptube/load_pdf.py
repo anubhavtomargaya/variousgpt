@@ -22,9 +22,12 @@ def load_pdf_link_into_bucket(pdf_link,bucket=None):
         session = requests.Session()
         retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
         session.mount('https://', HTTPAdapter(max_retries=retries))
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
         
         # Make the request with verification disabled to handle SSL certificate issues
-        response = session.get(pdf_link, timeout=15, verify=False)
+        response = session.get(pdf_link,headers=headers ,timeout=15, verify=False)
         response.raise_for_status()  # Ensure the request was successful
 
         if 'application/pdf' in response.headers.get('Content-Type', ''):
