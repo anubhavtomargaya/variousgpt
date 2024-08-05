@@ -172,8 +172,8 @@ def embed_doc():
     if not file:
         raise HTTPException("title not provided ")
     else:
-        f = file.split('.')[0]
-        return jsonify(create_embedding_for_doc(file=f))
+        # f = file.split('.')[0]
+        return jsonify(create_embedding_for_doc(file))
 
     
 @gpt_app.route('/transcribe/youtube', methods=['POST','GET'])

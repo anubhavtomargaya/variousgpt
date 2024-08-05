@@ -5,6 +5,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from tempfile import NamedTemporaryFile
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures.file_storage import FileStorage
 import ssl
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
@@ -67,12 +68,17 @@ def load_pdf_into_bucket(file,destination_filename,bucket=None):
         print('loading in bucket',bucket,file)
         print('loading in bucket dest',destination_filename)
         if file:
+
             filename = Path(destination_filename)
             destination_blob_name = _make_file_path(PDF_DIR,
                                                 filename,format='pdf',local=False)
-            with open(file,'rb') as tmpfile:
-                file_url = upload_file_to_gcs(tmpfile, destination_blob_name,bucket=bucket)
-                return file_url
+            if isinstance(file,FileStorage):
+                file = file
+                file_url = upload_file_to_gcs(file, destination_blob_name,bucket=bucket)
+            else:
+                with open(file,'rb') as tmpfile:
+                    file_url = upload_file_to_gcs(tmpfile, destination_blob_name,bucket=bucket)
+            return file_url
         else:
             raise Exception("Loaderror",file,allowed_file(destination_filename ))
     except Exception as e:
