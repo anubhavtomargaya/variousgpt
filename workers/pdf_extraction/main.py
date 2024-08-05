@@ -95,6 +95,12 @@ if __name__=='__main__':
         ts_entry = service_extract_transcript_texts(f_path,row_id)
         return ts_entry
     
+    def test_process_main():
+        bucket_file = 'fy-2024_q1_investor_conference_transcript_raymond_500330.pdf'
+        event = { "name":bucket_file,"bucket":'app_bucket'}
+        return process_valid_pdf(event)
+        
     # print(test_download_from_bucket_as_tmp())
     # print(test_metadata_service())
-    print(test_transcript_extract_service())
+    # print(test_transcript_extract_service())
+    print(test_process_main())
