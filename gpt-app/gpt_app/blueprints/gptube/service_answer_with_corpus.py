@@ -16,8 +16,10 @@ def get_context_corpus(file_name):
     return load_summary_embedded(file_name)
 
 def get_context_corpus_database(file):
-    if '.' in file:
-        file = file.split('.')[0]
+    if '.' not in file:
+        print("TEMP MODIFIER")
+        file = file + '.pdf'
+    print("file oing",file)
     chunks_dict = get_chunk_doc(file)
     print("chunks dict")
     if not chunks_dict:
