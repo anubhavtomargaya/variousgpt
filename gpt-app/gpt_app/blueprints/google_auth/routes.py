@@ -34,12 +34,12 @@ def login():
     print('url base',AUTH_REDIRECT_URI)
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
-                            redirect_uri=AUTH_REDIRECT_URI,
+                            redirect_uri=AUTH_REDIRECT_URI_HTTPS,
                             _external=True)
                             #   url_for('google_auth.google_auth_redirect',
                                                 #  _external=True)) #no need to use 
 
-    uri, state = session.create_authorization_url(AUTHORIZATION_URL)
+    uri, state = session.create_authorization_url(AUTH_REDIRECT_URI_HTTPS)
     current_app.logger.debug("state %s",state )
     current_app.logger.debug("uri %s",uri)
     set_auth_state(state)
@@ -61,7 +61,7 @@ def google_auth_redirect():
                                 scope=AUTHORIZATION_SCOPE,
                                 state=req_state,
                                 redirect_uri=
-                                        AUTH_REDIRECT_URI)
+                                        AUTH_REDIRECT_URI_HTTPS)
     except Exception as e:
         return flask.jsonify(e)
     current_app.logger.debug(' session built')
