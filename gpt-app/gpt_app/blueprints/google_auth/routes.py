@@ -31,7 +31,7 @@ def login():
     print("auth url")
     print(url_for('google_auth.google_auth_redirect',
                                             _external=True))
-    print('url base',AUTH_REDIRECT_URI)
+    print('url base',AUTH_REDIRECT_URI_HTTPS)
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
                             redirect_uri=AUTH_REDIRECT_URI_HTTPS,
@@ -39,7 +39,7 @@ def login():
                             #   url_for('google_auth.google_auth_redirect',
                                                 #  _external=True)) #no need to use 
 
-    uri, state = session.create_authorization_url(AUTH_REDIRECT_URI_HTTPS)
+    uri, state = session.create_authorization_url(AUTHORIZATION_URL)
     current_app.logger.debug("state %s",state )
     current_app.logger.debug("uri %s",uri)
     set_auth_state(state)
