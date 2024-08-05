@@ -5,6 +5,7 @@ from gpt_app.common.constants import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 def get_chunk_doc(filename)->dict:
+    print("filname for em", filename)
     rows =  supabase.table('chunk_docs').select('*').eq('file_name', filename).execute()
     if not rows.data:
         return False
@@ -44,7 +45,7 @@ def get_list_pdf_transcripts():
         return [x['company_name']for x in rows.data]
     
 def get_list_pdf_transcripts():
-    rows =  supabase.table('pdf-transcripts').select('file_name').neq('file_name',None).execute()
+    rows =  supabase.table('pdf-transcripts').select('file_name').neq('file_name',None).order('created_at', desc=True).execute()
     if not rows.data:
         return False
     else:
@@ -117,6 +118,21 @@ def insert_yt_entry(link,meta,added_by):
 
         # Insert user into the users table
     supabase.table('imports_youtube').insert(user_document).execute()
+    return True 
+
+def insert_classifier_entry(import_filename,given_filename,file_metadata={}):
+
+    classifier_doc = {
+            
+        
+            'import_filename': import_filename,
+            'given_file_name': given_filename,
+            'file_metadata': file_metadata,
+            'classifier_version':'v0'
+        }
+
+        # Insert user into the users table
+    supabase.table('pdf-classification').insert(classifier_doc).execute()
     return True 
 
 def insert_ts_entry(title,text,added_by):

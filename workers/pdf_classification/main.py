@@ -5,6 +5,7 @@ from google.cloud import storage
 from process_pdf_text import service_extract_transcript_texts
 from dirs import PDF_DIR
 from workers.pdf_classification.classify_pdf import classify_pdf_transcript
+from workers.pdf_classification.db_supabase import insert_classifier_entry
 
 #utils.py
 def _make_file_path(direcotry:Path,
@@ -55,8 +56,8 @@ def download_pdf_from_pdf_bucket_file(file_name, dir=PDF_DIR,format='pdf',bytes=
         print("makking tmp path",file_name) 
         destination_file_path = os.path.join('/tmp', f"{file_name}.pdf")
         return download_gcs_file(source_blob_name,destination_file_name=destination_file_path,bucket=bucket)
-    
-def process_valid_pdf(event, context=None):
+
+def validate_and_classify_valid_pdf(event, context=None):
     print("Processing file")
     if not isinstance(event,dict):
         request_json = event.get_json()
@@ -80,7 +81,8 @@ def process_valid_pdf(event, context=None):
         classificaiton = classify_pdf_transcript(path)
         if classificaiton:
             print("earning call detected! path:", classificaiton) 
-            # return classificaiton
+            insert = insert_classifier_entry(import_filename=file_name,given_filename=classificaiton)
+            print("inserted",insert)
         else:
             print("earning call NOT detected! response", classificaiton) 
             return False 

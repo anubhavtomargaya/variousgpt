@@ -6,7 +6,7 @@ from  gpt_app.blueprints.gptube.helpers_pdf import extract_text_from_pdf_bytes
 from  gpt_app.blueprints.gptube.helpers_db import create_doc_for_file
 from  gpt_app.blueprints.gptube.classify_pdf import classify_pdf_transcript
 from gpt_app.common.utils_text import split_document, count_words,generate_hash_key
-from gpt_app.common.supabase_handler import check_tdoc_exist, insert_chunk_doc_entry
+from gpt_app.common.supabase_handler import check_tdoc_exist, insert_chunk_doc_entry, insert_classifier_entry
 from gpt_app.blueprints.gptube.process_pdf_text import service_extract_transcript_texts
 
 import json
@@ -59,19 +59,22 @@ def process_pdf_to_doc(file,added_by=None):
         if classificaiton:
             print("earning call detected! path:", classificaiton) 
             # return classificaiton
+            insert = insert_classifier_entry(import_filename=file,given_filename=classificaiton)
+            print("inserted",insert)
         else:
             print("earning call NOT detected! response", classificaiton) 
             return False 
    
         
         txt = get_pdf_txt(file)
-        print("file",file)
+        print("fileeee",file)
         meta = {'chunk_params':CHUNK_PARAMS}
         chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
         doc = create_doc_for_file(chunks=chunks,
                                 filename=classificaiton,
                                 e='pdf',
                                 meta=meta)
+        print("pathh",path)
         url = load_pdf_into_bucket(path,destination_filename=classificaiton,bucket=PROC_PDF_BUCKET)
         print("url")
         print(url)
