@@ -22,7 +22,7 @@
             flex-direction: column; */
       
             margin:0;
-            padding: 2rem;
+            padding: 1rem 2rem;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(233, 233, 233, 0.1);
         }
@@ -33,20 +33,15 @@
             margin: 0;
         }
         h4 {
-            color: #4b4b4b;
+            color: #cacac9;
             text-align: left;
             font-size: large;
             /* margin: 0;  */
         }
-        h5 {
-            color: #ededed;
-            text-align: left;
-            font-size: small;
-            margin: 0;
-        }
+   
         ul { list-style-type: none;}
-        #email { font-size: x-small;color: #fcfff8;font-family:Arial, Helvetica, sans-serif;text-align: left; margin: 0;}
-        li {padding: 1rem; font-size: small; text-decoration: none;}
+        #email { font-size: x-small;color: #2c2d2c;font-family:Arial, Helvetica, sans-serif;text-align: left; margin: 0;}
+        /* li {padding: 1rem; font-size: small; text-decoration: none;} */
         input[type="text"] {
             width: 95%;
             padding: 10px;
@@ -66,14 +61,16 @@
         }
         .footer {
             display: flex;
-            justify-content: space-around;
-            padding: 0rem 2rem 0rem 2rem;
+            justify-content: space-evenly;
+            /* padding: 0rem 2rem 0rem 2rem; */
             flex-wrap: wrap;
         }
         .askbuttonArea {
             display: flex;
             justify-content: space-around;
-            padding: 0rem 2rem 0rem 2rem;
+            /* background-color: #145372; */
+            /* opacity: 0.5; */
+            /* padding: 0rem 2rem 0rem 2rem; */
             flex-wrap: wrap;
         }
         button {
@@ -82,17 +79,17 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 5px;
+            /* margin: 5px; */
         }
-        li:hover {transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        /* li:hover {transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2);} */
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        #newButton { background-color: #da0c4a;float: right;}
-        #askButton { background-color: #FFD700; }
-        #getQuestionsButton { background-color: #83c0bd; }
-        #getCallsButton { background-color: #FF6347; }
+        /* #newButton { background-color: #30292b;float: right;}
+        #askButton { background-color: #aaaaa8; }
+        #getQuestionsButton { background-color: #e9f6f5; }
+        #getCallsButton { background-color: #efe6e4; } */
         .panel {
             position: fixed;
             top: 0;
@@ -106,7 +103,10 @@
             left: -250px; 
             background-color: rgba(240, 248, 255, 0.9);
         }
-        #right-panel { right: -250px; }
+        #right-panel { right: -250px;   
+             background-color: #2c2c2d;
+             color:#f1f1f1
+        }
         .panel.open { transform: translateX(250px); }
         #right-panel.open { transform: translateX(-250px); }
         .panel-content {
@@ -187,9 +187,30 @@
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-    #askButton { background-color: #FFD700; }
-    #leftButton { background-color: #20B2AA; }
-    #rightButton { background-color: #FF6347; }
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+    #askButton {
+         /* background-color: #fff826;   */
+    color:  ivory;
+    background: linear-gradient(210deg, #145372, #1c8cdb, #25c6fb, #1c8cdb, #145372);
+    background-size: 400% 400%;
+    /* -webkit-background-clip: text; */
+    /* -webkit-text-fill-color: transparent; */
+    animation: gradient-animation 5s ease-in infinite;
+        }
+    #leftButton { background-color: #3288b0; }
+    #rightButton { background-color: #3288b0; }
 
     #questionsContainer {
             /* max-width: 800px; */
@@ -402,28 +423,211 @@
             margin-left: 10px;
         }
     }
+   
+.panel {
+    width: 250px;
+    /* background-color: #f8f9fa; */
+    border-right: 1px solid #ddd;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.back-arrow {
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+#newButton {
+    background-color: #040d26;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    transition: background-color 0.3s;
+}
+
+#newButton:hover {
+    background-color: #4c3c38;
+}
+
+#call-list h3 {
+    font-size: 20px;
+    /* margin-bottom: 20px; */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.company-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.company-item {
+    background-color: #5488a2;
+    margin-bottom: 10px;
+}
+
+.company-header {
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #145372;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.company-header:hover {
+    background-color: #ce7b45;
+}
+
+.transcript-list {
+    list-style-type: none;
+    padding-left: 10px;
+    margin-top: 10px;
+    
+}
+
+.transcript-list.hidden {
+    display: none;
+}
+
+.transcript-item {
+    margin: 0px 0;
+}
+
+.transcript-item a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.transcript-item a:hover {
+    text-decoration: underline;
+}
+.new-header { 
+    display: flex;
+    align-items: center;
+
+    justify-content: space-between;
+    background-color: #f0f4f8;
+    /* flex-direction: column; */
+    padding: .5rem 2rem;
+    /* border-radius: 10px; */
+    margin-bottom: 1rem;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+
+}
+    #title-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f4f8;
+    
+    padding: .5rem;
+    /* border-radius: 10px; */
+    margin-bottom: 1rem;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+}
+
+.company-logo {
+    /* display: none; */
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.company-info {
+    flex-grow: 1;
+}
+
+.company-name {
+    font-size: 24px;
+    margin: 0 0 5px 0;
+    color: #2c3e50;
+}
+.earnings-info {
+    font-size: 16px;
+    color: #7f8c8d;
+}
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+#email span {
+    background: linear-gradient(270deg, #145372, #1c8cdb, #25c6fb, #1c8cdb, #145372);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-animation 3s ease infinite;
+}
 </style>
 </head> 
 <body> 
-    <div class="app"> <h3>Earning Concall AI</h3>
-        <h5 id="email">{{user}}</h2> 
+    <div class="app"> 
+        <div style="color: #02283b; font-size: x-large; font-weight: 600; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Earning Concall AI</div>
+        <h5 id="email"><span style="color: #145372; font-size: large;">Hey,</span> {{user}} !! </h5> 
             <hr/>
-        <h2 id="title">{{title}}</h2> 
-        <div class="footer"> 
-        <button id="leftButton">LIST</button>
-        <button id="rightButton">HISTORY</button> 
+           
+        <!-- <h2 id="title">{{title}}</h2>  -->
+        <div class="new-header"> 
+            <!-- <div class="footer">  -->
+            <button id="leftButton">LIST</button>
+            <div id="title-section"></div>
+            <button id="rightButton">HISTORY</button> 
+            <!-- </div> -->
         </div>
+        <div id="transcript-container"></div>
         <!-- <div id="questionsContainer"> -->
             <!-- <ul id="questionsList" ></ul> -->
-            <div id="transcript-container">
+            <!-- <div id="transcript-container"> -->
                 <!-- <h4>Document Text</h4> -->
-                <div id="transcript" ></div>
-            </div>
+                <!-- <div id="transcript" ></div> -->
+        <!-- </div> -->
         <!-- </div> -->
         <input type="text" id="question-input" placeholder="Ask a question on selected concall">
      <div id="answer-area"></div> 
      <div class="askbuttonArea"> 
-     <button id="askButton">Shoot</button> 
+     <button id="askButton">Shoot!</button> 
      <div id="loader"> <div class="loader">
         
      </div> 
@@ -440,12 +644,12 @@
         <br/>
         <br/>
         
-        <button id="newButton"> NEW </button> 
+        <button id="newButton"> NEW DOCUMENT</button> 
         <br/>
         <br/>
         <div id="call-list"> 
         <div id="callList" > 
-            <h3>Call List</h3> 
+            
             <div id="loader2" class="loader" style="display: none;"></div> 
         
             
@@ -508,30 +712,91 @@
     }
 
     // Function to fetch call list
+    // function fetchCallList() {
+    //     loader2.style.display = 'block';
+    //     fetch('/view/docs/list')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             callListDiv.innerHTML = '';
+    //             const ul = document.createElement('ul');
+    //             data.forEach(item => {
+    //                 const li = document.createElement('li');
+    //                 li.textContent = item;
+    //                 li.addEventListener('click', () => updateTitle(item));
+    //                 ul.appendChild(li);
+    //             });
+    //             callListDiv.appendChild(ul);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching call list:', error);
+    //         })
+    //         .finally(() => {
+    //             loader2.style.display = 'none';
+    //         });
+    // }
     function fetchCallList() {
-        loader2.style.display = 'block';
-        fetch('/view/docs/list')
-            .then(response => response.json())
-            .then(data => {
-                callListDiv.innerHTML = '';
-                const ul = document.createElement('ul');
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item;
-                    li.addEventListener('click', () => updateTitle(item));
-                    ul.appendChild(li);
+    loader2.style.display = 'block';
+    fetch('/view/docs/list')
+        .then(response => response.json())
+        .then(data => {
+            callListDiv.innerHTML = '';
+            const ul = document.createElement('ul');
+            ul.className = 'company-list';
+
+            for (const [company, transcripts] of Object.entries(data)) {
+                const li = document.createElement('li');
+                li.className = 'company-item';
+
+                const companyHeader = document.createElement('div');
+                companyHeader.className = 'company-header';
+                companyHeader.textContent = company;
+                companyHeader.addEventListener('click', () => toggleTranscriptList(li));
+
+                const transcriptList = document.createElement('ul');
+                transcriptList.className = 'transcript-list hidden';
+
+                transcripts.forEach(transcript => {
+                    const transcriptLi = document.createElement('li');
+                    transcriptLi.className = 'transcript-item';
+                    
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.textContent = `${transcript.financial_year} - ${transcript.quarter}`;
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        updateTitle(transcript.file_name);
+                    });
+
+                    transcriptLi.appendChild(link);
+                    transcriptList.appendChild(transcriptLi);
                 });
-                callListDiv.appendChild(ul);
-            })
-            .catch(error => {
-                console.error('Error fetching call list:', error);
-            })
-            .finally(() => {
-                loader2.style.display = 'none';
-            });
-    }
+
+                li.appendChild(companyHeader);
+                li.appendChild(transcriptList);
+                ul.appendChild(li);
+            }
+
+            callListDiv.appendChild(ul);
+        })
+        .catch(error => {
+            console.error('Error fetching call list:', error);
+        })
+        .finally(() => {
+            loader2.style.display = 'none';
+        });
+}
+
+function toggleTranscriptList(companyItem) {
+    const transcriptList = companyItem.querySelector('.transcript-list');
+    transcriptList.classList.toggle('hidden');
+}
+
+
     function fetchQAHistory() {
-        const fileTitle = titleElement.textContent;
+        // const fileTitle = titleElement.textContent;
+        const currentPath = window.location.pathname;
+        const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
+        console.log("Fetching document:", fileTitle);
         loader2.style.display = 'block';
         fetch(`/view/records/${fileTitle}`)
             .then(response => response.json())
@@ -574,8 +839,12 @@
             return colors[Math.abs(hash) % colors.length];
         }
     async function getDocument() {
-        const fileTitle = titleElement.textContent;
-        console.log("running get question", fileTitle);
+        // const fileTitle = titleElement.textContent;
+        // console.log("file title", fileTitle);
+        const currentPath = window.location.pathname;
+        const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
+        console.log("Fetching document:", fileTitle);
+        // console.log("running get doc", fileTitle);
 
         loader.style.display = 'block';
 
@@ -583,6 +852,10 @@
             const response = await fetch(`/view/document/${fileTitle}`);
             const data = await response.json();
             console.log('data', data);
+            // console.log('data', data);
+
+// Create and update the title section
+            updateTitleSection(data);
 
             const transcriptContainer = document.getElementById('transcript-container');
             transcriptContainer.innerHTML = ''; // Clear existing content
@@ -641,8 +914,33 @@
         }
     }
     // Call getQuestions when the page loads
-    window.addEventListener('load', getDocument);
-
+   
+    function updateTitleSection(data) {
+        const 
+        titleSection = document.getElementById('title-section');
+        titleSection.innerHTML = '';
+        
+        // const companyLogo = document.createElement('div');
+        // companyLogo.className = 'company-logo';
+        // companyLogo.textContent = data.company_name.charAt(0).toUpperCase();
+        
+        const companyInfo = document.createElement('div');
+        companyInfo.className = 'company-info';
+        
+        const companyName = document.createElement('h1');
+        companyName.className = 'company-name';
+        companyName.textContent = data.company_name;
+        
+        const earningsInfo = document.createElement('h2');
+        earningsInfo.className = 'earnings-info';
+        earningsInfo.textContent = `${data.quarter} ${data.financial_year} Earnings Call`;
+        
+        companyInfo.appendChild(companyName);
+        companyInfo.appendChild(earningsInfo);
+        
+        // titleSection.appendChild(companyLogo);
+        titleSection.appendChild(companyInfo);
+    }
     // Update getQuestions call when a new file is selected
     function updateTitle(title) {
         // titleElement.textContent = title;
@@ -650,11 +948,12 @@
         // closePanels();
         getDocument(); // Fetch questions for the new file
     }
-
+    
     function truncateText(text, maxLength = 15) {
         return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
-      }
-
+    }
+    window.addEventListener('load', getDocument);
+    
     async function askQuestion(query) {
         if (!query) {
             answerArea.textContent = 'Please enter a question.';
