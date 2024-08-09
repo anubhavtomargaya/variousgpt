@@ -198,6 +198,7 @@ def check_question_dir(file_name:Path):
 
 ## transcript text
 from gpt_app.common.utils_dir import client as gcs_client
+
 def load_transcript_doc(filename:Path,gcs=False)->str:
 
     if not isinstance(filename,Path):

@@ -65,6 +65,17 @@ def get_pdf_chunks_transcript(file_name):
         print(rows.data)
         return rows.data[0]['extracted_transcript']
     
+def get_itdoc_qa_secrion(file_name):
+    print("running supabase query...")
+    rows =  supabase.table('transcripts-intel').select('qa_data').eq('file_name', f'{file_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data[0]['qa_data']['section_qa']
+    
 def get_list_transcripts():
     rows =  supabase.table('transcripts').select('title').execute()
     if not rows.data:
@@ -277,3 +288,10 @@ def update_transcript_pdf_entry(transcript_id, extracted_transcript, extra_text)
     result = supabase.table('pdf-transcripts').update(update_document).eq('id', transcript_id).execute()
     print("Updated document:")
     return result
+
+if __name__=='__main__':
+    f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
+    def test_get_qa_section():
+        return get_itdoc_qa_secrion(f)
+    
+    print(test_get_qa_section())

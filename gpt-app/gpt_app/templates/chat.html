@@ -403,22 +403,62 @@
         }
     }
 </style>
+<style>
+    /* Add your existing styles here */
+    .pill-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .pill {
+        padding: 5px 20px;
+        margin: 0 10px;
+        font-size: x-small;
+        border-radius: 20px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+    }
+    .pill.active {
+        background-color: #007bff;
+        color: white;
+    }
+    .content-container {
+        max-height: 200px;
+        overflow: scroll;
+    }
+</style>
 </head> 
 <body> 
     <div class="app"> <h3>Earning Concall AI</h3>
         <h5 id="email">{{user}}</h2> 
             <hr/>
         <h2 id="title">{{title}}</h2> 
-        <div class="footer"> 
-        <button id="leftButton">LIST</button>
-        <button id="rightButton">HISTORY</button> 
+        <div class="footer">
+            <button id="leftButton">LIST</button>
+            <button id="rightButton">HISTORY</button>
         </div>
-        <!-- <div id="questionsContainer"> -->
-            <!-- <ul id="questionsList" ></ul> -->
-            <div id="transcript-container">
-                <!-- <h4>Document Text</h4> -->
+ 
+        <div class="pill-container">
+            <div class="pill active" id="transcriptPill">Transcript</div>
+            <div class="pill" id="qaPill">Q&A Section</div>
+        </div>
+    
+    
+        <div id="content-container">
+            <div id="transcript-container">    
                 <div id="transcript" ></div>
             </div>
+            <div id="qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 200px;display: none;"></div>
+        </div>
+    </div>
+        <!-- <div id="questionsContainer"> -->
+            <!-- <ul id="questionsList" ></ul> -->
+            <!-- <div id="transcript-container"> -->
+                <!-- <h4>Document Text</h4> -->
+            <!-- </div> -->
+            <!-- <div style="max-height: 10vh;">  -->
+            <!-- <div style="border:solid 1px #131313;overflow: scroll; max-height: 200px;"> <div id="qa-container"></div>    -->
+        <!-- </div> -->
         <!-- </div> -->
         <input type="text" id="question-input" placeholder="Ask a question on selected concall">
      <div id="answer-area"></div> 
@@ -478,6 +518,29 @@
     const titleElement = document.getElementById('title');
     const questionInput = document.getElementById('question-input');
     const answerArea = document.getElementById('answer-area');
+
+    const transcriptPill = document.getElementById('transcriptPill');
+    const qaPill = document.getElementById('qaPill');
+    const transcriptContainer = document.getElementById('transcript-container');
+    const qaContainer = document.getElementById('qa-container');
+    const loader = document.getElementById('loader');
+
+    transcriptPill.addEventListener('click', () => {
+        transcriptPill.classList.add('active');
+        qaPill.classList.remove('active');
+        transcriptContainer.style.display = 'block';
+        qaContainer.style.display = 'none';
+        getDocument();
+    });
+
+    qaPill.addEventListener('click', () => {
+        qaPill.classList.add('active');
+        transcriptPill.classList.remove('active');
+        qaContainer.style.display = 'block';
+        transcriptContainer.style.display = 'none';
+        getQASection();
+    });
+
 
     function navigateToBlueprintRoute() {
             window.location.href = "{{ url_for('view_app.new') }} ";
@@ -573,9 +636,22 @@
             }
             return colors[Math.abs(hash) % colors.length];
         }
+
+    const styles_addn = `
+                    .transcript-container {
+                        font-family: Arial, sans-serif;
+                        max-width: 800px;
+                        margin: 0 auto;
+                        border:solid 1px #ddd
+
+                    }
+
+                    .speaker-text {
+                      
+                    }`
     async function getDocument() {
         const fileTitle = titleElement.textContent;
-        console.log("running get question", fileTitle);
+        console.log("running get doc", fileTitle);
 
         loader.style.display = 'block';
 
@@ -641,7 +717,154 @@
         }
     }
     // Call getQuestions when the page loads
-    window.addEventListener('load', getDocument);
+    // window.addEventListener('load', getDocument);
+
+    // CSS styles
+
+    const styles = `
+.qa-container {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.qa-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.qa-question {
+    background-color: #f5f5f5;
+    padding: 10px;
+    cursor: pointer;
+    font-size: small;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.qa-question:hover {
+    background-color: #e9e9e9;
+}
+
+.qa-question-content {
+    flex-grow: 1;
+}
+
+.qa-question-text {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.qa-question-info {
+    font-size: x-small;
+    color: #666;
+    font-style: italic;
+}
+
+.qa-toggle {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.qa-answer {
+    padding: 10px;
+    display: none;
+    font-size: small;
+}
+
+.qa-speaker {
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+    font-size: x-small;
+}
+
+.file-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+`;
+
+// Add styles to the document
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
+async function getQASection() {
+    const fileTitle = titleElement.textContent;
+    console.log("Running get QA section for", fileTitle);
+
+    loader.style.display = 'block';
+
+    try {
+        const response = await fetch(`/view/document/section/qa/${fileTitle}`);
+        const data = await response.json();
+        console.log('QA data', data);
+
+        const qaContainer = document.getElementById('qa-container');
+        qaContainer.innerHTML = ''; // Clear existing content
+
+        // Render QA items
+        data.qa.forEach((item, index) => {
+            const qaItem = document.createElement('div');
+            qaItem.className = 'qa-item';
+            
+            const question = document.createElement('div');
+            question.className = 'qa-question';
+            question.innerHTML = `
+                <div class="qa-question-content">
+                    <span class="qa-question-text">${item.question.text}</span>
+                    <span class="qa-question-info">${item.question.speaker.name}, ${item.question.speaker.title}</span>
+                </div>
+                <span class="qa-toggle">▼</span>
+            `;
+            question.addEventListener('click', () => toggleAnswer(index));
+
+            const answer = document.createElement('div');
+            answer.className = 'qa-answer';
+            answer.id = `qa-answer-${index}`;
+            answer.innerHTML = `
+                <div>${item.answer.text}</div>
+                <div class="qa-speaker">
+                    - ${item.answer.speaker.name}
+                    ${item.answer.speaker.title ? `(${item.answer.speaker.title})` : ''}
+                </div>
+            `;
+
+            qaItem.appendChild(question);
+            qaItem.appendChild(answer);
+            qaContainer.appendChild(qaItem);
+        });
+
+    } catch (error) {
+        console.error('Error fetching or processing QA section:', error);
+        document.getElementById('qa-container').innerHTML = '<p>Error fetching or processing QA section. Please try again later.</p>';
+    } finally {
+        loader.style.display = 'none';
+    }
+}
+
+function toggleAnswer(index) {
+    const answer = document.getElementById(`qa-answer-${index}`);
+    const toggle = answer.previousElementSibling.querySelector('.qa-toggle');
+    if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        toggle.textContent = '▼';
+    } else {
+        answer.style.display = 'block';
+        toggle.textContent = '▲';
+    }
+}
+// Call getQASection when the page loads
+// window.addEventListener('load', getQASection);
 
     // Update getQuestions call when a new file is selected
     function updateTitle(title) {
@@ -688,38 +911,13 @@
             loader.style.display = 'none';
         }
     }
-    // async function getQuestions(fileTitle) {
-    //    console.log("running get question",fileTitle)
-    //     loader.style.display = 'block';
-    //     try {
-    //         const response = await fetch(`/view/questions/${fileTitle}`); //  instead of this add view for view/transcript/ here
-    //         const data = await response.json();
-    //         const questionsList = document.getElementById('questionsList');
-    //         questionsList.innerHTML = '';
-    //         data.questions.forEach(q => {
-    //             const li = document.createElement('li');
-    //             li.textContent = q.question;
-    //             console.log('q',q.question)
-    //             li.addEventListener('click', () => {
-    //                 questionInput.value = q.question;
-    //                 askQuestion(q.question);
-    //             });
-    //             questionsList.appendChild(li);
-    //         });
-    //     } catch (error) {
-    //         console.error('Error fetching questions:', error);
-    //         document.getElementById('questionsList').innerHTML = '<li>Error fetching questions. Please try again later.</li>';
-    //     } finally {
-    //         loader.style.display = 'none';
-    //     }
-    // }
-
+    
     // Event listeners
     leftButton.addEventListener('click', openLeftPanel);
     rightButton.addEventListener('click', openRightPanel);
     leftBackArrow.addEventListener('click', closePanels);
     rightBackArrow.addEventListener('click', closePanels);
-
+    getDocument()
     // Close panels when clicking outside
     document.addEventListener('click', (event) => {
         if (!leftPanel.contains(event.target) && !rightPanel.contains(event.target) &&
