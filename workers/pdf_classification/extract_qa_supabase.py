@@ -17,6 +17,18 @@ def get_pdf_chunks_transcript(file_name):
         return rows.data[0]['extracted_transcript']
     
  
+def get_pdf_transcript_and_meta(file_name):
+    print("running supabase query...")
+    rows =  supabase.table('pdf-transcripts').select('extracted_transcript,addn_meta').eq('file_name', f'{file_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data[0]
+    
+ 
 def update_transcript_meta_entry(file_name, qa_start_key):
     meta = {
         'addn_meta': {'qa_start_key':qa_start_key}

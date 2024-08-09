@@ -247,6 +247,7 @@ def create_diarization():
     
 
     return jsonify(dts_file.name)
+
 SEGGER_PROMPT = "You are a helpful assistant to segment a quarterly EARNINGS CONFERENCE CALL from text. \
                     The transcript of the con-call will be provided in chunks.\
                     The concall may start with an intro and then some presentation from the management \
