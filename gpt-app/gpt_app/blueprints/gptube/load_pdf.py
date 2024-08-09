@@ -5,7 +5,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from tempfile import NamedTemporaryFile
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures.file_storage import FileStorage
+
 import ssl
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
@@ -72,7 +72,7 @@ def load_pdf_into_bucket(file,destination_filename,bucket=None):
             filename = Path(destination_filename)
             destination_blob_name = _make_file_path(PDF_DIR,
                                                 filename,format='pdf',local=False)
-            if isinstance(file,FileStorage):
+            if not isinstance(file,str):
                 file = file
                 file_url = upload_file_to_gcs(file, destination_blob_name,bucket=bucket)
             else:

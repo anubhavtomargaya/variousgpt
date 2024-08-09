@@ -62,55 +62,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // });
     askButton.addEventListener('click', () => askQuestion(questionInput.value.trim()));
 
-    // Function to fetch and display list of calls
-    function fetchAndDisplayCalls() {
-        loader2.style.display = 'block'; // Show loader
+    // // Function to fetch and display list of calls
+    // function fetchAndDisplayCalls() {
+    //     loader2.style.display = 'block'; // Show loader
 
-        fetch('/view/docs/list')
-            .then(response => response.json())
-            .then(data => {
-                callListDiv.innerHTML = ''; // Clear previous content
-                const ul = document.createElement('ul');
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item; // Assuming each item is a string
-                    li.addEventListener('click', () => updateTitle(item)); // Add click event listener
-                    ul.appendChild(li);
-                });
-                callListDiv.appendChild(ul);
-                // console.log(Object(data))
-                // updateTitle(data[data.length - 1])
-            })
-            .catch(error => {
-            console.error('Error fetching call list:', error);
-            })
-            .finally(() => {
-                loader2.style.display = 'none'; // Hide loader
-            });
-    }
+    //     fetch('/view/docs/list')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             callListDiv.innerHTML = ''; // Clear previous content
+    //             const ul = document.createElement('ul');
+    //             data.forEach(item => {
+    //                 const li = document.createElement('li');
+    //                 li.textContent = item; // Assuming each item is a string
+    //                 li.addEventListener('click', () => updateTitle(item)); // Add click event listener
+    //                 ul.appendChild(li);
+    //             });
+    //             callListDiv.appendChild(ul);
+    //             // console.log(Object(data))
+    //             // updateTitle(data[data.length - 1])
+    //         })
+    //         .catch(error => {
+    //         console.error('Error fetching call list:', error);
+    //         })
+    //         .finally(() => {
+    //             loader2.style.display = 'none'; // Hide loader
+    //         });
+    // }
 
-    function fetchCallList() {
-        loader2.style.display = 'block';
-        fetch('/view/docs/list')
-            .then(response => response.json())
-            .then(data => {
-                callListDiv.innerHTML = '';
-                const ul = document.createElement('ul');
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item;
-                    li.addEventListener('click', () => updateTitle(item));
-                    ul.appendChild(li);
-                });
-                callListDiv.appendChild(ul);
-            })
-            .catch(error => {
-                console.error('Error fetching call list:', error);
-            })
-            .finally(() => {
-                loader2.style.display = 'none';
-            });
-    }
+    // function fetchCallList() {
+    //     loader2.style.display = 'block';
+    //     fetch('/view/docs/list')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             callListDiv.innerHTML = '';
+    //             const ul = document.createElement('ul');
+    //             data.forEach(item => {
+    //                 const li = document.createElement('li');
+    //                 li.textContent = item;
+    //                 li.addEventListener('click', () => updateTitle(item));
+    //                 ul.appendChild(li);
+    //             });
+    //             callListDiv.appendChild(ul);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching call list:', error);
+    //         })
+    //         .finally(() => {
+    //             loader2.style.display = 'none';
+    //         });
+    // }
     function openLeftPanel() {
         leftPanel.style.display = 'block';
         setTimeout(() => leftPanel.classList.add('open'), 10);
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Automatically fetch and display calls when window is loaded
-    fetchAndDisplayCalls();
+    // fetchAndDisplayCalls();
     function truncateText(text, maxLength = 15) {
         return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
       }
@@ -137,7 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const fileTitle = titleElement.textContent;
+        // const fileTitle = titleElement.textContent;
+        const currentPath = window.location.pathname;
+        const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
+        console.log("Fetching document:", fileTitle);
         loader.style.display = 'block';
         answerArea.textContent = '';
 

@@ -54,16 +54,35 @@ def get_list_pdf_transcripts():
         print(rows.data[0]['file_name'])
         return [x['file_name']  for x in rows.data]
     
+def get_company_transcript_data():
+    rows = supabase.table('pdf-transcripts').select('company_name,quarter,financial_year,file_name').neq('file_name', None).order('created_at', desc=True).execute()
+    if not rows.data:
+        return False
+    else:
+        # Group the data by company
+        grouped_data = {}
+        for row in rows.data:
+            company = row['company_name']
+            if company not in grouped_data:
+                grouped_data[company] = []
+            grouped_data[company].append({
+                'quarter': row['quarter'],
+                'financial_year': row['financial_year'],
+                'file_name': row['file_name']
+            })
+        
+        return grouped_data
+    
 def get_pdf_chunks_transcript(file_name):
     print("running supabase query...")
-    rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
+    rows =  supabase.table('pdf-transcripts').select('company_name,quarter,financial_year,extracted_transcript').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
         print("documents supp")
         print(rows.data)
-        return rows.data[0]['extracted_transcript']
+        return rows.data[0]
     
 def get_itdoc_qa_secrion(file_name):
     print("running supabase query...")

@@ -4,6 +4,7 @@ from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
 from gpt_app.common.supabase_handler import get_file_extn_doc, get_itdoc_qa_secrion, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
+from gpt_app.common.supabase_handler import get_company_transcript_data, get_file_extn_doc, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
 from gpt_app.blueprints.gptube.service_process_pdf import get_pdf_txt, get_transcript_text
 from . import view_app
@@ -93,25 +94,26 @@ def get_transcript(file_name):
     return jsonify(text)
 
 
-@view_app.route('/p/<file_name>')
-@login_required
-def get_document(file_name): #process pdf and show
-    print('fil')
-    print(file_name)
-    # text = load_transcript_doc(f'{file_name}',gcs=True)
-    extension = get_file_extn_doc(file_name)['extn']
-    print("extension")
-    print(extension)
-    if extension =='pdf':
-        txt = get_pdf_txt(file_name)
-    elif extension =='json':
+# @view_app.route('/p/<file_name>')
+# @login_required
+# def get_document(file_name): #process pdf and show
+#     print('fil')
+#     print(file_name)
+#     # text = load_transcript_doc(f'{file_name}',gcs=True)
+#     extension = get_file_extn_doc(file_name)['extn']
+#     print("extension")
+#     print(extension)
+#     if extension =='pdf':
+#         txt = get_pdf_txt(file_name)
+#     elif extension =='json':
 
-        print("json inside")
-        txt = get_transcript_text(file_name)
-    else:
-        txt =  get_pdf_txt(file_name)
+#         print("json inside")
+#         txt = get_transcript_text(file_name)
+#     else:
+#         txt =  get_pdf_txt(file_name)
     
-    return {'text':txt}
+#     return {'text':txt}
+
 
 @view_app.route('/document/<file_name>')
 @login_required
@@ -121,9 +123,14 @@ def get_pdf_transcript(file_name): #process pdf and show
     # text = load_transcript_doc(f'{file_name}',gcs=True)
     # extension = get_f
 
-    txt =  get_pdf_chunks_transcript(file_name)
+    details =  get_pdf_chunks_transcript(file_name)
+    return jsonify({
+        'company_name': details['company_name'],
+        'quarter': details['quarter'],
+        'financial_year': details['financial_year'],
+        'text': details['extracted_transcript']
+        })
     
-    return {'text':txt}
 
 @view_app.route('/document/section/qa/<file_name>')
 @login_required
@@ -218,7 +225,8 @@ def get_analyst_questions_transcript(file_name):
 def list_calls():
     # list = list_embedding_dir()
     # list = get_list_docs()
-    list = get_list_pdf_transcripts()
+    # list = get_list_pdf_transcripts()
+    list = get_company_transcript_data()
     # list = get_list_transcripts()
     
     # import time
