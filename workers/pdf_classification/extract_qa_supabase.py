@@ -37,3 +37,20 @@ def update_transcript_meta_entry(file_name, qa_start_key):
     result = supabase.table('pdf-transcripts').update(meta).eq('file_name', file_name).execute()
     print("Inserted document:", result)
     return result.data[0]['id'] if result.data else None  
+
+
+def insert_transcript_intel_entry(file_name,
+                                  qa_data=None,
+                                  mg_data=None,
+                                  adn_meta=None 
+                                    ):
+    ts_document = {
+        'qa_data': qa_data,
+        'management_data': mg_data ,
+        'file_name':file_name,
+        'addn_meta': adn_meta,
+    }
+
+    result = supabase.table('transcripts-intel').insert(ts_document).execute()
+    print("Inserted document:", result)
+    return result.data[0]['id'] if result.data else None  

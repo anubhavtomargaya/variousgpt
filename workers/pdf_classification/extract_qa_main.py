@@ -1,7 +1,7 @@
 
 import json
 from utils_ts import get_openai_client,count_tokens
-from extract_qa_supabase import get_pdf_chunks_transcript, get_pdf_transcript_and_meta, update_transcript_meta_entry
+from extract_qa_supabase import get_pdf_chunks_transcript, get_pdf_transcript_and_meta, insert_transcript_intel_entry, update_transcript_meta_entry
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -101,6 +101,10 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
     print("results,",results)
     return results
 
+def insert_qa_section(file,results:list):
+    qa_entry = { 'section_qa':results}
+    return insert_transcript_intel_entry(file_name=file,
+                                         qa_data=qa_entry)
 
 # def get_analyst_questions(file_name): # being used by /view/ directly
 #     qa_json = load_qa_section(file_name)
@@ -157,9 +161,17 @@ if __name__=='__main__':
         with open('sam_ttl.json','w') as  fl:
             json.dump(processed_qa,fl) 
         return processed_qa
+    
+    def test_insert_qa_section_intel():
+        data = get_pdf_transcript_and_meta(f)
+        key = data['addn_meta']['qa_start_key']
+        d = data['extracted_transcript']
+        processed_qa = process_transcript_qa_section(d, key)
+        return insert_qa_section(f,processed_qa)
         
     # print(test_get_ts_chunks())
     # print(test_get_qa_start())
     # print(test_update_qa_start_meta())
-    print(test_get_ts_and_meta())
+    # print(test_get_ts_and_meta())
+    print(test_insert_qa_section_intel())
     # print(test_format_qa_section())
