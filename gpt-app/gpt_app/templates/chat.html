@@ -605,8 +605,10 @@
     /* Add your existing styles here */
     .pill-container {
         display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
+        justify-content: space-evenly;
+        margin: 0;
+   
+        gap: 2rem;
     }
     .pill {
         padding: 5px 20px;
@@ -621,7 +623,7 @@
         color: white;
     }
     .content-container {
-        max-height: 200px;
+        /* max-height: 200px; */
         overflow: scroll;
     }
 </style>
@@ -664,21 +666,23 @@
                 <button id="rightButton">HISTORY</button>
             <!-- </div> -->
         </div>
- 
         <div class="pill-container">
             <div class="pill active" id="transcriptPill">Transcript</div>
             <div class="pill" id="qaPill">Q&A Section</div>
+            <div class="pill" id="qaPill">AI Assitant</div>
+            <div class="pill" id="qaPill">Another Pill</div>
         </div>
+ 
     
     
         <div id="content-container">
             <div id="transcript-container">    
                 <div id="transcript" ></div>
             </div>
-            <div id="qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 200px;display: none;"></div>
+            <div id="qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 50vh;display: none;"></div>
         </div>
     </div>
-        <div id="transcript-container"></div>
+        <!-- <div id="transcript-container"></div> -->
         <!-- <div id="questionsContainer"> -->
             <!-- <ul id="questionsList" ></ul> -->
             <!-- <div id="transcript-container"> -->
@@ -822,6 +826,31 @@
     //             loader2.style.display = 'none';
     //         });
     // }
+    function updateTitleSection(data) {
+        const 
+        titleSection = document.getElementById('title-section');
+        titleSection.innerHTML = '';
+        
+        // const companyLogo = document.createElement('div');
+        // companyLogo.className = 'company-logo';
+        // companyLogo.textContent = data.company_name.charAt(0).toUpperCase();
+        
+        const companyInfo = document.createElement('div');
+        companyInfo.className = 'company-info';
+        
+        const companyName = document.createElement('h1');
+        companyName.className = 'company-name';
+        companyName.textContent = data.company_name;
+        
+        const earningsInfo = document.createElement('h2');
+        earningsInfo.className = 'earnings-info';
+        earningsInfo.textContent = `${data.quarter} ${data.financial_year} Earnings Call`;
+        
+        companyInfo.appendChild(companyName);
+        companyInfo.appendChild(earningsInfo);
+        
+        // titleSection.appendChild(companyLogo);
+        titleSection.appendChild(companyInfo);}
     function fetchCallList() {
     loader2.style.display = 'block';
     fetch('/view/docs/list')
@@ -1097,8 +1126,9 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 async function getQASection() {
-    const fileTitle = titleElement.textContent;
-    console.log("Running get QA section for", fileTitle);
+    const currentPath = window.location.pathname;
+    const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
+    console.log("Fetching document:", fileTitle);
 
     loader.style.display = 'block';
 
