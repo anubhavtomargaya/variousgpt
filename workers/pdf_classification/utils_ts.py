@@ -4,7 +4,12 @@ import openai
 from openai import OpenAI
 from datetime import datetime
 from enum import Enum
+import tiktoken 
 
+def count_tokens(text, model="gpt-3.5-turbo"):
+    encoding = tiktoken.encoding_for_model(model)
+    tokens = encoding.encode(text)
+    return len(tokens)
 
 BUCKET_NAME = 'gpt-app-data'
 class tsFormats(Enum):
