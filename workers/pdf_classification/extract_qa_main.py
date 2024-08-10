@@ -5,6 +5,8 @@ from extract_qa_supabase import get_pdf_chunks_transcript, get_pdf_transcript_an
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
+
+#w1
 def find_qa_section_start(transcript_json, openai_client):
     def process_chunk(chunk):
         prompt = f"""
@@ -47,8 +49,8 @@ def find_qa_section_start(transcript_json, openai_client):
 
     return None  # If Q&A section start is not found
 
-import json
-from openai import OpenAI
+
+#w2
 
 def process_transcript_qa_section(transcript_json, qa_start_key):
     def process_chunk(chunk):
@@ -58,11 +60,11 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
         {json.dumps(chunk, indent=2)}
 
         Convert this into a list of dictionaries with the following format:
-        [{{
+        {{"result" : [{{
             'question': {{'id': <question_key>, 'text': <concise_question>, 'speaker': {{'name': <question_asker>,'title':<designation & orgname> }} }},
             'answer': {{'text': <answer_text>, 'speaker': {{ 'name': <answer_giver> , 'title': <designation & orgname>}} }}
         }}]
-
+        }}
         Guidelines:
         1. Extract the question ID (key), make the question text concise by removing phrases like "my next question is" or "I was wondering".
         2. Identify the speaker who asked the question.Along with their title and company name
@@ -106,33 +108,12 @@ def insert_qa_section(file,results:list):
     return insert_transcript_intel_entry(file_name=file,
                                          qa_data=qa_entry)
 
-# def get_analyst_questions(file_name): # being used by /view/ directly
-#     qa_json = load_qa_section(file_name)
-#     # print(text)
-#     qa = [text[x]['chunk']['questions']  for x in text.keys() if text[x]['chunk']['segment']=='QA']
-#     questions = [ ]
 
-#     # print("QA",questions)
-#     for x in qa:
-#         questions.extend(x)
-#     if not len(questions) >0:
-#         return { 'questions': []}
-
-#     s_prompt = "I will give you a list of questions extracted by an LLM from a transcript text. \
-#                 Your job is to filter out the junk questions like 'can you hear me?' etc \
-#                 declutter the questions. and return  \
-#                 the list of questions in a json { question: '', } similar to the json given by me. "
-
-#     res = gpt_filter_analyst_questions(client=openai_client,text=questions,system_prompt=s_prompt)
-#     data = json.loads(res)
-#     # print("DATA",data)
-#     question_dict = { 'questions':data['questions'], 'raw_questions': questions}
-   
-#     return question_dict
 
 if __name__=='__main__':
-    # f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
-    f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
+    f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
+    # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
+
     def test_get_ts_chunks():
         ts =  get_pdf_chunks_transcript(f)
         print(ts.keys())
@@ -146,7 +127,9 @@ if __name__=='__main__':
         transcript_json =  get_pdf_chunks_transcript(f)
         start_key  = find_qa_section_start(transcript_json, openai_client)
         return update_transcript_meta_entry(f,str(start_key))
-    #w2
+    
+
+    #w2 - tests
     def test_get_ts_and_meta():
         data = get_pdf_transcript_and_meta(f)
         key = data['addn_meta']['qa_start_key']
@@ -173,5 +156,5 @@ if __name__=='__main__':
     # print(test_get_qa_start())
     # print(test_update_qa_start_meta())
     # print(test_get_ts_and_meta())
-    print(test_insert_qa_section_intel())
     # print(test_format_qa_section())
+    print(test_insert_qa_section_intel())

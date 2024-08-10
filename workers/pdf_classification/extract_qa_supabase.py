@@ -54,3 +54,16 @@ def insert_transcript_intel_entry(file_name,
     result = supabase.table('transcripts-intel').insert(ts_document).execute()
     print("Inserted document:", result)
     return result.data[0]['id'] if result.data else None  
+
+
+def update_transcript_intel_entry(file_name,
+                                  qa_data=None,
+                                  mg_data=None,
+                                  adn_meta=None ):
+    meta = {
+        'management_data':mg_data
+    }
+
+    result = supabase.table('transcripts-intel').update(meta).eq('file_name', file_name).execute()
+    print("Inserted document:", result)
+    return result.data[0]['id'] if result.data else None  
