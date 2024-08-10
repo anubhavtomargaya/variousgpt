@@ -95,6 +95,17 @@ def get_itdoc_qa_secrion(file_name):
         print(rows.data)
         return rows.data[0]['qa_data']['section_qa']
     
+def get_itdoc_mg_guidance(file_name):
+    print("running supabase query...")
+    rows =  supabase.table('transcripts-intel').select('management_data').eq('file_name', f'{file_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data[0]['management_data']['overview']
+    
 def get_list_transcripts():
     rows =  supabase.table('transcripts').select('title').execute()
     if not rows.data:
