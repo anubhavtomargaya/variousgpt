@@ -2,12 +2,13 @@
 import json
 from pathlib import Path
 from typing import Any, Dict
-from utils_qa import get_openai_client,count_tokens, insert_qa_section
+from utils_qa import get_openai_client,count_tokens, insert_qa_section, load_ts_section_management
 from handler_supabase import ( 
                                 get_pdf_chunks_transcript,
                                 get_pdf_transcript_and_meta, 
                                 update_transcript_meta_entry
                             )
+from summary_mg import insert_summary_management, summarize_management_guidance
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -143,6 +144,9 @@ def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
         insert_result = insert_qa_section(filename, qa_section)
         if not insert_result:
             raise ValueError(f"Failed to insert Q&A section for {filename}")
+        
+   
+      
 
         return {
             "status": "success",
@@ -157,6 +161,28 @@ def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
             "message": str(e),
             "filename": filename
         }
+    
+
+def process_earning_call_summary(file_name):
+    try:
+        section = load_ts_section_management(file_name)
+        if not section:
+            raise ValueError(f"Unable to get management section from ts for :{file_name}")
+        
+        s = summarize_management_guidance(section)
+        if s:
+            print("inserting")
+            s_insert_result =  insert_summary_management(file_name,s)
+            print("insert success",s_insert_result)
+        else:
+            raise ValueError(f"failed to get summary for section  {section}")
+        return s_insert_result
+
+    except Exception as e:
+        print("Exce",e)
+        return False
+    
+
 def main_process_qa_fx(event,context=None):
     print("Processing ts intel qa section")
     if not isinstance(event,dict):
@@ -168,8 +194,17 @@ def main_process_qa_fx(event,context=None):
         file_name = Path(file_path).name
 
         print(f"Processing file: {file_name} in _pdf-transcript_ table")
-    return process_earnings_call_qa(filename=file_name)
-
+    qa_proc = process_earnings_call_qa(filename=file_name)
+    
+    if qa_proc['status']=='success':
+        summ_proc = process_earning_call_summary(file_name=file_name)
+        if not summ_proc:
+            res = 'summary-failure'
+        else:
+            res = 'summary-success'
+        qa_proc["status_addn"] = res
+        return qa_proc
+       
 if __name__=='__main__':
     # f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'

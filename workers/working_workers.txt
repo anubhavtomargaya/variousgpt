@@ -40,6 +40,9 @@ curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/pdf
 
 curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_intel_http -H "Content-Type: application/json" -d '{"name":"Q4_FY23_Earnings_Conference_Raymond_Limited.pdf"}'
 curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_intel_http -H "Content-Type: application/json" -d '{"name":"fy24_q2_earnings_call_transcript_escorts_kubota_limited_escorts.pdf"}'
+
+curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_mg_intel_http -H "Content-Type: application/json" -d '{"name":"fy-2024_q1_earnings_call_transcript_pcbl_limited_pcbl.pdf"}'
+
 # deploy the function with trigger by bucket
 - gcloud functions deploy process_file_auto     --region=asia-southeast1     --runtime=python39     --trigger-resource=youtube-bucket-audio     --trigger-event=google.storage.object.finalize     --entry-point=process_file     --timeout=540s
 - gcloud functions deploy pdf_transcript_processing_auto     --region=asia-southeast1     --runtime=python39     --trigger-resource=pdf-transcripts     --trigger-event=google.storage.object.finalize     --entry-point=process_valid_pdf     --timeout=540s --memory=512MB
