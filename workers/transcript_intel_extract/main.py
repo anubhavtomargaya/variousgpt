@@ -1,10 +1,17 @@
 
 import json
-from utils_ts import get_openai_client,count_tokens
-from extract_qa_supabase import get_pdf_chunks_transcript, get_pdf_transcript_and_meta, insert_transcript_intel_entry, update_transcript_meta_entry
+from pathlib import Path
+from typing import Any, Dict
+from utils_qa import get_openai_client,count_tokens, insert_qa_section
+from handler_supabase import ( 
+                                get_pdf_chunks_transcript,
+                                get_pdf_transcript_and_meta, 
+                                update_transcript_meta_entry
+                            )
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
+
 
 #w1
 def find_qa_section_start(transcript_json, openai_client):
@@ -40,7 +47,7 @@ def find_qa_section_start(transcript_json, openai_client):
         
         if result.isdigit():
             print("yes")
-            print(transcript_json[result])
+            # print(transcript_json[result])
             # print('bfore')
             # print(transcript_json[str(int(result)-1)])
             # print('after')
@@ -87,7 +94,7 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
             ]
         )
         print("repso")
-        print(response.choices[0].message.content.strip())
+        # print(response.choices[0].message.content.strip())
         return json.loads(response.choices[0].message.content.strip())
     print('qas')
     qa_section = {k: v for k, v in transcript_json.items() if int(k) >= int(qa_start_key)}
@@ -97,22 +104,77 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
     for i in range(0, len(qa_section), chunk_size):
         chunk = dict(list(qa_section.items())[i:i+chunk_size])
         chunk_results = process_chunk(chunk)['result']
-        print("cresi;t",chunk_results
+        print("cresi;t"
               )
         results.extend(chunk_results)
-    print("results,",results)
+    print("results,")
+    # results)
     return results
 
-def insert_qa_section(file,results:list):
-    qa_entry = { 'section_qa':results}
-    return insert_transcript_intel_entry(file_name=file,
-                                         qa_data=qa_entry)
 
+def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
+    try:
+        # Step 1: Get transcript chunks
+        transcript_json = get_pdf_chunks_transcript(filename)
+        if not transcript_json:
+            raise ValueError(f"Failed to retrieve transcript chunks for {filename}")
 
+        # Step 2: Find Q&A section start
+        qa_start_key = find_qa_section_start(transcript_json, openai_client)
+        if qa_start_key is None:
+            raise ValueError(f"Failed to find Q&A section start for {filename}")
+
+        # Step 3: Update transcript meta entry with Q&A start key
+        update_result = update_transcript_meta_entry(filename, str(qa_start_key))
+        if not update_result:
+            raise ValueError(f"Failed to update transcript meta entry for {filename}")
+
+        # Step 4: Get updated transcript and meta data
+        data = get_pdf_transcript_and_meta(filename)
+        if not data or 'extracted_transcript' not in data or 'addn_meta' not in data:
+            raise ValueError(f"Failed to retrieve updated transcript and meta data for {filename}")
+
+        # Step 5: Process Q&A section
+        qa_section = process_transcript_qa_section(data['extracted_transcript'], qa_start_key)
+        if not qa_section:
+            raise ValueError(f"Failed to process Q&A section for {filename}")
+
+        # Step 6: Insert processed Q&A section
+        insert_result = insert_qa_section(filename, qa_section)
+        if not insert_result:
+            raise ValueError(f"Failed to insert Q&A section for {filename}")
+
+        return {
+            "status": "success",
+            "message": f"Successfully processed Q&A section for {filename}",
+            "qa_start_key": qa_start_key,
+            "qa_section_length": len(qa_section)
+        }
+
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+            "filename": filename
+        }
+def main_process_qa_fx(event,context=None):
+    print("Processing ts intel qa section")
+    if not isinstance(event,dict):
+        request_json = event.get_json()
+        file_name = request_json['name']
+      
+    else:
+        file_path = event['name']
+        file_name = Path(file_path).name
+
+        print(f"Processing file: {file_name} in _pdf-transcript_ table")
+    return process_earnings_call_qa(filename=file_name)
 
 if __name__=='__main__':
-    f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
+    # f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
+    # f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
+    f = 'fy-2024_q4_Earnings_Conference_Raymond Limited.pdf'
 
     def test_get_ts_chunks():
         ts =  get_pdf_chunks_transcript(f)
@@ -134,14 +196,16 @@ if __name__=='__main__':
         data = get_pdf_transcript_and_meta(f)
         key = data['addn_meta']['qa_start_key']
         d = data['extracted_transcript']
-        return key,d
+        if not isinstance(d,dict):
+            raise Exception("Error in extracted_transcript")
+        return key,list(d.keys())
 
     def test_format_qa_section():
         data = get_pdf_transcript_and_meta(f)
         key = data['addn_meta']['qa_start_key']
         d = data['extracted_transcript']
         processed_qa = process_transcript_qa_section(d, key)
-        with open('sam_ttl.json','w') as  fl:
+        with open(f'sam_{f}_ttl.json','w') as  fl:
             json.dump(processed_qa,fl) 
         return processed_qa
     
@@ -152,9 +216,16 @@ if __name__=='__main__':
         processed_qa = process_transcript_qa_section(d, key)
         return insert_qa_section(f,processed_qa)
         
+
+    #main -tests
+    def test_pipeline():
+        return process_earnings_call_qa(f)
     # print(test_get_ts_chunks())
     # print(test_get_qa_start())
-    # print(test_update_qa_start_meta())
     # print(test_get_ts_and_meta())
     # print(test_format_qa_section())
-    print(test_insert_qa_section_intel())
+    # print(test_update_qa_start_meta())
+
+    # print(test_insert_qa_section_intel())
+
+    print(test_pipeline())

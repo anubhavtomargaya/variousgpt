@@ -8,5 +8,6 @@ def _load_config():
         return json.load(f)
     
 configs = _load_config()
+OPENAI_KEY = configs['OPENAI_KEY']
 SUPABASE_URL =configs['SUPABASE_URL']
 SUPABASE_SERVICE_KEY = configs['SUPABASE_SERVICE_KEY']

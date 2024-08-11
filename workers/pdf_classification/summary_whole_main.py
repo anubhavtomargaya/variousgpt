@@ -71,6 +71,8 @@ def insert_summary_management(file,mg_summary_guidance:list):
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
+    f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
+
     def test_management_content_get():
         return load_ts_section_management(f)
     

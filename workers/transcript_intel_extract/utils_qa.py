@@ -1,5 +1,30 @@
 
-from extract_qa_supabase import get_pdf_transcript_and_meta
+from openai import OpenAI
+import openai
+import tiktoken
+
+from handler_supabase import get_pdf_transcript_and_meta, insert_transcript_intel_entry
+from config_qa import OPENAI_KEY
+
+from pathlib import Path
+import json
+def insert_qa_section(file,results:list):
+    qa_entry = { 'section_qa':results}
+    return insert_transcript_intel_entry(file_name=file,
+                                         qa_data=qa_entry)
+
+def count_tokens(text, model="gpt-3.5-turbo"):
+    encoding = tiktoken.encoding_for_model(model)
+    tokens = encoding.encode(text)
+    return len(tokens)
+
+
+def get_openai_client():
+    client = OpenAI(
+        timeout=50.0,
+        api_key=OPENAI_KEY)
+    return client
+    
 def load_ts_sections(file_name)->tuple:
     data = get_pdf_transcript_and_meta(file_name)
     key = data['addn_meta']['qa_start_key']
