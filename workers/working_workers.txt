@@ -20,14 +20,16 @@ docker run -p 8080:8080 ffmpeg-python-function
 #build in gcr
 docker build -t gcr.io/gmailapi-test-361320/ffmpeg-python-function .
 docker build -t gcr.io/gmailapi-test-361320/process-qa-intel-function .
-
+docker build -t gcr.io/gmailapi-test-361320/process-pdf-transcript-intel-function .
 #push in gcr 
 docker push gcr.io/gmailapi-test-361320/ffmpeg-python-function
+docker push gcr.io/gmailapi-test-361320/process-pdf-transcript-intel-function
 ! setup repo first if not alrdy
 
 
 # deploy to trigger by http 
 gcloud functions deploy process_file     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=process_file     --timeout=540s
+gcloud functions deploy process_pdf_transcript_intel     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=process_valid_pdf     --timeout=540s
 gcloud functions deploy audio_transcribe_http     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=transcribe_audio_file     --timeout=540s
 
 # trigger by http
@@ -41,9 +43,14 @@ curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/pdf
 curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_intel_http -H "Content-Type: application/json" -d '{"name":"Q4_FY23_Earnings_Conference_Raymond_Limited.pdf"}'
 curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_intel_http -H "Content-Type: application/json" -d '{"name":"fy24_q2_earnings_call_transcript_escorts_kubota_limited_escorts.pdf"}'
 
-curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_mg_intel_http -H "Content-Type: application/json" -d '{"name":"fy-2024_q1_earnings_call_transcript_pcbl_limited_pcbl.pdf"}'
+curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel -H "Content-Type: application/json" -d '{"name":"fy-2024_q1_earnings_call_transcript_pcbl_limited_pcbl.pdf"}'
+curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel -H "Content-Type: application/json" -d '{"name":"fy-2025_q1_earnings_call_transcript_escorts_kubota_limited_escorts.pdf"}'
 
+-- http trigger to process pdf into transcript as before and now also trigger the transcript_intel_extract worker by http at the end. 
+-- return response combined.
+        `curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_mg_intel_http -H "Content-Type: application/json" -d '{"name":"fy-2025_q1_earnings_call_transcript_escorts_kubota_limited_escorts.pdf"}'
 # deploy the function with trigger by bucket
 - gcloud functions deploy process_file_auto     --region=asia-southeast1     --runtime=python39     --trigger-resource=youtube-bucket-audio     --trigger-event=google.storage.object.finalize     --entry-point=process_file     --timeout=540s
 - gcloud functions deploy pdf_transcript_processing_auto     --region=asia-southeast1     --runtime=python39     --trigger-resource=pdf-transcripts     --trigger-event=google.storage.object.finalize     --entry-point=process_valid_pdf     --timeout=540s --memory=512MB
 gcloud functions deploy pdf_transcript_processing_auto     --region=asia-southeast1     --runtime=python39     --trigger-resource=pdf-transcripts     --trigger-event=google.storage.object.finalize     --entry-point=process_valid_pdf     --timeout=540s --memory=512MB 
+gcloud functions deploy process_pdf_transcript_intel_auto     --region=asia-southeast1     --runtime=python39     --trigger-resource=pdf-transcripts     --trigger-event=google.storage.object.finalize     --entry-point=process_valid_pdf     --timeout=540s --memory=512MB 

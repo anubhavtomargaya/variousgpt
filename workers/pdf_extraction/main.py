@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import requests
 
 from google.cloud import storage
 from extract_pdf_metadata import service_extract_pdf_metadata
@@ -55,6 +56,39 @@ def download_pdf_from_pdf_bucket(file_name, dir=PDF_DIR,format='pdf',bytes=False
         destination_file_path = os.path.join('/tmp', file_name)
         return download_gcs_file(source_blob_name,destination_file_name=destination_file_path)
     
+def process_stage_one(file_name):
+    fname = download_pdf_from_pdf_bucket(file_name)
+    try:
+        row_id = service_extract_pdf_metadata(fname)
+        if row_id:
+            final_ = service_extract_transcript_texts(fname,row_id)
+            print("final donw")
+            print(final_)
+            return row_id
+    except Exception as e:
+        print("error in processing pdf",e)
+        return False
+
+def process_qa_mg_intel(filename):
+    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_mg_intel_http"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "name": filename
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+
+    if response.status_code == 200:
+        return response.json() 
+    else:
+        print("msg",{"error": f"Request failed with status code {response.status_code}"})
+        return False
+
+
+
+
 def process_valid_pdf(event, context=None):
     print("Processing file")
     if not isinstance(event,dict):
@@ -65,18 +99,14 @@ def process_valid_pdf(event, context=None):
         file_name = Path(file_path).name
         bucket_name = event['bucket']
         print(f"Processing file: {file_name} in bucket: {bucket_name}")
+    pdf_to_ts = process_stage_one(file_name)
+    if not pdf_to_ts:
+        raise Exception("unable to process stage one %s",pdf_to_ts)
+    print('processed pdf to ts ')
+    ts_intel = process_qa_mg_intel(file_name)
 
-    fname = download_pdf_from_pdf_bucket(file_name)
-    try:
-        row_id = service_extract_pdf_metadata(fname)
-        if row_id:
-            final_ = service_extract_transcript_texts(fname,row_id)
-            print("final donw")
-            print(final_)
-    except Exception as e:
-        print("error in processing pdf",e)
-        return False
-    
+    print("ts intel output",ts_intel)
+    return ts_intel
 
 if __name__=='__main__':
     f = 'Earnings-Call-Transcript-Q1-FY-2021.pdf'
