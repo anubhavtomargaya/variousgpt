@@ -1,0 +1,3628 @@
+{
+    "data": {
+        "pathogenList": {
+            "version": "0.2.1",
+            "citations": [
+                "Bennett, John, Raphael Dolin, and Martin Blaser. John E. Bennett, Raphael Dolin, Martin J. Blaser. Mandell, Douglas, and Bennett's Principles and Practice of Infectious Diseases. Elsevier/Saunders, 2015.",
+                "“The Approved List of Biological Agents.” The Approved List of Biological Agents - MISC208(rev2), Advisory Committee on Dangerous Pathogens, 2021, https://www.hse.gov.uk/pubns/misc208.htm.",
+                "“NIAID Emerging Infectious Diseases/ Pathogens.” National Institute of Allergy and Infectious Diseases, U.S. Department of Health and Human Services, 26 July 2018, https://www.niaid.nih.gov/research/emerging-infectious-diseases-pathogens. Accessed September 2022.",
+                "“List of Clinically Important Bacteria.” Wikipedia, Wikimedia Foundation, 26 July 2022, https://en.wikipedia.org/wiki/List_of_clinically_important_bacteria. Accessed September 2022.",
+                "“List of Parasites of Humans.” Wikipedia, Wikimedia Foundation, https://en.wikipedia.org/wiki/List_of_parasites_of_humans. Accessed September 2022.",
+                "Human viruses and associated pathologies. ViralZone, SIB Swiss Institute of Bioinformatics. https://viralzone.expasy.org/678. Accessed September 2022.",
+                "“Organism Groups - Pathogen Detection - NCBI.” National Center for Biotechnology Information, U.S. National Library of Medicine, https://www.ncbi.nlm.nih.gov/pathogens/organisms/. Accessed September 2022.",
+                "Urban, M. et al, (2019). PHI-base: the pathogen-host interactions database. Nucleic Acids Res. doi: 10.1093/nar/gkz904.",
+                "“Health Topics.” Centers for Disease Control and Prevention, Centers for Disease Control and Prevention, https://www.cdc.gov/health-topics.html. Accessed September 2022.",
+                "Robert D Olson, Rida Assaf, Thomas Brettin,et. al., Introducing the Bacterial and Viral Bioinformatics Resource Center (BV-BRC): a resource combining PATRIC, IRD and ViPR, Nucleic Acids Research, Volume 51, Issue D1, 6 January 2023, Pages D678–D689, https://doi.org/10.1093/nar/gkac1003",
+                "“Disease Ontology.” Disease Ontology, Institute for Genome Sciences, University of Maryland, https://disease-ontology.org/. Accessed November 2022."
+            ],
+            "updatedAt": "2024-06-05T22:19:05-07:00",
+            "pathogens": [
+                {
+                    "category": "Bacteria",
+                    "name": "Abiotrophia defectiva",
+                    "taxId": 46125
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Achromobacter xylosoxidans",
+                    "taxId": 85698
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Acinetobacter baumannii",
+                    "taxId": 470
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Actinomadura madurae",
+                    "taxId": 1993
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Actinomadura pelletieri",
+                    "taxId": 111805
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Actinomyces gerencseriae",
+                    "taxId": 52769
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Actinomyces israelii",
+                    "taxId": 1659
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Actinotignum schaalii",
+                    "taxId": 59505
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aerococcus sanguinicola",
+                    "taxId": 119206
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aerococcus urinae",
+                    "taxId": 1376
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aeromonas caviae",
+                    "taxId": 648
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aeromonas hydrophila",
+                    "taxId": 644
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aeromonas veronii",
+                    "taxId": 654
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aggregatibacter actinomycetemcomitans",
+                    "taxId": 714
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aggregatibacter aphrophilus",
+                    "taxId": 732
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Agrobacterium tumefaciens",
+                    "taxId": 358
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Anaplasma phagocytophilum",
+                    "taxId": 948
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Arcanobacterium haemolyticum",
+                    "taxId": 28264
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Aliarcobacter butzleri",
+                    "taxId": 28197
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bacillus anthracis",
+                    "taxId": 1392
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Brevibacillus brevis",
+                    "taxId": 1393
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bacillus cereus",
+                    "taxId": 1396
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bacillus licheniformis",
+                    "taxId": 1402
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bartonella bacilliformis",
+                    "taxId": 774
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bartonella clarridgeiae",
+                    "taxId": 56426
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bartonella elizabethae",
+                    "taxId": 807
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bartonella grahamii",
+                    "taxId": 33045
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bartonella henselae",
+                    "taxId": 38323
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bartonella quintana",
+                    "taxId": 803
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bordetella bronchiseptica",
+                    "taxId": 518
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bordetella parapertussis",
+                    "taxId": 519
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Bordetella pertussis",
+                    "taxId": 520
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borreliella burgdorferi",
+                    "taxId": 139
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borrelia duttonii",
+                    "taxId": 40834
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borrelia hermsii",
+                    "taxId": 140
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borreliella mayonii",
+                    "taxId": 1674146
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borrelia miyamotoi",
+                    "taxId": 47466
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borrelia parkeri",
+                    "taxId": 141
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borrelia recurrentis",
+                    "taxId": 44449
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Borrelia turicatae",
+                    "taxId": 142
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Brucella abortus",
+                    "taxId": 235
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Brucella canis",
+                    "taxId": 36855
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Brucella melitensis",
+                    "taxId": 29459
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Brucella suis",
+                    "taxId": 29461
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Burkholderia cenocepacia",
+                    "taxId": 95486
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Burkholderia cepacia",
+                    "taxId": 292
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Burkholderia mallei",
+                    "taxId": 13373
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Burkholderia pseudomallei",
+                    "taxId": 28450
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Campylobacter coli",
+                    "taxId": 195
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Campylobacter curvus",
+                    "taxId": 200
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Campylobacter fetus",
+                    "taxId": 196
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Campylobacter jejuni",
+                    "taxId": 197
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Campylobacter lari",
+                    "taxId": 201
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Cardiobacterium hominis",
+                    "taxId": 2718
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Chlamydia pneumoniae",
+                    "taxId": 83558
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Chlamydia psittaci",
+                    "taxId": 83554
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Chlamydia trachomatis",
+                    "taxId": 813
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Citrobacter freundii",
+                    "taxId": 546
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Paraclostridium bifermentans",
+                    "taxId": 1490
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Clostridium botulinum",
+                    "taxId": 1491
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Clostridioides difficile",
+                    "taxId": 1496
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Clostridium perfringens",
+                    "taxId": 1502
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Clostridium septicum",
+                    "taxId": 1504
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Clostridium tetani",
+                    "taxId": 1513
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Corynebacterium diphtheriae",
+                    "taxId": 1717
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Corynebacterium minutissimum",
+                    "taxId": 38301
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Trueperella pyogenes",
+                    "taxId": 1661
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Corynebacterium striatum",
+                    "taxId": 43770
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Corynebacterium ulcerans",
+                    "taxId": 65058
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Coxiella burnetii",
+                    "taxId": 777
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Cronobacter sakazakii",
+                    "taxId": 28141
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Cronobacter turicensis",
+                    "taxId": 413502
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Edwardsiella tarda",
+                    "taxId": 636
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Ehrlichia chaffeensis",
+                    "taxId": 945
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Ehrlichia ewingii",
+                    "taxId": 947
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Ehrlichia muris",
+                    "taxId": 35795
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Eikenella corrodens",
+                    "taxId": 539
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Elizabethkingia anophelis",
+                    "taxId": 1117645
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Elizabethkingia meningoseptica",
+                    "taxId": 238
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Enterobacter cloacae",
+                    "taxId": 550
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Klebsiella aerogenes",
+                    "taxId": 548
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Enterococcus avium",
+                    "taxId": 33945
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Enterococcus faecalis",
+                    "taxId": 1351
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Enterococcus faecium",
+                    "taxId": 1352
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Enterococcus gallinarum",
+                    "taxId": 1353
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Erysipelothrix rhusiopathiae",
+                    "taxId": 1648
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Escherichia coli",
+                    "taxId": 562
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Legionella bozemanae",
+                    "taxId": 447
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Francisella tularensis",
+                    "taxId": 263
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Fusobacterium necrophorum",
+                    "taxId": 859
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Fusobacterium nucleatum",
+                    "taxId": 851
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Gardnerella vaginalis",
+                    "taxId": 2702
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Haemophilus aegyptius",
+                    "taxId": 197575
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "[Haemophilus] ducreyi",
+                    "taxId": 730
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Haemophilus influenzae",
+                    "taxId": 727
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Haemophilus parainfluenzae",
+                    "taxId": 729
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Helicobacter pylori",
+                    "taxId": 210
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Kingella denitrificans",
+                    "taxId": 502
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Suttonella indologenes",
+                    "taxId": 13276
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Kingella kingae",
+                    "taxId": 504
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Klebsiella granulomatis",
+                    "taxId": 39824
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Klebsiella oxytoca",
+                    "taxId": 571
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Klebsiella pneumoniae",
+                    "taxId": 573
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Legionella micdadei",
+                    "taxId": 451
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Legionella pneumophila",
+                    "taxId": 446
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira alexanderi",
+                    "taxId": 100053
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira alstonii",
+                    "taxId": 28452
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira borgpetersenii",
+                    "taxId": 174
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira interrogans",
+                    "taxId": 173
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira kirschneri",
+                    "taxId": 29507
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira kmetyi",
+                    "taxId": 408139
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira mayottensis",
+                    "taxId": 1137606
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira noguchii",
+                    "taxId": 28182
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira santarosai",
+                    "taxId": 28183
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Leptospira weilii",
+                    "taxId": 28184
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Listeria monocytogenes",
+                    "taxId": 1639
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Malacoplasma penetrans",
+                    "taxId": 28227
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Methylorubrum extorquens",
+                    "taxId": 408
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Moraxella catarrhalis",
+                    "taxId": 480
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Moraxella lacunata",
+                    "taxId": 477
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Moraxella nonliquefaciens",
+                    "taxId": 478
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Morganella morganii",
+                    "taxId": 582
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacteroides abscessus",
+                    "taxId": 36809
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium tuberculosis",
+                    "taxId": 1773
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium avium",
+                    "taxId": 1764
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacteroides chelonae",
+                    "taxId": 1774
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycolicibacterium fortuitum",
+                    "taxId": 1766
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium intracellulare",
+                    "taxId": 1767
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium kansasii",
+                    "taxId": 1768
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium leprae",
+                    "taxId": 1769
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium lepromatosis",
+                    "taxId": 480418
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium malmoense",
+                    "taxId": 1780
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium marinum",
+                    "taxId": 1781
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium scrofulaceum",
+                    "taxId": 1783
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium simiae",
+                    "taxId": 1784
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycolicibacterium smegmatis",
+                    "taxId": 1772
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium szulgai",
+                    "taxId": 1787
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycolicibacter terrae",
+                    "taxId": 1788
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium ulcerans",
+                    "taxId": 1809
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycolicibacterium wolinskyi",
+                    "taxId": 59750
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycobacterium xenopi",
+                    "taxId": 1789
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycoplasmoides genitalium",
+                    "taxId": 2097
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Metamycoplasma hominis",
+                    "taxId": 2098
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycoplasmoides pneumoniae",
+                    "taxId": 2104
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Metamycoplasma salivarium",
+                    "taxId": 2124
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycoplasmopsis caviae",
+                    "taxId": 55603
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Mycoplasmopsis fermentans",
+                    "taxId": 2115
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Neisseria gonorrhoeae",
+                    "taxId": 485
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Neisseria meningitidis",
+                    "taxId": 487
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Neorickettsia sennetsu",
+                    "taxId": 951
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Nocardia asteroides",
+                    "taxId": 1824
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Nocardia brasiliensis",
+                    "taxId": 37326
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Nocardia farcinica",
+                    "taxId": 37329
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Nocardia nova",
+                    "taxId": 37330
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Nocardia otitidiscaviarum",
+                    "taxId": 1823
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Orientia tsutsugamushi",
+                    "taxId": 784
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Pasteurella multocida",
+                    "taxId": 747
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Peptostreptococcus anaerobius",
+                    "taxId": 1261
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Peptoniphilus asaccharolyticus",
+                    "taxId": 1258
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Finegoldia magna",
+                    "taxId": 1260
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Parvimonas micra",
+                    "taxId": 33033
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Anaerococcus prevotii",
+                    "taxId": 33034
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Photobacterium damselae",
+                    "taxId": 38293
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Plesiomonas shigelloides",
+                    "taxId": 703
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Porphyromonas gingivalis",
+                    "taxId": 837
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Prevotella bivia",
+                    "taxId": 28125
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Prevotella intermedia",
+                    "taxId": 28131
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Prevotella melaninogenica",
+                    "taxId": 28132
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Proteus mirabilis",
+                    "taxId": 584
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Proteus penneri",
+                    "taxId": 102862
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Proteus vulgaris",
+                    "taxId": 585
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Providencia alcalifaciens",
+                    "taxId": 126385
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Providencia rettgeri",
+                    "taxId": 587
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Pseudomonas aeruginosa",
+                    "taxId": 287
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Pseudomonas fluorescens",
+                    "taxId": 294
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Pseudomonas putida",
+                    "taxId": 303
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Ralstonia pickettii",
+                    "taxId": 329
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Prescottella equi",
+                    "taxId": 43767
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia africae",
+                    "taxId": 35788
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia akari",
+                    "taxId": 786
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia australis",
+                    "taxId": 787
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia canadensis",
+                    "taxId": 788
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia conorii",
+                    "taxId": 781
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia felis",
+                    "taxId": 42862
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia helvetica",
+                    "taxId": 35789
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia honei",
+                    "taxId": 37816
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia japonica",
+                    "taxId": 35790
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia montanensis",
+                    "taxId": 33991
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia parkeri",
+                    "taxId": 35792
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia prowazekii",
+                    "taxId": 782
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia rickettsii",
+                    "taxId": 783
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia sibirica",
+                    "taxId": 35793
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rickettsia typhi",
+                    "taxId": 785
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Rothia dentocariosa",
+                    "taxId": 2047
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Salmonella bongori",
+                    "taxId": 54736
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Salmonella enterica",
+                    "taxId": 28901
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Shigella dysenteriae",
+                    "taxId": 622
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Serratia marcescens",
+                    "taxId": 615
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Shewanella algae",
+                    "taxId": 38313
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Shigella boydii",
+                    "taxId": 621
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Shigella flexneri",
+                    "taxId": 623
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Shigella sonnei",
+                    "taxId": 624
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus aureus",
+                    "taxId": 1280
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus capitis",
+                    "taxId": 29388
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus epidermidis",
+                    "taxId": 1282
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus haemolyticus",
+                    "taxId": 1283
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus lugdunensis",
+                    "taxId": 28035
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus pseudintermedius",
+                    "taxId": 283734
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus saccharolyticus",
+                    "taxId": 33028
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Staphylococcus saprophyticus",
+                    "taxId": 29385
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Stenotrophomonas maltophilia",
+                    "taxId": 40324
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptobacillus moniliformis",
+                    "taxId": 34105
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus agalactiae",
+                    "taxId": 1311
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus anginosus",
+                    "taxId": 1328
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus equinus",
+                    "taxId": 1335
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus criceti",
+                    "taxId": 1333
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus dysgalactiae",
+                    "taxId": 1334
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus equi",
+                    "taxId": 1336
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus gordonii",
+                    "taxId": 1302
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus iniae",
+                    "taxId": 1346
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus mitis",
+                    "taxId": 28037
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus mutans",
+                    "taxId": 1309
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus oralis",
+                    "taxId": 1303
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus pneumoniae",
+                    "taxId": 1313
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus pyogenes",
+                    "taxId": 1314
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus sanguinis",
+                    "taxId": 1305
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus sobrinus",
+                    "taxId": 1310
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Streptococcus suis",
+                    "taxId": 1307
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Tannerella forsythia",
+                    "taxId": 28112
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Treponema denticola",
+                    "taxId": 158
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Brachyspira hyodysenteriae",
+                    "taxId": 159
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Treponema pallidum",
+                    "taxId": 160
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Treponema vincentii",
+                    "taxId": 69710
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Tropheryma whipplei",
+                    "taxId": 2039
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Ureaplasma parvum",
+                    "taxId": 134821
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Ureaplasma urealyticum",
+                    "taxId": 2130
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Vibrio alginolyticus",
+                    "taxId": 663
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Vibrio cholerae",
+                    "taxId": 666
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Vibrio parahaemolyticus",
+                    "taxId": 670
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Vibrio vulnificus",
+                    "taxId": 672
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Yersinia enterocolitica",
+                    "taxId": 630
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Yersinia pestis",
+                    "taxId": 632
+                },
+                {
+                    "category": "Bacteria",
+                    "name": "Yersinia pseudotuberculosis",
+                    "taxId": 633
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Lichtheimia corymbifera",
+                    "taxId": 42458
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba astronyxis",
+                    "taxId": 65658
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba castellanii",
+                    "taxId": 5755
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba culbertsoni",
+                    "taxId": 43142
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba divionensis",
+                    "taxId": 202919
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba hatchetti",
+                    "taxId": 65660
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba lenticulata",
+                    "taxId": 29196
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba lugdunensis",
+                    "taxId": 61605
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba polyphaga",
+                    "taxId": 5757
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Acanthamoeba rhysodes",
+                    "taxId": 32599
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Alternaria alternata",
+                    "taxId": 5599
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Alternaria brassicicola",
+                    "taxId": 29001
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ancylostoma duodenale",
+                    "taxId": 51022
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ancylostoma braziliense",
+                    "taxId": 369059
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ancylostoma caninum",
+                    "taxId": 29170
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ancylostoma ceylanicum",
+                    "taxId": 53326
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Angiostrongylus cantonensis",
+                    "taxId": 6313
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Angiostrongylus costaricensis",
+                    "taxId": 334426
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Anisakis simplex",
+                    "taxId": 6269
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Anncaliia algerae",
+                    "taxId": 723287
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Apophysomyces variabilis",
+                    "taxId": 760013
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Moniliformis moniliformis",
+                    "taxId": 10237
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ascaris lumbricoides",
+                    "taxId": 6252
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ascaris suum",
+                    "taxId": 6253
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Aspergillus flavus",
+                    "taxId": 5059
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Aspergillus fumigatus",
+                    "taxId": 746128
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Aspergillus nidulans",
+                    "taxId": 162425
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Aspergillus niger",
+                    "taxId": 5061
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Aspergillus terreus",
+                    "taxId": 33178
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Babesia duncani",
+                    "taxId": 323732
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Babesia divergens",
+                    "taxId": 32595
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Babesia microti",
+                    "taxId": 5868
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Babesia sp. venatorum",
+                    "taxId": 171411
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Balamuthia mandrillaris",
+                    "taxId": 66527
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Neobalantidium coli",
+                    "taxId": 71585
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Basidiobolus ranarum",
+                    "taxId": 34480
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Baylisascaris procyonis",
+                    "taxId": 6259
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Bertiella mucronata",
+                    "taxId": 2817671
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Bertiella studeri",
+                    "taxId": 578852
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Curvularia australiensis",
+                    "taxId": 91365
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Curvularia hawaiiensis",
+                    "taxId": 1230527
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Curvularia papendorfii",
+                    "taxId": 1537989
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Curvularia spicifera",
+                    "taxId": 145392
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Blastocystis hominis",
+                    "taxId": 12968
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Blastomyces dermatitidis",
+                    "taxId": 5039
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Blastomyces gilchristii",
+                    "taxId": 1681229
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Blastomyces helicus",
+                    "taxId": 465036
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Brugia malayi",
+                    "taxId": 6279
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Brugia timori",
+                    "taxId": 42155
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Brugia pahangi",
+                    "taxId": 6280
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Candida albicans",
+                    "taxId": 5476
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "[Candida] auris",
+                    "taxId": 498019
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Candida dubliniensis",
+                    "taxId": 42374
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Nakaseomyces glabratus",
+                    "taxId": 5478
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Pichia kudriavzevii",
+                    "taxId": 4909
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Candida parapsilosis",
+                    "taxId": 5480
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Candida tropicalis",
+                    "taxId": 5482
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Capillaria hepatica",
+                    "taxId": 1239592
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paracapillaria philippinensis",
+                    "taxId": 1457282
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Taenia multiceps",
+                    "taxId": 94034
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Chrysomya bezziana",
+                    "taxId": 69364
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cladophialophora bantiana",
+                    "taxId": 89940
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cladophialophora boppii",
+                    "taxId": 82106
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cladophialophora carrionii",
+                    "taxId": 86049
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Clavispora lusitaniae",
+                    "taxId": 36911
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Clinostomum complanatum",
+                    "taxId": 235145
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Clonorchis sinensis",
+                    "taxId": 79923
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Coccidioides immitis",
+                    "taxId": 5501
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Coccidioides posadasii",
+                    "taxId": 199306
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cochliomyia hominivorax",
+                    "taxId": 115425
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Colletotrichum coccodes",
+                    "taxId": 27358
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Colletotrichum gloeosporioides",
+                    "taxId": 474922
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Conidiobolus coronatus",
+                    "taxId": 34488
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Conidiobolus incongruus",
+                    "taxId": 90249
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Contracaecum osculatum",
+                    "taxId": 106324
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cryptococcus gattii",
+                    "taxId": 37769
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cryptococcus neoformans",
+                    "taxId": 5207
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cryptosporidium hominis",
+                    "taxId": 237895
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cryptosporidium parvum",
+                    "taxId": 5807
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Curvularia lunata",
+                    "taxId": 5503
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cyclospora cayetanensis",
+                    "taxId": 88456
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dermanyssus gallinae",
+                    "taxId": 34641
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dermatobia hominis",
+                    "taxId": 115427
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dicrocoelium dendriticum",
+                    "taxId": 57078
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dientamoeba fragilis",
+                    "taxId": 43352
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dioctophyme renale",
+                    "taxId": 513045
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Diphyllobothrium latum",
+                    "taxId": 60516
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Adenocephalus pacificus",
+                    "taxId": 372152
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dirofilaria immitis",
+                    "taxId": 6287
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dirofilaria repens",
+                    "taxId": 31241
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Dracunculus medinensis",
+                    "taxId": 318479
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Echinococcus granulosus",
+                    "taxId": 6210
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Echinococcus multilocularis",
+                    "taxId": 6211
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Echinococcus oligarthrus",
+                    "taxId": 6212
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Echinococcus vogeli",
+                    "taxId": 6213
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Emmonsia crescens",
+                    "taxId": 73230
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Encephalitozoon cuniculi",
+                    "taxId": 6035
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Encephalitozoon hellem",
+                    "taxId": 27973
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Encephalitozoon intestinalis",
+                    "taxId": 58839
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Entamoeba histolytica",
+                    "taxId": 5759
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Enterobius vermicularis",
+                    "taxId": 51028
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Enterocytozoon bieneusi",
+                    "taxId": 31281
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Epidermophyton floccosum",
+                    "taxId": 34391
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Exophiala dermatitidis",
+                    "taxId": 5970
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fasciola gigantica",
+                    "taxId": 46835
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fasciola hepatica",
+                    "taxId": 6192
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fasciolopsis buski",
+                    "taxId": 27845
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fonsecaea compacta",
+                    "taxId": 86057
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fonsecaea pedrosoi",
+                    "taxId": 40355
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fusarium fujikuroi",
+                    "taxId": 5127
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fusarium oxysporum",
+                    "taxId": 5507
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Fusarium solani",
+                    "taxId": 169388
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Giardia intestinalis",
+                    "taxId": 5741
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Gnathostoma spinigerum",
+                    "taxId": 75299
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Gnathostoma hispidum",
+                    "taxId": 279404
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Halicephalobus gingivalis",
+                    "taxId": 114868
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Heterophyes heterophyes",
+                    "taxId": 1849833
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Histoplasma capsulatum",
+                    "taxId": 5037
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Hymenolepis diminuta",
+                    "taxId": 6216
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Rodentolepis nana",
+                    "taxId": 102285
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Cystoisospora belli",
+                    "taxId": 482538
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Echinolaelaps echidninus",
+                    "taxId": 2759148
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania aethiopica",
+                    "taxId": 5667
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania amazonensis",
+                    "taxId": 5659
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania braziliensis",
+                    "taxId": 5660
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania chagasi",
+                    "taxId": 44271
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania colombiensis",
+                    "taxId": 93413
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania donovani",
+                    "taxId": 5661
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania guyanensis",
+                    "taxId": 5670
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania infantum",
+                    "taxId": 5671
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania major",
+                    "taxId": 5664
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania martiniquensis",
+                    "taxId": 1580590
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania mexicana",
+                    "taxId": 5665
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania naiffi",
+                    "taxId": 5678
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania panamensis",
+                    "taxId": 5679
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania peruviana",
+                    "taxId": 5681
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Leishmania tropica",
+                    "taxId": 5666
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Lichtheimia ramosa",
+                    "taxId": 688394
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Linguatula serrata",
+                    "taxId": 646052
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Loa loa",
+                    "taxId": 7209
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trematosphaeria grisea",
+                    "taxId": 1489895
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Madurella mycetomatis",
+                    "taxId": 100816
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Mansonella ozzardi",
+                    "taxId": 122354
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Mansonella perstans",
+                    "taxId": 42231
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Mansonella streptocerca",
+                    "taxId": 1761664
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Metagonimus yokogawai",
+                    "taxId": 84529
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Mucor circinelloides",
+                    "taxId": 36080
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Naegleria fowleri",
+                    "taxId": 5763
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Necator americanus",
+                    "taxId": 51031
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Onchocerca volvulus",
+                    "taxId": 6282
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Opisthorchis felineus",
+                    "taxId": 147828
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Opisthorchis sinensis",
+                    "taxId": 41765
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Opisthorchis viverrini",
+                    "taxId": 6198
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ornithonyssus bacoti",
+                    "taxId": 480692
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ornithonyssus bursa",
+                    "taxId": 663933
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Ornithonyssus sylviarum",
+                    "taxId": 224536
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paracoccidioides brasiliensis",
+                    "taxId": 121759
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus africanus",
+                    "taxId": 434055
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus heterotremus",
+                    "taxId": 100268
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus kellicotti",
+                    "taxId": 100269
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus mexicanus",
+                    "taxId": 100270
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus siamensis",
+                    "taxId": 100271
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus skrjabini",
+                    "taxId": 59630
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus westermani",
+                    "taxId": 34504
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Paragonimus uterobilateralis",
+                    "taxId": 2912759
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Pediculus humanus",
+                    "taxId": 121225
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Pythium insidiosum",
+                    "taxId": 114742
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Talaromyces marneffei",
+                    "taxId": 37727
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Phialophora verrucosa",
+                    "taxId": 39412
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Plasmodium falciparum",
+                    "taxId": 5833
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Plasmodium knowlesi",
+                    "taxId": 5850
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Plasmodium malariae",
+                    "taxId": 5858
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Plasmodium ovale",
+                    "taxId": 36330
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Plasmodium vivax",
+                    "taxId": 5855
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Pneumocystis jirovecii",
+                    "taxId": 42068
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Scedosporium boydii",
+                    "taxId": 5597
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Pseudoterranova decipiens",
+                    "taxId": 6271
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Pthirus pubis",
+                    "taxId": 121228
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Rhinocladiella mackenziei",
+                    "taxId": 86056
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Rhinosporidium seeberi",
+                    "taxId": 90339
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Rhizomucor pusillus",
+                    "taxId": 4840
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Rhizopus microsporus",
+                    "taxId": 58291
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Rhizopus arrhizus",
+                    "taxId": 64495
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Saccharomyces cerevisiae",
+                    "taxId": 4932
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Saksenaea erythrospora",
+                    "taxId": 931868
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Saksenaea vasiformis",
+                    "taxId": 90258
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Sappinia diploidea",
+                    "taxId": 343529
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Sappinia pedata",
+                    "taxId": 472956
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Sarcocystis hominis",
+                    "taxId": 61650
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Sarcocystis suihominis",
+                    "taxId": 102713
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Sarcoptes scabiei",
+                    "taxId": 52283
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Scedosporium apiospermum",
+                    "taxId": 563466
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Lomentospora prolificans",
+                    "taxId": 41688
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma guineensis",
+                    "taxId": 393876
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma haematobium",
+                    "taxId": 6185
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma intercalatum",
+                    "taxId": 6187
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma japonicum",
+                    "taxId": 6182
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma malayensis",
+                    "taxId": 53353
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma mansoni",
+                    "taxId": 6183
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Schistosoma mekongi",
+                    "taxId": 38744
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Scopulariopsis brevicaulis",
+                    "taxId": 561152
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Spirometra erinaceieuropaei",
+                    "taxId": 99802
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Sporothrix schenckii",
+                    "taxId": 29908
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Strongyloides stercoralis",
+                    "taxId": 6248
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Taenia saginata",
+                    "taxId": 6206
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Taenia solium",
+                    "taxId": 6204
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Thelazia callipaeda",
+                    "taxId": 103827
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Toxocara canis",
+                    "taxId": 6265
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Toxocara cati",
+                    "taxId": 6266
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Toxoplasma gondii",
+                    "taxId": 5811
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trachipleistophora hominis",
+                    "taxId": 72359
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichinella nativa",
+                    "taxId": 6335
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichinella nelsoni",
+                    "taxId": 6336
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichinella pseudospiralis",
+                    "taxId": 6337
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichinella spiralis",
+                    "taxId": 6334
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichinella britovi",
+                    "taxId": 45882
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichomonas vaginalis",
+                    "taxId": 5722
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichophyton rubrum",
+                    "taxId": 5551
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichuris trichiura",
+                    "taxId": 36087
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trichuris vulpis",
+                    "taxId": 219738
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trypanosoma brucei",
+                    "taxId": 5691
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Trypanosoma cruzi",
+                    "taxId": 5693
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Tubulinosema acridophagus",
+                    "taxId": 307626
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Tunga penetrans",
+                    "taxId": 214035
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Uncinaria stenocephala",
+                    "taxId": 125367
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Vittaforma corneae",
+                    "taxId": 42399
+                },
+                {
+                    "category": "Eukaryota",
+                    "name": "Wuchereria bancrofti",
+                    "taxId": 6293
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Aichivirus A",
+                    "taxId": 72149
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Akhmeta virus",
+                    "taxId": 2200830
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus kyasanurense",
+                    "taxId": 33743
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus kyasanurense",
+                    "taxId": 3048170
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthohantavirus andesense",
+                    "taxId": 1980456
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lyssavirus australis",
+                    "taxId": 90961
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoavulavirus javaense",
+                    "taxId": 2560319
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoavulavirus javaense",
+                    "taxId": 3051375
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Banna virus",
+                    "taxId": 77763
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Barmah Forest virus",
+                    "taxId": 11020
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bayou orthohantavirus",
+                    "taxId": 1980459
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bandavirus bhanjanagarense",
+                    "taxId": 1213620
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bhanja bandavirus",
+                    "taxId": 2734423
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bandavirus bhanjanagarense",
+                    "taxId": 3051989
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Betapolyomavirus hominis",
+                    "taxId": 1891762
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Black Creek Canal orthohantavirus",
+                    "taxId": 1980460
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Borna disease virus",
+                    "taxId": 12455
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Thogotovirus bourbonense",
+                    "taxId": 1618189
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Thogotovirus bourbonense",
+                    "taxId": 2956523
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bufavirus-3",
+                    "taxId": 1391667
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Vaccinia virus",
+                    "taxId": 10245
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoebolavirus bundibugyoense",
+                    "taxId": 565995
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoebolavirus bundibugyoense",
+                    "taxId": 3052458
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bunyamwera orthobunyavirus",
+                    "taxId": 1933179
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus bunyamweraense",
+                    "taxId": 3052381
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Snowshoe hare orthobunyavirus",
+                    "taxId": 2560767
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus khatangaense",
+                    "taxId": 3052407
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bwamba orthobunyavirus",
+                    "taxId": 35310
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Cache Valley orthobunyavirus",
+                    "taxId": 2560364
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus cacheense",
+                    "taxId": 3052385
+                },
+                {
+                    "category": "Viruses",
+                    "name": "California encephalitis orthobunyavirus",
+                    "taxId": 1933264
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus encephalitidis",
+                    "taxId": 11084
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus encephalitidis",
+                    "taxId": 3052465
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Simplexvirus macacinealpha1",
+                    "taxId": 10325
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Simplexvirus macacinealpha1",
+                    "taxId": 3050305
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Vesiculovirus chandipura",
+                    "taxId": 1972576
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Chapare mammarenavirus",
+                    "taxId": 499556
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Chikungunya virus",
+                    "taxId": 37124
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Colorado tick fever coltivirus",
+                    "taxId": 46839
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Colorado tick fever coltivirus",
+                    "taxId": 2748762
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Cowpox virus",
+                    "taxId": 10243
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Coxsackievirus",
+                    "taxId": 12066
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Crimean-Congo hemorrhagic fever orthonairovirus",
+                    "taxId": 1980519
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Bandavirus dabieense",
+                    "taxId": 2748958
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus denguei",
+                    "taxId": 12637
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus denguei",
+                    "taxId": 3052464
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Thogotovirus dhoriense",
+                    "taxId": 11318
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Dobrava-Belgrade orthohantavirus",
+                    "taxId": 1980467
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Dugbe orthonairovirus",
+                    "taxId": 1980521
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lyssavirus duvenhage",
+                    "taxId": 38767
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Eastern equine encephalitis virus",
+                    "taxId": 11021
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Echovirus",
+                    "taxId": 33758
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Cardiovirus A",
+                    "taxId": 1821749
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lymphocryptovirus humangamma4",
+                    "taxId": 10376
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lymphocryptovirus humangamma4",
+                    "taxId": 3050299
+                },
+                {
+                    "category": "Viruses",
+                    "name": "European bat lyssavirus",
+                    "taxId": 38768
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Everglades virus",
+                    "taxId": 2083198
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Pegivirus C",
+                    "taxId": 1985356
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Pegivirus hominis",
+                    "taxId": 3052608
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Guanarito mammarenavirus",
+                    "taxId": 45219
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Guaroa orthobunyavirus",
+                    "taxId": 1933274
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus guaroaense",
+                    "taxId": 3052397
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Hantaan orthohantavirus",
+                    "taxId": 1980471
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Heartland bandavirus",
+                    "taxId": 2747342
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Hendra henipavirus",
+                    "taxId": 63330
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Hepatovirus A",
+                    "taxId": 12092
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Hepatitis B virus",
+                    "taxId": 10407
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Hepacivirus C",
+                    "taxId": 11103
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Hepatitis delta virus",
+                    "taxId": 12475
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Paslahepevirus balayani",
+                    "taxId": 1678143
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human adenovirus sp.",
+                    "taxId": 1907210
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human astrovirus",
+                    "taxId": 1868658
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Roseolovirus humanbeta6a",
+                    "taxId": 32603
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Roseolovirus humanbeta6a",
+                    "taxId": 3050296
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Roseolovirus humanbeta6b",
+                    "taxId": 32604
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Roseolovirus humanbeta6b",
+                    "taxId": 3050297
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human bocavirus",
+                    "taxId": 329641
+                },
+                {
+                    "category": "Viruses",
+                    "name": "unidentified human coronavirus",
+                    "taxId": 694448
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human coronavirus 229E",
+                    "taxId": 11137
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human coronavirus HKU1",
+                    "taxId": 290028
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human coronavirus NL63",
+                    "taxId": 277944
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Betacoronavirus 1",
+                    "taxId": 694003
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Cytomegalovirus humanbeta5",
+                    "taxId": 10359
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Cytomegalovirus humanbeta5",
+                    "taxId": 3050295
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Enterovirus D",
+                    "taxId": 138951
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Enterovirus A",
+                    "taxId": 138948
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Enterovirus B",
+                    "taxId": 138949
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Simplexvirus humanalpha1",
+                    "taxId": 10298
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Simplexvirus humanalpha1",
+                    "taxId": 3050292
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Simplexvirus humanalpha2",
+                    "taxId": 10310
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Simplexvirus humanalpha2",
+                    "taxId": 3050293
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human betaherpesvirus 6",
+                    "taxId": 10368
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Roseolovirus humanbeta7",
+                    "taxId": 10372
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Roseolovirus humanbeta7",
+                    "taxId": 3050298
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rhadinovirus humangamma8",
+                    "taxId": 37296
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rhadinovirus humangamma8",
+                    "taxId": 3050300
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human immunodeficiency virus",
+                    "taxId": 12721
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human mastadenovirus A",
+                    "taxId": 129875
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human mastadenovirus B",
+                    "taxId": 108098
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human mastadenovirus C",
+                    "taxId": 129951
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human mastadenovirus D",
+                    "taxId": 130310
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human mastadenovirus F",
+                    "taxId": 130309
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Metapneumovirus hominis",
+                    "taxId": 162145
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Metapneumovirus hominis",
+                    "taxId": 3048148
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mupapillomavirus 1",
+                    "taxId": 334203
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapapillomavirus 9",
+                    "taxId": 337041
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapapillomavirus 7",
+                    "taxId": 337042
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapapillomavirus 4",
+                    "taxId": 337043
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Respirovirus laryngotracheitidis",
+                    "taxId": 12730
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Respirovirus laryngotracheitidis",
+                    "taxId": 3049952
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthorubulavirus laryngotracheitidis",
+                    "taxId": 2560525
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthorubulavirus laryngotracheitidis",
+                    "taxId": 3052557
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Respirovirus pneumoniae",
+                    "taxId": 11216
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Respirovirus pneumoniae",
+                    "taxId": 3049953
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthorubulavirus hominis",
+                    "taxId": 2560526
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthorubulavirus hominis",
+                    "taxId": 3052556
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Primate erythroparvovirus 1",
+                    "taxId": 1511900
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Erythroparvovirus primate1",
+                    "taxId": 3052189
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthopneumovirus hominis",
+                    "taxId": 11250
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthopneumovirus hominis",
+                    "taxId": 3049954
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human rhinovirus sp.",
+                    "taxId": 169066
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rhinovirus A",
+                    "taxId": 147711
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rhinovirus C",
+                    "taxId": 463676
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rotavirus A",
+                    "taxId": 28875
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rotavirus B",
+                    "taxId": 28876
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rotavirus C",
+                    "taxId": 36427
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Severe acute respiratory syndrome-related coronavirus",
+                    "taxId": 694009
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Primate T-lymphotropic virus 1",
+                    "taxId": 194440
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Primate T-lymphotropic virus 2",
+                    "taxId": 194441
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human torovirus",
+                    "taxId": 67605
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Ilesha orthobunyavirus",
+                    "taxId": 2560528
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus ileshaense",
+                    "taxId": 3052399
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphainfluenzavirus influenzae",
+                    "taxId": 11320
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphainfluenzavirus influenzae",
+                    "taxId": 2955291
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Betainfluenzavirus influenzae",
+                    "taxId": 11520
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Betainfluenzavirus influenzae",
+                    "taxId": 2955465
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Gammainfluenzavirus influenzae",
+                    "taxId": 11552
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Gammainfluenzavirus influenzae",
+                    "taxId": 2955935
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Vesiculovirus isfahan",
+                    "taxId": 1972573
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Jamestown Canyon orthobunyavirus",
+                    "taxId": 2560532
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus japonicum",
+                    "taxId": 11072
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus japonicum",
+                    "taxId": 3048158
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Betapolyomavirus secuhominis",
+                    "taxId": 1891763
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mammarenavirus juninense",
+                    "taxId": 2169991
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus nilense",
+                    "taxId": 11082
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus nilense",
+                    "taxId": 3048448
+                },
+                {
+                    "category": "Viruses",
+                    "name": "La Crosse orthobunyavirus",
+                    "taxId": 2560547
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus lacrosseense",
+                    "taxId": 3052409
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Marburg marburgvirus",
+                    "taxId": 11269
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lassa mammarenavirus",
+                    "taxId": 11620
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Norwalk virus",
+                    "taxId": 11983
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus loupingi",
+                    "taxId": 11086
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus loupingi",
+                    "taxId": 3048184
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lujo mammarenavirus",
+                    "taxId": 649188
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lymphocytic choriomeningitis mammarenavirus",
+                    "taxId": 11623
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Machupo mammarenavirus",
+                    "taxId": 11628
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mammalian orthoreovirus",
+                    "taxId": 351073
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mayaro virus",
+                    "taxId": 59301
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Morbillivirus hominis",
+                    "taxId": 11234
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Morbillivirus hominis",
+                    "taxId": 3052345
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapolyomavirus quintihominis",
+                    "taxId": 493803
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapolyomavirus quintihominis",
+                    "taxId": 1891726
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Middle East respiratory syndrome-related coronavirus",
+                    "taxId": 1335626
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Middelburg virus",
+                    "taxId": 11023
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lyssavirus mokola",
+                    "taxId": 12538
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Molluscum contagiosum virus",
+                    "taxId": 10279
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Monkeypox virus",
+                    "taxId": 10244
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mucambo virus",
+                    "taxId": 60875
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mumps rubulavirus",
+                    "taxId": 1979165
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus murrayense",
+                    "taxId": 11079
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus murrayense",
+                    "taxId": 3048215
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Deltapolyomavirus decihominis",
+                    "taxId": 1203539
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Deltapolyomavirus decihominis",
+                    "taxId": 1208309
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Nairobi sheep disease orthonairovirus",
+                    "taxId": 1980526
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthonairovirus nairobiense",
+                    "taxId": 3052529
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthohantavirus sinnombreense",
+                    "taxId": 44755
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthohantavirus sinnombreense",
+                    "taxId": 3052499
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Nipah henipavirus",
+                    "taxId": 121791
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Onyong-nyong virus",
+                    "taxId": 2169701
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus omskense",
+                    "taxId": 12542
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus omskense",
+                    "taxId": 3048233
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orf virus",
+                    "taxId": 10258
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Oropouche orthobunyavirus",
+                    "taxId": 1933309
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthobunyavirus oropoucheense",
+                    "taxId": 3052429
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orungo virus",
+                    "taxId": 40058
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Human parechovirus",
+                    "taxId": 195054
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Parechovirus A",
+                    "taxId": 1803956
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Parechovirus B",
+                    "taxId": 1803957
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Cali mammarenavirus",
+                    "taxId": 2169993
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Enterovirus C",
+                    "taxId": 138950
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus powassanense",
+                    "taxId": 11083
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus powassanense",
+                    "taxId": 3048287
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Pseudocowpox virus",
+                    "taxId": 129726
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Punta Toro phlebovirus",
+                    "taxId": 1933186
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Puumala orthohantavirus",
+                    "taxId": 1980486
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Lyssavirus rabies",
+                    "taxId": 11292
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rift Valley fever phlebovirus",
+                    "taxId": 1933187
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Phlebovirus riftense",
+                    "taxId": 3052676
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus ilheusense",
+                    "taxId": 59563
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus ilheusense",
+                    "taxId": 3052466
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rosavirus A",
+                    "taxId": 1511805
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Ross River virus",
+                    "taxId": 11029
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rubivirus rubellae",
+                    "taxId": 11041
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Rubivirus rubellae",
+                    "taxId": 2846071
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Russian Spring-Summer encephalitis virus",
+                    "taxId": 64316
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mammarenavirus brazilense",
+                    "taxId": 3052299
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Salivirus A",
+                    "taxId": 1330524
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Sandfly fever Naples phlebovirus",
+                    "taxId": 1933189
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Naples phlebovirus",
+                    "taxId": 2747931
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Phlebovirus napoliense",
+                    "taxId": 3052666
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Phlebovirus siciliaense",
+                    "taxId": 28292
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Sicilian phlebovirus",
+                    "taxId": 2734473
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Phlebovirus siciliaense",
+                    "taxId": 3052681
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Sapporo virus",
+                    "taxId": 95342
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Semliki Forest virus",
+                    "taxId": 11033
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Seoul orthohantavirus",
+                    "taxId": 1980490
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Huaiyangshan banyangvirus",
+                    "taxId": 2509281
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Mammalian rubulavirus 5",
+                    "taxId": 1979162
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Sin Nombre orthohantavirus",
+                    "taxId": 1980491
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Sindbis virus",
+                    "taxId": 11034
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Spondweni virus",
+                    "taxId": 64318
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus louisense",
+                    "taxId": 11080
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus louisense",
+                    "taxId": 3052468
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoebolavirus sudanense",
+                    "taxId": 186540
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoebolavirus sudanense",
+                    "taxId": 3052460
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Tanapox virus",
+                    "taxId": 99000
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Tonate virus",
+                    "taxId": 60877
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Toscana phlebovirus",
+                    "taxId": 2734478
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Phlebovirus toscanaense",
+                    "taxId": 3052686
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapolyomavirus octihominis",
+                    "taxId": 862909
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Alphapolyomavirus octihominis",
+                    "taxId": 1891727
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Uukuniemi phlebovirus",
+                    "taxId": 1933191
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Uukuniemi uukuvirus",
+                    "taxId": 2749936
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Uukuvirus uukuniemiense",
+                    "taxId": 3052811
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Varicellovirus humanalpha3",
+                    "taxId": 10335
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Varicellovirus humanalpha3",
+                    "taxId": 3050294
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Variola virus",
+                    "taxId": 10255
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Venezuelan equine encephalitis virus",
+                    "taxId": 11036
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Vesicular stomatitis virus",
+                    "taxId": 11276
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus wesselsbronense",
+                    "taxId": 164416
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus wesselsbronense",
+                    "taxId": 3048447
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Western equine encephalitis virus",
+                    "taxId": 11039
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Whitewater Arroyo mammarenavirus",
+                    "taxId": 46919
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Betapolyomavirus quartihominis",
+                    "taxId": 1891765
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Yaba monkey tumor virus",
+                    "taxId": 38804
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus flavi",
+                    "taxId": 11089
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus flavi",
+                    "taxId": 3046277
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoebolavirus zairense",
+                    "taxId": 186538
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoebolavirus zairense",
+                    "taxId": 3052462
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus zikaense",
+                    "taxId": 64320
+                },
+                {
+                    "category": "Viruses",
+                    "name": "Orthoflavivirus zikaense",
+                    "taxId": 3048459
+                }
+            ]
+        }
+    }
+}

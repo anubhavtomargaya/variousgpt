@@ -3,8 +3,13 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd 
 
+def make_soup(html):
+    return  BeautifulSoup(html, 'lxml')
 def fetch_html_from_url(url):
-    response = requests.get(url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url,headers=headers)
     if response.status_code == 200:
         return response.text
     else:
@@ -83,16 +88,16 @@ def read_html_file(file_path):
         html_content = file.read()
     return html_content
 
-html_path = Path('scrape')
-table_file = 'alphastreet_ranking.html'
-# with open('scrape/div_sample.html','r') as f:
-# print(all_span)
+# html_path = Path('scrape')
+# table_file = 'alphastreet_ranking.html'
+# # with open('scrape/div_sample.html','r') as f:
+# # print(all_span)
     
-html_content = read_html_file(Path(html_path,table_file))
-df = parse_react_table(html_content)
-print(df)
-# all_span = extract_span_content(html_content)
-# print([ {k: len(set(v))} for k,v in all_span.items()] )
-required_class = 'search-keyword' #gpt will figure this out from the samples
+# html_content = read_html_file(Path(html_path,table_file))
+# df = parse_react_table(html_content)
+# print(df)
+# # all_span = extract_span_content(html_content)
+# # print([ {k: len(set(v))} for k,v in all_span.items()] )
+# required_class = 'search-keyword' #gpt will figure this out from the samples
 # keyword_for_alphastreet = all_span[required_class]
 # print(keyword_for_alphastreet)
