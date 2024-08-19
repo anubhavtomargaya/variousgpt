@@ -51,7 +51,7 @@ def service_extract_seo_top_questions(file_name,added_by=None):
         return True
     except Exception as e:
         print("dbError: alreayd exists?",e)
-        raise e
+        pass
 
 
 
