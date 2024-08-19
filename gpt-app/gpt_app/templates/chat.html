@@ -45,6 +45,7 @@
         input[type="text"] {
             width: 95%;
             padding: 10px;
+            background-color: #ebebeb;
             margin: 10px 0;
             border: none;
             align-items: center;
@@ -248,6 +249,8 @@
             /* margin-top: 20px; */
             /* height: 30%; */
             overflow-y: scroll;
+            /* display: none; */
+
             border: 1px solid #ced4da;
             padding: 1.5rem 2.5rem;
             font-size: 18px;
@@ -260,6 +263,7 @@
         #transcript-container #transcript {
             border: none;
             height: 20vh;
+            display: none;
             
            
             /* background-color: #fff; Set background color to white */
@@ -632,7 +636,7 @@
     .pill-container {
         display: flex;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: .5rem;
     }
     .pill {
         padding: 5px 20px;
@@ -667,19 +671,31 @@
             <!-- </div> -->
         </div>
         <div class="pill-container">
-            <div class="pill active" id="transcriptPill">Transcript</div>
-            <div class="pill" id="qaPill">Q&A Section</div>
-            <div class="pill" id="guidancePill"> <span class="ai-indicator">✨</span> Management Guidance</div>
-            <div class="pill" id="qaSummary">Another Pill</div>
+            <div class="pill " id="transcriptPill"><span class="ai-indicator">📃 </span>Transcript</div>
+            <div class="pill" id="qaPill"><span class="ai-indicator">✨ </span>Q&A Section</div>
+            <div class="pill" id="guidancePill"> <span class="ai-indicator">✨ </span>Management Guidance</div>
+            <div class="pill active" id="topQAPill"><span class="ai-indicator">✨ </span>Top Questions</div>
         </div>
  
-    
-    
+        <div style="display: flex;  flex-direction: row; gap: 1rem;">
+        <input type="text" id="question-input" placeholder="Ask about what the managent said in the concall">
+        <button id="askButton">Shoot!</button> </div>
+        <div id="answer-area" style="display: none;">
+   
+          
+       </div> 
+       <div class="askbuttonArea"> 
+          
+           <div id="loader"> 
+               <div class="loader"></div> 
+          </div>
+       </div> 
         <div id="content-container">
-            <div id="transcript-container">    
+            <div id="transcript-container" style="display: none;">     
                 <div id="transcript" ></div>
             </div>
-            <div id="qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 50vh;display: none;"></div>
+            <div id="qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 50vh;"></div>
+            <!-- <div id="top-qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 50vh;display: none;"></div> -->
         </div>
     </div>
         <!-- <div id="transcript-container"></div> -->
@@ -693,18 +709,9 @@
             <!-- <div style="border:solid 1px #131313;overflow: scroll; max-height: 200px;"> <div id="qa-container"></div>    -->
         <!-- </div> -->
         <!-- </div> -->
-        <input type="text" id="question-input" placeholder="Ask a question on selected concall">
-     <div id="answer-area"></div> 
-     <div class="askbuttonArea"> 
-     <button id="askButton">Shoot!</button> 
-     <div id="loader"> <div class="loader">
-        
-     </div> 
-    </div>
-    
-    </div> 
+   
  
-        </div>      
+    
 <div id="left-panel" class="panel" style="display: none;">
    
     <div class="back-arrow">←</div>
@@ -755,6 +762,7 @@
     const transcriptPill = document.getElementById('transcriptPill');
     const qaPill = document.getElementById('qaPill');
     const guidancePill = document.getElementById('guidancePill');
+    const topQAPill = document.getElementById('topQAPill');
     const transcriptContainer = document.getElementById('transcript-container');
     const qaContainer = document.getElementById('qa-container');
     const loader = document.getElementById('loader');
@@ -763,6 +771,7 @@
         transcriptPill.classList.add('active');
         qaPill.classList.remove('active');
         guidancePill.classList.remove('active');
+        topQAPill.classList.remove('active');
         transcriptContainer.style.display = 'block';
         qaContainer.style.display = 'none';
         getDocument();
@@ -772,6 +781,7 @@
         qaPill.classList.add('active');
         transcriptPill.classList.remove('active');
         guidancePill.classList.remove('active');
+        topQAPill.classList.remove('active');
         qaContainer.style.display = 'block';
         transcriptContainer.style.display = 'none';
         getQASection();
@@ -781,9 +791,20 @@
         guidancePill.classList.add('active');
         transcriptPill.classList.remove('active');
         qaPill.classList.remove('active');
+        topQAPill.classList.remove('active');
         qaContainer.style.display = 'block';
         transcriptContainer.style.display = 'none';
         getManagementGuidance();
+    });
+    topQAPill.addEventListener('click', () => {
+        console.log('another pil')
+        topQAPill.classList.add('active');
+        guidancePill.classList.remove('active');
+        transcriptPill.classList.remove('active');
+        qaPill.classList.remove('active');
+        qaContainer.style.display = 'block';
+        transcriptContainer.style.display = 'none';
+        getTopQA();
     });
 
 
@@ -1057,6 +1078,7 @@ function toggleTranscriptList(companyItem) {
     }
     // Call getQuestions when the page loads
     // window.addEventListener('load', getDocument);
+    window.addEventListener('load', getTopQA);
 
     // CSS styles
 
@@ -1300,13 +1322,13 @@ async function getManagementGuidance() {
         // titleElement.textContent = title;
         window.location.href = "/view/chat/"+ title;
         // closePanels();
-        getDocument(); // Fetch questions for the new file
+        // getDocument(); // Fetch questions for the new file
     }
     
     function truncateText(text, maxLength = 15) {
         return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
     }
-    window.addEventListener('load', getDocument);
+    // window.addEventListener('load', getDocument);
     
     async function askQuestion(query) {
         if (!query) {
@@ -1314,7 +1336,10 @@ async function getManagementGuidance() {
             return;
         }
 
-        const fileTitle = titleElement.textContent;
+        const currentPath = window.location.pathname;
+        const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
+        console.log("Fetching document:", fileTitle);
+
         loader.style.display = 'block';
         answerArea.textContent = '';
 
@@ -1341,13 +1366,72 @@ async function getManagementGuidance() {
             loader.style.display = 'none';
         }
     }
+
+    //  get top questions 
+    async function getTopQA() {
+        const currentPath = window.location.pathname;
+        const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
+        console.log("Fetching document:", fileTitle);
+
+        loader.style.display = 'block';
+
+        try {
+            console.log('api')
+            const response = await fetch(`/view/content/top_questions/${fileTitle}`);
+            const data = await response.json();
+            console.log('QA data', data);
+            updateTitleSection(data);
+            const qaContainer = document.getElementById('qa-container');
+            qaContainer.innerHTML = ''; // Clear existing content
+
+            // Render QA items
+            data.top_questions.forEach((item, index) => {
+                const qaItem = document.createElement('div');
+                qaItem.className = 'qa-item';
+                console.log("item",item,index)
+                const question = document.createElement('div');
+                question.className = 'qa-question';
+                question.innerHTML = `
+                    <div class="qa-question-content">
+                        <span class="qa-question-text">${item}</span>
+                     
+                    </div>
+                    <span class="qa-toggle">▼</span>
+                `;
+                question.addEventListener('click', () => askQuestion(item));
+
+                // const answer = document.createElement('div');
+                // answer.className = 'qa-answer';
+                // answer.id = `qa-answer-${index}`;
+                // answer.innerHTML = `
+                //     <div>${item.answer.text}</div>
+                //     <div class="qa-speaker">
+                //         - ${item.answer.speaker.name}
+                //         ${item.answer.speaker.title ? `(${item.answer.speaker.title})` : ''}
+                //     </div>
+                // `;
+
+                qaItem.appendChild(question);
+                // qaItem.appendChild(answer);
+                qaContainer.appendChild(qaItem);
+            });
+
+        } catch (error) {
+            console.error('Error fetching or processing QA section:', error);
+            document.getElementById('qa-container').innerHTML = '<p>Error fetching or processing QA section. Please try again later.</p>';
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
+
     
     // Event listeners
     leftButton.addEventListener('click', openLeftPanel);
     rightButton.addEventListener('click', openRightPanel);
     leftBackArrow.addEventListener('click', closePanels);
     rightBackArrow.addEventListener('click', closePanels);
-    getDocument()
+    // getDocument()
+    // getTopQA()
     // Close panels when clicking outside
     document.addEventListener('click', (event) => {
         if (!leftPanel.contains(event.target) && !rightPanel.contains(event.target) &&

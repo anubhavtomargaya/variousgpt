@@ -3,7 +3,7 @@ from flask import jsonify, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
-from gpt_app.common.supabase_handler import get_file_extn_doc, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records, test_get_content_top_qa
+from gpt_app.common.supabase_handler import get_content_top_questions, get_file_extn_doc, get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.common.supabase_handler import get_company_transcript_data, get_file_extn_doc, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
 from gpt_app.blueprints.gptube.service_process_pdf import get_pdf_txt, get_transcript_text
@@ -158,7 +158,7 @@ def get_mg_guidance(file_name): #process pdf and show
     return {'file_name':file_name,
             'management_guidance':txt}
 
-@view_app.route('/document/content/top_questions/<file_name>')
+@view_app.route('/content/top_questions/<file_name>')
 @login_required
 def get_top_questions(file_name): #process pdf and show
     print('top qa: fil---')
@@ -166,10 +166,17 @@ def get_top_questions(file_name): #process pdf and show
     # text = load_transcript_doc(f'{file_name}',gcs=True)
     # extension = get_f
 
-    top_questions =  test_get_content_top_qa(file_name)
-    
-    return {'file_name':file_name,
-            'top_questions':top_questions}
+    top_questions =  get_content_top_questions(file_name)
+    details = get_file_meta(file_name)
+    return jsonify({
+                    'file_name':file_name,
+                    'company_name': details['company_name'],
+                    'quarter': details['quarter'],
+                    'financial_year': details['financial_year'],
+                    'top_questions':top_questions
+                    
+                    })
+
 
 
 

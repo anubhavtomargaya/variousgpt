@@ -84,6 +84,17 @@ def get_pdf_chunks_transcript(file_name):
         print(rows.data)
         return rows.data[0]
     
+def get_file_meta(file_name):
+    print("running supabase query...")
+    rows =  supabase.table('pdf-transcripts').select('company_name,quarter,financial_year').eq('file_name', f'{file_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data[0]
+    
 def get_itdoc_qa_secrion(file_name):
     print("running supabase query...")
     rows =  supabase.table('transcripts-intel').select('qa_data').eq('file_name', f'{file_name}').execute()
