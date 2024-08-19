@@ -106,6 +106,18 @@ def get_itdoc_mg_guidance(file_name):
         print(rows.data)
         return rows.data[0]['management_data']['overview']
     
+    
+def get_content_top_questions(file_name):
+    print("running supabase query...")
+    rows =  supabase.table('content-docs').select('top_qa').eq('file_name', f'{file_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        # print(rows.data)
+        return rows.data[0]['top_qa']
+    
 def get_list_transcripts():
     rows =  supabase.table('transcripts').select('title').execute()
     if not rows.data:
@@ -321,7 +333,12 @@ def update_transcript_pdf_entry(transcript_id, extracted_transcript, extra_text)
 
 if __name__=='__main__':
     f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
+    f = 'fy-2025_q1_earnings_call_transcript_amara_raja_energy_&_mobility_limited_are&m.pdf'
+
     def test_get_qa_section():
         return get_itdoc_qa_secrion(f)
+    def test_get_content_top_qa():
+        return get_content_top_questions(f)
     
-    print(test_get_qa_section())
+    # print(test_get_qa_section())
+    print(test_get_content_top_qa())
