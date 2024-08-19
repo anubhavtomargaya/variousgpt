@@ -216,3 +216,5 @@ workers/pdf_classification/env.json
 workers/transcript_intel_extract/env.json
 workers/transcript_intel_extract/sa_gcs.json
 workers/transcript_intel_extract/sam_fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf_ttl.json
+workers/pdf_seo_top_content/env.json
+workers/pdf_seo_top_content/sa_gcs.json

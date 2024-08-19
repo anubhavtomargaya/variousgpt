@@ -54,7 +54,6 @@ def service_embed_pdf_chunks(file):
         else:
             pass
     return True
-
 def service_process_to_chunk_doc(file_name,added_by=None):
     txt = get_pdf_txt(file_name)
     print("file",file_name)

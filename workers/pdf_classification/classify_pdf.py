@@ -2,8 +2,7 @@ import json
 import fitz
 import os
 import openai
-from utils_ts import get_openai_client
-from process_pdf_text import count_tokens
+from utils_ts import get_openai_client,count_tokens
 
 def extract_top_text_from_pdf(pdf_path,pg=0):
     """
