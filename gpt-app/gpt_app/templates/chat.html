@@ -773,23 +773,26 @@
         guidancePill.classList.remove('active');
         topQAPill.classList.remove('active');
         transcriptContainer.style.display = 'block';
+        answerArea.style.display = 'none';
         qaContainer.style.display = 'none';
         getDocument();
     });
-
+    
     qaPill.addEventListener('click', () => {
         qaPill.classList.add('active');
         transcriptPill.classList.remove('active');
         guidancePill.classList.remove('active');
+        answerArea.style.display = 'none';
         topQAPill.classList.remove('active');
         qaContainer.style.display = 'block';
         transcriptContainer.style.display = 'none';
         getQASection();
     });
-
+    
     guidancePill.addEventListener('click', () => {
         guidancePill.classList.add('active');
         transcriptPill.classList.remove('active');
+        answerArea.style.display = 'none';
         qaPill.classList.remove('active');
         topQAPill.classList.remove('active');
         qaContainer.style.display = 'block';
@@ -1358,6 +1361,7 @@ async function getManagementGuidance() {
 
             const data = await response.json();
             answerArea.textContent = data;
+            answerArea.style.display = 'block';
             rightButton.textContent = truncateText(query)
         } catch (error) {
             console.error('Error querying GPT:', error);
@@ -1396,7 +1400,7 @@ async function getManagementGuidance() {
                         <span class="qa-question-text">${item}</span>
                      
                     </div>
-                    <span class="qa-toggle">▼</span>
+                     <span class="qa-toggle">+</span>
                 `;
                 question.addEventListener('click', () => askQuestion(item));
 
