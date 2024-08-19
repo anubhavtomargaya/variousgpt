@@ -29,6 +29,7 @@ def top_questions(pdf_content, num_questions=10):
     {pdf_content[:13000]}  # Limiting to first 3000 characters to avoid token limits
 
     Please provide the top {num_questions} SEO-optimized questions based on this content.
+    Be direct and avoid using leadings phrases like here are the questions etc.
     """
 
     response = query_gpt(prompt)
@@ -64,6 +65,7 @@ def generate_answers(pdf_content,
         {pdf_content[:13000]}  # Using a shorter excerpt to keep within token limits
 
         Please provide an SEO-optimized answer to the question.
+        Avoid 
         """
 
         answer = query_gpt(prompt)

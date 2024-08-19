@@ -71,9 +71,9 @@ def create_seo_content_doc_for_file(filename,
     
 
     doc = {'file_name':filename,
-           'top_questions':top_questions,
-           'addn_content':None,
-           'metadata':meta
+           'top_qa':top_questions, #dict
+           'addn_content':None, #dict 
+           'metadata':meta # dict 
            }
    
     return doc

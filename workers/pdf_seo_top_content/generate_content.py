@@ -25,18 +25,27 @@ def get_pdf_txt(file):
     return txt 
 
 
-CHUNKS_TO_PROC = 1
-def service_process_to_chunk_doc(file_name,added_by=None):
+def service_extract_seo_top_questions(file_name,added_by=None):
     txt = get_pdf_txt(file_name)
-    print("file",file_name)
-    meta = {'chunk_params':CHUNK_PARAMS}
+    print("gen seo doc for file:",file_name)
+
     chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
-    top_questions = [ ]
-    for chunk in chunks:
-        questions = generate_seo.top_questions()
+    big_chunk  = chunks[0] # only take first chunk
+    
+    try:
+
+        questions = generate_seo.top_questions(big_chunk,
+                                            num_questions=6)
+        
+        # seo_content = generate_seo.generate_answers(big_chunk,
+                                                    # questions)
+        
+    except Exception as e:
+        raise Exception("Error in generate.seo : %s",e)
     try:
         doc = create_seo_content_doc_for_file(filename=file_name,
-                                              )
+                                              top_questions=questions,
+                                            )
         sp = insert_content_doc_entry(doc=doc,added_by=added_by)
         print(sp)
         return True
@@ -66,8 +75,17 @@ if __name__=='__main__':
         seo_content = generate_seo.generate_answers(big_chunk,questions)
         return seo_content
     
+# ----------------- # 
+
+    def test_service_seo_content():
+        return service_extract_seo_top_questions(f)
+
+# ----------------- # 
+
+
     # print(test_get_text_chunk())
     # print(test_generate_questions())
-    print(test_generate_seo_qa())
+    # print(test_generate_seo_qa())
+    print(test_service_seo_content())
 
     
