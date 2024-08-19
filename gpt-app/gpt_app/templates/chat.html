@@ -6,7 +6,7 @@
         body, html {
             margin: 0;
             background: rgb(248, 248, 248);
-            background-image: radial-gradient(rgb(120, 120, 120) .75px, transparent 0);
+            /* background-image: radial-gradient(rgb(120, 120, 120) .75px, transparent 0); */
             background-size: 35px 35px;
             /* background-position: -19px -19px; */
             padding: 0;
@@ -654,11 +654,21 @@
         max-height: 200px;
         overflow: scroll;
     }
+    #ttl::after {
+        content: ' BETA ⚡ v2.3 ';
+        background-color: #bdbdbd;
+        padding: 1px 3px;
+        border-radius: 2px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif  ;
+        color: #0c054b;
+        font-size: xx-small;
+        vertical-align: text-bottom;
+}
 </style>
 </head> 
 <body> 
     <div class="app"> 
-        <div style="color: #02283b; font-size: x-large; font-weight: 600; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Earning Concall AI</div>
+        <div id="ttl" style="color: #02283b; font-size: x-large; font-weight: 600; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Earning Concall AI</div>
         <h5 id="email"><span style="color: #145372; font-size: large;">Hey,</span> {{user}} !! </h5> 
             <hr/>
            
