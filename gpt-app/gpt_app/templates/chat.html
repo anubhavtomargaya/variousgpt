@@ -1,7 +1,8 @@
 <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Chat with Concall</title>
  <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
  
-</script> <style> 
+</script>
+ <style> 
 
         body, html {
             margin: 0;
@@ -62,9 +63,9 @@
         }
         .footer {
             display: flex;
-            justify-content: space-evenly;
+            justify-content: space-around;
             /* padding: 0rem 2rem 0rem 2rem; */
-            flex-wrap: wrap;
+            /* flex-wrap: wrap; */
         }
         .askbuttonArea {
             display: flex;
@@ -75,7 +76,7 @@
             flex-wrap: wrap;
         }
         button {
-            padding: 10px 20px;
+            padding: .2rem .4rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -87,10 +88,7 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        /* #newButton { background-color: #30292b;float: right;}
-        #askButton { background-color: #aaaaa8; }
-        #getQuestionsButton { background-color: #e9f6f5; }
-        #getCallsButton { background-color: #efe6e4; } */
+       
         .panel {
             position: fixed;
             top: 0;
@@ -176,14 +174,14 @@
         justify-content: space-between;
         flex-wrap: wrap;
     }
-    button {
+    /* button {
         padding: 10px 20px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         transition: all 0.3s ease;
         margin: 5px;
-    }
+    } */
     button:hover {
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -210,8 +208,8 @@
     /* -webkit-text-fill-color: transparent; */
     animation: gradient-animation 5s ease-in infinite;
         }
-    #leftButton { background-color: #3288b0;  color: white; font-weight: 600}
-    #rightButton { background-color: #3288b0; color: white; font-weight: 600;}
+    #leftButton { background-color: #3288b0;  color: white; font-weight: 400}
+    #rightButton { background-color: #3288b0; color: white; font-weight: 400;}
 
     #questionsContainer {
             /* max-width: 800px; */
@@ -402,12 +400,7 @@
         .transcript::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-    /* .transcript-container {
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 20px; */
-    /* } */
+
     .speaker-section {
         margin-bottom: 20px;
     }
@@ -533,11 +526,11 @@
 }
 .new-header { 
     display: flex;
-    align-items: center;
+    /* align-items: center; */
 
-    justify-content: space-between;
+    justify-content: space-around;
     background-color: #f0f4f8;
-    /* flex-direction: column; */
+    flex-direction: column;
     padding: .5rem 2rem;
     /* border-radius: 10px; */
     margin-bottom: 1rem;
@@ -609,40 +602,20 @@
     /* Add your existing styles here */
     .pill-container {
         display: flex;
-        justify-content: space-evenly;
-        margin: 0;
-   
-        gap: 2rem;
+        justify-content: space-around;
+        align-items: baseline;
+        flex-wrap: nowrap; 
+        gap: 1rem;
+        /* margin-bottom: .5rem; */
     }
     .pill {
-        padding: 5px 20px;
-        margin: 0 10px;
-        font-size: x-small;
-        border-radius: 20px;
-        cursor: pointer;
-        background-color: #f0f0f0;
-    }
-    .pill.active {
-        background-color: #007bff;
-        color: white;
-    }
-    .content-container {
-        /* max-height: 200px; */
-        overflow: scroll;
-    }
-</style>
-<style>
-    /* Add your existing styles here */
-    .pill-container {
-        display: flex;
+        padding: .25rem .5rem;
+        /* margin: 0 10px; */
+        /* min-width: 90px; */
+        align-items: center;
         justify-content: center;
-        margin-bottom: .5rem;
-    }
-    .pill {
-        padding: 5px 20px;
-        margin: 0 10px;
-        font-size: x-small;
-        border-radius: 20px;
+        font-size: .75rem;
+        border-radius: 25px;
         cursor: pointer;
         background-color: #f0f0f0;
     }
@@ -650,6 +623,12 @@
         background-color: #007bff;
         color: white;
     }
+    @media (max-width: 320px) {
+    .pill {
+        font-size: 0.6rem; /* Smaller font size for very small screens */
+        padding: .2rem .4rem; /* Adjust padding */
+    }
+}
     .content-container {
         max-height: 200px;
         overflow: scroll;
@@ -669,16 +648,16 @@
 <body> 
     <div class="app"> 
         <div id="ttl" style="color: #02283b; font-size: x-large; font-weight: 600; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Earning Concall AI</div>
-        <h5 id="email"><span style="color: #145372; font-size: large;">Hey,</span> {{user}} !! </h5> 
+        <h5 id="email"><span style="color: #145372; font-size: large;">Hey,</span> {{user}} </h5> 
             <hr/>
            
         <!-- <h2 id="title">{{title}}</h2>  -->
+        <div class="footer">
+            <button id="leftButton">LIST</button>
+            <button id="rightButton">HISTORY</button>
+        </div>
         <div class="new-header"> 
-            <!-- <div class="footer"> -->
-                <button id="leftButton">LIST</button>
             <div id="title-section"><span style="font-size: x-small; font-family: 'Courier New', Courier, monospace;">Please Select an item from list</span> </div>
-                <button id="rightButton">HISTORY</button>
-            <!-- </div> -->
         </div>
         <div class="pill-container">
             <div class="pill " id="transcriptPill"><span class="ai-indicator">📃 </span>Transcript</div>
@@ -705,21 +684,10 @@
                 <div id="transcript" ></div>
             </div>
             <div id="qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 50vh;"></div>
-            <!-- <div id="top-qa-container" style=" background-color: #ffffff; overflow: scroll; max-height: 50vh;display: none;"></div> -->
+          
         </div>
     </div>
-        <!-- <div id="transcript-container"></div> -->
-        <!-- <div id="questionsContainer"> -->
-            <!-- <ul id="questionsList" ></ul> -->
-            <!-- <div id="transcript-container"> -->
-            <!-- <div id="transcript-container"> -->
-                <!-- <h4>Document Text</h4> -->
-            <!-- </div> -->
-            <!-- <div style="max-height: 10vh;">  -->
-            <!-- <div style="border:solid 1px #131313;overflow: scroll; max-height: 200px;"> <div id="qa-container"></div>    -->
-        <!-- </div> -->
-        <!-- </div> -->
-   
+ 
  
     
 <div id="left-panel" class="panel" style="display: none;">
