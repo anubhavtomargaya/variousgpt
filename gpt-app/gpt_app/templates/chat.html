@@ -204,6 +204,8 @@
     color:  ivory;
     background: linear-gradient(210deg, #145372, #1c8cdb, #25c6fb, #1c8cdb, #145372);
     background-size: 400% 400%;
+    padding: 0.3rem 0.5rem;
+    /* max-height: 30px; */
     /* -webkit-background-clip: text; */
     /* -webkit-text-fill-color: transparent; */
     animation: gradient-animation 5s ease-in infinite;
@@ -666,13 +668,11 @@
             <div class="pill active" id="topQAPill"><span class="ai-indicator">✨ </span>Top Questions</div>
         </div>
  
-        <div style="display: flex;  flex-direction: row; gap: 1rem;">
-        <input type="text" id="question-input" placeholder="Ask about what the managent said in the concall">
-        <button id="askButton">Shoot!</button> </div>
-        <div id="answer-area" style="display: none;">
-   
-          
-       </div> 
+        <div id="search" style="display: flex;  flex-direction: row; gap: 1rem;align-items: baseline;">
+            <input type="text" id="question-input" placeholder="Ask about what the managent said in the concall">
+            <button id="askButton">Shoot!</button> 
+        </div>
+        <div id="answer-area" style="display: none;"></div> 
        <div class="askbuttonArea"> 
           
            <div id="loader"> 
