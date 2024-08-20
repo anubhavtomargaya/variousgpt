@@ -204,7 +204,7 @@
     color:  ivory;
     background: linear-gradient(210deg, #145372, #1c8cdb, #25c6fb, #1c8cdb, #145372);
     background-size: 400% 400%;
-    padding: 0.3rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     /* max-height: 30px; */
     /* -webkit-background-clip: text; */
     /* -webkit-text-fill-color: transparent; */
@@ -606,23 +606,26 @@
         display: flex;
         justify-content: space-around;
         align-items: baseline;
-        flex-wrap: nowrap; 
-        gap: 1rem;
+        flex-wrap: wrap; 
+        gap: .5rem;
         /* margin-bottom: .5rem; */
     }
     .pill {
-        padding: .25rem .5rem;
+        padding: .4rem .6rem;
+        text-align: center;
         /* margin: 0 10px; */
-        /* min-width: 90px; */
+        min-width: 4rem;
+        
         align-items: center;
         justify-content: center;
         font-size: .75rem;
         border-radius: 25px;
+        /* white-space: nowrap; */
         cursor: pointer;
-        background-color: #f0f0f0;
+        background-color: #eee7dd;
     }
     .pill.active {
-        background-color: #007bff;
+        background-color: #6bb1fb;
         color: white;
     }
     @media (max-width: 320px) {
@@ -660,14 +663,14 @@
         </div>
         <div class="new-header"> 
             <div id="title-section"><span style="font-size: x-small; font-family: 'Courier New', Courier, monospace;">Please Select an item from list</span> </div>
+            <div class="pill-container">
+                <div class="pill active" id="topQAPill"><span class="ai-indicator">✨ </span>Top Questions</div>
+                <div class="pill " id="transcriptPill"><span class="ai-indicator">📃 </span>Transcript</div>
+                <div class="pill" id="qaPill"><span class="ai-indicator">✨ </span>Q&A Section</div>
+                <div class="pill" id="guidancePill"> <span class="ai-indicator">✨ </span>Management Guidance</div>
+            </div>
         </div>
-        <div class="pill-container">
-            <div class="pill " id="transcriptPill"><span class="ai-indicator">📃 </span>Transcript</div>
-            <div class="pill" id="qaPill"><span class="ai-indicator">✨ </span>Q&A Section</div>
-            <div class="pill" id="guidancePill"> <span class="ai-indicator">✨ </span>Management Guidance</div>
-            <div class="pill active" id="topQAPill"><span class="ai-indicator">✨ </span>Top Questions</div>
-        </div>
- 
+            
         <div id="search" style="display: flex;  flex-direction: row; gap: 1rem;align-items: baseline;">
             <input type="text" id="question-input" placeholder="Ask about what the managent said in the concall">
             <button id="askButton">Shoot!</button> 
