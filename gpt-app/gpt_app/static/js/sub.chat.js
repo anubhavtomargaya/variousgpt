@@ -136,6 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
             answerArea.textContent = 'Please enter a question.';
             return;
         }
+        gtag('event', 'ask_input_question', {
+            'event_category': 'question',
+            'event_label': `${query}`
+            });
 
         // const fileTitle = titleElement.textContent;
         const currentPath = window.location.pathname;
@@ -159,6 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             answerArea.textContent = data;
+            answerArea.style.display = 'block';
+            // console.log("ans got",data)
             rightButton.textContent = truncateText(query)
         } catch (error) {
             console.error('Error querying GPT:', error);
