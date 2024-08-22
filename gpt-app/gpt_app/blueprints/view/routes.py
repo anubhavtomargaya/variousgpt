@@ -49,7 +49,7 @@ def chat(file_name):
                 <img src="{url_for('static', filename='images/google-logo.png')}" alt="Google Logo" style="width: 20px; height: 20px; margin-right: 10px;">
                 Sign In with Google
             </button>
-            <sub style="color: #ddd; font-size:10px;  cursor: pointer; margin: 0px" >Request access first. Write to imanubhav18@gmail.com</sub>
+            <p style="color: #ddd; font-size:10px; line-height:0.2; cursor: pointer; margin: 0px" >Request access first. Write to imanubhav18@gmail.com</p>
         </form>
         """
         name = ''
