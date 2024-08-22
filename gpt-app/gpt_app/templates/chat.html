@@ -11,9 +11,9 @@
   gtag('config', 'G-5DF5GL4LB5');
 </script>
 
-    <!-- <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
+    <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
  
-</script> -->
+</script>
  <style> 
 
         body, html {
@@ -665,7 +665,7 @@
 <body> 
     <div class="app"> 
         <div id="ttl" style="color: #02283b; font-size: x-large; font-weight: 600; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Earning Concall AI</div>
-        <h5 id="email"><span style="color: #145372; font-size: large;">Hey,</span> {{user}} </h5> 
+        <h5 id="email"><span style="color: #145372; font-size: large;">Hey! </span> {{user}} </h5> 
             <hr/>
            
         <!-- <h2 id="title">{{title}}</h2>  -->
@@ -733,7 +733,8 @@
 <div id="right-panel" class="panel" style="display: none;">
     <div class="back-arrow">→</div>
     <div class="panel-content">
-        <h3>History</h3>
+        <!-- <h3>history</h3> -->
+        {{ history | safe }}
         <div id="history-content"></div>
     </div>
 </div>
