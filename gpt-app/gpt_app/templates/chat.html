@@ -1327,6 +1327,10 @@ async function getManagementGuidance() {
     // window.addEventListener('load', getDocument);
     
     async function askQuestion(query) {
+        gtag('event', 'ask_top_question', {
+        'event_category': 'question',
+        'event_label': `${query}`
+        });
         if (!query) {
             answerArea.textContent = 'Please enter a question.';
             return;
