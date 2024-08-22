@@ -79,10 +79,10 @@ def create_app():
                     - /api/v1/gptube - app to serve the content with apis.
                     - /view/ - app to mimic front end client
     """
-        if is_logged_in():
-            return redirect(url_for(default_home_page))
-        else:
-             return default_error_page.format(login=url_for(google_auth_page))
+        # if is_logged_in():
+        return redirect(url_for(default_home_page))
+        # else:
+            #  return default_error_page.format(login=url_for(google_auth_page))
 
     return app
 
