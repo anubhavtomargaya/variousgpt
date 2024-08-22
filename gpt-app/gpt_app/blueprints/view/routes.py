@@ -17,13 +17,33 @@ def index():
 @view_app.route('/chat')
 # #@login_required
 def chat_app():
-    return render_template('chat.html',user=get_user_email())
+    user = get_user_email()
+    if not user:
+        history= f"""<button> SignIn with Google </button> """
+    else:
+        history=f"History"
+    return render_template('chat.html',history=history,user=get_user_email())
 
 @view_app.route('/chat/<file_name>')
 #@login_required
 def chat(file_name):
-    
-    return render_template('chat.html',title=file_name,user=get_user_email())
+    user = get_user_email()
+    if not user:
+        history = f"""
+        <br/>
+        <h3>To Save & Export History </h3>
+        <form action="{url_for('google_auth.login')}" method="post">
+            <button type="submit" style="display: flex; align-items: center; padding: 10px; border: none; background-color: #ceea99; color: black; font-size: 16px; cursor: pointer; margin: 0px">
+                <img src="{url_for('static', filename='images/google-logo.png')}" alt="Google Logo" style="width: 20px; height: 20px; margin-right: 10px;">
+                Sign In with Google
+            </button>
+        </form>
+        """
+        name = ''
+    else:
+        name = user
+        history=f"History"
+    return render_template('chat.html',title=file_name,history=history,user=name)
 
 @view_app.route('/submit')
 #@login_required

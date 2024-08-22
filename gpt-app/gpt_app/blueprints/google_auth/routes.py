@@ -18,7 +18,7 @@ from . import google_auth, no_cache
 
 
 
-@google_auth.route('/login')
+@google_auth.route('/login',methods=['GET','POST'])
 @no_cache
 def login():
 
