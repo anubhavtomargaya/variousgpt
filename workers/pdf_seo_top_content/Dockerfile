@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set the working directory in the container
-WORKDIR /pdf_chunk_embedding
+WORKDIR /pdf_seo_top_content
 
 
 # Copy the requirements file into the container
@@ -18,10 +18,10 @@ RUN pip install functions-framework
 COPY . .
 
 # Set the environment variable for Google Cloud credentials
-ENV GOOGLE_APPLICATION_CREDENTIALS=/pdf_chunk_embedding/sa_gcs.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/pdf_seo_top_content/sa_gcs.json
 
 # Set the environment variable for the function name
-ENV FUNCTION_TARGET=chunk_embed_valid_pdf
+ENV FUNCTION_TARGET=generate_content_valid_pdf
 
 # Add debug echo statements
 RUN echo '#!/bin/bash' > /entrypoint.sh && \

@@ -1,10 +1,9 @@
 
  
 from pathlib import Path
+from generate_content import service_extract_seo_top_questions
 
-from process import service_process_pdf_to_rag
-
-def chunk_embed_valid_pdf(event, context=None):
+def generate_content_valid_pdf(event, context=None):
     print("Processing file")
     if not isinstance(event,dict):
         request_json = event.get_json()
@@ -14,8 +13,10 @@ def chunk_embed_valid_pdf(event, context=None):
         file_name = Path(file_path).name
         # bucket_name = event['bucket']
     try:
-        print(f"Processing file: {file_name} in bucket: ")
-        return service_process_pdf_to_rag(file_name)
+     
+        print("running top qa for file:",file_name)
+        r = service_extract_seo_top_questions(file_name=file_name)
+        print(r)
     except Exception as e:
         print("error in processing pdf",e)
         return False
