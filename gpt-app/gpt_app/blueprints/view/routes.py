@@ -51,7 +51,7 @@ def chat(file_name):
             </button>
             
             
-            <p style="color: #ddd; font-size:10px; line-height:0.8; cursor: pointer; margin: 0px" >Request access first. Write to imanubhav18@gmail.com</p>
+            <p style="color: #ddd; font-size:10px; line-height:1; cursor: pointer; margin: 2px 0px 0px 0px" >Request access first. Write to imanubhav18@gmail.com</p>
         </form>
         """
         name = ''
