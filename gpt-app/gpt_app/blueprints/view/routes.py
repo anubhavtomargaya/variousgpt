@@ -12,15 +12,27 @@ from . import view_app
 @view_app.route('/')
 # #@login_required
 def index():
-    return render_template('chat.html',user=get_user_email())
+    return redirect(url_for('view_app.chat_app'))
 
 @view_app.route('/chat')
 # #@login_required
 def chat_app():
     user = get_user_email()
     if not user:
-        history= f"""<button> SignIn with Google </button> """
+        history = f"""
+        <br/>
+        <h3>To Save & Export History </h3>
+        <form action="{url_for('google_auth.login')}" method="post">
+            <button type="submit" style="display: flex; align-items: center; padding: 10px; border: none; background-color: #ceea99; color: black; font-size: 16px; cursor: pointer; margin: 0px">
+                <img src="{url_for('static', filename='images/google-logo.png')}" alt="Google Logo" style="width: 20px; height: 20px; margin-right: 10px;">
+                Sign In with Google
+            </button>
+            <sub style="color: #ddd; font-size:10px;  cursor: pointer; margin: 0px" >Request access first. Write to imanubhav18@gmail.com</sub>
+        </form>
+        """
+        name = ''
     else:
+        name = user
         history=f"History"
     return render_template('chat.html',history=history,user=get_user_email())
 
@@ -37,6 +49,7 @@ def chat(file_name):
                 <img src="{url_for('static', filename='images/google-logo.png')}" alt="Google Logo" style="width: 20px; height: 20px; margin-right: 10px;">
                 Sign In with Google
             </button>
+            <sub style="color: #ddd; font-size:10px;  cursor: pointer; margin: 0px" >Request access first. Write to imanubhav18@gmail.com</sub>
         </form>
         """
         name = ''
