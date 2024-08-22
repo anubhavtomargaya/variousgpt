@@ -51,7 +51,17 @@ def create_app():
     # print("url_for(google_auth_page)")
     # print(url_for(google_auth_page))
     default_home_page = 'view_app.index'
-    default_error_page = """<body >  
+    default_error_page = """
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5DF5GL4LB5');
+</script>
+    <body >  
                                 <p>Oops... Login first</p>
                                 <br>
                                 <div style="text-align: center;"> 
