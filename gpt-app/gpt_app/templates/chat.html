@@ -1,5 +1,17 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Chat with Concall</title>
- <!-- <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Chat with Concall</title>
+ <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5DF5GL4LB5');
+</script>
+
+    <!-- <script defer src="{{ url_for('static', filename='js/sub.chat.js') }}">
  
 </script> -->
  <style> 
@@ -747,8 +759,13 @@
     const transcriptContainer = document.getElementById('transcript-container');
     const qaContainer = document.getElementById('qa-container');
     const loader = document.getElementById('loader');
-
+    const currentPath = window.location.pathname;
+    const ft = currentPath.split('/').pop(); // Get for once
     transcriptPill.addEventListener('click', () => {
+        gtag('event', 'load_transcript', {
+        'event_category': 'load',
+        'event_label': `${ft}`
+        });
         transcriptPill.classList.add('active');
         qaPill.classList.remove('active');
         guidancePill.classList.remove('active');
@@ -797,6 +814,10 @@
         }
     // Function to open left panel and fetch call list
     function openLeftPanel() {
+        gtag('event', 'listCompany', {
+        'event_category': 'list',
+        'event_label': 'null'
+        });
         leftPanel.style.display = 'block';
         setTimeout(() => leftPanel.classList.add('open'), 10);
         fetchCallList();
@@ -804,6 +825,10 @@
 
     // Function to open right panel
     function openRightPanel() {
+        gtag('event', 'listHistory', {
+        'event_category': 'list',
+        'event_label': 'null'
+        });
         rightPanel.style.display = 'block';
 
         setTimeout(() => rightPanel.classList.add('open'), 10);
@@ -844,8 +869,8 @@
     //         });
     // }
     function updateTitleSection(data) {
-        const 
-        titleSection = document.getElementById('title-section');
+
+        const titleSection = document.getElementById('title-section');
         titleSection.innerHTML = '';
         
         // const companyLogo = document.createElement('div');
@@ -867,7 +892,12 @@
         companyInfo.appendChild(earningsInfo);
         
         // titleSection.appendChild(companyLogo);
-        titleSection.appendChild(companyInfo);}
+        titleSection.appendChild(companyInfo);
+        gtag('event', 'updateTitle', {
+        'event_category': 'list',
+        'event_label': `${data.company_name}`
+        });
+    }
     function fetchCallList() {
     loader2.style.display = 'block';
     fetch('/view/docs/list')
@@ -1063,6 +1093,10 @@ function toggleTranscriptList(companyItem) {
     // Call getQuestions when the page loads
     // window.addEventListener('load', getDocument);
     window.addEventListener('load', getTopQA);
+    gtag('event', 'load-chat', {
+        'event_category': 'firstLoad',
+        'event_label': 'null'
+        });
 
     // CSS styles
 
@@ -1315,6 +1349,10 @@ async function getManagementGuidance() {
     // window.addEventListener('load', getDocument);
     
     async function askQuestion(query) {
+        gtag('event', 'ask_top_question', {
+        'event_category': 'question',
+        'event_label': `${query}`
+        });
         if (!query) {
             answerArea.textContent = 'Please enter a question.';
             return;
@@ -1354,6 +1392,10 @@ async function getManagementGuidance() {
 
     //  get top questions 
     async function getTopQA() {
+        gtag('event', 'list_top_qa', {
+        'event_category': 'load',
+        'event_label': 'null'
+        });
         const currentPath = window.location.pathname;
         const fileTitle = currentPath.split('/').pop(); // Get the last part of the URL
         console.log("Fetching document:", fileTitle);
