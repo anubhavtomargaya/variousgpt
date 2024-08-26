@@ -11,6 +11,7 @@ from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_
 from gpt_app.blueprints.gptube import gpt_app
 from gpt_app.blueprints.google_auth import google_auth
 from gpt_app.blueprints.view import view_app
+from gpt_app.blueprints.company import company_app
 from gpt_app.common.session_manager import *
 
 
@@ -38,6 +39,9 @@ def create_app():
 
     app.register_blueprint(view_app, url_prefix='/view')
     app.logger.info('Flask bp registerd, %s',"/view")
+
+    app.register_blueprint(company_app, url_prefix='/company')
+    app.logger.info('Flask bp registerd, %s',"/company")
 
     @app.route('/session',methods=['GET'])
     def session_debugger():
