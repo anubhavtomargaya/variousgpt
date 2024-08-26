@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /private/
+
+User-agent: BadBot
+Disallow: /
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+Sitemap: http://wallartlabs.tech/sitemap.xml
