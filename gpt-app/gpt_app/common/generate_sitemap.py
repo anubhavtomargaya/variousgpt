@@ -33,10 +33,10 @@ def generate_sitemap():
         print(filename)
         print(filenames[filename][0]['file_name'])
         urls = [
-            f"http://wallartlabs.tech/document/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/document/section/qa/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/document/section/management/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/content/top_questions/{filenames[filename][0]['file_name']}"
+            f"http://wallartlabs.tech/view/document/{filenames[filename][0]['file_name']}",
+            f"http://wallartlabs.tech/view/document/section/qa/{filenames[filename][0]['file_name']}",
+            f"http://wallartlabs.tech/view/document/section/management/{filenames[filename][0]['file_name']}",
+            f"http://wallartlabs.tech/view/content/top_questions/{filenames[filename][0]['file_name']}"
         ]
         
         for url in urls:
