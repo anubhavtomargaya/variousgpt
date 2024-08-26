@@ -5,12 +5,13 @@ function. They can be added as a blueprint but I am using these as tools while
 developement. Run this with wsgi.py" 
 """
 # from common import fh
-from flask import Flask, jsonify,redirect, render_template, url_for
+from flask import Flask, jsonify,redirect, render_template, send_from_directory, url_for
 from flask_cors import CORS
 from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
 from gpt_app.blueprints.gptube import gpt_app
 from gpt_app.blueprints.google_auth import google_auth
 from gpt_app.blueprints.view import view_app
+from gpt_app.blueprints.company import company_app
 from gpt_app.common.session_manager import *
 
 
@@ -38,6 +39,9 @@ def create_app():
 
     app.register_blueprint(view_app, url_prefix='/view')
     app.logger.info('Flask bp registerd, %s',"/view")
+
+    app.register_blueprint(company_app, url_prefix='/company')
+    app.logger.info('Flask bp registerd, %s',"/company")
 
     @app.route('/session',methods=['GET'])
     def session_debugger():
@@ -83,6 +87,11 @@ def create_app():
         return redirect(url_for(default_home_page))
         # else:
             #  return default_error_page.format(login=url_for(google_auth_page))
+
+    #sitemap
+    @app.route('/sitemap.xml')
+    def sitemap():
+        return send_from_directory('.', 'sitemap.xml')
 
     return app
 
