@@ -92,6 +92,10 @@ def create_app():
     @app.route('/sitemap.xml')
     def sitemap():
         return send_from_directory('.', 'sitemap.xml')
+    #robots
+    @app.route('/robots.txt')
+    def robots():
+        return send_from_directory('.', 'robots.txt')
 
     return app
 
