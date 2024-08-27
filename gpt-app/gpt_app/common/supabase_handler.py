@@ -118,6 +118,19 @@ def get_itdoc_mg_guidance(file_name):
         return rows.data[0]['management_data']['overview']
     
     
+    
+def get_company_content_all(copname):
+    print("running supabase query...")
+    rows =  supabase.table('company-content').select('company_name,upcoming,latest,faq').eq('company_name', f'{copname}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data
+    
+    
 def get_content_top_questions(file_name):
     print("running supabase query...")
     rows =  supabase.table('content-docs').select('top_qa').eq('file_name', f'{file_name}').execute()
