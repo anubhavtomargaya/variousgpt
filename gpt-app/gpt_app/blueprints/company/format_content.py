@@ -5,7 +5,7 @@ d = {
         'company_name':'',
         'upcoming': { 'questions' : {
                                         'When is the reliance earning call?': 'Reliance Industries earning call for Q1 FY25 is on 29th August 2024.',
-                                        'What are the expectations from upcoming reliance concall?': 'Reliance Industries are expected to show improvements in EBITDA margins.',
+                                        'What are the expectations from upcoming Escorts Kubota concall?': 'Escorts Kubota are expected to show improvements in EBITDA margins.',
                                     }          
                     },
         'faq': {'questions': 
