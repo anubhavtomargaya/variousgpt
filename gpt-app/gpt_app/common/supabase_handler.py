@@ -130,6 +130,17 @@ def get_company_content_all(copname):
         print(rows.data)
         return rows.data
     
+def get_company_list():
+    print("running supabase query...")
+    rows =  supabase.table('company-data').select('company_name,tags').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data
+    
     
 def get_company_file_names(company_name):
     print("running supabase query...")

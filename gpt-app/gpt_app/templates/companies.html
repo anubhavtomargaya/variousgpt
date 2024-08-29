@@ -151,7 +151,7 @@
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     {% for company in company_data.indices_companies[index][:5] %}
-                                    <li class="list-group-item">{{ company }}</li>
+                                    <li class="list-group-item"><a href="/company/{{ company }}"> {{ company }}</a></li>
                                     {% endfor %}
                                 </ul>
                                 <div class="card-body">
@@ -174,7 +174,7 @@
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     {% for company in company_data.market_cap_companies[cap][:5] %}
-                                    <li class="list-group-item">{{ company }}</li>
+                                    <li class="list-group-item"><a href="/company/{{ company }}"> {{ company }}</a></li>
                                     {% endfor %}
                                 </ul>
                                 <div class="card-body">
@@ -219,7 +219,7 @@
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     {% for company in company_data.recently_updated[:5] %}
-                                    <li class="list-group-item">{{ company }}</li>
+                                    <li class="list-group-item"><a href="/company/{{ company }}">{{ company }}</a></li>
                                     {% endfor %}
                                 </ul>
                                 <div class="card-body">
