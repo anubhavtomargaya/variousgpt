@@ -17,6 +17,8 @@ def slugify(question):
 @company_app.app_template_filter('slugify')
 def slugify_filter(s):
     return slugify(s)
+from flask import render_template, redirect, url_for
+
 
 @company_app.route('/<company_name>')
 @company_app.route('/<company_name>/upcoming')
@@ -26,15 +28,13 @@ def upcoming(company_name, question_slug=None):
     if question_slug:
         valid_slugs = [slugify(q) for q in upcoming_data.keys()]
         if question_slug not in valid_slugs:
-            # Redirect to the main FAQ page if the slug is invalid
-            return redirect(url_for('company.upcoming', company_name=company_name))
+            return redirect(url_for('company_app.upcoming', company_name=company_name))
     
     return render_template('company.html', 
                            company_name=company_name.replace('-', ' '), 
                            active_page="upcoming", 
                            upcoming_data=upcoming_data,
-                            question_slug=question_slug)
-                           
+                           question_slug=question_slug)
 
 @company_app.route('/<company_name>/historical')
 def historical(company_name):
@@ -51,8 +51,7 @@ def faq(company_name, question_slug=None):
     if question_slug:
         valid_slugs = [slugify(q) for q in faq_data.keys()]
         if question_slug not in valid_slugs:
-            # Redirect to the main FAQ page if the slug is invalid
-            return redirect(url_for('company.faq', company_name=company_name))
+            return redirect(url_for('company_app.faq', company_name=company_name))
     
     return render_template('company.html', 
                            company_name=company_name.replace('-', ' '), 

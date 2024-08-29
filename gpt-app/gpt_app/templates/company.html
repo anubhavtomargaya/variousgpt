@@ -11,43 +11,42 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
-    
+
         .navbar-brand {
             font-weight: 600;
             font-size: 1.5rem;
             width: 8vw;
         }
-    
+
         .navbar-separator {
             border-left: 1px solid #dee2e6;
             height: 30px;
             margin: 0 15px;
         }
-    
+
         .sidebar {
             height: 100vh;
             position: fixed;
             top: 0;
-            font-size: medium;
             left: 0;
             width: 10vw;
             padding-top: 76px;
             padding-left: 2rem;
             background-color: #f8f9fa;
         }
-    
+
         .sidebar .nav-link {
             padding: 0.5rem 1rem;
             color: #777;
             position: relative;
             transition: color 0.3s ease;
         }
-    
+
         .sidebar .nav-link.active {
             color: #007bff;
             font-weight: 600;
         }
-    
+
         .sidebar .nav-link.active::before {
             content: "";
             position: absolute;
@@ -61,48 +60,45 @@
             opacity: 1;
             transition: top 0.3s ease, opacity 0.3s ease;
         }
-    
+
         .sidebar .nav-link:hover {
             color: #555;
         }
-    
+
         .main-content {
             margin-left: 250px;
             padding-top: 76px;
             min-height: 90vh;
         }
-    
+
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
                 height: auto;
                 padding-top: 0;
             }
-    
+
             .main-content {
                 margin-left: 0;
             }
         }
-    
+
         .accordion-button:not(.collapsed) {
             background-color: #e7f1ff;
         }
-    
+
         .accordion-button.active {
             background-color: #cce5ff;
         }
+
         footer {
             position: fixed;
             bottom: 0;
             width: 100vw;
-
             right: 0;
         }
-   
-    </style>
-    
 
-    
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -125,7 +121,7 @@
         </div>
     </nav>
 
-    <div class="container-fluid ">
+    <div class="container-fluid">
         <div class="row">
             <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                 <div class="position-sticky">
@@ -210,41 +206,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            if (window.location.hash) {
-                const id = window.location.hash.substring(1);
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView();
-                    element.querySelector('.accordion-button').click();
-                }
-            }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
+        document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.sidebar .nav-link');
-    
+
             links.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-    
+
                     // Remove active class from all links
                     links.forEach(l => {
                         l.classList.remove('active');
                         l.style.color = '#777';  // Reset color of all links
                     });
-    
+
                     // Add active class to the clicked link
                     link.classList.add('active');
                     link.style.color = '#007bff';  // Set active color
-    
+
                     // Navigate to the link's href
                     window.location.href = link.href;
                 });
             });
-    
-            // Handle hash-based navigation for FAQs
+
+            // Handle hash-based navigation for FAQs and Upcoming
             if (window.location.hash) {
                 const id = window.location.hash.substring(1);
                 const element = document.getElementById(id);
@@ -255,7 +239,5 @@
             }
         });
     </script>
-    
-  
 </body>
 </html>
