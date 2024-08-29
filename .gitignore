@@ -219,3 +219,5 @@ workers/transcript_intel_extract/sam_fy-2024_q1_earnings_call_transcript_neuland
 workers/pdf_seo_top_content/env.json
 workers/pdf_seo_top_content/sa_gcs.json
 workers/pdf_seo_top_content/pdf-transcripts_rows.csv
+workers/nifty_processing/sa_gcs.json
+workers/nifty_processing/env.json

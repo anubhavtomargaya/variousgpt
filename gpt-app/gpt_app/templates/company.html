@@ -1,56 +1,164 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ company_name }} FAQ</title>
-    <meta name="description" content="{{ company_name }} Frequently Asked Questions and Answers">
+    <title>{{ company_name|title }} - {{ active_page|capitalize }}</title>
+    <meta name="description" content="{{ company_name|title }} {{ active_page|capitalize }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            width: 8vw;
+        }
+
+        .navbar-separator {
+            border-left: 1px solid #dee2e6;
+            height: 30px;
+            margin: 0 15px;
+        }
+
         .sidebar {
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            padding-top: 56px;
+            width: 10vw;
+            padding-top: 76px;
+            padding-left: 2rem;
             background-color: #f8f9fa;
         }
-        .main-content {
-            margin-left: 250px;
-            padding-top: 56px;
+
+        .sidebar .nav-link {
+            padding: 0.5rem 1rem;
+            color: #777;
+            position: relative;
+            transition: color 0.3s ease;
         }
+
+        .sidebar .nav-link.active {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link.active::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: #007bff;
+            border-radius: 50%;
+            opacity: 1;
+            transition: top 0.3s ease, opacity 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #555;
+        }
+
+        .main-content {
+            margin-left: 12vw;
+            padding-top: 76px;
+            min-height: 90vh;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
                 height: auto;
                 padding-top: 0;
             }
+
             .main-content {
                 margin-left: 0;
             }
         }
+
         .accordion-button:not(.collapsed) {
             background-color: #e7f1ff;
+        }
+
+        .accordion-button.active {
+            background-color: #cce5ff;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100vw;
+            right: 0;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .card-subtitle {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .card-text ul {
+            padding-left: 1rem;
+        }
+
+        .card-text ul li {
+            list-style-type: disc;
+        }
+
+        .card .btn {
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .card .show-more {
+            display: none;
+        }
+
+        .show-more-btn {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007bff;
+            background: none;
+            border: none;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">{{ company_name }}</a>
+            <a class="navbar-brand" href="/">stockrabit</a>
+            <!-- <div class="navbar-separator"></div> -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="/other-links">Other Links</a>
                     </li>
                 </ul>
             </div>
@@ -63,18 +171,23 @@
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a class="nav-link {% if active_page == 'upcoming' %}active{% endif %}" href="{{ url_for('company_app.upcoming', company_name=company_name) }}">
+                                Upcoming
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'historical' %}active{% endif %}" href="{{ url_for('company_app.historical', company_name=company_name) }}">
+                                Historical
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'faq' %}active{% endif %}" href="{{ url_for('company_app.faq', company_name=company_name) }}">
                                 FAQ
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                Latest Updates
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                Archive
+                            <a class="nav-link {% if active_page == 'links' %}active{% endif %}" href="{{ url_for('company_app.links', company_name=company_name) }}">
+                                Links
                             </a>
                         </li>
                     </ul>
@@ -82,13 +195,15 @@
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <h1 class="mt-4">{{ company_name }} FAQ</h1>
+                <h1 class="mt-4 mb-4">{{ company_name|title }} {{ active_page|capitalize }}</h1>
+                
+                {% if active_page == 'faq' %}
                 <div class="accordion mt-4" id="faqAccordion">
                     {% for question, answer in faq_data.items() %}
-                    {% set slug = question|lower|replace(' ', '-')|replace('?', '') %}
+                    {% set slug = question|slugify %}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="{{ slug }}">
-                            <button class="accordion-button {% if slug != question_slug %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
+                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
                                 {{ question }}
                             </button>
                         </h2>
@@ -100,37 +215,102 @@
                     </div>
                     {% endfor %}
                 </div>
+                 
+                {% elif active_page == 'historical' %}
+                <div class="row">
+                    {% for data in historical_data %}
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ data.company_name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    {{ data.quarter }} {{ data.financial_year }}
+                                </h6>
+                                <p class="card-text">
+                                    <strong>Top Questions:</strong>
+                                    <ul>
+                                        {% for question in data.top_questions[:3] %}
+                                        <li>{{ question }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% if data.top_questions|length > 3 %}
+                                    <ul class="show-more">
+                                        {% for question in data.top_questions[3:] %}
+                                        <li>{{ question }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <button class="show-more-btn" onclick="toggleShowMore(this)">Show more</button>
+                                    {% endif %}
+                                </p>
+                                <a href="{{ url_for('view_app.chat', file_name=data.file_name) }}" class="btn btn-primary">Read Full Transcript</a>
+                                <a href="{{ url_for('view_app.chat', file_name=data.file_name) }}#management" class="btn btn-secondary">Management Insights</a>
+                                <a href="{{ url_for('view_app.chat', file_name=data.file_name) }}#analyst-questions" class="btn btn-info">Analyst Questions</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+               
+                </div>
+
+                {% elif active_page == 'upcoming' %}
+                <div class="accordion mt-4" id="upcomingAccordion">
+                    {% for question, answer in upcoming_data.items() %}
+                    {% set slug = question|slugify %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="{{ slug }}">
+                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
+                                {{ question }}
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#upcomingAccordion">
+                            <div class="accordion-body">
+                                {{ answer }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="content">
+                    {{ content|safe }}
+                </div>
+                {% endif %}
             </main>
         </div>
     </div>
 
     <footer class="bg-light text-center text-lg-start mt-4">
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2024 {{ company_name }}. All rights reserved.
+            © 2024 stockrabit. All rights reserved.
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {% for question, answer in faq_data.items() %}
-            {
-                "@type": "Question",
-                "name": "{{ question }}",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "{{ answer }}"
-                }
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ]
-    }
-    </script>
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('.sidebar .nav-link');
+
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    // Remove active class from all links
+                    links.forEach(l => {
+                        l.classList.remove('active');
+                        l.style.color = '#777';  // Reset color of all links
+                    });
+
+                    // Add active class to the clicked link
+                    link.classList.add('active');
+                    link.style.color = '#007bff';  // Set active color
+
+                    // Navigate to the link's href
+                    window.location.href = link.href;
+                });
+            });
+
+            // Handle hash-based navigation for FAQs and Upcoming
             if (window.location.hash) {
                 const id = window.location.hash.substring(1);
                 const element = document.getElementById(id);

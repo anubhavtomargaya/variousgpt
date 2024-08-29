@@ -86,6 +86,7 @@ def get_pdf_chunks_transcript(file_name):
     
 def get_file_meta(file_name):
     print("running supabase query...")
+    print('filename',file_name)
     rows =  supabase.table('pdf-transcripts').select('company_name,quarter,financial_year').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
@@ -118,6 +119,44 @@ def get_itdoc_mg_guidance(file_name):
         return rows.data[0]['management_data']['overview']
     
     
+    
+def get_company_content_all(copname):
+    print("running supabase query...")
+    rows =  supabase.table('company-content').select('company_name,upcoming,latest,faq').eq('company_name', f'{copname}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return rows.data
+    
+def get_company_list():
+    print("running supabase query...")
+    rows =  supabase.table('company-data').select('company_name,tags').eq('disable',False).execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        # print(rows.data)
+        return rows.data
+    
+    
+def get_company_file_names(company_name):
+    print("running supabase query...")
+    print(company_name)
+    rows =  supabase.table('pdf-transcripts').select('file_name').eq('company_name', f'{company_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return [x['file_name'] for x in rows.data]
+        return rows.data[0]['top_qa']
+
+
 def get_content_top_questions(file_name):
     print("running supabase query...")
     rows =  supabase.table('content-docs').select('top_qa').eq('file_name', f'{file_name}').execute()
