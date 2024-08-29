@@ -15,12 +15,15 @@ def fetch_filenames():
         print(e)
         # print(f"Error fetching filenames: e")
         return []
+    
+
 
 # Function to generate the sitemap XML
 def generate_sitemap():
     filenames = fetch_filenames()
-    
+    print('fileanms',filenames)
     print(filenames)
+    # return
     if not filenames:
         print("No filenames available to generate sitemap.")
         return
@@ -31,16 +34,20 @@ def generate_sitemap():
     # Create URL entries for each filename
     for filename in filenames:
         print(filename)
-        print(filenames[filename][0]['file_name'])
-        urls = [
+        urls = [ 
+            f"http://wallartlabs.tech/company/{filename}",
+            f"http://wallartlabs.tech/company/{filename}/historical",
             f"http://wallartlabs.tech/view/chat/{filenames[filename][0]['file_name']}",
             f"http://wallartlabs.tech/view/document/{filenames[filename][0]['file_name']}",
             f"http://wallartlabs.tech/view/document/section/qa/{filenames[filename][0]['file_name']}",
             f"http://wallartlabs.tech/view/document/section/management/{filenames[filename][0]['file_name']}",
             f"http://wallartlabs.tech/view/content/top_questions/{filenames[filename][0]['file_name']}"
-        ]
+
+            ]
+        
         
         for url in urls:
+            
             url_elem = SubElement(urlset, 'url')
             loc = SubElement(url_elem, 'loc')
             loc.text = url
