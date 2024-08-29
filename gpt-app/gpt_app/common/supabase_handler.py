@@ -131,6 +131,19 @@ def get_company_content_all(copname):
         return rows.data
     
     
+def get_company_file_names(company_name):
+    print("running supabase query...")
+    rows =  supabase.table('pdf-transcripts').select('file_name').eq('company_name', f'{company_name}').execute()
+    if not rows.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        print(rows.data)
+        return [x['file_name'] for x in rows.data]
+        return rows.data[0]['top_qa']
+
+
 def get_content_top_questions(file_name):
     print("running supabase query...")
     rows =  supabase.table('content-docs').select('top_qa').eq('file_name', f'{file_name}').execute()
