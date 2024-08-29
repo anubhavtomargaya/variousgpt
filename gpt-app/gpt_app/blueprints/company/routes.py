@@ -38,23 +38,27 @@ def upcoming(company_name, question_slug=None):
 @company_app.route('/<company_name>')
 @company_app.route('/<company_name>/historical')
 def historical(company_name):
+    print('com',company_name)
     file_names = get_company_file_names(company_name)  # Implement this function
     print("filen ames",file_names)
     if not file_names:
         return redirect(url_for('company_app.company_index'))
     historical_data = []
     
+    print("names",file_names)
     for file_name in file_names:
-        top_questions = get_content_top_questions(file_name)  # Fetch top questions
-        details = get_file_meta(file_name)  # Fetch file details
-        
-        historical_data.append({
-            'file_name': file_name,
-            'company_name': details['company_name'],
-            'quarter': details['quarter'],
-            'financial_year': details['financial_year'],
-            'top_questions': top_questions
-        })
+        print("name",file_name)
+        if file_name:
+            top_questions = get_content_top_questions(file_name)  # Fetch top questions
+            details = get_file_meta(file_name)  # Fetch file details
+            
+            historical_data.append({
+                'file_name': file_name,
+                'company_name': details['company_name'],
+                'quarter': details['quarter'],
+                'financial_year': details['financial_year'],
+                'top_questions': top_questions
+            })
     
     return render_template('company.html', 
                            company_name=company_name.replace('-', ' '), 
@@ -94,10 +98,11 @@ def company_index():
     data = get_company_list()
     # print("data",data)
     company_data = {
-    'indices': ['NIFTY100', 'NIFTY50', 'NASDAQ100'],
+    'indices': ['NIFTY100', 'NIFTY50', 'OTHERS','NASDAQ100'],
     'indices_companies': {
         'NIFTY100': [],
         'NIFTY50': [],
+        'OTHERS':[],
         'NASDAQ100': []
     },
     'market_cap': ['Large Cap', 'Mid Cap', 'Small Cap'],
@@ -119,17 +124,21 @@ def company_index():
 
     # Process the data
     for item in data:
-        # print("item",item)
+        print("item",item)
         company_name = item['company_name']
         tags = item['tags']
 
         if tags:
-            # print("tags")
+            print("tags",tags)
             # Process indices
             if 'indices' in tags:
-                for index in tags['indices']:
-                    if index in company_data['indices_companies']:
-                        company_data['indices_companies'][index].append(company_name)
+                if not len(tags['indices'])>0:
+                    print("tagsss",tags['indices'])
+                    company_data['indices_companies']['OTHERS'].append(company_name)
+                else:
+                    for index in tags['indices']:
+                        if index in company_data['indices_companies']:
+                            company_data['indices_companies'][index].append(company_name)
             
             # Process market cap
             if 'market_cap' in tags:
