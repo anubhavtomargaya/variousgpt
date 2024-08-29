@@ -138,7 +138,7 @@ def get_company_list():
         return False
     else:
         print("documents supp")
-        print(rows.data)
+        # print(rows.data)
         return rows.data
     
     

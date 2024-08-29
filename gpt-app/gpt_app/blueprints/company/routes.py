@@ -92,11 +92,11 @@ def links(company_name):
 @company_app.route('/')
 def company_index():
     data = get_company_list()
-    print("data",data)
+    # print("data",data)
     company_data = {
-    'indices': ['S&P500', 'NIFTY50', 'NASDAQ100'],
+    'indices': ['NIFTY100', 'NIFTY50', 'NASDAQ100'],
     'indices_companies': {
-        'S&P500': [],
+        'NIFTY100': [],
         'NIFTY50': [],
         'NASDAQ100': []
     },
@@ -113,17 +113,18 @@ def company_index():
         'Healthcare': [],
         'Energy': []
     },
+
     'recently_updated': []
 }
 
     # Process the data
     for item in data:
-        print("item",item)
+        # print("item",item)
         company_name = item['company_name']
         tags = item['tags']
 
         if tags:
-            print("tags")
+            # print("tags")
             # Process indices
             if 'indices' in tags:
                 for index in tags['indices']:
@@ -141,7 +142,7 @@ def company_index():
                 for sector in tags['sectors']:
                     if sector in company_data['sector_companies']:
                         company_data['sector_companies'][sector].append(company_name)
-
+        
         
     return render_template('companies.html', 
                         active_page="company_index", 
