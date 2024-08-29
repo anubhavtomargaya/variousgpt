@@ -66,3 +66,33 @@ def links(company_name):
                            company_name=company_name.replace('-', ' '), 
                            active_page="links", 
                            content=f"Useful links for {company_name.replace('-', ' ').title()}")
+
+@company_app.route('/')
+def company_index():
+    # data = get_companies_data()
+    company_data = {
+        'indices': ['S&P500', 'NIFTY50', 'NASDAQ100'],
+        'indices_companies': {
+            'S&P500': ['Apple', 'Microsoft', 'Amazon', 'Facebook', 'Google'],
+            'NIFTY50': ['Reliance', 'TCS', 'HDFC Bank', 'Infosys', 'ICICI Bank'],
+            'NASDAQ100': ['Apple', 'Microsoft', 'Amazon', 'Tesla', 'NVIDIA']
+        },
+        'market_cap': ['Large Cap', 'Mid Cap', 'Small Cap'],
+        'market_cap_companies': {
+            'Large Cap': ['Apple', 'Microsoft', 'Saudi Aramco', 'Amazon', 'Alphabet'],
+            'Mid Cap': ['Occidental Petroleum', 'Spotify', 'Zendesk', 'Zoom', 'DocuSign'],
+            'Small Cap': ['Bed Bath & Beyond', 'GameStop', 'AMC Entertainment', 'Tupperware', 'Rite Aid']
+        },
+        'sectors': ['Technology', 'Finance', 'Healthcare', 'Energy'],
+        'sector_companies': {
+            'Technology': ['Apple', 'Microsoft', 'Google', 'Facebook', 'NVIDIA'],
+            'Finance': ['JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Citigroup', 'Goldman Sachs'],
+            'Healthcare': ['Johnson & Johnson', 'UnitedHealth', 'Pfizer', 'Abbott', 'Merck'],
+            'Energy': ['ExxonMobil', 'Chevron', 'Shell', 'BP', 'TotalEnergies']
+        },
+        'recently_updated': ['Tesla', 'Netflix', 'Uber', 'Airbnb', 'Palantir']
+    }
+    
+    return render_template('companies.html', 
+                           active_page="company_index", 
+                           company_data=company_data)
