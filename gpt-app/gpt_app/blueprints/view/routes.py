@@ -231,7 +231,66 @@ def get_records(file_name):
     response = make_response(jsonify(user_file_records))
     response.headers['Cache-Control'] = 'public, max-age=360'  # Cache for 1 hour
     return response
+
+def process_transcript(raw_transcript):
+    processed_transcript = []
+    current_speaker = ""
+    current_text = ""
+
+    # Print raw transcript for debugging
+    print("raw_transcript:", raw_transcript)
+
+    # If raw_transcript is a dictionary, you might need to convert it to a list of dicts
+    if isinstance(raw_transcript, dict):
+        raw_transcript = raw_transcript.values()
+
+    # Iterate over the transcript items
+    for item in raw_transcript:
+        print("item:", item)  # Debugging print to see the current item
+        if 'speaker' in item:
+            if current_speaker:
+                processed_transcript.append({'speaker': current_speaker, 'text': current_text.strip()})
+            current_speaker = item['speaker']
+            current_text = item.get('text', '')  # Reset text for the new speaker
+        else:
+            # Accumulate text for the current speaker
+            current_text += " " + item.get('text', '')
+
+    # Append the last speaker's text
+    if current_speaker:
+        processed_transcript.append({'speaker': current_speaker, 'text': current_text.strip()})
+
+    return processed_transcript
+
+@view_app.route('/concall/<file_name>')
+def concall(file_name):
+    section = request.args.get('section', 'top_questions')
     
+    # Fetch company details
+    details = get_file_meta(file_name)
+    
+    # Fetch content based on the selected section
+    if section == 'top_questions':
+        content = get_content_top_questions(file_name)
+    elif section == 'transcript':
+        raw_transcript = get_pdf_chunks_transcript(file_name)['extracted_transcript']
+        content = process_transcript(raw_transcript)
+        print(content) 
+    elif section == 'qa_section':
+        content = get_itdoc_qa_secrion(file_name)
+    elif section == 'management_guidance':
+        content = get_itdoc_mg_guidance(file_name)
+    
+    return render_template('concall.html',
+                           company_name=details['company_name'],
+                           quarter=details['quarter'],
+                           financial_year=details['financial_year'],
+                           file_name=file_name,
+                           active_section=section,
+                           top_questions=content if section == 'top_questions' else [],
+                           transcript=content if section == 'transcript' else '',
+                           qa_section=content if section == 'qa_section' else '',
+                           management_guidance=content if section == 'management_guidance' else '')
 
 # @view_app.route('/transcript/update/<file_name>',methods=['POST'])
 # #@login_required
