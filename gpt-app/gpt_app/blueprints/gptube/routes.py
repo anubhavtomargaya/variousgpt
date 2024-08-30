@@ -15,7 +15,7 @@ from .service_transcribe_audio import create_text_from_audio
 from .service_embed_text import create_text_diarized_doc, create_text_meta_doc,create_embeddings_from_chunk_doc, create_text_segment_doc, get_qa_digest
 from .load_youtube_audio import download_youtube_audio
 from .load_pdf import load_pdf_into_bucket, load_pdf_link_into_bucket
-from flask import current_app as app,jsonify,request
+from flask import current_app as app,jsonify,request,redirect,url_for
 
 
 from  gpt_app.common.session_manager import get_user_email, login_required,is_logged_in
@@ -106,9 +106,13 @@ def upload_file():
 
     
 @gpt_app.route('/process/pdf', methods=['POST','GET'])
-@login_required
+# @login_required
 def process_pdf():
-    GCS = True 
+
+    if not is_logged_in():
+        print('not loggede in!')
+
+        # redirect(url_for('google_auth.login'))
     mthd = request.method 
     args = request.args
     app.logger.info('method: %s',mthd)
@@ -125,7 +129,7 @@ def process_pdf():
 
     if not file:
         raise HTTPException("title not provided ")
-    
+    print(file ,'file')
     return jsonify(process_pdf_to_doc(file=file,added_by=get_user_email()))
 
 @gpt_app.route('/process/tdoc', methods=['POST','GET'])
