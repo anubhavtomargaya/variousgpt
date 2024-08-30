@@ -41,8 +41,11 @@ def generate_sitemap():
             f"http://wallartlabs.tech/view/document/{filenames[filename][0]['file_name']}",
             f"http://wallartlabs.tech/view/document/section/qa/{filenames[filename][0]['file_name']}",
             f"http://wallartlabs.tech/view/document/section/management/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/view/content/top_questions/{filenames[filename][0]['file_name']}"
-
+            f"http://wallartlabs.tech/view/content/top_questions/{filenames[filename][0]['file_name']}",
+            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=top_questions",
+            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=qa_section",
+            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=management_guidance",
+            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=transcript",
             ]
         
         
