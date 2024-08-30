@@ -89,6 +89,7 @@ def create_app():
             #  return default_error_page.format(login=url_for(google_auth_page))
 
     #sitemap
+    @app.route('/sitemap.xml.gz')
     @app.route('/sitemap.xml')
     def sitemap():
         return send_from_directory('.', 'sitemap.xml')
