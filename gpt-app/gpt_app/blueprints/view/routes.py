@@ -278,6 +278,7 @@ def concall(file_name):
         print(content) 
     elif section == 'qa_section':
         content = get_itdoc_qa_secrion(file_name)
+        print("con",content)
     elif section == 'management_guidance':
         content = get_itdoc_mg_guidance(file_name)
     
@@ -288,9 +289,9 @@ def concall(file_name):
                            file_name=file_name,
                            active_section=section,
                            top_questions=content if section == 'top_questions' else [],
-                           transcript=content if section == 'transcript' else '',
-                           qa_section=content if section == 'qa_section' else '',
-                           management_guidance=content if section == 'management_guidance' else '')
+                           transcript=content if content and section == 'transcript' else '',
+                           qa_section=content if content and section == 'qa_section' else '',
+                           management_guidance=content if content and section == 'management_guidance' else '')
 
 # @view_app.route('/transcript/update/<file_name>',methods=['POST'])
 # #@login_required

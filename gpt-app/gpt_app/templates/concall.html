@@ -140,7 +140,6 @@
                         <div class="transcript-container">
                             {% for entry in transcript %}
                                 <div class="transcript-entry">
-                             
                                     <div class="transcript-speaker">{{ entry.speaker }}</div>
                                     <div class="transcript-text">{{ entry.text }}</div>
                                 </div>
@@ -148,7 +147,28 @@
                         </div>
                     {% elif active_section == 'qa_section' %}
                         <h3>Q&A Section</h3>
-                        <div>{{ qa_section|safe }}</div>
+                        <div class="accordion" id="qaAccordion">
+                            {% for qa in qa_section %}
+                            <div class="card">
+                                <div class="card-header" id="heading{{ loop.index }}">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+                                            {{ qa['question']['text'] }}
+                                        </button>
+                                        <h6 >   {{ qa['question']['speaker']['name'] }},  {{ qa['question']['speaker']['title'] }}
+                                        </h6>
+                                    </h2>
+                                </div>
+
+                                <div id="collapse{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#qaAccordion">
+                                    <div class="card-body">
+                                        <p>{{ qa['answer']['text'] }}</p>
+                                        <p>{{ qa['answer']['speaker']['name'] }} ({{ qa['answer']['speaker']['title']  }})</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                     {% elif active_section == 'management_guidance' %}
                         <h3>Management Guidance</h3>
                         <div>{{ management_guidance|safe }}</div>
