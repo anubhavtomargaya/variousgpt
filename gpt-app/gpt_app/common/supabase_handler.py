@@ -116,9 +116,7 @@ def get_itdoc_mg_guidance(file_name):
     else:
         print("documents supp")
         print(rows.data)
-        return rows.data[0]['management_data']['overview']
-    
-    
+        return rows.data[0]['management_data']['overview'] if rows.data[0]['management_data'] else False
     
 def get_company_content_all(copname):
     print("running supabase query...")
