@@ -167,7 +167,7 @@
         }
 
         function uploadFile(file) {
-            const url = '/api/v1/gptube/upload';
+            const url = '/loader/upload';
             const formData = new FormData();
             formData.append('file', file);
 
@@ -180,7 +180,7 @@
                         showResponse('Error: ' + data.error);
                     } else {
                         showResponse('File uploaded successfully: ' + data.file_name);
-                        window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                        window.location.href = "/loader/status?file=" + data.file_name.split('.')[0];
                     }
                 })
                 .catch(function (error) {
@@ -197,7 +197,7 @@
                 return;
             }
 
-            const url = '/api/v1/gptube/upload';
+            const url = '/loader/upload';
             const formData = new FormData();
             formData.append('pdf_link', pdfLink);
 
@@ -210,7 +210,7 @@
                         showResponse('Error: ' + data.error);
                     } else {
                         showResponse('PDF link uploaded successfully: ' + data.file_name);
-                        window.location.href = "/view/procpdf?file=" + data.file_name.split('.')[0];
+                        window.location.href = "/loader/status?file=" + data.file_name.split('.')[0];
                     }
                 })
                 .catch(function (error) {

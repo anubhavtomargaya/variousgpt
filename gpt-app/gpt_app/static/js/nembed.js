@@ -16,12 +16,12 @@ document.addEventListener("DOMContentLoaded", function() {
         if (extn === 'pdf') {
 
 
-            baseUrl = '/api/v1/gptube/process/pdf';
+            baseUrl = '/loader/process/pdf';
         } else if (extn === 'json') {
-            baseUrl = '/api/v1/gptube/process/tdoc';
+            baseUrl = '/loader/process/tdoc';
         } else {
             // Handle other extensions or provide a default base URL if needed
-            baseUrl = '/api/v1/gptube/process/pdf';
+            baseUrl = '/loader/process/pdf';
         }
         const url = 
         fetch(baseUrl, {
@@ -38,28 +38,29 @@ document.addEventListener("DOMContentLoaded", function() {
             content.style.display = 'block';
             tick1.style.display = 'inline';
             console.log('response data',data)
+            window.location.href = "/view/chat/"+ data.filename;
             // filename = data.filename
 
             // Call the embed PDF API
-            loader.style.display = 'block';
-            console.log("using filename",data.filename)
-            fetch('/api/v1/gptube/embed/doc', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ file: data.filename })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Show second tick
-                loader.style.display = 'none';
-                tick2.style.display = 'inline';
-                window.location.href = "/view/chat/"+ data.filename;
-            })
-            .catch(error => {
-                console.error('Error embedding PDF:', error);
-            });
+            // loader.style.display = 'block';
+            // console.log("using filename",data.filename)
+            // fetch('/api/v1/gptube/embed/doc', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ file: data.filename })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     // Show second tick
+            //     loader.style.display = 'none';
+            //     tick2.style.display = 'inline';
+            //     window.location.href = "/view/chat/"+ data.filename;
+            // })
+            // .catch(error => {
+            //     console.error('Error embedding PDF:', error);
+            // });
         })
         .catch(error => {
             console.error('Error processing PDF:', error);

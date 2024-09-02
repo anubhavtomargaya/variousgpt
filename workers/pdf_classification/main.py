@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from flask import jsonify
 from google.cloud import storage
 from dirs import PDF_DIR
 from classify_pdf import classify_pdf_transcript
@@ -28,35 +29,11 @@ def _make_file_path(direcotry:Path,
 
 #consts.py
 APP_BUCKET = 'gpt-app-data'
-BUCKET_NAME = 'pdf-transcripts'
+
+IMPORT_BUCKET= 'uploads-mr-pdf'
+PROC_PDF_BUCKET = 'pdf-transcripts'
 # gcs_client = storage.Client()
 gcs_client = storage.Client.from_service_account_json(Path(f'sa_gcs.json'))
-
-def download_gcs_file_as_bytes(source_blob_name):
-    bucket = gcs_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(source_blob_name)
-    print(blob)
-    return blob.download_as_bytes()
-
-def download_gcs_file(source_blob_name, destination_file_name):
-    bucket = gcs_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(source_blob_name)
-    with open(destination_file_name, 'wb') as file_obj:
-        blob.download_to_file(file_obj)
-    print("file downloaded",destination_file_name)
-    return destination_file_name
-
-def download_pdf_from_pdf_bucket_file(file_name, dir=PDF_DIR,format='pdf',bytes=False,bucket=None):
-    source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,
-                                       local=False,format=format)   
-    if bytes:
-        return download_gcs_file_as_bytes(source_blob_name=source_blob_name)
-    else:
-        print("makking tmp path",file_name) 
-        destination_file_path = os.path.join('/tmp', f"{file_name}.pdf")
-        return download_gcs_file(source_blob_name,destination_file_name=destination_file_path,bucket=bucket)
-
-PROC_PDF_BUCKET = 'pdf-transcripts'
 
 def upload_file_to_gcs(file,
                         filename,
@@ -68,6 +45,42 @@ def upload_file_to_gcs(file,
     print("blob",blob)
     blob.upload_from_file(file)
     return blob.public_url
+
+
+def download_gcs_file_as_bytes(source_blob_name,bucket=None):
+    bucket = gcs_client.bucket(bucket)
+    blob = bucket.blob(source_blob_name)
+    print(blob)
+    return blob.download_as_bytes()
+
+def download_gcs_file(source_blob_name, destination_file_name,
+                      bucket=None):
+    bucket = gcs_client.bucket(bucket)
+    blob = bucket.blob(source_blob_name)
+    with open(destination_file_name, 'wb') as file_obj:
+        blob.download_to_file(file_obj)
+    print("file downloaded",destination_file_name)
+    return destination_file_name
+
+#utils_main
+def download_pdf_from_pdf_bucket_file(file_name,
+                                       dir=PDF_DIR,
+                                       format='pdf',
+                                       bucket=None,
+                                       bytes=False,
+                                       ):
+    
+    source_blob_name = _make_file_path(direcotry=dir,file_name=file_name,
+                                       local=False,format=format)   
+    if bytes:
+        return download_gcs_file_as_bytes(source_blob_name=source_blob_name,
+                                          bucket=bucket)
+    else:
+        print("makking tmp path",file_name) 
+        destination_file_path = os.path.join('/tmp', f"{file_name}.pdf")
+        return download_gcs_file(source_blob_name,
+                                 destination_file_name=destination_file_path,
+                                 bucket=bucket)
 
 
 def allowed_file(filename):
@@ -94,6 +107,7 @@ def load_pdf_into_bucket(file,destination_filename,bucket=None):
     except Exception as e:
         raise Exception("LoadError: couldnt upload pdf : %s",e.__str__())
     
+## main
 def validate_and_classify_pdf(event, context=None):
     print("Processing file")
     if not isinstance(event,dict):
@@ -107,7 +121,7 @@ def validate_and_classify_pdf(event, context=None):
 
     try:
         path = download_pdf_from_pdf_bucket_file(file_name=file_name,
-                                             bucket=APP_BUCKET)
+                                                bucket=IMPORT_BUCKET)
         classification = classify_pdf_transcript(path)
         if classification:
             print("earning call detected! path:", classification) 
@@ -115,10 +129,10 @@ def validate_and_classify_pdf(event, context=None):
             print("inserted",insert)
             url = load_pdf_into_bucket(path,destination_filename=classification,bucket=PROC_PDF_BUCKET)
             # insert = update_classifier_entry(path) # update confirmation for pdf upload
-            return url
+            return jsonify(url)
         else:
             print("earning call NOT detected! response", classification) 
-            return False 
+            return jsonify(False )
    
     except Exception as e:
         print("error in processing pdf",e)
