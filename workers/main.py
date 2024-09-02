@@ -61,3 +61,6 @@ def run_extract_pdf_transcript(name):
 
 
 
+if __name__=='__main__':
+    f = 'fy-2025_q1_earnings_call_transcript_ghcl_500171.pdf'
+    print(run_chunk_embed_pdf(f ))

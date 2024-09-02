@@ -74,9 +74,14 @@ def service_process_to_chunk_doc(file_name,added_by=None):
         raise e
     
 def service_process_pdf_to_rag(given_file_name,added_by=None):
+    print("starting pdf to rag service...")
     tdoc = check_tdoc_exist(given_file_name)
     if  tdoc:
-        return False
+        print("Already exists; skip pdf to rag service...")
+        
+        return {"file":given_file_name,
+                "exists":True,
+                }
     else:        
         try:
             chunk_doc = service_process_to_chunk_doc(file_name=given_file_name)
@@ -92,9 +97,10 @@ def service_process_pdf_to_rag(given_file_name,added_by=None):
         try:
             embedding_ = service_embed_pdf_chunks(given_file_name)
             if embedding_:
-                return True,given_file_name
+                print("embedding success")
+                return given_file_name
             else:
-                return False,given_file_name
+                return False
         except Exception as e:
             print("Embedding error..",e)
             return {"filename":given_file_name,"success":False}

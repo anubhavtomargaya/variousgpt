@@ -2,6 +2,8 @@
  
 from pathlib import Path
 
+from flask import jsonify
+
 from process import service_process_pdf_to_rag
 
 def chunk_embed_valid_pdf(event, context=None):
@@ -15,7 +17,7 @@ def chunk_embed_valid_pdf(event, context=None):
         # bucket_name = event['bucket']
     try:
         print(f"Processing file: {file_name} in bucket: ")
-        return service_process_pdf_to_rag(file_name)
+        return jsonify(service_process_pdf_to_rag(file_name))
     except Exception as e:
         print("error in processing pdf",e)
         return False

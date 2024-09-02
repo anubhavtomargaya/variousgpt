@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from flask import jsonify
 import requests
 
 from google.cloud import storage
@@ -104,9 +105,12 @@ def process_valid_pdf(event, context=None):
         raise Exception("unable to process stage one %s",pdf_to_ts)
     print('processed pdf to ts ')
     ts_intel = process_qa_mg_intel(file_name)
-
     print("ts intel output",ts_intel)
-    return ts_intel
+    
+    return jsonify({'filename':file_name,
+            "status":True,
+            'tsintel':ts_intel,
+            'stageone':pdf_to_ts})
 
 if __name__=='__main__':
     f = 'Earnings-Call-Transcript-Q1-FY-2021.pdf'
