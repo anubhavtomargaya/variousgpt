@@ -2,10 +2,9 @@ import os
 from pathlib import Path
 
 from google.cloud import storage
-from process_pdf_text import service_extract_transcript_texts
 from dirs import PDF_DIR
-from workers.pdf_classification.classify_pdf import classify_pdf_transcript
-from workers.pdf_classification.db_supabase import insert_classifier_entry
+from classify_pdf import classify_pdf_transcript
+from db_supabase import insert_classifier_entry
 
 #utils.py
 def _make_file_path(direcotry:Path,
@@ -57,7 +56,45 @@ def download_pdf_from_pdf_bucket_file(file_name, dir=PDF_DIR,format='pdf',bytes=
         destination_file_path = os.path.join('/tmp', f"{file_name}.pdf")
         return download_gcs_file(source_blob_name,destination_file_name=destination_file_path,bucket=bucket)
 
-def validate_and_classify_valid_pdf(event, context=None):
+PROC_PDF_BUCKET = 'pdf-transcripts'
+
+def upload_file_to_gcs(file,
+                        filename,
+                        bucket=None):
+    storage_client = gcs_client
+    print("uploading file to gcs",file)
+    bucket = storage_client.bucket(bucket)
+    blob = bucket.blob(filename)
+    print("blob",blob)
+    blob.upload_from_file(file)
+    return blob.public_url
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf'
+
+def load_pdf_into_bucket(file,destination_filename,bucket=None):
+    try:
+        print('loading in bucket',bucket,file)
+        print('loading in bucket dest',destination_filename)
+        if file:
+
+            filename = Path(destination_filename)
+            destination_blob_name = _make_file_path(PDF_DIR,
+                                                filename,format='pdf',local=False)
+            if not isinstance(file,str):
+                file = file
+                file_url = upload_file_to_gcs(file, destination_blob_name,bucket=bucket)
+            else:
+                with open(file,'rb') as tmpfile:
+                    file_url = upload_file_to_gcs(tmpfile, destination_blob_name,bucket=bucket)
+            return file_url
+        else:
+            raise Exception("Loaderror",file,allowed_file(destination_filename ))
+    except Exception as e:
+        raise Exception("LoadError: couldnt upload pdf : %s",e.__str__())
+    
+def validate_and_classify_pdf(event, context=None):
     print("Processing file")
     if not isinstance(event,dict):
         request_json = event.get_json()
@@ -65,26 +102,22 @@ def validate_and_classify_valid_pdf(event, context=None):
     else:
         file_path = event['name']
         file_name = Path(file_path).name
-        bucket_name = event['bucket']
-        print(f"Processing file: {file_name} in bucket: {APP_BUCKET}") #replace with new bucket for pdfs specifically
+      
+        print(f"Processing file: {file_name} ") #replace with new bucket for pdfs specifically
 
     try:
-        # tdoc = check_tdoc_exist(file)
-        # if  tdoc:
-        #     return False
-        # else : # create a table to map input file to output file.
-        # check if input file matches and return the existing output file if it exists. 
-        # proceed if other wise  
-
         path = download_pdf_from_pdf_bucket_file(file_name=file_name,
                                              bucket=APP_BUCKET)
-        classificaiton = classify_pdf_transcript(path)
-        if classificaiton:
-            print("earning call detected! path:", classificaiton) 
-            insert = insert_classifier_entry(import_filename=file_name,given_filename=classificaiton)
+        classification = classify_pdf_transcript(path)
+        if classification:
+            print("earning call detected! path:", classification) 
+            insert = insert_classifier_entry(import_filename=file_name,given_filename=classification)
             print("inserted",insert)
+            url = load_pdf_into_bucket(path,destination_filename=classification,bucket=PROC_PDF_BUCKET)
+            # insert = update_classifier_entry(path) # update confirmation for pdf upload
+            return url
         else:
-            print("earning call NOT detected! response", classificaiton) 
+            print("earning call NOT detected! response", classification) 
             return False 
    
     except Exception as e:
@@ -117,4 +150,4 @@ if __name__=='__main__':
     # print(test_download_from_bucket_as_tmp())
     # print(test_metadata_service())
     # print(test_transcript_extract_service())
-    print(test_process_main())
+    # print(test_process_main())

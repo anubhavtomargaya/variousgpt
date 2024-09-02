@@ -33,7 +33,7 @@ def is_india_concall_transcript(text, filename):
                 2. quarter name (Q1,Q4 etc)
                 3. type of document (earnings call transcript, shareholder letter, annual report etc)
                 4. COMPANY NAME (Extract using the first few pages given in context above)
-                5. COMPANY TICKER (optional, if possible find the ticker that the company has in NSE/BSE if not available skip it)
+                5. COMPANY SCRIP NAME (optional, if possible find the ticker that the company has in NSE/BSE if not available skip it)
                 Using the above information provide an appropriate name for the pdf file, concat eeverything using "_" (underscores) 
 
                 Respond with ONLY the formulated filename (including extension). AND NOT OTHER TEXT OR MARKDOWN FORMATTING ETC.

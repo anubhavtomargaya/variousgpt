@@ -22,16 +22,16 @@ def get_pdf_txt(file):
     # print(txt)
     return txt 
 
-def validate_earnings_transcript(import_file_name):
-    path = download_pdf_from_pdf_bucket_file(file_name=import_file_name,
-                                             bucket=APP_BUCKET)
-    classificaiton = classify_pdf_transcript(path)
-    if classificaiton:
-        print("earning call detected! path:", classificaiton) 
-        return classificaiton
-    else:
-        print("earning call NOT detected! response", classificaiton) 
-        return False 
+# def validate_earnings_transcript(import_file_name):
+#     path = download_pdf_from_pdf_bucket_file(file_name=import_file_name,
+#                                              bucket=APP_BUCKET)
+#     classificaiton = classify_pdf_transcript(path)
+#     if classificaiton:
+#         print("earning call detected! path:", classificaiton) 
+#         return classificaiton
+#     else:
+#         print("earning call NOT detected! response", classificaiton) 
+#         return False 
 
 
 def get_transcript_text(file):
@@ -47,56 +47,79 @@ def get_transcript_text(file):
     return txt_
 from .load_pdf import load_pdf_into_bucket 
 
-def process_pdf_to_doc(file,added_by=None):
-    tdoc = check_tdoc_exist(file)
-    if  tdoc:
-        return False
+
+def process_pdf_input_v2(file_name,
+                         bucket=APP_BUCKET):
+    ## proc I 
+        # download pdf from app bucket 
+        # classify pdf transcript - get file name 
+        # - make sure consistent to avoid dups
+        # insert entry 
+        # dump file to new bucket 
+    # return new file path / meta
+
+    ## part 2 
+    # download from proc bucket 
+    # metadata 
+    # diarized text 
+    # level 1 intel
+    # level 2 intel
+    pass 
+import requests
+
+def run_classifier(name):
+    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/gen1_classify_upload_pdf"
+    headers = {"Content-Type": "application/json"}
+    data = {"name": name}
+
+    response = requests.post(url, headers=headers, json=data)
+    
+    if response.status_code == 200:
+        return response.json()  # Assuming the response is in JSON format
     else:
+        return {"error": response.status_code, "message": response.text}
 
-        path = download_pdf_from_pdf_bucket_file(file_name=file,
-                                             bucket=APP_BUCKET)
-        classificaiton = classify_pdf_transcript(path)
-        if classificaiton:
-            print("earning call detected! path:", classificaiton) 
-            # return classificaiton
-            insert = insert_classifier_entry(import_filename=file,given_filename=classificaiton)
-            print("inserted",insert)
-        else:
-            print("earning call NOT detected! response", classificaiton) 
-            return False 
-   
-        
-        txt = get_pdf_txt(file)
-        print("fileeee",file)
-        meta = {'chunk_params':CHUNK_PARAMS}
-        chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
-        doc = create_doc_for_file(chunks=chunks,
-                                filename=classificaiton,
-                                e='pdf',
-                                meta=meta)
-        print("pathh",path)
-        url = load_pdf_into_bucket(path,destination_filename=classificaiton,bucket=PROC_PDF_BUCKET)
-        print("url")
-        print(url)
-        try:
 
-            sp = insert_chunk_doc_entry(doc=doc,added_by=added_by)
-            print(sp)
-        except Exception as e:
-            print("already exists?",e)
-        filename = url.split('/')[-1]
-        return {"url":url,
-                "filename":filename}
-   
 
-def process_pdf_to_doc_v2(file,row,added_by=None):
-    path = download_pdf_from_pdf_bucket_file(file)
-    print("row",row)
-    print("path",path)
-    result = service_extract_transcript_texts(path,row)
+def process_pdf_to_doc(file,added_by=None):
+    # tdoc = check_tdoc_exist(file)
+    # if  tdoc:
+    #     return False
+    # else:
 
-    return result
-   
+    #     path = download_pdf_from_pdf_bucket_file(file_name=file,
+    #                                          bucket=APP_BUCKET)
+    #     classificaiton = classify_pdf_transcript(path)
+    #     if classificaiton:
+    #         print("earning call detected! path:", classificaiton) 
+    #         # return classificaiton
+    #         insert = insert_classifier_entry(import_filename=file,given_filename=classificaiton)
+    #         print("inserted",insert)
+    #     else:
+    #         print("earning call NOT detected! response", classificaiton) 
+    #         return False 
+    classification = run_classifier(file)
+    if classification:
+        # txt = get_pdf_txt(file)
+        # print("fileeee",file)
+        # meta = {'chunk_params':CHUNK_PARAMS}
+        # chunks = split_document(txt,CHUNK_PARAMS[0],CHUNK_PARAMS[1])
+        # doc = create_doc_for_file(chunks=chunks,
+        #                         filename=classification,
+        #                         e='pdf',
+        #                         meta=meta)
+       
+        # try:
+
+        #     sp = insert_chunk_doc_entry(doc=doc,added_by=added_by)
+        #     print(sp)
+        # except Exception as e:
+        #     print("already exists?",e)
+
+        return {"url":classification,
+                }
+    else:
+        return {"url":"Unsuitable Document"}
 
 
 if __name__=='__main__':

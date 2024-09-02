@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set the working directory in the container
-WORKDIR /pdf_extraction
+WORKDIR /pdf_classification
 
 
 # Copy the requirements file into the container
@@ -18,10 +18,10 @@ RUN pip install functions-framework
 COPY . .
 
 # Set the environment variable for Google Cloud credentials
-ENV GOOGLE_APPLICATION_CREDENTIALS=/pdf_extraction/sa_gcs.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/pdf_classification/sa_gcs.json
 
 # Set the environment variable for the function name
-ENV FUNCTION_TARGET=process_valid_pdf
+ENV FUNCTION_TARGET=validate_and_classify_pdf
 
 # Add debug echo statements
 RUN echo '#!/bin/bash' > /entrypoint.sh && \

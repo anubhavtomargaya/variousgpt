@@ -12,13 +12,13 @@ def insert_classifier_entry(import_filename,given_filename,file_metadata={}):
             'import_filename': import_filename,
             'given_file_name': given_filename,
             'file_metadata': file_metadata,
-            'classifier_version':'v0',
-            'user_id':'catwoman'
+            'classifier_version':'v0'
         }
 
         # Insert user into the users table
     supabase.table('pdf-classification').insert(classifier_doc).execute()
     return True 
+
 def check_pdf_exist(company_name, quarter, financial_year, doc_type):
     existing_ts = supabase.table('pdf-transcripts') \
                           .select('*') \

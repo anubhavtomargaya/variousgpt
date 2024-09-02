@@ -26,16 +26,19 @@ docker build -t gcr.io/gmailapi-test-361320/process-pdf-transcript-intel-functio
 docker push gcr.io/gmailapi-test-361320/ffmpeg-python-function
 docker push gcr.io/gmailapi-test-361320/generate-pdf-transcript-seo-function
 docker push gcr.io/gmailapi-test-361320/process-pdf-transcript-intel-function
+docker push gcr.io/gmailapi-test-361320/gen1_classify_upload_pdf 
 ! setup repo first if not alrdy
 
 
 # deploy to trigger by http 
 gcloud functions deploy process_file     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=process_file     --timeout=540s
 gcloud functions deploy process_pdf_transcript_intel     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=process_valid_pdf     --timeout=540s
+gcloud functions deploy gen1_classify_upload_pdf     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=validate_and_classify_pdf     --timeout=540s
 gcloud functions deploy audio_transcribe_http     --region=asia-southeast1     --runtime=python39     --trigger-http     --allow-unauthenticated     --source=.     --entry-point=transcribe_audio_file     --timeout=540s
 
 # trigger by http
 curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_file -H "Content-Type: application/json" -d '{"name":"Max_Healthcare_Institute_Ltd_Q4_FY2023-24_Earnings_Conference_Call.mp4"}'
+curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/gen1_classify_upload_pdf -H "Content-Type: application/json" -d '{"name":""}'
 
 curl -X POST https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/audio_transcribe_http -H "Content-Type: application/json" -d '{"name":"Zucks_new_Llama_is_a_beast.webm"}'
 

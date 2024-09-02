@@ -221,3 +221,4 @@ workers/pdf_seo_top_content/sa_gcs.json
 workers/pdf_seo_top_content/pdf-transcripts_rows.csv
 workers/nifty_processing/sa_gcs.json
 workers/nifty_processing/env.json
+workers/pdf_classification/sa_gcs.json
