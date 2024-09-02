@@ -63,7 +63,6 @@ def run_extract_pdf_transcript(name):
 
 
 
-
 def process_pdf_to_doc(file,added_by=None):
     # tdoc = check_tdoc_exist(file)
     # if  tdoc:
@@ -82,8 +81,11 @@ def process_pdf_to_doc(file,added_by=None):
     #         print("earning call NOT detected! response", classificaiton) 
     #         return False 
     classification = run_classifier(file)
+
+    # file_name = json.loads(classification).__dict__['_content']
+    print('file name',classification.split('/')[-1])
     if classification:
-        extract_transcript = run_extract_pdf_transcript(classification)
+        extract_transcript = run_extract_pdf_transcript(classification.split('/')[-1])
         if extract_transcript:
 
         # txt = get_pdf_txt(file)

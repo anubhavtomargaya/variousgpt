@@ -10,8 +10,13 @@ def extract_top_text_from_pdf(pdf_path,pg=0):
     """
     try:
         doc = fitz.open(pdf_path)
-        first_page = doc[0:pg]
-        text = first_page.get_text()
+        top_pages = doc[0:pg]
+        print("top pages!")
+        print(top_pages)
+        print(top_pages[0])
+        print(top_pages[0].get_text())
+        text = ' '.join([ page.get_text() for page in top_pages ])
+        print(text)
         doc.close()
         return text
     except Exception as e:
@@ -48,7 +53,7 @@ def is_india_concall_transcript(text, filename):
                 2. quarter name (Q1,Q4 etc)
                 3. type of document (earnings call transcript, shareholder letter, annual report etc)
                 4. COMPANY NAME (Extract using the first few pages given in context above)
-                5. COMPANY SCRIP NAME (optional, if possible find the ticker that the company has in NSE/BSE if not available skip it)
+                5. COMPANY SCRIP CODE NSE ( if possible find the ticker  NAME that the company has in NSE. It should be a WORD. if not available skip it)
                 Using the above information provide an appropriate name for the pdf file, concat eeverything using "_" (underscores) 
 
                 Respond with ONLY the formulated filename (including extension). AND NOT OTHER TEXT OR MARKDOWN FORMATTING ETC.
@@ -80,7 +85,7 @@ def classify_pdf_transcript(pdf_path):
     Classify if a PDF is an Indian company earnings call transcript.
     """
     filename = os.path.basename(pdf_path)
-    text = extract_top_text_from_pdf(pdf_path)
+    text = extract_top_text_from_pdf(pdf_path,pg=2)
     
     if text is None:
         return False
