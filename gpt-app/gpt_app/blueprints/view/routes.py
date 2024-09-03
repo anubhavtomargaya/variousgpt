@@ -1,12 +1,8 @@
-from http.client import HTTPException
 from flask import jsonify, make_response, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
-from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
-from gpt_app.common.supabase_handler import get_content_top_questions, get_file_extn_doc, get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
-from gpt_app.common.supabase_handler import get_company_transcript_data, get_file_extn_doc, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
-from gpt_app.blueprints.gptube.service_embed_text import get_analyst_questions
-from gpt_app.blueprints.gptube.service_process_pdf import get_pdf_txt, get_transcript_text
+from gpt_app.common.supabase_handler import get_content_top_questions,  get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_pdf_chunks_transcript, get_qa_records
+from gpt_app.common.supabase_handler import get_company_transcript_data, get_pdf_chunks_transcript, get_qa_records
 from . import view_app
 
 @view_app.route('/')
@@ -60,52 +56,52 @@ def chat(file_name):
         history=f"History"
     return render_template('chat.html',title=file_name,history=history,user=name)
 
-@view_app.route('/submit')
-#@login_required
-def submit():
-    return render_template('submit.html')
-
-@view_app.route('/file')
-def file_upload():
-    return render_template('getfile.html')
-
-@view_app.route('/new')
-#@login_required
-def new():
-    return render_template('nsubmit.html')
-
-@view_app.route('/embed')
-def embed():
-    pl = request.args.get('pl', "FileName")
-    return render_template('embed.html',placeholder=pl)
-
-@view_app.route('/procpdf')
+# @view_app.route('/submit')
 # #@login_required
-def proc_pdf():
-    file = request.args.get('file', None)
-    row = request.args.get('row', None)
-    extn = request.args.get('extn', None)
+# def submit():
+#     return render_template('submit.html')
 
-    if not file:
-        raise HTTPException("File not found")
+# @view_app.route('/file')
+# def file_upload():
+#     return render_template('getfile.html')
+
+# @view_app.route('/new')
+# #@login_required
+# def new():
+#     return render_template('nsubmit.html')
+
+# # @view_app.route('/embed')
+# # def embed():
+# #     pl = request.args.get('pl', "FileName")
+# #     return render_template('embed.html',placeholder=pl)
+
+# # @view_app.route('/procpdf')
+# # # #@login_required
+# # def proc_pdf():
+# #     file = request.args.get('file', None)
+# #     row = request.args.get('row', None)
+# #     extn = request.args.get('extn', None)
+
+# #     if not file:
+# #         raise HTTPException("File not found")
     
-    return render_template('nembd.html',title=file)
+# #     return render_template('nembd.html',title=file)
 
 
-@view_app.route('/etc')
-def etc():
-    mthd = request.method
-    args = request.args
-    app.logger.info('method: %s',mthd)
-    app.logger.info('args: %s',args)
-    if mthd =='GET':
-        print("get wont work in reality")
-        file_name = args.get('title') or None
+# @view_app.route('/etc')
+# def etc():
+#     mthd = request.method
+#     args = request.args
+#     app.logger.info('method: %s',mthd)
+#     app.logger.info('args: %s',args)
+#     if mthd =='GET':
+#         print("get wont work in reality")
+#         file_name = args.get('title') or None
         
     
-    else:raise HTTPException("Invalid Method")
+#     else:raise HTTPException("Invalid Method")
     
-    return redirect(url_for('view_app.embed'))
+#     return redirect(url_for('view_app.embed'))
 
 
 
@@ -120,7 +116,7 @@ class HistoryQA:
         self.question = question
         self.answer = answer
 
-from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
+# from gpt_app.common.record_handler import load_qa_record,QARecord,save_qa_record
 # @view_app.route('/transcript/<file_name>')
 # #@login_required
 # def get_transcript(file_name):
