@@ -88,7 +88,8 @@ def create_app():
                     - /view/ - app to mimic front end client
     """
         # if is_logged_in():
-        return redirect(url_for(default_home_page))
+        # return redirect(url_for(default_home_page))
+        return render_template('landing.html')
         # else:
             #  return default_error_page.format(login=url_for(google_auth_page))
 
