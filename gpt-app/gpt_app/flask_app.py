@@ -5,6 +5,8 @@ function. They can be added as a blueprint but I am using these as tools while
 developement. Run this with wsgi.py" 
 """
 # from common import fh
+import json
+import time
 from flask import Flask, jsonify,redirect, render_template, send_from_directory, url_for
 from flask_cors import CORS
 from gpt_app.common.session_manager import set_auth_state,set_auth_token, clear_auth_session, get_next_url,is_logged_in
@@ -13,8 +15,10 @@ from gpt_app.blueprints.google_auth import google_auth
 from gpt_app.blueprints.view import view_app
 from gpt_app.blueprints.company import company_app
 from gpt_app.common.session_manager import *
+from flask_socketio import SocketIO, emit
+from google.cloud import pubsub_v1
 
-
+import threading
 import logging
 logging.basicConfig(level=logging.INFO)  
 
@@ -96,6 +100,56 @@ def create_app():
     @app.route('/robots.txt')
     def robots():
         return send_from_directory('.', 'robots.txt')
+    PROJECT_ID = 'gmailapi-test-361320'  # Replace with your project ID
+    TOPIC_ID = 'process-updates'  # The topic you created
+
+    SUBSCRIPTION_ID = 'process-status'
+    socketio = SocketIO(app)
+    def callback(message):
+        """Callback function triggered when a message is received from Pub/Sub"""
+        data = json.loads(message.data.decode('utf-8'))
+
+        # Emit the progress update to connected WebSocket clients
+        socketio.emit('progress', data)
+
+        # Acknowledge the message (remove it from the Pub/Sub queue)
+        message.ack()
+        
+    def listen_to_pubsub():
+        """Start listening to the Pub/Sub subscription"""
+        subscriber = pubsub_v1.SubscriberClient()
+        subscription_path = subscriber.subscription_path(PROJECT_ID, SUBSCRIPTION_ID)
+        streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
+
+        # Keep the subscription active
+        with subscriber:
+            try:
+                streaming_pull_future.result()
+            except Exception as e:
+                print(f'Listening for Pub/Sub messages failed: {e}')
+
+    @app.route('/progress')
+    def progress():
+        return render_template('progress.html')
+
+    # Function to simulate task progress (replace with your real process)
+    def long_running_task():
+        total_steps = 100
+        for i in range(total_steps + 1):
+            print("work")
+            socketio.emit('progress', {'progress': i, 'message': f'Progress: {i}%'})
+            time.sleep(0.1)  # Simulate work being done
+
+    
+            if i == total_steps:
+                break
+
+    # Start the long-running task in a separate thread
+    @app.route('/start-task')
+    def start_task():
+        thread = threading.Thread(target=long_running_task)
+        thread.start()
+        return "Task started!"
 
     return app
 

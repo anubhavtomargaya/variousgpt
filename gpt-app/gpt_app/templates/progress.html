@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Progress</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 25px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 30px;
+            background-color: #4caf50;
+            width: 0%;
+            border-radius: inherit;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .status-message {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .loading-animation {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Progress</h1>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progress-bar-fill">0%</div>
+        </div>
+
+        <!-- Loading Animation -->
+        <div class="loading-animation" id="loading-animation"></div>
+
+        <!-- Status Message -->
+        <div class="status-message" id="status-message">Waiting for updates...</div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io.connect(window.location.origin);
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const statusMessage = document.getElementById('status-message');
+        const loadingAnimation = document.getElementById('loading-animation');
+
+        // Listen for 'progress' events from the WebSocket
+        socket.on('progress', function(data) {
+            const progress = data.progress;
+            const message = data.message;
+
+            // Update progress bar
+            progressBarFill.style.width = progress + '%';
+            progressBarFill.innerText = progress + '%';
+
+            // Update status message
+            statusMessage.innerText = message;
+
+            // If progress is 100%, stop loading animation
+            if (progress >= 100) {
+                loadingAnimation.style.display = 'none';
+                statusMessage.innerText = 'Process Complete!';
+            }
+        });
+    </script>
+</body>
+</html>
