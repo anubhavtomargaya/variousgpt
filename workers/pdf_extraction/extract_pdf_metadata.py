@@ -42,6 +42,7 @@ def extract_metadata(pdf_path: str, num_pages: int = 2) -> Dict:
     {{
         "company_name": "Name of the company, or None if not found",
         "doc_type": "Type of document (e.g., 'Quarterly Earnings Call Transcript', 'Annual Report', etc.)",
+        "date": "Date of event mentioned specifically in the document, format- 'YYYY-MM-DD'",
         "doc_name": "make a filename by concating the company name with _ (underscores) and quarter, FY etc to make a unique file name",
         "quarter": "Quarter (Q1, Q2, Q3, or Q4) if applicable, or None",
         "financial_year": "Financial year in format FYxx (e.g., FY24, FY23)",
@@ -55,9 +56,10 @@ def extract_metadata(pdf_path: str, num_pages: int = 2) -> Dict:
     
     Be sure to:
     1. Identify the company name, which is likely mentioned at the beginning of the document.
-    2. Determine the document type based on the content and structure.
+    2. Determine the document type based on the content and structure. As well as the date of event mentioned in the doc,
     3. Look for mentions of quarters (Q1, Q2, Q3, Q4) and financial years. Return the financial year in xxxx format.
-        Event if its mentioned as FY24 for example, return as FY2024.
+        Event if its mentioned as FY24 for example, return as FY2024. If the quarter is not mentioned specifically as Q1, Q2 etc then use the date to guess the quarter. 
+        follow the standard financial year naming starting in April as Q1. Example; if the date is 29th July, 2024 then concall would be of April-June period, the Quarter And FY would become Q1FY2025.
     4. write a passage that contains the necessary info like what is the doc including metadata and other important info. keep around 350 words
     5. Extract names and roles of key management personnel mentioned in the document.
     6. Use None for any fields where the information is not clearly present in the text.
@@ -91,6 +93,7 @@ def service_extract_pdf_metadata(fl):
     reques = {
         "company_name":metadata['company_name'],
         "doc_type":metadata['doc_type'],
+        "date":metadata['date'],
         "financial_year":metadata['financial_year'],
         "quarter":metadata['quarter'],
         }
@@ -98,6 +101,7 @@ def service_extract_pdf_metadata(fl):
     if not existing:
         entry =    {
             "company_name":metadata['company_name'],
+            "date":metadata['date'],
             "quarter":metadata['quarter'],
             "file_name":name,
             "financial_year":metadata['financial_year'],

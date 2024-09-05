@@ -48,7 +48,8 @@ def run_classifier(name):
 
 
 def run_extract_pdf_transcript(name):
-    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel"
+    # url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel"
+    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_extract_main_http"
     headers = {"Content-Type": "application/json"}
     data = {"name": name}
 

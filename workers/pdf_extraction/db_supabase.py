@@ -4,7 +4,7 @@ from utils_ts import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-def check_pdf_exist(company_name, quarter, financial_year, doc_type):
+def check_pdf_exist(company_name, quarter,date, financial_year, doc_type):
     existing_ts = supabase.table('pdf-transcripts') \
                           .select('*') \
                           .eq('company_name', company_name) \
@@ -32,6 +32,7 @@ def check_transcript_extracted(transcript_id):
     
 def insert_initial_transcript_entry(company_name,
                                     quarter, 
+                                    date,
                                     file_name,
                                     financial_year,
                                     doc_type,
@@ -41,6 +42,7 @@ def insert_initial_transcript_entry(company_name,
     ts_document = {
         'company_name': company_name,
         'quarter': quarter,
+        'date':date,
         'file_name':file_name,
         'financial_year': financial_year,
         'doc_type': doc_type,
