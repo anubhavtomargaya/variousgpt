@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const extn = urlParams.get('extn');
     console.log('extn')
     console.log(extn)
+    console.log('file')
+    console.log(filename)
 
     if (filename) {
         // Call the process PDF API

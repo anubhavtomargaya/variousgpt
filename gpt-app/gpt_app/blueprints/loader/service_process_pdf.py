@@ -105,7 +105,8 @@ def process_pdf_to_doc(file,added_by=None):
         #     print(sp)
         # except Exception as e:
         #     print("already exists?",e)
-
+            print('url',classification)
+            print('etc',extract_transcript)
             return {"url":classification,
                     "etc":extract_transcript
                     }
