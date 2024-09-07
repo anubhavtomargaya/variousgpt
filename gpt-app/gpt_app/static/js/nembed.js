@@ -12,12 +12,12 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log(extn)
     console.log('file')
     console.log(filename)
-
+    
     if (filename) {
         // Call the process PDF API
         if (extn === 'pdf') {
 
-
+            
             baseUrl = '/loader/process/pdf';
         } else if (extn === 'json') {
             baseUrl = '/loader/process/tdoc';
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Handle other extensions or provide a default base URL if needed
             baseUrl = '/loader/process/pdf';
         }
+        console.log("url",baseUrl)
         const url = 
         fetch(baseUrl, {
             method: 'POST',
@@ -36,11 +37,11 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             // Hide loader and show first tick
+            console.log('response data',data)
             loader.style.display = 'none';
             content.style.display = 'block';
-            tick1.style.display = 'inline';
-            console.log('response data',data)
             window.location.href = "/company";
+            // tick1.style.display = 'inline';
             // filename = data.filename
 
             // Call the embed PDF API
