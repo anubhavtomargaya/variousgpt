@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
             content.style.display = 'block';
             tick1.style.display = 'inline';
             console.log('response data',data)
-            window.location.href = "/view/chat/"+ data.filename;
+            window.location.href = "/company";
             // filename = data.filename
 
             // Call the embed PDF API

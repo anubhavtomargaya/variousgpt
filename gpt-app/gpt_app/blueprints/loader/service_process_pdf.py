@@ -35,10 +35,10 @@ def process_pdf_input_v2(file_name,
 import requests
 
 def run_classifier(name):
-    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/gen1_classify_upload_pdf"
+    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_classify_pdf_metadata"
     headers = {"Content-Type": "application/json"}
     data = {"name": name}
-
+    print("url",url)
     response = requests.post(url, headers=headers, json=data)
     print("response clasifer", response.__dict__)
     if response.status_code == 200:
@@ -84,6 +84,7 @@ def process_pdf_to_doc(file,added_by=None):
     classification = run_classifier(file)
 
     # file_name = json.loads(classification).__dict__['_content']
+    print('classf',classification)
     print('file name',classification.split('/')[-1])
     if classification:
         extract_transcript = run_extract_pdf_transcript(classification.split('/')[-1])
