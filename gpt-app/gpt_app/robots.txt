@@ -10,4 +10,4 @@ Disallow:
 User-agent: Bingbot
 Disallow:
 
-Sitemap: http://wallartlabs.tech/sitemap.xml
+Sitemap: http://stockrabit.com/sitemap.xml

@@ -34,19 +34,31 @@ def generate_sitemap():
     # Create URL entries for each filename
     for filename in filenames:
         print(filename)
-        urls = [ 
-            f"http://wallartlabs.tech/company/{filename}",
-            f"http://wallartlabs.tech/company/{filename}/historical",
-            f"http://wallartlabs.tech/view/chat/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/view/document/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/view/document/section/qa/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/view/document/section/management/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/view/content/top_questions/{filenames[filename][0]['file_name']}",
-            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=top_questions",
-            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=qa_section",
-            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=management_guidance",
-            f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=transcript",
-            ]
+        urls = [ f"http://stockrabit.com/company/{filename}",
+            f"http://stockrabit.com/company/{filename}/historical",
+            f"http://stockrabit.com/view/chat/{filenames[filename][0]['file_name']}",
+            f"http://stockrabit.com/view/document/{filenames[filename][0]['file_name']}",
+            f"http://stockrabit.com/view/document/section/qa/{filenames[filename][0]['file_name']}",
+            f"http://stockrabit.com/view/document/section/management/{filenames[filename][0]['file_name']}",
+            f"http://stockrabit.com/view/content/top_questions/{filenames[filename][0]['file_name']}",
+            f"http://stockrabit.com/view/concall/{filenames[filename][0]['file_name']}?section=top_questions",
+            f"http://stockrabit.com/view/concall/{filenames[filename][0]['file_name']}?section=qa_section",
+            f"http://stockrabit.com/view/concall/{filenames[filename][0]['file_name']}?section=management_guidance",
+            f"http://stockrabit.com/view/concall/{filenames[filename][0]['file_name']}?section=transcript"
+        ]
+            # f"http://wallartlabs.tech/company/{filename}",
+            # f"http://wallartlabs.tech/company/{filename}/historical",
+            # f"http://wallartlabs.tech/view/chat/{filenames[filename][0]['file_name']}",
+            # f"http://wallartlabs.tech/view/document/{filenames[filename][0]['file_name']}",
+            # f"http://wallartlabs.tech/view/document/section/qa/{filenames[filename][0]['file_name']}",
+            # f"http://wallartlabs.tech/view/document/section/management/{filenames[filename][0]['file_name']}",
+            # f"http://wallartlabs.tech/view/content/top_questions/{filenames[filename][0]['file_name']}",
+            # f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=top_questions",
+            # f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=qa_section",
+            # f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=management_guidance",
+            # f"http://wallartlabs.tech/view/concall/{filenames[filename][0]['file_name']}?section=transcript",
+  
+  
         
         
         for url in urls:
