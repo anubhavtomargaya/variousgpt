@@ -1,6 +1,7 @@
+from pathlib import Path
 import fitz
 from utils_ts import get_openai_client
-from db_supabase import check_pdf_exist, check_transcript_extracted, get_transcript_row,insert_initial_transcript_entry, update_transcript_pdf_entry
+from db_supabase import check_pdf_exist, check_transcript_extracted, get_transcript_row, get_transcript_row_filename,insert_initial_transcript_entry, update_transcript_pdf_entry
 import json
 from typing import List, Dict,Generator
 import tiktoken
@@ -177,13 +178,15 @@ def extract_transcript_from_pdf(pdf_path: str,csize:int=3000) -> Dict[str, Dict[
     
     return result
 
-def service_extract_transcript_texts(pdf_path, row_id):
-    if not check_transcript_extracted(row_id):
+def service_extract_transcript_texts(pdf_path):
+    file_name = Path(pdf_path).name
+    print("file name in service extract", file_name)
+    if not check_transcript_extracted(file_name):
         print("start time")
         print(datetime.datetime.now())
         transcript_data = extract_transcript_from_pdf(pdf_path,csize=12000)
         # print(json.dumps(transcript_data, indent=2))
-        entry_up = {"transcript_id":row_id,
+        entry_up = {"file_name":file_name,
                     "extracted_transcript":transcript_data['transcript'],
                     "extra_text":transcript_data['extra']
                     }
@@ -193,7 +196,7 @@ def service_extract_transcript_texts(pdf_path, row_id):
         return update_transcript_pdf_entry(**entry_up)
     else:
         print("getting existing rows....")
-        return get_transcript_row(row_id)
+        return get_transcript_row_filename(file_name)
 
 
 if __name__=='__main__':
@@ -219,7 +222,7 @@ if __name__=='__main__':
     import datetime
     def test_update_entry_with_transcript_text():
         pdf_path = fl
-        if not check_transcript_extracted(1):
+        if not check_transcript_extracted(pdf_path):
             print(datetime.datetime.now())
             transcript_data = extract_transcript_from_pdf(pdf_path)
             print(json.dumps(transcript_data, indent=2))

@@ -18,10 +18,10 @@ def check_pdf_exist(company_name, quarter,date, financial_year, doc_type):
     else:
         return existing_ts.data[0]
     
-def check_transcript_extracted(transcript_id):
+def check_transcript_extracted(file_name):
     existing_ts = supabase.table('pdf-transcripts') \
                           .select('extracted_transcript') \
-                          .eq('id', transcript_id) \
+                          .eq('file_name', file_name) \
                           .execute()
     print("existing extracted_transcript field:", existing_ts)
     if existing_ts.data and existing_ts.data[0]['extracted_transcript'] is not None:
@@ -65,18 +65,31 @@ def get_transcript_row(id)->dict:
         return rows.data[0]
     
 
+def get_transcript_row_filename(file_name)->dict:
+    rows =  supabase.table('pdf-transcripts').select('*').eq('file_name', file_name).execute()
+    if not rows.data:
+        print("No rows found for the id")
+        return False
+    else:
+        print("rows:",rows.data)
+        return rows.data[0]
+    
 
 
-def update_transcript_pdf_entry(transcript_id, extracted_transcript, extra_text):
-    update_document = {
+
+def update_transcript_pdf_entry(file_name, extracted_transcript, extra_text):
+    try:
+        update_document = {
         'extracted_transcript': extracted_transcript,
         'extra_text': extra_text
-    }
+        }
 
-    result = supabase.table('pdf-transcripts').update(update_document).eq('id', transcript_id).execute()
-    print("Updated document:")
-    return result
-
+        result = supabase.table('pdf-transcripts').update(update_document).eq('file_name', file_name).execute()
+        print("Updated transcript!:",result)
+        return result.data
+    except Exception as e:
+        print("Excepion in update transcript,",e.__str__())
+        return False 
 
 if __name__ == '__main__':
     etitle = 'Frances_Election_Results_Explained'

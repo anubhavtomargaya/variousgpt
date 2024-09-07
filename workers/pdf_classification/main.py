@@ -5,7 +5,7 @@ from flask import jsonify
 from google.cloud import storage
 from dirs import PDF_DIR
 from classify_pdf import classify_pdf_transcript
-from db_supabase import insert_classifier_entry
+from db_supabase import check_pdf_exist, insert_classifier_entry, insert_initial_transcript_entry
 
 #utils.py
 def _make_file_path(direcotry:Path,
@@ -108,6 +108,47 @@ def load_pdf_into_bucket(file,destination_filename,bucket=None):
         raise Exception("LoadError: couldnt upload pdf : %s",e.__str__())
     
 ## main
+
+def build_file_name(metadata):
+    keys = ['financial_year','quarter','company_name','doc_type','nse_scrip_code']
+
+def process_concall_metadata():pass 
+
+def insert_metadata_entry(metadata):
+
+    try:
+
+        check_request = {
+                            "company_name":metadata['company_name'],
+                            "doc_type":metadata['doc_type'],
+                            "financial_year":metadata['financial_year'],
+                            "quarter":metadata['quarter'],
+                        }
+        existing= check_pdf_exist(**check_request)
+
+        if not existing:
+            entry = {
+                    "company_name":metadata['company_name'],
+                    "date":metadata['date'],
+                    "quarter":metadata['quarter'],
+                    "file_name":metadata['doc_name'],
+                    "financial_year":metadata['financial_year'],
+                    "doc_type":metadata['doc_type'],
+                    "description":metadata['description'],
+                    "key_people":metadata['key_people'],
+                    "ticker":f"{metadata['nse_scrip_code']}",
+                    }
+            row_id = insert_initial_transcript_entry(**entry)
+            print("new row id",row_id)
+            return row_id
+        else:
+            print("already esits",existing)
+            return True
+    except Exception as e:
+        print("Excep,",e)
+        return False
+
+
 def validate_and_classify_pdf(event, context=None):
     print("Processing file")
     if not isinstance(event,dict):
@@ -120,34 +161,67 @@ def validate_and_classify_pdf(event, context=None):
         print(f"Processing file: {file_name} ") #replace with new bucket for pdfs specifically
 
     try:
+        classifcation = None
         path = download_pdf_from_pdf_bucket_file(file_name=file_name,
                                                 bucket=IMPORT_BUCKET)
-        classification = classify_pdf_transcript(path)
-        if classification:
-            print("earning call detected! path:", classification) 
-            insert = insert_classifier_entry(import_filename=file_name,given_filename=classification)
+        metadata = classify_pdf_transcript(path)
+        if len(metadata.keys())<1:
+            classifcation = False
+        else:
+            classifcation = True
+
+        if classifcation:
+            f_name_new = metadata.get('doc_name',None)
+            if not file_name:
+                raise Exception("file name not found in response")
+            print("earning call detected! path:", metadata) 
+            insert = insert_classifier_entry(import_filename=file_name,given_filename=f_name_new)
+            if not insert:
+                raise Exception("classification error")
+            
+            url = load_pdf_into_bucket(path,destination_filename=f_name_new,bucket=PROC_PDF_BUCKET)
             print("inserted",insert)
-            url = load_pdf_into_bucket(path,destination_filename=classification,bucket=PROC_PDF_BUCKET)
+            if not url:
+                raise Exception("Error uploading to bucket")
+            
+            metadata['addn_meta']  = { }
+            insert_meta = insert_metadata_entry(metadata)
+            if not insert_meta:
+                raise Exception("Problem inserting metadata")
+            print("inserted",insert_meta )
             # insert = update_classifier_entry(path) # update confirmation for pdf upload
             return jsonify(url)
         else:
-            print("earning call NOT detected! response", classification) 
+            print("earning call NOT detected! response", metadata) 
             return jsonify(False )
    
     except Exception as e:
         print("error in processing pdf",e)
-        return False
+        return  jsonify(False )
     
 
 if __name__=='__main__':
-    f = 'Earnings-Call-Transcript-Q1-FY-2021.pdf'
+    # f = 'Earnings-Call-Transcript-Q1-FY-2021.pdf'
+    f= 'CC-Jun23.pdf'
+    # f = 'fy-2024_q1_investor_conference_transcript_raymond_500330.pdf'
     def test_download_from_bucket_as_tmp():
         return download_pdf_from_pdf_bucket_file(f)
     
     def test_metadata_service():
-        f_path=  download_pdf_from_pdf_bucket_file(f)
-        row_id = service_extract_pdf_metadata(f_path)
-        return row_id
+        f_path=  download_pdf_from_pdf_bucket_file(f,bucket=APP_BUCKET)
+        return classify_pdf_transcript(f_path)
+    
+    def test_metadata_entry():
+        f_path=  Path(download_pdf_from_pdf_bucket_file(f,bucket=APP_BUCKET))
+        
+        metadata =  classify_pdf_transcript(f_path)
+        f_new = metadata['doc_name']
+        insert_clf = insert_classifier_entry(import_filename=f_path.name,given_filename=f_new)
+        insert_meta = insert_metadata_entry(metadata)
+        print("inserted_new",insert_clf,"insert_meta" ,insert_meta
+              )
+        return insert_meta
+        
     
     def test_transcript_extract_service():
         # f_path=  download_pdf_from_pdf_bucket(f)
@@ -163,5 +237,6 @@ if __name__=='__main__':
         
     # print(test_download_from_bucket_as_tmp())
     # print(test_metadata_service())
+    print(test_metadata_entry())
     # print(test_transcript_extract_service())
     # print(test_process_main())

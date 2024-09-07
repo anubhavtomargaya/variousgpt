@@ -58,14 +58,16 @@ def download_pdf_from_pdf_bucket(file_name, dir=PDF_DIR,format='pdf',bytes=False
         return download_gcs_file(source_blob_name,destination_file_name=destination_file_path)
     
 def process_stage_one(file_name):
+    print("file name",file_name)
     fname = download_pdf_from_pdf_bucket(file_name)
     try:
-        row_id = service_extract_pdf_metadata(fname)
-        if row_id:
-            final_ = service_extract_transcript_texts(fname,row_id)
-            print("final donw")
-            print(final_)
-            return row_id
+        # row_id = service_extract_pdf_metadata(fname)
+        # if row_id:
+        print("fname",fname)
+        final_ = service_extract_transcript_texts(fname)
+        print("final donw",type(final_))
+        print(final_)
+        return True
     except Exception as e:
         print("error in processing pdf",e)
         return False
@@ -82,7 +84,7 @@ def process_qa_mg_intel(filename):
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code == 200:
-        return response.json() 
+        return response.__dict__
     else:
         print("msg",{"error": f"Request failed with status code {response.status_code}"})
         return False
@@ -91,7 +93,7 @@ def process_qa_mg_intel(filename):
 
 
 def process_valid_pdf(event, context=None):
-    print("Processing file")
+    print("Processing file",event)
     if not isinstance(event,dict):
         request_json = event.get_json()
         file_name = request_json['name']
@@ -106,14 +108,20 @@ def process_valid_pdf(event, context=None):
     print('processed pdf to ts ')
     ts_intel = process_qa_mg_intel(file_name)
     print("ts intel output",ts_intel)
+    print("fil name type",type(file_name))
+    print("ts intel type",type(ts_intel))
+    print("pdf to ts type",type(pdf_to_ts))
+    
+    
     
     return jsonify({'filename':file_name,
             "status":True,
-            'tsintel':ts_intel,
-            'stageone':pdf_to_ts})
+            'tsintel':True,
+            'stageone':True})
 
 if __name__=='__main__':
     f = 'Earnings-Call-Transcript-Q1-FY-2021.pdf'
+    f = 'fy2024_q1_berger_paints_india_limited_quarterly_earnings_call_transcript_bergepaint.pdf'
     def test_download_from_bucket_as_tmp():
         return download_pdf_from_pdf_bucket(f)
     
@@ -134,7 +142,7 @@ if __name__=='__main__':
         event = { "name":bucket_file,"bucket":'app_bucket'}
         return process_valid_pdf(event)
         
-    # print(test_download_from_bucket_as_tmp())
+    print(test_download_from_bucket_as_tmp())
     # print(test_metadata_service())
     # print(test_transcript_extract_service())
-    print(test_process_main())
+    # print(test_process_main())

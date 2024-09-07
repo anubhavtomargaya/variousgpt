@@ -47,6 +47,8 @@ def check_transcript_extracted(transcript_id):
     
 def insert_initial_transcript_entry(company_name,
                                     quarter, 
+                                    date,
+                                    ticker,
                                     file_name,
                                     financial_year,
                                     doc_type,
@@ -56,6 +58,8 @@ def insert_initial_transcript_entry(company_name,
     ts_document = {
         'company_name': company_name,
         'quarter': quarter,
+        'date':date,
+        'ticker':ticker,
         'file_name':file_name,
         'financial_year': financial_year,
         'doc_type': doc_type,
@@ -64,9 +68,8 @@ def insert_initial_transcript_entry(company_name,
     }
 
     result = supabase.table('pdf-transcripts').insert(ts_document).execute()
-    print("Inserted document:", result)
+    # print("Inserted document:", result)
     return result.data[0]['id'] if result.data else None  
-
 
 def get_transcript_row(id)->dict:
     rows =  supabase.table('pdf-transcripts').select('*').eq('id', id).execute()

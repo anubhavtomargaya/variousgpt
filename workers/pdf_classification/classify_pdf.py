@@ -38,47 +38,78 @@ def extract_bottom_text_from_pdf(pdf_path,pg=0):
         return None
 
 openai_client = get_openai_client()
-
 def is_india_concall_transcript(text, filename):
     prompt = f"""
-                Analyze the following text and filename to determine if it's a transcript of an earnings call 
-                for a company listed on the Indian stock market (NSE, BSE). 
-                
-                Text: {text[:10000]}  # Limiting to first 10000 characters
-                
-                Filename: {filename}
-                If it is a concall generate a suitable name for it using the 
-                
-                1. financia lyear in the format FY-YYYY
-                2. quarter name (Q1,Q4 etc)
-                3. type of document (earnings call transcript, shareholder letter, annual report etc)
-                4. COMPANY NAME (Extract using the first few pages given in context above)
-                5. COMPANY SCRIP CODE NSE ( if possible find the ticker  NAME that the company has in NSE. It should be a WORD. if not available skip it)
-                Using the above information provide an appropriate name for the pdf file, concat eeverything using "_" (underscores) 
-
-                Respond with ONLY the formulated filename (including extension). AND NOT OTHER TEXT OR MARKDOWN FORMATTING ETC.
-                if it's an earnings call transcript for an Indian listed company, 
-                or 'False' for anything else.
-                """
+            Analyze the following text extracted from a document and extract the metadata as specified below. 
+            If you can't find a specific piece of information, use None for that field.
+            If the document is not a earning concall Transcript then just return an empty dictionary {{}}
+            
+            Format the output as a JSON string with the following structure:
+            {{
+                "company_name": "Name of the company. ",
+                "doc_type": "Type of document (e.g., 'Quarterly Earnings Call Transcript', 'Annual Report', etc.)",
+                "date": "Date of event mentioned specifically in the document, format- 'YYYY-MM-DD'",
+                "quarter": "Quarter (Q1, Q2, Q3, or Q4) if applicable, or None",
+                "financial_year": "Financial year in format FYxx (e.g., FY24, FY23)",
+                "nse_scrip_code": string   // NSE ticker symbol as TEXT not the number. (if available, else empty string),
+                "bse_scrip_code": string   // BSE ticker symbol . (if available, else empty string),
+                "description": "short description of the document based on your knowledge, write a 350 word passage on what you think the pdf is about",
+                "key_people": {{
+                    "person1": {{"name": "Name of person", "role": "Role/designation"}},
+                    "person2": {{"name": "Name of person", "role": "Role/designation"}},
+                    // Add more persons as needed
+                }}
+            }}
+            
+            Be sure to:
+            1. Identify the company name, which is likely mentioned at the beginning of the document. Make sure to include Limited or any other words if it has.
+            2. Determine the document type based on the content and structure. As well as the date of event mentioned in the doc,
+            3. Look for mentions of quarters (Q1, Q2, Q3, Q4) and financial years. Return the financial year in xxxx format.
+                Event if its mentioned as FY24 for example, return as FY2024. If the quarter is not mentioned specifically as Q1, Q2 etc then use the date to guess the quarter. 
+                follow the standard financial year naming starting in April as Q1. Example; if the date is 29th July, 2024 then concall would be of April-June period, the Quarter And FY would become Q1FY2025.
+            4. write a passage that contains the necessary info like what is the doc including metadata and other important info. keep around 350 words
+            5. Extract names and roles of key management personnel mentioned in the document.
+            6. Use None for any fields where the information is not clearly present in the text.
+            
+            Text to analyze:
+            {text[:10000]}  # Limiting to first 10000 characters to avoid token limits
+            """
     CLASSIFICATION_MODEL = 'gpt-4o-mini'
     tokens = count_tokens(prompt)
-    print("tokens",tokens)
+    print("tokens", tokens)
     response = openai_client.chat.completions.create(
         model=CLASSIFICATION_MODEL,
-        temperature=0.4,  
+        temperature=0.3,
+        response_format={"type": "json_object"},
         messages=[
-            {"role": "system", "content": "You are a financial document analyst and manage the data storage for the documents."},
+            {"role": "system", "content": "You are a financial document analyst. Respond with a JSON object exactly as specified."},
             {"role": "user", "content": prompt}
-            ]
+        ]
     )
     
     try:
-        result = response.choices[0].message.content.strip().lower()
-        return result 
+        result = json.loads(response.choices[0].message.content)
+        if result:  # If the result is not an empty dictionary
+            # Ensure financial_year is in the correct format
+            if result.get("financial_year") and len(result["financial_year"]) == 4:
+                result["financial_year"] = f"FY{result['financial_year']}"
+            
+            # Construct filename if not already present
+            if "doc_name" not in result or not result["doc_name"]:
+                filename_parts = [
+                    str(result.get("financial_year", "")).lower(),
+                    str(result.get("quarter", "")).lower(),
+                    str(result.get("company_name", "")).lower().replace(" ", "_"),
+                    str(result.get("doc_type", "").replace(" ", "_")).lower(),
+                    str(result.get("nse_scrip_code", "")).lower()
+                ]
+                result["doc_name"] = "_".join(filter(None, filename_parts)) + ".pdf"
+        
+        return result
     except json.JSONDecodeError:
         print(f"Error decoding JSON for chunk starting with: {text[:100]}...")
-        print(f"Error decoding JSON : {response.choices[0].message.content}...")
-        return False
+        print(f"Error decoding JSON: {response.choices[0].message.content}...")
+        return {}
     
 def classify_pdf_transcript(pdf_path):
     """
