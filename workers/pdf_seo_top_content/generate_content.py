@@ -36,22 +36,27 @@ def service_extract_seo_top_questions(file_name,added_by=None):
 
         questions = generate_seo.top_questions(big_chunk,
                                             num_questions=6)
-        
-        # seo_content = generate_seo.generate_answers(big_chunk,
-                                                    # questions)
+        seo_top_qa = {}
+        for question in questions:
+            print(f"generating answer for question: {question}")
+            answer = generate_seo.generate_answer(big_chunk,
+                                                    questions)
+            print(f"answer: {answer}")
+            seo_top_qa[question] = answer
+        # return seo_content
         
     except Exception as e:
         raise Exception("Error in generate.seo : %s",e)
     try:
         doc = create_seo_content_doc_for_file(filename=file_name,
-                                              top_questions=questions,
+                                              top_questions=seo_top_qa,
                                             )
         sp = insert_content_doc_entry(doc=doc,added_by=added_by)
         print(sp)
         return True
     except Exception as e:
         print("dbError: alreayd exists?",e)
-        pass
+        return False
 
 
 

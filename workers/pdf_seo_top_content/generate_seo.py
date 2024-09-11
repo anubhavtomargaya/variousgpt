@@ -43,8 +43,8 @@ def top_questions(pdf_content, num_questions=10):
     else:
         return []
 
-def generate_answers(pdf_content,
-                        questions):
+def generate_answer(pdf_content,
+                        question):
     """
     Generate SEO-optimized content based on the top questions.
     
@@ -52,24 +52,22 @@ def generate_answers(pdf_content,
     :return: Dictionary with questions as keys and generated content as values
     """
    
-    seo_content = {}
+  
 
-    for question in questions:
-        prompt = f"""
-        Based on the following question and the content from the PDF, generate a concise, SEO-optimized answer. 
-        The answer should be informative, engaging, and incorporate relevant keywords naturally.
 
-        Question: {question}
+    prompt = f"""
+    Based on the following question and the content from the PDF, generate a concise, SEO-optimized answer. 
+    The answer should be informative, engaging, and incorporate relevant keywords naturally.
 
-        PDF Content (excerpt):
-        {pdf_content[:13000]}  # Using a shorter excerpt to keep within token limits
+    Question: {question}
 
-        Please provide an SEO-optimized answer to the question.
-        Avoid 
-        """
+    PDF Content (excerpt):
+    {pdf_content[:13000]} 
 
-        answer = query_gpt(prompt)
-        if answer:
-            seo_content[question] = answer
+    Please provide an SEO-optimized answer to the question.
+    Avoid 
+    """
 
-    return seo_content
+    answer = query_gpt(prompt)
+    if answer:
+        return answer

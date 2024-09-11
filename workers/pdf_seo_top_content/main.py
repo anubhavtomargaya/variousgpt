@@ -17,6 +17,7 @@ def generate_content_valid_pdf(event, context=None):
         print("running top qa for file:",file_name)
         r = service_extract_seo_top_questions(file_name=file_name)
         print(r)
+        return True
     except Exception as e:
         print("error in processing pdf",e)
         return False
