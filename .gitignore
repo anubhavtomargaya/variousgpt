@@ -221,3 +221,5 @@ workers/pdf_seo_top_content/sa_gcs.json
 workers/pdf_seo_top_content/pdf-transcripts_rows.csv
 workers/nifty_processing/sa_gcs.json
 workers/nifty_processing/env.json
+gpt-app/send_to_car/constants/env.json
+gpt-app/send_to_car/constants/sa_gcs.json

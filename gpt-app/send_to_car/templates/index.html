@@ -1,0 +1,147 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SendToCar - Your Car Media Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">SendToCar</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4">Media List</h2>
+                <ul id="mediaList" class="space-y-4 h-96 overflow-y-auto pr-4">
+                    {% for item in media_items %}
+                    <li class="bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors" onclick="playMedia({{ item.id }})">
+                        <div class="font-semibold">{{ item.title }}</div>
+                        <div class="text-sm text-gray-400">{{ item.type }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4">Now Playing</h2>
+                <div id="nowPlaying" class="text-lg mb-4">Nothing playing</div>
+                <div id="progressBar" class="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+                    <div id="progress" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <button id="playPauseBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded" onclick="togglePlayPause()">
+                    Play
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSound = null;
+        let isPlaying = false;
+
+        function playMedia(mediaId) {
+            console.log(`Attempting to play media with ID: ${mediaId}`);
+            fetch(`/play/${mediaId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Received data:', data);
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        document.getElementById('nowPlaying').textContent = `Error: ${data.error}`;
+                        return;
+                    }
+
+                    if (currentSound) {
+                        currentSound.unload();
+                    }
+
+                    document.getElementById('nowPlaying').textContent = `Now playing: ${data.title}`;
+
+                    console.log(`Creating Howl object with URL: ${data.url}`);
+                    currentSound = new Howl({
+                        src: [data.url],
+                        html5: true,
+                        format: ['mp3', 'aac'],
+                        xhr: {
+                            method: 'GET',
+                            headers: {
+                                'Range': 'bytes=0-'
+                            }
+                        },
+                        onplay: () => {
+                            console.log('Playback started');
+                            document.getElementById('playPauseBtn').textContent = 'Pause';
+                            isPlaying = true;
+                        },
+                        onpause: () => {
+                            console.log('Playback paused');
+                            document.getElementById('playPauseBtn').textContent = 'Play';
+                            isPlaying = false;
+                        },
+                        onend: () => {
+                            console.log('Playback ended');
+                            document.getElementById('playPauseBtn').textContent = 'Play';
+                            isPlaying = false;
+                            document.getElementById('progress').style.width = '0%';
+                        },
+                        onloaderror: (id, err) => {
+                            console.error('Load error:', err);
+                            document.getElementById('nowPlaying').textContent = `Error loading audio. URL: ${data.url}. Error: ${err}`;
+                        },
+                        onplayerror: (id, err) => {
+                            console.error('Play error:', err);
+                            document.getElementById('nowPlaying').textContent = `Error playing audio: ${err}`;
+                        }
+                    });
+                    currentSound.play();
+                    updateProgress();
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    document.getElementById('nowPlaying').textContent = `Error: ${error.message}`;
+                });
+        }
+
+
+        function togglePlayPause() {
+
+
+
+
+
+            if (currentSound) {
+                if (isPlaying) {
+                    currentSound.pause();
+                } else {
+                    currentSound.play();
+                }
+            }
+        }
+
+        function updateProgress() {
+            if (currentSound && isPlaying) {
+                const progress = (currentSound.seek() / currentSound.duration()) * 100;
+                document.getElementById('progress').style.width = `${progress}%`;
+                requestAnimationFrame(updateProgress);
+            }
+        }
+    </script>
+</body>
+</html>

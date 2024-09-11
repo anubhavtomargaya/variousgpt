@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SendToCar - Your Car Media Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">SendToCar</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4">Media List</h2>
+                <ul id="mediaList" class="space-y-4 h-96 overflow-y-auto pr-4">
+                    <!-- Media items will be dynamically added here -->
+                </ul>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4">Now Playing</h2>
+                <div id="nowPlaying" class="text-lg mb-4">Nothing playing</div>
+                <div id="progressBar" class="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+                    <div id="progress" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <button id="playPauseBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                    Play
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mediaItems = [
+            { type: 'youtube', title: 'Relaxing Jazz Music', url: 'https://www.youtube.com/watch?v=neV3EPgvZ3g' },
+            { type: 'podcast', title: 'TED Radio Hour', url: 'https://www.npr.org/podcasts/510298/ted-radio-hour' },
+            { type: 'audible', title: 'The Hitchhiker\'s Guide to the Galaxy', url: 'https://www.audible.com/pd/The-Hitchhikers-Guide-to-the-Galaxy-Audiobook/B002V5GNC2' },
+            // Add more items as needed
+        ];
+
+        const mediaList = document.getElementById('mediaList');
+        const nowPlaying = document.getElementById('nowPlaying');
+        const progressBar = document.getElementById('progress');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+
+        let currentSound = null;
+        let isPlaying = false;
+
+        function renderMediaList() {
+            mediaItems.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors';
+                li.innerHTML = `
+                    <div class="font-semibold">${item.title}</div>
+                    <div class="text-sm text-gray-400">${item.type}</div>
+                `;
+                li.onclick = () => playMedia(index);
+                mediaList.appendChild(li);
+            });
+        }
+
+        function playMedia(index) {
+            const item = mediaItems[index];
+            nowPlaying.textContent = `Now playing: ${item.title}`;
+
+            if (currentSound) {
+                currentSound.unload();
+            }
+
+            if (item.type === 'youtube' || item.type === 'podcast') {
+                // For YouTube and podcasts, we'll just open the link in a new tab
+                window.open(item.url, '_blank');
+                playPauseBtn.textContent = 'Pause';
+                isPlaying = true;
+            } else if (item.type === 'audible') {
+                // For Audible, we'll simulate playback using Howler.js
+                currentSound = new Howl({
+                    src: ['https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.js'],
+                    html5: true,
+                    onplay: () => {
+                        playPauseBtn.textContent = 'Pause';
+                        isPlaying = true;
+                    },
+                    onpause: () => {
+                        playPauseBtn.textContent = 'Play';
+                        isPlaying = false;
+                    },
+                    onend: () => {
+                        playPauseBtn.textContent = 'Play';
+                        isPlaying = false;
+                        progressBar.style.width = '0%';
+                    }
+                });
+                currentSound.play();
+            }
+
+            updateProgress();
+        }
+
+        function togglePlayPause() {
+            if (currentSound) {
+                if (isPlaying) {
+                    currentSound.pause();
+                } else {
+                    currentSound.play();
+                }
+            }
+        }
+
+        function updateProgress() {
+            if (currentSound && isPlaying) {
+                const progress = (currentSound.seek() / currentSound.duration()) * 100;
+                progressBar.style.width = `${progress}%`;
+                requestAnimationFrame(updateProgress);
+            }
+        }
+
+        playPauseBtn.onclick = togglePlayPause;
+
+        renderMediaList();
+    </script>
+</body>
+</html>
