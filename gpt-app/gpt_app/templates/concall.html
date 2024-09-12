@@ -140,7 +140,8 @@
                         <h3>Top Questions</h3>
                         <ol>
                             {% for question in top_questions %}
-                                <li>{{ question }}</li>
+                                <li>{{ question.question }}</li>
+                                <li>{{ question.answer }}</li>
                             {% endfor %}
                         </ol>
                     {% elif active_section == 'transcript' %}

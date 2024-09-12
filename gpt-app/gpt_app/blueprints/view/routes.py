@@ -268,6 +268,8 @@ def concall(file_name):
     # Fetch content based on the selected section
     if section == 'top_questions':
         content = get_content_top_questions(file_name)
+        print("content",content)
+        print("type",type(content))
     elif section == 'transcript':
         raw_transcript = get_pdf_chunks_transcript(file_name)['extracted_transcript']
         content = process_transcript(raw_transcript)
@@ -284,7 +286,7 @@ def concall(file_name):
                            financial_year=details['financial_year'],
                            file_name=file_name,
                            active_section=section,
-                           top_questions=content if section == 'top_questions' else [],
+                           top_questions=content if section == 'top_questions' else {},
                            transcript=content if content and section == 'transcript' else '',
                            qa_section=content if content and section == 'qa_section' else '',
                            management_guidance=content if content and section == 'management_guidance' else '')

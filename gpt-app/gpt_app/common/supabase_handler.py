@@ -163,7 +163,7 @@ def get_content_top_questions(file_name):
         return False
     else:
         print("documents supp")
-        # print(rows.data)
+        print(rows.data)
         return rows.data[0]['top_qa']
     
 def get_list_transcripts():
