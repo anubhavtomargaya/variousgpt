@@ -93,6 +93,13 @@ def links(company_name):
                            active_page="links", 
                            content=f"Useful links for {company_name.replace('-', ' ').title()}")
 
+@company_app.route('/sample')
+def company_sample():
+    return render_template('sample.html')
+
+@company_app.route('/landing')
+def company_landing():
+    return render_template('newlp.html')
 @company_app.route('/')
 def company_index():
     data = get_company_list()
