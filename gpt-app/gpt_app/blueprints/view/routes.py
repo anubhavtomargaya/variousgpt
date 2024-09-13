@@ -268,6 +268,7 @@ def concall(file_name):
     # Fetch content based on the selected section
     if section == 'top_questions':
         content = get_content_top_questions(file_name)
+        content = {k:str(v).replace("**",'') for k,v in content.items()}
         print("content",content)
         print("type",type(content))
     elif section == 'transcript':

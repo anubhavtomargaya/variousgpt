@@ -239,17 +239,18 @@
                                 <p class="card-text">
                                     <strong>Top Questions:</strong>
                                     <ul>
-                                        {% for question in data.top_questions[:3] %}
+                                        {% for question in data.top_questions %}
                                         <li>{{ question }}</li>
                                         {% endfor %}
                                     </ul>
                                     {% if data.top_questions|length > 3 %}
                                     <ul class="show-more">
-                                        {% for question in data.top_questions[3:] %}
+                                        {% for question in data.top_questions %}
                                         <li>{{ question }}</li>
                                         {% endfor %}
                                     </ul>
-                                    <button class="show-more-btn" onclick="toggleShowMore(this)">Show more</button>
+                                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info ">Show More</a>
+                                    <!-- <button class="show-more-btn" onclick="toggleShowMore(this)">Show more</button> -->
                                     {% endif %}
                                 </p>
                                 <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary">Read Full Transcript</a>

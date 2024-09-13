@@ -71,6 +71,13 @@
         .input-group {
             margin-bottom: 20px;
         }
+        .accordion-button:not(.collapsed) {
+            background-color: #e7f1ff;
+        }
+
+        .accordion-button.active {
+            background-color: #cce5ff;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
@@ -137,13 +144,42 @@
 
                 <div id="content-section">
                     {% if active_section == 'top_questions' %}
-                        <h3>Top Questions</h3>
-                        <ol>
-                            {% for question in top_questions %}
-                                <li>{{ question.question }}</li>
-                                <li>{{ question.answer }}</li>
+                    <!-- <h3>Top Questions</h3> -->
+                    <div class="accordion mt-4" id="topQaAccordion">
+                        {% for question, answer in top_questions.items() %}
+                        {% set slug = question|slugify %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="{{ slug }}">
+                                <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
+                                    {{ question }}
+                                </button>
+                            </h2>
+                            <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    {{ answer }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                        
+                        <!-- <ol>
+                            {% for question, answer in top_questions.items() %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="{{ slug }}">
+                                    <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
+                                        {{ question }}
+                                    </button>
+                                </h2>
+                                <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#topQaAccordion">
+                                    <div class="accordion-body">
+                                        {{ answer }}
+                                    </div>
+                                </div>
+                            </div>
+                          
                             {% endfor %}
-                        </ol>
+                        </ol> -->
                     {% elif active_section == 'transcript' %}
                         <h3>Transcript</h3>
                         <div class="transcript-container">
