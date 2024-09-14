@@ -1,174 +1,256 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ company_name|title }} Earning Call - {{ active_page|capitalize }} </title>
-     <!-- Google tag (gtag.js) -->
+    <title>{{ company_name|title }} Earning Calls</title>
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-5DF5GL4LB5');
     </script>
-    <meta name="description" content="{{ company_name|title }} {{ active_page|capitalize }}">
+    <meta name="description" content="{{ company_name|title }} Earning Calls">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-green: #18994e;
+            --primary-purple: #6a198a;
+            --text-color: #333333;
+            --secondary-text-color: #666666;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding-top: 56px; /* Height of the navbar */
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            width: 8vw;
+            font-weight: 700;
+            color: var(--primary-green) !important;
         }
-
-        .navbar-separator {
-            border-left: 1px solid #dee2e6;
-            height: 30px;
-            margin: 0 15px;
-        }
-
-        .sidebar {
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 10vw;
-            padding-top: 76px;
-            padding-left: 2rem;
-            background-color: #f8f9fa;
-        }
-
-        .sidebar .nav-link {
-            padding: 0.5rem 1rem;
-            color: #777;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .sidebar .nav-link.active {
-            color: #007bff;
-            font-weight: 600;
-        }
-
-        .sidebar .nav-link.active::before {
-            content: "";
-            position: absolute;
-            left: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background-color: #007bff;
-            border-radius: 50%;
-            opacity: 1;
-            transition: top 0.3s ease, opacity 0.3s ease;
-        }
-
-        .sidebar .nav-link:hover {
-            color: #555;
-        }
-
-        .main-content {
-            margin-left: 12vw;
-            padding-top: 76px;
-            min-height: 90vh;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                position: static;
-                height: auto;
-                padding-top: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-        }
-
-        .accordion-button:not(.collapsed) {
-            background-color: #e7f1ff;
-        }
-
-        .accordion-button.active {
-            background-color: #cce5ff;
-        }
-
         footer {
-            position: fixed;
-            bottom: 0;
-            width: 100vw;
-            right: 0;
-        }
-
-        .card {
-            margin-bottom: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-        }
-
-        .card-subtitle {
-            font-size: 1rem;
-            color: #6c757d;
-            margin-bottom: 15px;
-        }
-
-        .card-text ul {
-            padding-left: 1rem;
-        }
-
-        .card-text ul li {
-            list-style-type: disc;
-        }
-
-        .card .btn {
-            margin-right: 10px;
-            margin-top: 10px;
-        }
-
-        .card .show-more {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 4rem 2rem 0;
             display: none;
         }
 
-        .show-more-btn {
-            margin-top: 10px;
-            cursor: pointer;
-            color: #007bff;
-            background: none;
+        footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #3498db;
+        }
+
+        .text-secondary {
+            color: #3498db;
+        }
+
+        .text-muted {
+            color: #95a5a6;
+        }
+
+        #madeWithLove {
+            color: black;
+            background-color: var(--background-color);
+        }
+
+        #madeWithLove a:hover {
+            color: var(--primary-green);
+        }
+    
+        .btn-sign-up {
+            background-color: var(--primary-green);
+            color: white;
+            border-radius: 20px;
+            padding: 0.375rem 1rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 56px; /* Height of the navbar */
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            width: 200px; /* Reduced width */
+        }
+
+        .sidebar .nav-link {
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+        }
+
+        .sidebar .nav-link.active {
+            color: var(--primary-green);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        .main-content {
+            padding-top: 1rem;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+            margin-left: 200px; /* Adjusted for smaller sidebar */
+        }
+
+        .card {
+            background-color: var(--card-background);
             border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            color: var(--secondary-text-color);
+            font-size: 1.1rem;
+        }
+
+        .btn-primary, .btn-secondary, .btn-info {
+            border-radius: 20px;
+            padding: 0.375rem 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .btn-secondary, .btn-info {
+            background-color: white;
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, .1);
+            padding: 1rem 0;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .latest-call {
+            box-shadow: 0 0 15px var(--primary-purple);
+        }
+
+        .latest-call-label {
+            color: var(--primary-purple);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            padding: .25rem;
+            /* color: var(--primary-green); */
+            background-color: rgb(202, 255, 133);
+            border-radius: 5px;
+            max-width: 106px;
+        }
+
+        .top-questions {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .top-questions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .top-questions a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .top-questions a:hover {
+            color: var(--primary-green);
+            text-decoration: underline;
+        }
+
+        /* Faded effect for scrollable content */
+        .main-content::before,
+        .main-content::after {
+            content: "";
+            position: fixed;
+            left: 200px; /* Adjusted for smaller sidebar */
+            right: 0;
+            height: 70px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .main-content::before {
+            top: 56px; /* Height of the navbar */
+            background: linear-gradient(to bottom, var(--background-color), transparent);
+        }
+
+        .main-content::after {
+            bottom: 0;
+            background: linear-gradient(to top, var(--background-color), transparent);
+        }
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0.25rem 0;
+            margin-top: .5rem;
+            margin-bottom: .25rem;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            color: var(--secondary-text-color);
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--secondary-text-color);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">stockrabit</a>
-            <span><span class="badge bg-secondary">BETA v2.3  </span> <span>⚡</span></span>
-            <!-- <div class="navbar-separator"></div> -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/other-links">Other Links</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-sign-up" href="/signup">Sign Up</a>
                     </li>
                 </ul>
             </div>
@@ -177,17 +259,12 @@
 
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {% if active_page == 'upcoming' %}active{% endif %}" href="{{ url_for('company_app.upcoming', company_name=company_name) }}">
-                                Upcoming
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {% if active_page == 'historical' %}active{% endif %}" href="{{ url_for('company_app.historical', company_name=company_name) }}">
-                                Historical
+                                ⚡   Latest 
                             </a>
                         </li>
                         <li class="nav-item">
@@ -205,13 +282,26 @@
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <h1 class="mt-4 mb-4">{{ company_name|title }} {{ active_page|capitalize }}</h1>
-                
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb  border-bottom ">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/company">Companies</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ company_name|title }}</li>
+                    </ol>
+                </nav>
+
+                <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">{{ company_name|title }} Latest Earning Calls</h1>
+                </div> -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                    <h1 class="h2">{{ company_name|title }}<span class="d-flex text-secondary"> Latest Earning Calls</span>    </h1>
+                </div>
+
                 {% if active_page == 'faq' %}
                 <div class="accordion mt-4" id="faqAccordion">
                     {% for question, answer in faq_data.items() %}
                     {% set slug = question|slugify %}
-                    <div class="accordion-item">
+                    <div class="accordion-item mb-3">
                         <h2 class="accordion-header" id="{{ slug }}">
                             <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
                                 {{ question }}
@@ -227,56 +317,33 @@
                 </div>
                  
                 {% elif active_page == 'historical' %}
-                <div class="row">
-                    {% for data in historical_data %}
-                    <div class="col-12 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ data.company_name }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    {{ data.quarter }} {{ data.financial_year }}
-                                </h6>
-                                <p class="card-text">
-                                    <strong>Top Questions:</strong>
-                                    <ul>
-                                        {% for question in data.top_questions %}
-                                        <li>{{ question }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                    {% if data.top_questions|length > 3 %}
-                                    <ul class="show-more">
-                                        {% for question in data.top_questions %}
-                                        <li>{{ question }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info ">Show More</a>
-                                    <!-- <button class="show-more-btn" onclick="toggleShowMore(this)">Show more</button> -->
-                                    {% endif %}
-                                </p>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary">Read Full Transcript</a>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary">Management Insights</a>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info">Analyst Questions</a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-               
-                </div>
-
-                {% elif active_page == 'upcoming' %}
-                <div class="accordion mt-4" id="upcomingAccordion">
-                    {% for question, answer in upcoming_data.items() %}
-                    {% set slug = question|slugify %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="{{ slug }}">
-                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
-                                {{ question }}
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#upcomingAccordion">
-                            <div class="accordion-body">
-                                {{ answer }}
+                <div class="card-list">
+                    {% set sorted_data = historical_data|sort(attribute='date', reverse=True) %}
+                    {% for data in sorted_data %}
+                    <div class="card {% if loop.first %}latest-call{% endif %}">
+                        <div class="card-body">
+                            {% if loop.first %}
+                            <div class="latest-call-label"> ⚡Latest </div>
+                            {% endif %}
+                            <h5 class="card-title">{{ data.quarter }} {{ data.financial_year }}</h5>
+                            <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
+                            <p class="card-text">
+                                <!-- <strong>Top Questions:</strong> -->
+                                <ul class="top-questions">
+                                    {% for question in data.top_questions[:2] %}
+                                    <li>
+                                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
+                                            {{ question }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info btn-sm">Show More</a>
+                            </p>
+                            <div class="mt-3">
+                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary btn-sm">Read Full Transcript</a>
+                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary btn-sm mt-2">Management Insights</a>
+                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info btn-sm mt-2">Analyst Questions</a>
                             </div>
                         </div>
                     </div>
@@ -291,9 +358,34 @@
         </div>
     </div>
 
-    <footer class="bg-light text-center text-lg-start mt-4">
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2024 stockrabit. All rights reserved.
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
+                    <p class="text-muted">Empowering fundamental investors with insights for informed decision-making.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Home</a></li>
+                        <li class="mb-2"><a href="#features">Features</a></li>
+                        <li class="mb-2"><a href="#demo">Demo</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
+                    <p class="text-muted">Email: info@stockrabit.com</p>
+                </div>
+            </div>
+            <div class="border-top border-secondary mt-4 pt-4 text-center text-muted">
+                © 2024 stockrabit. All rights reserved.
+            </div>
+        </div>
+        <div id="madeWithLove" class="text-center ">
+            <a href="/about" class="text-decoration-none">
+                Made with ❤️ in the ❤️ of India
+            </a>
         </div>
     </footer>
 
@@ -301,27 +393,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.sidebar .nav-link');
+            const mainContent = document.querySelector('.main-content');
+            const footer = document.querySelector('footer');
 
             links.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-
-                    // Remove active class from all links
-                    links.forEach(l => {
-                        l.classList.remove('active');
-                        l.style.color = '#777';  // Reset color of all links
-                    });
-
-                    // Add active class to the clicked link
+                    links.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
-                    link.style.color = '#007bff';  // Set active color
-
-                    // Navigate to the link's href
                     window.location.href = link.href;
                 });
             });
 
-            // Handle hash-based navigation for FAQs and Upcoming
+            mainContent.addEventListener('scroll', () => {
+                if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 1) {
+                    footer.style.display = 'block';
+                } else {
+                    footer.style.display = 'none';
+                }
+            });
+
             if (window.location.hash) {
                 const id = window.location.hash.substring(1);
                 const element = document.getElementById(id);
@@ -329,6 +420,13 @@
                     element.scrollIntoView();
                     element.querySelector('.accordion-button').click();
                 }
+            }
+
+            // Initial check for footer visibility
+            if (mainContent.scrollHeight <= mainContent.clientHeight) {
+                footer.style.display = 'block';
+            } else {
+                footer.style.display = 'none';
             }
         });
     </script>

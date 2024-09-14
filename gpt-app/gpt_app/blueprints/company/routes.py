@@ -1,3 +1,4 @@
+from datetime import datetime
 from http.client import HTTPException
 import re
 from flask import jsonify, make_response, render_template,redirect,url_for
@@ -56,6 +57,7 @@ def historical(company_name):
                 'file_name': file_name,
                 'company_name': details['company_name'],
                 'quarter': details['quarter'],
+                'date':datetime.utcnow().date(),
                 'financial_year': details['financial_year'],
                 'top_questions': top_questions
             })
