@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Companies - stockrabit</title>
+    <title>Discover New Stock Insights from Earnings Calls - Browse stockrabit</title>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
@@ -17,89 +17,122 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-green: #18994e;
+            --primary-purple: #6a198a;
+            --text-color: #333333;
+            --secondary-text-color: #666666;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            text-decoration: none;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding-top: 56px;
+        }
 
+        a { 
+            text-decoration: none;
+            cursor: pointer;
+            color: var(--text-color);
         }
-        a { text-decoration: none;
-            cursor:pointer ;
-            color: #111;
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            width: 8vw;
+            font-weight: 700;
+            color: var(--primary-green) !important;
         }
-        .navbar-separator {
-            border-left: 1px solid #dee2e6;
-            height: 30px;
-            margin: 0 15px;
+
+        .btn-sign-up {
+            background-color: var(--primary-green);
+            color: white;
+            border-radius: 20px;
+            padding: 0.375rem 1rem;
         }
+
         .sidebar {
-            height: 100vh;
             position: fixed;
-            top: 0;
-            font-size: medium;
+            top: 56px;
+            bottom: 0;
             left: 0;
-            width: 10vw;
-            padding-top: 76px;
-            padding-left: 2rem;
-            background-color: #f8f9fa;
+            z-index: 100;
+            padding: 20px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            width: 200px;
         }
+
         .sidebar .nav-link {
+            color: var(--text-color);
             padding: 0.5rem 1rem;
-            color: #777;
-            position: relative;
-            transition: color 0.3s ease;
         }
+
         .sidebar .nav-link.active {
-            color: #007bff;
+            color: var(--primary-green);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        .main-content {
+            padding-top: 1rem;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+            margin-left: 200px;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            color: var(--primary-purple);
             font-weight: 600;
         }
-        .sidebar .nav-link.active::before {
-            content: "";
-            position: absolute;
-            left: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background-color: #007bff;
-            border-radius: 50%;
-            opacity: 1;
-            transition: top 0.3s ease, opacity 0.3s ease;
+
+        .card-subtitle {
+            color: var(--secondary-text-color);
+            font-size: 1.1rem;
         }
-        .sidebar .nav-link:hover {
-            color: #555;
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+            border-radius: 20px;
+            padding: 0.375rem 1rem;
         }
-        .main-content {
-            margin-left: 250px;
-            padding-top: 76px;
-            min-height: 90vh;
-        }
-        .company-card {
-            transition: transform 0.3s ease-in-out;
-        }
-        .company-card:hover {
-            transform: translateY(-5px);
-        }
+
         footer {
-            position: fixed;
-            bottom: 0;
-            width: 100vw;
-            right: 0;
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, .1);
+            padding: 1rem 0;
+            position: relative;
+            z-index: 1000;
         }
+
         .section {
-            min-height: 100vh;
             padding-top: 2rem;
             padding-bottom: 2rem;
         }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
                 height: auto;
                 padding-top: 0;
+                width: 100%;
             }
             .main-content {
                 margin-left: 0;
@@ -108,20 +141,22 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">stockrabit</a>
-            <span><span class="badge bg-secondary">BETA v2.3  </span> <span>⚡</span></span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/other-links">Other Links</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-sign-up" href="/signup">Sign Up</a>
                     </li>
                 </ul>
             </div>
@@ -130,7 +165,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-2 d-md-block sidebar collapse">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -149,7 +184,14 @@
                 </div>
             </nav>
 
-            <main class="col-md-10 ms-sm-auto px-md-4 main-content">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb border-bottom">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Browse Companies</li>
+                    </ol>
+                </nav>
+
                 <section id="indices" class="section mb-5">
                     <h2 class="mb-4">Indices</h2>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -243,51 +285,58 @@
         </div>
     </div>
 
-    <footer class="bg-light text-center text-lg-start mt-4">
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2024 stockrabit. All rights reserved.
+    <footer>
+        <div id="madeWithLove" class="text-center">
+            <a href="/about" class="text-decoration-none">
+                Made with ❤️ in the ❤️ of India
+            </a>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.sidebar .nav-link');
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 75, // Adjust for navbar height
-                        behavior: 'smooth'
-                    });
+            const links = document.querySelectorAll('.sidebar .nav-link');
+            const mainContent = document.querySelector('.main-content');
+            const footer = document.querySelector('footer');
 
-                    // Update active link
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
                 });
             });
 
-            // Highlight active section on scroll
-            window.addEventListener('scroll', function() {
-                const fromTop = window.scrollY + 100; // Adjust offset as needed
-
-                navLinks.forEach(link => {
+            mainContent.addEventListener('scroll', () => {
+                const fromTop = mainContent.scrollTop + 100;
+                links.forEach(link => {
                     const section = document.querySelector(link.hash);
-                    
-                    if (
-                        section.offsetTop <= fromTop &&
-                        section.offsetTop + section.offsetHeight > fromTop
-                    ) {
+                    if (section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop) {
                         link.classList.add('active');
                     } else {
                         link.classList.remove('active');
                     }
                 });
+
+                if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 1) {
+                    footer.style.display = 'block';
+                } else {
+                    footer.style.display = 'none';
+                }
             });
+
+            // Initial check for footer visibility
+            if (mainContent.scrollHeight <= mainContent.clientHeight) {
+                footer.style.display = 'block';
+            } else {
+                footer.style.display = 'none';
+            }
         });
     </script>
 </body>
