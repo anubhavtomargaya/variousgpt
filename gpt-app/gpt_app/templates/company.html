@@ -35,6 +35,7 @@
             display: flex;
             flex-direction: column;
         }
+        a {text-decoration: none;}
 
         .navbar {
             background-color: #ffffff;
@@ -128,7 +129,7 @@
             position: relative;
             z-index: 1000;
         }
-
+        footer > ul { color: var(--background-color);}
         .latest-call {
             box-shadow: 0 0 10px var(--primary-purple);
         }
@@ -310,7 +311,7 @@
                 </div>
 
                 {% if active_page == 'historical' %}
-                <div class="card-list">
+                <div class="card-list " style="min-height: 80vh;">
                     {% set sorted_data = historical_data|sort(attribute='date', reverse=True) %}
                     {% for data in sorted_data %}
                     <div class="card {% if loop.first %}latest-call{% endif %}">
@@ -365,27 +366,27 @@
         <!-- Add more menu items as needed -->
     </div>
 
-    <footer>
-        <div class="container">
+    <footer class=" bg-dark ">
+        <div class="container bg-dark ">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
-                    <p class="text-muted">Empowering fundamental investors with insights for informed decision-making.</p>
+                    <p class="text-white">Empowering fundamental investors with insights for informed decision-making.</p>
                 </div>
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">Home</a></li>
+                    <ul class="list-unstyled text-white">
+                        <li class="mb-2 "  ><a href="#">Home</a></li>
                         <li class="mb-2"><a href="#features">Features</a></li>
                         <li class="mb-2"><a href="#demo">Demo</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
-                    <p class="text-muted">Email: info@stockrabit.com</p>
+                    <p class="text-white">Email: info@stockrabit.com</p>
                 </div>
             </div>
-            <div class="border-top border-secondary mt-4 pt-4 text-center text-muted">
+            <div class="border-top border-secondary mt-4 pt-4 text-center text-green-600">
                 © 2024 stockrabit. All rights reserved.
             </div>
         </div>
