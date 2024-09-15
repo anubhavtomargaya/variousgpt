@@ -58,6 +58,17 @@
             padding: 20px 0 0;
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
             width: 200px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
         }
 
         .sidebar .nav-link {
@@ -74,7 +85,12 @@
             padding-top: 1rem;
             height: calc(100vh - 56px);
             overflow-y: auto;
-            margin-left: 200px;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                margin-left: 200px;
+            }
         }
 
         .card {
@@ -158,6 +174,7 @@
             padding: 1rem 0;
             position: relative;
             z-index: 1000;
+            width: 100%;
         }
 
         .breadcrumb {
@@ -179,6 +196,27 @@
 
         .breadcrumb-item.active {
             color: var(--secondary-text-color);
+        }
+
+        #sidebar-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1030;
+            display: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 767.98px) {
+            #sidebar-toggle {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -322,6 +360,14 @@
         </div>
     </footer>
 
+    <button id="sidebar-toggle" aria-label="Toggle Sidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function askQuestion() {
@@ -333,6 +379,8 @@
             const links = document.querySelectorAll('.sidebar .nav-link');
             const mainContent = document.querySelector('.main-content');
             const footer = document.querySelector('footer');
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
 
             links.forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -341,6 +389,10 @@
                     link.classList.add('active');
                     window.location.href = link.href;
                 });
+            });
+
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
             });
 
             mainContent.addEventListener('scroll', () => {
@@ -366,6 +418,20 @@
             } else {
                 footer.style.display = 'none';
             }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 767.98 && !sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
+                }
+            });
+
+            // Adjust sidebar visibility on window resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 767.98) {
+                    sidebar.classList.remove('show');
+                }
+            });
         });
     </script>
 </body>
