@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ company_name|title }} Earning Calls</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
@@ -260,7 +261,8 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">stockrabit</a>
+            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" class="w-1 h-1 object-contain" style="height: 30px; width: 35px; margin-right: .25rem;">
+            <a class="navbar-brand" href="/"> stockrabit</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
