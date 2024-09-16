@@ -40,7 +40,7 @@ def service_extract_seo_top_questions(file_name,added_by=None):
         for question in questions:
             print(f"generating answer for question: {question}")
             answer = generate_seo.generate_answer(big_chunk,
-                                                    questions)
+                                                    questions,file_name=file_name)
             print(f"answer: {answer}")
             seo_top_qa[question] = answer
         # return seo_content
@@ -61,7 +61,8 @@ def service_extract_seo_top_questions(file_name,added_by=None):
 
 
 if __name__=='__main__':
-    f = 'fy-2025_q1_earnings_call_transcript_amara_raja_energy_&_mobility_limited_are&m.pdf'
+    # f = 'fy-2025_q1_earnings_call_transcript_amara_raja_energy_&_mobility_limited_are&m.pdf'
+    f = 'fy2025_q1_fortis_healthcare_limited_quarterly_earnings_call_transcript_fortis.pdf'
 
     def test_get_text_chunk():
         txt= get_pdf_txt(f)
