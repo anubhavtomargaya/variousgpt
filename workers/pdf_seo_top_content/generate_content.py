@@ -62,8 +62,57 @@ def service_extract_seo_top_questions(file_name,added_by=None):
 
 if __name__=='__main__':
     # f = 'fy-2025_q1_earnings_call_transcript_amara_raja_energy_&_mobility_limited_are&m.pdf'
-    f = 'fy2025_q1_fortis_healthcare_limited_quarterly_earnings_call_transcript_fortis.pdf'
-
+    # f = 'fy2/025_q1_fortis_healthcare_limited_quarterly_earnings_call_transcript_fortis.pdf'
+    # f = 'fy2025_q1_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
+    files = ['fy2024_q2_morepen_laboratories_limited_earnings_conference_call_transcript_morepenlab.pdf',
+    'fy2024_q3_morepen_laboratories_limited_quarterly_earnings_call_transcript_morepenlab.pdf',
+    'fy2025_q1_morepen_laboratories_limited_earnings_conference_call_transcript_morepenlab.pdf',
+    'fy2025_q2_cipla_limited_annual_general_meeting_transcript_cipla.pdf',
+    'fy2025_q1_cipla_limited_quarterly_earnings_call_transcript_cipla.pdf',
+    'fy2024_q2_bosch_limited_quarterly_earnings_call_transcript_boschltd.pdf',
+    'fy2024_q4_bosch_limited_quarterly_earnings_call_transcript_boschltd.pdf',
+    'fy2025_q1_bosch_limited_quarterly_earnings_call_transcript_boschltd.pdf',
+    'fy2024_q4_ambuja_cements_limited_quarterly_earnings_call_transcript_ambujacem.pdf',
+    'fy2025_q1_ambuja_cements_limited_quarterly_earnings_call_transcript_ambujacem.pdf',
+    'fy2024_q3_bharat_petroleum_corporation_limited_quarterly_earnings_call_transcript_bpcl.pdf',
+    'fy2024_q4_bharat_petroleum_corporation_limited_quarterly_earnings_call_transcript_bpcl.pdf',
+    'fy2025_q1_bharat_petroleum_corporation_limited_quarterly_earnings_call_transcript_bpcl.pdf',
+    'fy-2024_q2_earnings_call_transcript_avenue_supermarts_limited_dmart.pdf',
+    'fy2024_q1_berger_paints_india_limited_quarterly_earnings_call_transcript_bergepaint.pdf',
+    'fy2023_q4_berger_paints_india_limited_quarterly_earnings_call_transcript_bergepaint.pdf',
+    'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf',
+    'fy-2024_q4_earnings_call_transcript_asian_paints_500820.pdf',
+    'fy-2024_q2_earnings_call_transcript_hindustan_unilever_hindunilvr.pdf',
+    'fy-2024_q4_earnings_call_transcript_hindustan_unilever_hindunilvr.pdf',
+    'fy-2024_q4_earnings_call_transcript_ghcl_ghcl.pdf',
+    'fy-2025_q1_earnings_call_transcript_ghcl_500171.pdf',
+    'fy-2025_q2_earnings_call_transcript_ghcl_limited_500171.pdf']
+    fss = [ 
+        'fy-2024_q1_earnings_call_transcript_schneider_electric_infrastructure_limited_534139.pdf',
+        'fy-2024_q1_earnings_call_transcript_tata_consumer_products_limited_tataconsum.pdf',
+        'fy-2024_q1_earnings_call_transcript_tata_consumer_products_limited_500800.pdf',
+        'fy-2024_q2_earnings_call_transcript_ashok_leyland_limited_ashokley.pdf',
+        'fy-2024_q4_earnings_call_transcript_reliance_industries_reliance.pdf',
+        'fy-2024_q1_earnings_call_transcript_reliance_industries_limited_reliance.pdf',
+        'fy-2023_q4_earnings_call_transcript_kirloskar_oil_engines_limited_koel.pdf',
+        'fy-2024_q1_earnings_call_transcript_cummins_india_cumminsind.pdf',
+        'fy-2024_q4_earnings_call_transcript_kirloskar_oil_engines_limited_koel.pdf',
+        'fy24_q2_earnings_call_transcript_escorts_kubota_limited_escorts.pdf',
+        'fy-2024_q1_earnings_call_transcript_pcbl_limited_pcbl.pdf',
+        'fy-2024_q1_investor_conference_transcript_raymond_500330.pdf',
+        'Raymond_Conference_Call_TranscripQ4-fy24.pdf',
+        'fy-2024_q4_Earnings_Conference_Raymond Limited.pdf',
+        'Q4_FY23_Earnings_Conference_Raymond_Limited.pdf',
+        'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf',
+        'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf',
+        'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf',
+        'fy-2025_q1_earnings_call_transcript_escorts_kubota_limited_escorts.pdf',
+        'fy2024_q3_earnings_call_transcript_escorts_kubota_limited_escorts.pdf',
+        'fy-2024_q3_earnings_call_transcript_pvr_inox_532689.pdf',
+        'fy-2024_q2_earnings_call_transcript_abb_india_limited_bse:abbind.pdf',
+        'fy-2024_q1_earnings_call_transcript_sanofi_500674.pdf',
+        'fy-2023_q1_earnings_call_transcript_aegis_logistics_limited_aegischem.pdf'
+        ]
     def test_get_text_chunk():
         txt= get_pdf_txt(f)
         return split_document(txt)
@@ -84,8 +133,14 @@ if __name__=='__main__':
 # ----------------- # 
 
     def test_service_seo_content():
-        return service_extract_seo_top_questions(f)
-
+        for f in fss:
+            try:
+                print("rnning file,",f)
+                s = service_extract_seo_top_questions(f)
+                print(s)
+            except Exception as e:
+                print("error",e)
+        return
 # ----------------- # 
 
 
