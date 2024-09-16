@@ -348,13 +348,15 @@
                             <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
                             <p class="card-text">
                                 <ul class="top-questions">
-                                    {% for question in data.top_questions[:2] %}
-                                    <li>
-                                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
+                                    {% for question,answer in data.top_questions.items() %}
+                                    {% if loop.index <= 2 %}
+                                        <li class="list-group-item">
+                                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}" class="text-decoration-none">
                                             {{ question }}
                                         </a>
-                                    </li>
-                                    {% endfor %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
                                 </ul>
                                 <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info btn-sm">Show More</a>
                             </p>
