@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ company_name|title }} Earning Calls</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
@@ -30,7 +31,11 @@
             background-color: var(--background-color);
             color: var(--text-color);
             padding-top: 56px; /* Height of the navbar */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+        a {text-decoration: none;}
 
         .navbar {
             background-color: #ffffff;
@@ -41,40 +46,7 @@
             font-weight: 700;
             color: var(--primary-green) !important;
         }
-        footer {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            padding: 4rem 2rem 0;
-            display: none;
-        }
 
-        footer a {
-            color: #bdc3c7;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        footer a:hover {
-            color: #3498db;
-        }
-
-        .text-secondary {
-            color: #3498db;
-        }
-
-        .text-muted {
-            color: #95a5a6;
-        }
-
-        #madeWithLove {
-            color: black;
-            background-color: var(--background-color);
-        }
-
-        #madeWithLove a:hover {
-            color: var(--primary-green);
-        }
-    
         .btn-sign-up {
             background-color: var(--primary-green);
             color: white;
@@ -91,6 +63,7 @@
             padding: 20px 0 0;
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
             width: 200px; /* Reduced width */
+            background-color: var(--background-color);
         }
 
         .sidebar .nav-link {
@@ -105,9 +78,9 @@
 
         .main-content {
             padding-top: 1rem;
-            height: calc(100vh - 56px);
+            flex-grow: 1;
             overflow-y: auto;
-            margin-left: 200px; /* Adjusted for smaller sidebar */
+            margin-left: 200px; /* Match sidebar width */
         }
 
         .card {
@@ -156,7 +129,7 @@
             position: relative;
             z-index: 1000;
         }
-
+        footer > ul { color: var(--background-color);}
         .latest-call {
             box-shadow: 0 0 10px var(--primary-purple);
         }
@@ -166,7 +139,6 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             padding: .25rem;
-            /* color: var(--primary-green); */
             background-color: rgb(202, 255, 133);
             border-radius: 5px;
             max-width: 106px;
@@ -191,53 +163,132 @@
             text-decoration: underline;
         }
 
-        /* Faded effect for scrollable content */
-        .main-content::before,
-        .main-content::after {
-            content: "";
-            position: fixed;
-            left: 200px; /* Adjusted for smaller sidebar */
-            right: 0;
-            height: 70px;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .main-content::before {
-            top: 56px; /* Height of the navbar */
-            background: linear-gradient(to bottom, var(--background-color), transparent);
-        }
-
-        .main-content::after {
-            bottom: 0;
-            background: linear-gradient(to top, var(--background-color), transparent);
-        }
         .breadcrumb {
-            background-color: transparent;
-            padding: 0.25rem 0;
-            margin-top: .5rem;
-            margin-bottom: .25rem;
-        }
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        padding: 0.25rem 0;
+        margin-top: .5rem;
+        margin-bottom: .25rem;
+    }
 
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: "›";
-            color: var(--secondary-text-color);
-        }
+    .breadcrumb-item {
+        display: inline-block;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-        .breadcrumb-item a {
-            color: var(--primary-green);
-            text-decoration: none;
+    .breadcrumb-item.active {
+        max-width: 200px;
+    }
+
+    @media (max-width: 575.98px) {
+        .breadcrumb-item {
+            max-width: 80px;
         }
 
         .breadcrumb-item.active {
-            color: var(--secondary-text-color);
+            max-width: 120px;
+        }
+    }
+
+    /* Existing styles */
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--secondary-text-color);
+    }
+
+    .breadcrumb-item a {
+        color: var(--primary-green);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--secondary-text-color);
+    }
+        .floating-widget {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-widget:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-menu {
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 999;
+        }
+
+        .floating-menu .nav-link {
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            display: block;
+            text-decoration: none;
+        }
+
+        .floating-menu .nav-link:hover {
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .navbar-nav {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+
+            .navbar-nav .nav-item {
+                margin-right: 10px;
+            }
+
+            .floating-widget {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .floating-widget, .floating-menu {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">stockrabit</a>
+            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" class="w-1 h-1 object-contain" style="height: 30px; width: 35px; margin-right: .25rem;">
+            <a class="navbar-brand" href="/"> stockrabit</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -267,57 +318,25 @@
                                 ⚡   Latest 
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link {% if active_page == 'faq' %}active{% endif %}" href="{{ url_for('company_app.faq', company_name=company_name) }}">
-                                FAQ
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if active_page == 'links' %}active{% endif %}" href="{{ url_for('company_app.links', company_name=company_name) }}">
-                                Links
-                            </a>
-                        </li> -->
                     </ul>
                 </div>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <main class="col-md-9 col-lg-10 main-content">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb  border-bottom ">
+                    <ol class="breadcrumb border-bottom">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item"><a href="/company">Companies</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ company_name|title }}</li>
                     </ol>
                 </nav>
 
-                <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">{{ company_name|title }} Latest Earning Calls</h1>
-                </div> -->
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                     <h1 class="h2">{{ company_name|title }} Latest Earning Calls</h1>
                 </div>
 
-                {% if active_page == 'faq' %}
-                <div class="accordion mt-4" id="faqAccordion">
-                    {% for question, answer in faq_data.items() %}
-                    {% set slug = question|slugify %}
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header" id="{{ slug }}">
-                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
-                                {{ question }}
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                {{ answer }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                 
-                {% elif active_page == 'historical' %}
-                <div class="card-list">
+                {% if active_page == 'historical' %}
+                <div class="card-list " style="min-height: 80vh;">
                     {% set sorted_data = historical_data|sort(attribute='date', reverse=True) %}
                     {% for data in sorted_data %}
                     <div class="card {% if loop.first %}latest-call{% endif %}">
@@ -328,15 +347,16 @@
                             <h5 class="card-title">{{ data.quarter }} {{ data.financial_year }}</h5>
                             <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
                             <p class="card-text">
-                                <!-- <strong>Top Questions:</strong> -->
                                 <ul class="top-questions">
-                                    {% for question in data.top_questions[:2] %}
-                                    <li>
-                                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
+                                    {% for question,answer in data.top_questions.items() %}
+                                    {% if loop.index <= 2 %}
+                                        <li class="list-group-item">
+                                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}" class="text-decoration-none">
                                             {{ question }}
                                         </a>
-                                    </li>
-                                    {% endfor %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
                                 </ul>
                                 <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info btn-sm">Show More</a>
                             </p>
@@ -358,31 +378,46 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
+    <div class="floating-widget" id="floatingWidget">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </div>
+
+    <div class="floating-menu" id="floatingMenu">
+        <a class="nav-link {% if active_page == 'historical' %}active{% endif %}" href="{{ url_for('company_app.historical', company_name=company_name) }}">
+            ⚡   Latest 
+        </a>
+        <!-- Add more menu items as needed -->
+    </div>
+
+    <footer class=" bg-dark ">
+        <div class="container bg-dark ">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
-                    <p class="text-muted">Empowering fundamental investors with insights for informed decision-making.</p>
+                    <p class="text-white">Empowering fundamental investors with insights for informed decision-making.</p>
                 </div>
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">Home</a></li>
+                    <ul class="list-unstyled text-white">
+                        <li class="mb-2 "  ><a href="#">Home</a></li>
                         <li class="mb-2"><a href="#features">Features</a></li>
                         <li class="mb-2"><a href="#demo">Demo</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
-                    <p class="text-muted">Email: info@stockrabit.com</p>
+                    <p class="text-white">Email: info@stockrabit.com</p>
                 </div>
             </div>
-            <div class="border-top border-secondary mt-4 pt-4 text-center text-muted">
+            <div class="border-top border-secondary mt-4 pt-4 text-center text-green-600">
                 © 2024 stockrabit. All rights reserved.
             </div>
         </div>
-        <div id="madeWithLove" class="text-center ">
+        <div id="madeWithLove" class="text-center">
             <a href="/about" class="text-decoration-none">
                 Made with ❤️ in the ❤️ of India
             </a>
@@ -393,8 +428,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.sidebar .nav-link');
-            const mainContent = document.querySelector('.main-content');
-            const footer = document.querySelector('footer');
+            const floatingWidget = document.getElementById('floatingWidget');
+            const floatingMenu = document.getElementById('floatingMenu');
 
             links.forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -403,14 +438,6 @@
                     link.classList.add('active');
                     window.location.href = link.href;
                 });
-            });
-
-            mainContent.addEventListener('scroll', () => {
-                if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 1) {
-                    footer.style.display = 'block';
-                } else {
-                    footer.style.display = 'none';
-                }
             });
 
             if (window.location.hash) {
@@ -422,12 +449,33 @@
                 }
             }
 
-            // Initial check for footer visibility
-            if (mainContent.scrollHeight <= mainContent.clientHeight) {
-                footer.style.display = 'block';
-            } else {
-                footer.style.display = 'none';
-            }
+            // Floating widget functionality
+            let isMenuOpen = false;
+
+            floatingWidget.addEventListener('click', () => {
+                isMenuOpen = !isMenuOpen;
+                if (isMenuOpen) {
+                    floatingMenu.style.display = 'block';
+                } else {
+                    floatingMenu.style.display = 'none';
+                }
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!floatingWidget.contains(event.target) && !floatingMenu.contains(event.target)) {
+                    floatingMenu.style.display = 'none';
+                    isMenuOpen = false;
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    floatingMenu.style.display = 'none';
+                    isMenuOpen = false;
+                }
+            });
         });
     </script>
 </body>

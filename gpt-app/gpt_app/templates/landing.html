@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <title>stockrabit - Advanced Financial Analysis for Fundamental Investors</title>
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
+      <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5DF5GL4LB5');
+      </script>
     <meta name="description" content="stockrabit provides in-depth analysis of earnings call transcripts, empowering fundamental investors with fresh, accurate insights for informed decision-making.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -60,10 +68,24 @@
             <div class="container mx-auto flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right">
                     <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Beyond the Balance Sheet</h1>
-                    <p class="text-xl md:text-2xl mb-8 max-w-2xl">stockrabit - Elevating Fundamental Analysis for Forward-Thinking Investors</p>
-                    <p class="text-lg mb-8">Unlock the power of earnings call transcripts. Get fresh, accurate insights to fuel your investment decisions. Simplify complex data, spot trends, and stay ahead of the market.</p>
-                    <a href="{{url_for('company_app.company_index')}}" class="bg-light text-primary px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-80 transition duration-300">Start Your Research</a>
+                    <p class="text-xl md:text-2xl mb-8 max-w-2xl">stockrabit - Elevating Earnings Call Analysis for Fundamental Investors</p>
+                    <p class="text-lg mb-8">Unlock the power of earnings call transcripts. Get latest, deep insights to fuel your investment decisions. Simplify complex data, spot trends, and stay ahead of the market.</p>
+                    <a href="{{url_for('company_app.company_index')}}" style="background-color: #18994e;" class=" text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-80 transition duration-300">Start Your Research</a>
+                    
+                    <!-- New Company Pills Section -->
+                    <section class="mt-8">
+                        <div class="flex flex-wrap justify-left gap-4">
+                            <a href="/company/Bosch Limited" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Bosch Limited</a>
+                            <a href="/company/ABB%20India%20Limited" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">ABB India Limited</a>
+                            <a href="/company/Reliance Industries Limited"  class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Reliance Industries Limited</a>
+                          <!-- <a href="/company/tata-consultancy-services" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Tata Consultancy Services</a> -->
+                          <!-- <a href="/company/hdfc-bank" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">HDFC Bank Limited</a> -->
+                        </div>
+                      </section>
+                    <!-- End of New Company Pills Section -->
+        
                 </div>
+        
                 <div class="md:w-1/2 mt-10 md:mt-0" data-aos="fade-left">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" class="w-full h-auto">
                         <rect x="10" y="50" width="380" height="200" rx="10" fill="#F8FAFC" opacity="0.1"/>
