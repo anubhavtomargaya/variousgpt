@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ company_name|title }} Earning Calls</title>
+    <title>{{ company_name|title }} - stockrabit</title>
     <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5DF5GL4LB5');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5DF5GL4LB5');
     </script>
-    <meta name="description" content="{{ company_name|title }} Earning Calls">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary-green: #18994e;
@@ -24,22 +23,20 @@
             --secondary-text-color: #666666;
             --background-color: #f8f9fa;
             --card-background: #ffffff;
+            --link-color: #4a4a4a;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
-            padding-top: 56px; /* Height of the navbar */
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            padding-top: 56px;
         }
-        a {text-decoration: none;}
 
         .navbar {
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
@@ -54,56 +51,126 @@
             padding: 0.375rem 1rem;
         }
 
-        .sidebar {
-            position: fixed;
-            top: 56px; /* Height of the navbar */
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 20px 0 0;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            width: 200px; /* Reduced width */
-            background-color: var(--background-color);
-        }
-
-        .sidebar .nav-link {
-            color: var(--text-color);
-            padding: 0.5rem 1rem;
-        }
-
-        .sidebar .nav-link.active {
-            color: var(--primary-green);
-            background-color: rgba(46, 204, 113, 0.1);
-        }
-
-        .main-content {
-            padding-top: 1rem;
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-left: 200px; /* Match sidebar width */
-        }
-
-        .card {
+        .company-header {
             background-color: var(--card-background);
-            border: none;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
-            transition: box-shadow 0.3s ease;
+            margin-bottom: 30px;
         }
 
-        .card:hover {
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        .company-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-purple);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0;
         }
 
-        .card-title {
+        .company-ticker {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--secondary-text-color);
+            margin-top: 5px;
+        }
+
+        .market-price {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .price-change {
+            font-size: 18px;
+        }
+
+        .price-change.positive {
+            color: var(--primary-green);
+        }
+
+        .price-change.negative {
+            color: #ff4136;
+        }
+
+        .company-tabs {
+            position: sticky;
+            top: 56px;
+            background-color: var(--background-color);
+            z-index: 1000;
+            padding-top: 10px;
+        }
+
+        .company-tabs .nav-link {
+            color: var(--link-color);
+            border: none;
+            padding: 10px 20px;
+        }
+
+        .company-tabs .nav-link.active {
+            color: var(--primary-green);
+            border-bottom: 2px solid var(--primary-green);
+        }
+
+        .company-tabs .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .info-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--secondary-text-color);
+        }
+
+        .info-value {
+            font-size: 18px;
+        }
+
+        .timeline-chart {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+
+        .earning-calls-section h2 {
+            color: var(--primary-purple);
+            margin-bottom: 20px;
+        }
+
+        .call-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .call-card .card-title {
             color: var(--primary-purple);
             font-weight: 600;
         }
 
-        .card-subtitle {
+        .call-card .card-subtitle {
             color: var(--secondary-text-color);
-            font-size: 1.1rem;
         }
 
         .btn-primary, .btn-secondary, .btn-info {
@@ -122,173 +189,62 @@
             color: var(--primary-green);
         }
 
-        footer {
-            background-color: #ffffff;
-            border-top: 1px solid rgba(0, 0, 0, .1);
-            padding: 1rem 0;
-            position: relative;
-            z-index: 1000;
-        }
-        footer > ul { color: var(--background-color);}
-        .latest-call {
-            box-shadow: 0 0 10px var(--primary-purple);
-        }
-
-        .latest-call-label {
-            color: var(--primary-purple);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            padding: .25rem;
-            background-color: rgb(202, 255, 133);
-            border-radius: 5px;
-            max-width: 106px;
-        }
-
-        .top-questions {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .top-questions li {
-            margin-bottom: 0.5rem;
-        }
-
-        .top-questions a {
-            color: var(--text-color);
-            text-decoration: none;
-        }
-
-        .top-questions a:hover {
+        .info-icon {
+            cursor: help;
             color: var(--primary-green);
-            text-decoration: underline;
+            margin-left: 5px;
         }
 
-        .breadcrumb {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
-        padding: 0.25rem 0;
-        margin-top: .5rem;
-        margin-bottom: .25rem;
-    }
-
-    .breadcrumb-item {
-        display: inline-block;
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .breadcrumb-item.active {
-        max-width: 200px;
-    }
-
-    @media (max-width: 575.98px) {
-        .breadcrumb-item {
-            max-width: 80px;
+        .tooltip {
+            position: relative;
+            display: inline-block;
         }
 
-        .breadcrumb-item.active {
-            max-width: 120px;
-        }
-    }
-
-    /* Existing styles */
-    .breadcrumb-item + .breadcrumb-item::before {
-        content: "›";
-        color: var(--secondary-text-color);
-    }
-
-    .breadcrumb-item a {
-        color: var(--primary-green);
-        text-decoration: none;
-    }
-
-    .breadcrumb-item.active {
-        color: var(--secondary-text-color);
-    }
-        .floating-widget {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background-color: var(--primary-green);
-            color: white;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            transition: transform 0.3s ease;
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .floating-widget:hover {
-            transform: scale(1.1);
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
 
-        .floating-menu {
-            position: fixed;
-            bottom: 90px;
-            left: 20px;
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            z-index: 999;
+        .section {
+            padding-top: 60px;
+            margin-bottom: 60px;
         }
 
-        .floating-menu .nav-link {
-            color: var(--text-color);
-            padding: 0.5rem 1rem;
-            display: block;
+        a {
+            color: var(--link-color);
             text-decoration: none;
         }
 
-        .floating-menu .nav-link:hover {
-            background-color: rgba(46, 204, 113, 0.1);
-        }
-
-        @media (max-width: 767.98px) {
-            .sidebar {
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .navbar-nav {
-                flex-direction: row;
-                justify-content: space-around;
-            }
-
-            .navbar-nav .nav-item {
-                margin-right: 10px;
-            }
-
-            .floating-widget {
-                display: flex;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .floating-widget, .floating-menu {
-                display: none;
-            }
+        a:hover {
+            color: var(--primary-green);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container-fluid">
-            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" class="w-1 h-1 object-contain" style="height: 30px; width: 35px; margin-right: .25rem;">
-            <a class="navbar-brand" href="/"> stockrabit</a>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" style="height: 30px; width: 35px; margin-right: .25rem;">
+            <a class="navbar-brand" href="/" id="navbarBrand">stockrabit</a>
+            <div class="company-info d-none" id="stickyCompanyInfo">
+                <span class="company-name">{{ company_name }}</span>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -308,117 +264,134 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link {% if active_page == 'historical' %}active{% endif %}" href="{{ url_for('company_app.historical', company_name=company_name) }}">
-                                ⚡   Latest 
-                            </a>
-                        </li>
-                    </ul>
+    <main class="container mt-4">
+        <div class="company-header" id="companyHeader">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="company-name">
+                        {{ company_name }}
+                        <span class="tooltip">
+                            <i class="info-icon">ℹ️</i>
+                            <span class="tooltiptext">Pondy Oxides & Chemicals Limited (POCL) is a top Secondary Lead Smelter in India, producing high-quality lead, lead alloys, and PVC additives for battery manufacturers, chemical manufacturers, and PVC industries.</span>
+                        </span>
+                    </h1>
+                    <h2 class="company-ticker">{{ ticker }}</h2>
                 </div>
-            </nav>
-
-            <main class="col-md-9 col-lg-10 main-content">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb border-bottom">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/company">Companies</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ company_name|title }}</li>
-                    </ol>
-                </nav>
-
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                    <h1 class="h2">{{ company_name|title }} Latest Earning Calls</h1>
+                <div class="col-md-6 text-md-end">
+                    <span class="market-price">₹2110.1</span>
+                    <span class="price-change negative">-1.14% (-24.4)</span>
                 </div>
+            </div>
+        </div>
 
-                {% if active_page == 'historical' %}
-                <div class="card-list " style="min-height: 80vh;">
-                    {% set sorted_data = historical_data|sort(attribute='date', reverse=True) %}
-                    {% for data in sorted_data %}
-                    <div class="card {% if loop.first %}latest-call{% endif %}">
-                        <div class="card-body">
-                            {% if loop.first %}
-                            <div class="latest-call-label"> ⚡Latest </div>
-                            {% endif %}
-                            <h5 class="card-title">{{ data.quarter }} {{ data.financial_year }}</h5>
-                            <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
-                            <p class="card-text">
-                                <ul class="top-questions">
-                                    {% for question,answer in data.top_questions.items() %}
-                                    {% if loop.index <= 2 %}
-                                        <li class="list-group-item">
-                                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}" class="text-decoration-none">
-                                            {{ question }}
-                                        </a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                                </ul>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info btn-sm">Show More</a>
-                            </p>
-                            <div class="mt-3">
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary btn-sm">Read Full Transcript</a>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary btn-sm mt-2">Management Insights</a>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info btn-sm mt-2">Analyst Questions</a>
+        <ul class="nav nav-tabs company-tabs" id="companyTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" href="#fundamentals">Fundamentals Overview</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="#earning-calls">Earning Calls Transcripts</a>
+            </li>
+        </ul>
+
+        <div id="fundamentals" class="section">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Market Cap:</span>
+                                <span class="info-value">₹2,661 Cr.</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">P/E Ratio:</span>
+                                <span class="info-value">65.34</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">52 Week High/Low:</span>
+                                <span class="info-value">₹2382 / ₹393</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Dividend Yield:</span>
+                                <span class="info-value">1.5%</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Debt to Equity:</span>
+                                <span class="info-value">0.45</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Return on Equity:</span>
+                                <span class="info-value">18.2%</span>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-                {% else %}
-                <div class="content">
-                    {{ content|safe }}
+                <div class="col-md-6">
+                    <div class="timeline-chart">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
                 </div>
-                {% endif %}
-            </main>
+            </div>
         </div>
-    </div>
 
-    <div class="floating-widget" id="floatingWidget">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-    </div>
+        <div id="earning-calls" class="section">
+            <div class="earning-calls-section">
+                <h2>Earning Call Transcripts</h2>
+                {% set sorted_data = historical_data|sort(attribute='date', reverse=True) %}
+                {% for data in sorted_data %}
+                <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
+                    <h5 class="card-title">{{ data.quarter }} {{ data.financial_year }}</h5>
+                    <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
+                    <p class="card-text">
+                        <ul class="list-unstyled">
+                            {% for question,answer in data.top_questions.items() %}
+                            {% if loop.index <= 2 %}
+                                <li>
+                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
+                                    {{ question }}
+                                </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info btn-sm">Show More</a>
+                    </p>
+                    <div class="mt-3">
+                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary btn-sm">Read Full Transcript</a>
+                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary btn-sm">Management Insights</a>
+                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info btn-sm">Analyst Questions</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
 
-    <div class="floating-menu" id="floatingMenu">
-        <a class="nav-link {% if active_page == 'historical' %}active{% endif %}" href="{{ url_for('company_app.historical', company_name=company_name) }}">
-            ⚡   Latest 
-        </a>
-        <!-- Add more menu items as needed -->
-    </div>
-
-    <footer class=" bg-dark ">
-        <div class="container bg-dark ">
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
-                    <p class="text-white">Empowering fundamental investors with insights for informed decision-making.</p>
+                    <p>Empowering fundamental investors with insights for informed decision-making.</p>
                 </div>
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
-                    <ul class="list-unstyled text-white">
-                        <li class="mb-2 "  ><a href="#">Home</a></li>
-                        <li class="mb-2"><a href="#features">Features</a></li>
-                        <li class="mb-2"><a href="#demo">Demo</a></li>
+                    <ul class="list-unstyled">
+                      <li class="mb-2"><a href="#" class="text-white">Home</a></li>
+                        <li class="mb-2"><a href="#features" class="text-white">Features</a></li>
+                        <li class="mb-2"><a href="#demo" class="text-white">Demo</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
-                    <p class="text-white">Email: info@stockrabit.com</p>
+                    <p>Email: info@stockrabit.com</p>
                 </div>
             </div>
-            <div class="border-top border-secondary mt-4 pt-4 text-center text-green-600">
+            <div class="border-top border-secondary mt-4 pt-4 text-center">
                 © 2024 stockrabit. All rights reserved.
             </div>
         </div>
-        <div id="madeWithLove" class="text-center">
-            <a href="/about" class="text-decoration-none">
+        <div id="madeWithLove" class="text-center mt-2">
+            <a href="/about" class="text-white text-decoration-none">
                 Made with ❤️ in the ❤️ of India
             </a>
         </div>
@@ -426,57 +399,181 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const links = document.querySelectorAll('.sidebar .nav-link');
-            const floatingWidget = document.getElementById('floatingWidget');
-            const floatingMenu = document.getElementById('floatingMenu');
+        // Timeline chart
+        const ctx = document.getElementById('timelineChart').getContext('2d');
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const years = ['2023', '2024'];
 
-            links.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    links.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                    window.location.href = link.href;
-                });
-            });
+        // Sample data - replace with actual data from API
+        const prices = [1800, 1900, 2000, 1950, 2100, 2200, 2150, 2300, 2250, 2400, 2350, 2110, 2200, 2300];
+        const earningCallDates = ['2023-04-15', '2023-07-15', '2023-10-15', '2024-01-15'];
+        const significantEvents = [
+            { date: '2023-06-01', event: 'Product Launch' },
+            { date: '2023-09-15', event: 'Expansion Announcement' },
+            { date: '2024-02-01', event: 'Management Change' }
+        ];
 
-            if (window.location.hash) {
-                const id = window.location.hash.substring(1);
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView();
-                    element.querySelector('.accordion-button').click();
-                }
-            }
-
-            // Floating widget functionality
-            let isMenuOpen = false;
-
-            floatingWidget.addEventListener('click', () => {
-                isMenuOpen = !isMenuOpen;
-                if (isMenuOpen) {
-                    floatingMenu.style.display = 'block';
-                } else {
-                    floatingMenu.style.display = 'none';
-                }
-            });
-
-            // Close menu when clicking outside
-            document.addEventListener('click', (event) => {
-                if (!floatingWidget.contains(event.target) && !floatingMenu.contains(event.target)) {
-                    floatingMenu.style.display = 'none';
-                    isMenuOpen = false;
-                }
-            });
-
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                if (window.innerWidth >= 768) {
-                    floatingMenu.style.display = 'none';
-                    isMenuOpen = false;
-                }
+        const labels = [];
+        years.forEach(year => {
+            months.forEach(month => {
+                labels.push(`${month} ${year}`);
             });
         });
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels.slice(0, prices.length),
+                datasets: [{
+                    label: 'Stock Price',
+                    data: prices,
+                    borderColor: '#18994e',
+                    tension: 0.1,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Earning Calls',
+                    data: labels.map((label, index) => {
+                        const date = new Date(`${label} 01`);
+                        return earningCallDates.includes(date.toISOString().split('T')[0]) ? prices[index] : null;
+                    }),
+                    pointBackgroundColor: '#6a198a',
+                    pointRadius: 6,
+                    showLine: false
+                },
+                {
+                    label: 'Significant Events',
+                    data: labels.map((label, index) => {
+                        const date = new Date(`${label} 01`);
+                        return significantEvents.some(event => event.date === date.toISOString().split('T')[0]) ? prices[index] : null;
+                    }),
+                    pointBackgroundColor: '#ff4136',
+                    pointRadius: 6,
+                    showLine: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return index % 3 === 0 ? this.getLabelForValue(value) : '';
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: false,
+                        display: false
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return context[0].label;
+                            },
+                            label: function(context) {
+                                if (context.dataset.label === 'Earning Calls') {
+                                    return 'Earning Call';
+                                } else if (context.dataset.label === 'Significant Events') {
+                                    const date = new Date(`${context.label} 01`);
+                                    const event = significantEvents.find(e => e.date === date.toISOString().split('T')[0]);
+                                    return event ? event.event : 'Significant Event';
+                                }
+                                return `₹${context.parsed.y}`;
+                            }
+                        }
+                    }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const date = new Date(`${labels[index]} 01`);
+                        const formattedDate = date.toISOString().split('T')[0];
+                        
+                        if (elements[0].datasetIndex === 1) {
+                            // Earning Call click
+                            const earningCallSection = document.querySelector(`[data-date="${formattedDate}"]`);
+                            if (earningCallSection) {
+                                earningCallSection.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        } else if (elements[0].datasetIndex === 2) {
+                            // Significant Event click
+                            const event = significantEvents.find(e => e.date === formattedDate);
+                            if (event) {
+                                alert(`Significant Event: ${event.event}`);
+                                // You can replace this with a more sophisticated way of displaying event details
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for section visibility
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.company-tabs .nav-link');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Sticky header functionality
+        const mainNav = document.getElementById('mainNav');
+        const companyHeader = document.getElementById('companyHeader');
+        const stickyCompanyInfo = document.getElementById('stickyCompanyInfo');
+        const navbarBrand = document.getElementById('navbarBrand');
+        const companyHeaderObserver = new IntersectionObserver(
+            ([e]) => {
+                if (e.intersectionRatio < 1) {
+                    mainNav.classList.add('scrolled');
+                    stickyCompanyInfo.classList.remove('d-none');
+                    navbarBrand.classList.add('d-none');
+                } else {
+                    mainNav.classList.remove('scrolled');
+                    stickyCompanyInfo.classList.add('d-none');
+                    navbarBrand.classList.remove('d-none');
+                }
+            },
+            { threshold: [1] }
+        );
+
+        companyHeaderObserver.observe(companyHeader);
     </script>
 </body>
 </html>
