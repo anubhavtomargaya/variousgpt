@@ -15,6 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <style>
         :root {
             --primary-green: #18994e;
@@ -340,6 +341,9 @@
                 {% for data in sorted_data %}
                 <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
                     <h5 class="card-title">{{ data.quarter }} {{ data.financial_year }}</h5>
+                    <!-- <p class="debug-info" style="font-size: 0.8em; color: #888;">
+                        Date: {{ data.date.strftime('%Y-%m-%d') }}
+                    </p> -->
                     <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
                     <p class="card-text">
                         <ul class="list-unstyled">
@@ -399,122 +403,153 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Timeline chart
-        const ctx = document.getElementById('timelineChart').getContext('2d');
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const years = ['2023', '2024'];
+ document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('timelineChart');
+    if (!ctx) {
+        console.error('Cannot find canvas element with id "timelineChart"');
+        return;
+    }
 
-        // Sample data - replace with actual data from API
-        const prices = [1800, 1900, 2000, 1950, 2100, 2200, 2150, 2300, 2250, 2400, 2350, 2110, 2200, 2300];
-        const earningCallDates = ['2023-04-15', '2023-07-15', '2023-10-15', '2024-01-15'];
-        const significantEvents = [
-            { date: '2023-06-01', event: 'Product Launch' },
-            { date: '2023-09-15', event: 'Expansion Announcement' },
-            { date: '2024-02-01', event: 'Management Change' }
-        ];
+    // Generate mock data function for the last 9 months
+    const generateMockData = () => {
+        const data = [];
+        const endDate = new Date();
+        const startDate = new Date(endDate);
+        startDate.setMonth(startDate.getMonth() - 9);
+        let price = 1000; // Starting price
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            price += (Math.random() - 0.5) * 20; // Random price change
+            data.push({ date: d.toISOString().split('T')[0], price: Math.max(price, 0) });
+        }
+        return data;
+    };
 
-        const labels = [];
-        years.forEach(year => {
-            months.forEach(month => {
-                labels.push(`${month} ${year}`);
-            });
-        });
+    const mockStockData = generateMockData();
 
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels.slice(0, prices.length),
-                datasets: [{
+    let sortedData;
+    try {
+        sortedData = {{ sorted_data|tojson|safe }};
+        console.log('Sorted Data:', sortedData);
+    } catch (error) {
+        console.error('Error accessing sorted_data:', error);
+        return;
+    }
+
+    if (!Array.isArray(sortedData) || sortedData.length === 0) {
+        console.error('sorted_data is not an array or is empty');
+        return;
+    }
+
+    // Filter sortedData to include only the last 9 months
+    const nineMonthsAgo = new Date();
+    nineMonthsAgo.setMonth(nineMonthsAgo.getMonth() - 9);
+    sortedData = sortedData.filter(data => new Date(data.date) >= nineMonthsAgo);
+
+    // Prepare data for the chart
+    const labels = mockStockData.map(data => data.date);
+    const prices = mockStockData.map(data => data.price);
+
+    const earningCallData = labels.map(label => {
+        const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === label);
+        return earningCall ? prices[labels.indexOf(label)] : null;
+    });
+
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
                     label: 'Stock Price',
                     data: prices,
-                    borderColor: '#18994e',
-                    tension: 0.1,
-                    pointRadius: 0
+                    borderColor: 'rgba(24, 153, 78, 1)',
+                    backgroundColor: 'rgba(24, 153, 78, 0.2)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    order: 2  // This puts the area chart in the back
                 },
                 {
                     label: 'Earning Calls',
-                    data: labels.map((label, index) => {
-                        const date = new Date(`${label} 01`);
-                        return earningCallDates.includes(date.toISOString().split('T')[0]) ? prices[index] : null;
-                    }),
+                    data: earningCallData,
                     pointBackgroundColor: '#6a198a',
-                    pointRadius: 6,
-                    showLine: false
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+                    showLine: false,
+                    order: 1  // This brings the dots to the front
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: {
+                            month: 'MMM yyyy'
+                        }
+                    },
+                    ticks: {
+                        maxRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 6
+                    }
                 },
-                {
-                    label: 'Significant Events',
-                    data: labels.map((label, index) => {
-                        const date = new Date(`${label} 01`);
-                        return significantEvents.some(event => event.date === date.toISOString().split('T')[0]) ? prices[index] : null;
-                    }),
-                    pointBackgroundColor: '#ff4136',
-                    pointRadius: 6,
-                    showLine: false
-                }]
+                y: {
+                    beginAtZero: false
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return index % 3 === 0 ? this.getLabelForValue(value) : '';
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: false,
-                        display: false
-                    }
+            plugins: {
+                legend: {
+                    display: false
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            title: function(context) {
-                                return context[0].label;
-                            },
-                            label: function(context) {
-                                if (context.dataset.label === 'Earning Calls') {
-                                    return 'Earning Call';
-                                } else if (context.dataset.label === 'Significant Events') {
-                                    const date = new Date(`${context.label} 01`);
-                                    const event = significantEvents.find(e => e.date === date.toISOString().split('T')[0]);
-                                    return event ? event.event : 'Significant Event';
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        title: function(context) {
+                            const date = new Date(context[0].label);
+                            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                        },
+                        label: function(context) {
+                            if (context.dataset.label === 'Earning Calls' && context.parsed.y !== null) {
+                                const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === context.label);
+                                if (earningCall) {
+                                    return `Earning Call: ${earningCall.quarter} ${earningCall.financial_year}`;
                                 }
-                                return `₹${context.parsed.y}`;
                             }
+                            return `Stock Price: ₹${context.parsed.y.toFixed(2)}`;
                         }
                     }
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const index = elements[0].index;
-                        const date = new Date(`${labels[index]} 01`);
-                        const formattedDate = date.toISOString().split('T')[0];
+                }
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0 && elements[0].datasetIndex === 1) {
+                    const index = elements[0].index;
+                    const clickedDate = labels[index];
+                    const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === clickedDate);
+
+                    if (earningCall) {
+                        const formattedDate = new Date(earningCall.date).toISOString().split('T')[0];
+                        console.log('Looking for element with data-date:', formattedDate);
                         
-                        if (elements[0].datasetIndex === 1) {
-                            // Earning Call click
-                            const earningCallSection = document.querySelector(`[data-date="${formattedDate}"]`);
-                            if (earningCallSection) {
-                                earningCallSection.scrollIntoView({ behavior: 'smooth' });
-                            }
-                        } else if (elements[0].datasetIndex === 2) {
-                            // Significant Event click
-                            const event = significantEvents.find(e => e.date === formattedDate);
-                            if (event) {
-                                alert(`Significant Event: ${event.event}`);
-                                // You can replace this with a more sophisticated way of displaying event details
-                            }
+                        const earningCallSection = document.querySelector(`[data-date="${formattedDate}"]`);
+                        if (earningCallSection) {
+                            earningCallSection.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            console.error(`No earning call section found for date: ${formattedDate}`);
+                            const allDataDates = Array.from(document.querySelectorAll('[data-date]')).map(el => el.getAttribute('data-date'));
+                            console.log('All data-date attributes in the DOM:', allDataDates);
                         }
                     }
                 }
             }
-        });
-
+        }
+    });
+});
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
