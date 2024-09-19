@@ -117,33 +117,80 @@
             color: var(--primary-green);
         }
 
-        .info-card {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            height: 100%;
-        }
+      .info-card {
+        background-color: var(--card-background);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+    .market-cap-highlight {
+        /* background-color: var(--primary-purple); */
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .info-item {
-            margin-bottom: 10px;
-        }
+    .market-cap-highlight .info-label {
+        font-weight: 600;
+    }
 
-        .info-label {
-            font-weight: 600;
-            color: var(--secondary-text-color);
-        }
+    .market-cap-highlight .info-value {
+        font-size: 1.2em;
+        font-weight: 700;
+    }
 
-        .info-value {
-            font-size: 18px;
-        }
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
 
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: var(--secondary-text-color);
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 1.1em;
+    }
+
+    .high-low-gradient {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .gradient-bar {
+        height: 10px;
+        flex-grow: 1;
+        margin: 0 10px;
+        background: linear-gradient(to right, var(--primary-green), var(--primary-purple));
+        border-radius: 5px;
+    }
+
+    .high-low-gradient .low, .high-low-gradient .high {
+        font-size: 0.9em;
+        font-weight: 600;
+    }
+
+    .high-low-gradient .low {
+        color: var(--primary-green);
+    }
+
+    .high-low-gradient .high {
+        color: var(--primary-purple);
+    }
         .timeline-chart {
             background-color: var(--card-background);
             border-radius: 10px;
@@ -298,18 +345,22 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="info-card">
+                        <div class="market-cap-highlight">
+                            <span class="info-label">Market Cap:</span>
+                            <span class="info-value">₹2,661 Cr.</span>
+                        </div>
                         <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Market Cap:</span>
-                                <span class="info-value">₹2,661 Cr.</span>
-                            </div>
                             <div class="info-item">
                                 <span class="info-label">P/E Ratio:</span>
                                 <span class="info-value">65.34</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">52 Week High/Low:</span>
-                                <span class="info-value">₹2382 / ₹393</span>
+                                <div class="high-low-gradient">
+                                    <span class="low">₹165.725</span>
+                                    <div class="gradient-bar"></div>
+                                    <span class="high">₹367.2</span>
+                                </div>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Dividend Yield:</span>
@@ -404,211 +455,361 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
  document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('timelineChart');
-    if (!ctx) {
-        console.error('Cannot find canvas element with id "timelineChart"');
+    const ticker = '{{ ticker }}'; // Assuming the ticker is passed from the server-side
+    fetchHistoricalData(ticker)
+    // Fetch company data
+    fetch(`/company/ticker`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ticker: ticker })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Received data:", data);
+        populateFundamentals(data.stock_data);
+        // createChart(data.chart_data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        displayErrorMessage('Failed to load company data. Please try again later.');
+    });
+
+    function populateFundamentals(stockData) {
+    if (!stockData) {
+        console.error('Stock data is undefined or null');
         return;
     }
 
-    // Generate mock data function for the last 9 months
-    const generateMockData = () => {
-        const data = [];
+    console.log('Populating fundamentals with:', stockData);
+
+    try {
+        // Helper function to safely update or create element
+        function safelyUpdateOrCreateElement(selector, label, value) {
+            let element = document.querySelector(selector);
+            if (!element) {
+                console.log(`Creating new element for: ${selector}`);
+                element = document.createElement('div');
+                element.className = 'info-item';
+                const infoCard = document.querySelector('.info-grid');
+                if (infoCard) {
+                    infoCard.appendChild(element);
+                } else {
+                    console.warn('Info grid not found, appending to body');
+                    document.body.appendChild(element);
+                }
+            }
+            element.innerHTML = `<span class="info-label">${label}:</span> <span class="info-value">${value}</span>`;
+        }
+
+        // Update company name and ticker
+        document.querySelector('.company-name').textContent = stockData.name || 'N/A';
+        document.querySelector('.company-ticker').textContent = stockData.ticker || 'N/A';
+        
+        // Update market price and change
+        const priceElement = document.querySelector('.market-price');
+        priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
+
+        const changeElement = document.querySelector('.price-change');
+        const change = stockData.change;
+        if (change !== undefined && change !== null) {
+            const changeNumber = Number(change);
+            if (!isNaN(changeNumber)) {
+                const changeText = `${changeNumber.toFixed(2)}%`;
+                const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
+                changeElement.textContent = `${changeText} ${priceChange}`;
+                changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
+            } else {
+                changeElement.textContent = 'N/A';
+                changeElement.className = 'price-change';
+            }
+        } else {
+            changeElement.textContent = 'N/A';
+            changeElement.className = 'price-change';
+        }
+
+        // Update Market Cap with special styling
+        const marketCapElement = document.querySelector('.market-cap-highlight .info-value');
+        marketCapElement.textContent = stockData.market_cap ? `₹${(Number(stockData.market_cap) / 10000000).toFixed(2)} Cr.` : 'N/A';
+
+        // Update 52 Week High/Low with gradient
+        const highLowElement = document.querySelector('.high-low-gradient');
+        if (highLowElement) {
+            console.log('if',stockData.low_52_week)
+            highLowElement.innerHTML = `
+                <span class="low">₹${stockData.low_52_week || 'N/A'}</span>
+                <div class="gradient-bar"></div>
+                <span class="high">₹${stockData.high_52_week || 'N/A'}</span>
+            `;
+        } else {
+            console.log('else',stockData.low_52_week)
+            highLowElement.innerHTML = `
+                <span class="low">₹${stockData.low_52_week || 'N/A'}</span>
+                <div class="gradient-bar"></div>
+                <span class="high">₹${stockData.high_52_week || 'N/A'}</span>
+            `;
+            // safelyUpdateOrCreateElement('.info-item:nth-of-type(3)', '52 Week High/Low', `₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}`);
+        }
+
+        // Update other info elements
+        safelyUpdateOrCreateElement('.info-item:nth-of-type(2)', 'P/E Ratio', stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A');
+        safelyUpdateOrCreateElement('.info-item:nth-of-type(4)', 'Dividend Yield', stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A');
+        safelyUpdateOrCreateElement('.info-item:nth-of-type(5)', 'Debt to Equity', stockData.debt_to_equity || 'N/A');
+        safelyUpdateOrCreateElement('.info-item:nth-of-type(6)', 'Return on Equity', stockData.return_on_equity ? `${Number(stockData.return_on_equity).toFixed(2)}%` : 'N/A');
+
+    } catch (error) {
+        console.error('Error populating fundamentals:', error);
+    }
+}
+    function fetchHistoricalData(ticker) {
         const endDate = new Date();
         const startDate = new Date(endDate);
         startDate.setMonth(startDate.getMonth() - 9);
-        let price = 1000; // Starting price
-        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-            price += (Math.random() - 0.5) * 20; // Random price change
-            data.push({ date: d.toISOString().split('T')[0], price: Math.max(price, 0) });
+
+        console.log(`Fetching historical data for ${ticker} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+
+        fetch(`/company/historical_data/${ticker}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                start_date: startDate.toISOString().split('T')[0],
+                end_date: endDate.toISOString().split('T')[0]
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Received historical data:", data);
+            if (data && Array.isArray(data) && data.length > 0) {
+                createChart(data);
+            } else {
+                console.error("Received data is empty or invalid");
+                displayErrorMessage('No historical data available for this stock.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching historical data:', error);
+            displayErrorMessage('Failed to load historical data. Please try again later.');
+        });
+    }
+
+    function createChart(chartData) {
+        console.log("Creating chart with data:", chartData);
+        const ctx = document.getElementById('timelineChart');
+        if (!ctx) {
+            console.error('Cannot find canvas element with id "timelineChart"');
+            return;
         }
-        return data;
-    };
 
-    const mockStockData = generateMockData();
+        if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
+            console.error('Chart data is invalid:', chartData);
+            return;
+        }
 
-    let sortedData;
-    try {
-        sortedData = {{ sorted_data|tojson|safe }};
-        console.log('Sorted Data:', sortedData);
-    } catch (error) {
-        console.error('Error accessing sorted_data:', error);
-        return;
-    }
+        let sortedData;
+        try {
+            sortedData = {{ sorted_data|tojson|safe }};
+            console.log('Sorted Data:', sortedData);
+        } catch (error) {
+            console.error('Error accessing sorted_data:', error);
+            sortedData = [];
+        }
 
-    if (!Array.isArray(sortedData) || sortedData.length === 0) {
-        console.error('sorted_data is not an array or is empty');
-        return;
-    }
+        if (!Array.isArray(sortedData) || sortedData.length === 0) {
+            console.warn('sorted_data is not an array or is empty, proceeding with empty array');
+            sortedData = [];
+        }
 
-    // Filter sortedData to include only the last 9 months
-    const nineMonthsAgo = new Date();
-    nineMonthsAgo.setMonth(nineMonthsAgo.getMonth() - 9);
-    sortedData = sortedData.filter(data => new Date(data.date) >= nineMonthsAgo);
+        // Prepare data for the chart
+        const labels = chartData.map(data => data.date);
+        const prices = chartData.map(data => data.close);
 
-    // Prepare data for the chart
-    const labels = mockStockData.map(data => data.date);
-    const prices = mockStockData.map(data => data.price);
+        console.log("Chart labels:", labels);
+        console.log("Chart prices:", prices);
 
-    const earningCallData = labels.map(label => {
-        const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === label);
-        return earningCall ? prices[labels.indexOf(label)] : null;
-    });
+        const earningCallData = labels.map(label => {
+            const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === label);
+            return earningCall ? prices[labels.indexOf(label)] : null;
+        });
 
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Stock Price',
-                    data: prices,
-                    borderColor: 'rgba(24, 153, 78, 1)',
-                    backgroundColor: 'rgba(24, 153, 78, 0.2)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0,
-                    order: 2  // This puts the area chart in the back
-                },
-                {
-                    label: 'Earning Calls',
-                    data: earningCallData,
-                    pointBackgroundColor: '#6a198a',
-                    pointRadius: 8,
-                    pointHoverRadius: 10,
-                    showLine: false,
-                    order: 1  // This brings the dots to the front
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'month',
-                        displayFormats: {
-                            month: 'MMM yyyy'
+        console.log("Earning call data:", Object(earningCallData));
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Stock Price',
+                        data: prices,
+                        borderColor: 'rgba(24, 153, 78, 1)',
+                        backgroundColor: 'rgba(24, 153, 78, 0.2)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        order: 2
+                    },
+                    {
+                        label: 'Earning Calls',
+                        data: earningCallData,
+                        pointBackgroundColor: '#6a198a',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        showLine: false,
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month',
+                            displayFormats: {
+                                month: 'MMM yyyy'
+                            }
+                        },
+                        ticks: {
+                            maxRotation: 0,
+                            autoSkip: true,
+                            maxTicksLimit: 6
                         }
                     },
-                    ticks: {
-                        maxRotation: 0,
-                        autoSkip: true,
-                        maxTicksLimit: 6
+                    y: {
+                        beginAtZero: false
                     }
                 },
-                y: {
-                    beginAtZero: false
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    callbacks: {
-                        title: function(context) {
-                            const date = new Date(context[0].label);
-                            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                        },
-                        label: function(context) {
-                            if (context.dataset.label === 'Earning Calls' && context.parsed.y !== null) {
-                                const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === context.label);
-                                if (earningCall) {
-                                    return `Earning Call: ${earningCall.quarter} ${earningCall.financial_year}`;
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            title: function(context) {
+                                const date = new Date(context[0].label);
+                                return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                            },
+                            label: function(context) {
+                                if (context.dataset.label === 'Earning Calls' && context.parsed.y !== null) {
+                                    const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === context.label);
+                                    if (earningCall) {
+                                        return `Earning Call: ${earningCall.quarter} ${earningCall.financial_year}`;
+                                    }
                                 }
+                                return `Stock Price: ₹${context.parsed.y.toFixed(2)}`;
                             }
-                            return `Stock Price: ₹${context.parsed.y.toFixed(2)}`;
                         }
                     }
-                }
-            },
-            onClick: (event, elements) => {
-                if (elements.length > 0 && elements[0].datasetIndex === 1) {
-                    const index = elements[0].index;
-                    const clickedDate = labels[index];
-                    const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === clickedDate);
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0 && elements[0].datasetIndex === 1) {
+                        const index = elements[0].index;
+                        const clickedDate = labels[index];
+                        const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === clickedDate);
 
-                    if (earningCall) {
-                        const formattedDate = new Date(earningCall.date).toISOString().split('T')[0];
-                        console.log('Looking for element with data-date:', formattedDate);
-                        
-                        const earningCallSection = document.querySelector(`[data-date="${formattedDate}"]`);
-                        if (earningCallSection) {
-                            earningCallSection.scrollIntoView({ behavior: 'smooth' });
-                        } else {
-                            console.error(`No earning call section found for date: ${formattedDate}`);
-                            const allDataDates = Array.from(document.querySelectorAll('[data-date]')).map(el => el.getAttribute('data-date'));
-                            console.log('All data-date attributes in the DOM:', allDataDates);
+                        if (earningCall) {
+                            const formattedDate = new Date(earningCall.date).toISOString().split('T')[0];
+                            console.log('Looking for element with data-date:', formattedDate);
+                            
+                            const earningCallSection = document.querySelector(`[data-date="${formattedDate}"]`);
+                            if (earningCallSection) {
+                                earningCallSection.scrollIntoView({ behavior: 'smooth' });
+                            } else {
+                                console.error(`No earning call section found for date: ${formattedDate}`);
+                                const allDataDates = Array.from(document.querySelectorAll('[data-date]')).map(el => el.getAttribute('data-date'));
+                                console.log('All data-date attributes in the DOM:', allDataDates);
+                            }
                         }
                     }
                 }
             }
-        }
+        });
+    }
+
+    function displayErrorMessage(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger';
+        errorDiv.textContent = message;
+        document.querySelector('main').prepend(errorDiv);
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
     });
-});
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+
+    // Intersection Observer for section visibility
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.company-tabs .nav-link');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
                 });
-            });
+            }
         });
+    }, observerOptions);
 
-        // Intersection Observer for section visibility
-        const sections = document.querySelectorAll('.section');
-        const navLinks = document.querySelectorAll('.company-tabs .nav-link');
+    sections.forEach(section => {
+        observer.observe(section);
+    });
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.5
-        };
+    // Sticky header functionality
+    const mainNav = document.getElementById('mainNav');
+    const companyHeader = document.getElementById('companyHeader');
+    const stickyCompanyInfo = document.getElementById('stickyCompanyInfo');
+    const navbarBrand = document.getElementById('navbarBrand');
+    const companyHeaderObserver = new IntersectionObserver(
+        ([e]) => {
+            if (e.intersectionRatio < 1) {
+                mainNav.classList.add('scrolled');
+                stickyCompanyInfo.classList.remove('d-none');
+                navbarBrand.classList.add('d-none');
+            } else {
+                mainNav.classList.remove('scrolled');
+                stickyCompanyInfo.classList.add('d-none');
+                navbarBrand.classList.remove('d-none');
+            }
+        },
+        { threshold: [1] }
+    );
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach(section => {
-            observer.observe(section);
-        });
-
-        // Sticky header functionality
-        const mainNav = document.getElementById('mainNav');
-        const companyHeader = document.getElementById('companyHeader');
-        const stickyCompanyInfo = document.getElementById('stickyCompanyInfo');
-        const navbarBrand = document.getElementById('navbarBrand');
-        const companyHeaderObserver = new IntersectionObserver(
-            ([e]) => {
-                if (e.intersectionRatio < 1) {
-                    mainNav.classList.add('scrolled');
-                    stickyCompanyInfo.classList.remove('d-none');
-                    navbarBrand.classList.add('d-none');
-                } else {
-                    mainNav.classList.remove('scrolled');
-                    stickyCompanyInfo.classList.add('d-none');
-                    navbarBrand.classList.remove('d-none');
-                }
-            },
-            { threshold: [1] }
-        );
-
-        companyHeaderObserver.observe(companyHeader);
+    companyHeaderObserver.observe(companyHeader);
+});
     </script>
 </body>
 </html>

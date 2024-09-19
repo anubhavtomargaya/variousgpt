@@ -10,7 +10,7 @@ from gpt_app.common.supabase_handler import get_company_transcript_data, get_fil
 from gpt_app.blueprints.company.format_content import get_faq_content, get_upcoming_content
 from . import company_app
 ## prefix -> /company
-
+from .post import *
 
 def slugify(question):
     return re.sub(r'[^\w\s-]', '', question.lower()).strip().replace(' ', '-')
@@ -20,9 +20,7 @@ def slugify_filter(s):
     return slugify(s)
 from flask import render_template, redirect, url_for
 
-
-
-@company_app.route('/<company_name>/upcoming')
+company_app.route('/<company_name>/upcoming')
 @company_app.route('/<company_name>/upcoming/<question_slug>')
 def upcoming(company_name, question_slug=None):
     upcoming_data = get_upcoming_content(company_name)
@@ -47,6 +45,12 @@ def historical(company_name):
     historical_data = []
     
     print("names",file_names)
+    def adjust_to_latest_friday(date):
+    # If it's Saturday (5) or Sunday (6), adjust to the latest Friday
+        while date.weekday() > 4:
+            date -= timedelta(days=1)
+        return date
+
     for file_name in file_names:
         print("name",file_name)
         if file_name:
@@ -57,7 +61,7 @@ def historical(company_name):
                 'file_name': file_name,
                 'company_name': details['company_name'],
                 'quarter': details['quarter'],
-                'date':datetime.utcnow().date(),
+               'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
                 'financial_year': details['financial_year'],
                 'top_questions': top_questions
             })
@@ -65,6 +69,7 @@ def historical(company_name):
     return render_template('company.html', 
                            company_name=company_name.replace('-', ' '), 
                            active_page="historical", 
+                            ticker=details['ticker'],
                            historical_data=historical_data)
 
     # return render_template('company.html', 
