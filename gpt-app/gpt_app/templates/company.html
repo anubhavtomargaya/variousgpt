@@ -455,118 +455,126 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
  document.addEventListener('DOMContentLoaded', function() {
-    const ticker = '{{ ticker }}'; // Assuming the ticker is passed from the server-side
-    fetchHistoricalData(ticker)
-    // Fetch company data
-    fetch(`/company/ticker`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ticker: ticker })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Received data:", data);
-        populateFundamentals(data.stock_data);
-        // createChart(data.chart_data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        displayErrorMessage('Failed to load company data. Please try again later.');
-    });
+    const ticker = '{{ ticker }}';
+    showLoading();
+    fetchHistoricalData(ticker);
+    fetchCompanyData(ticker);
 
-    function populateFundamentals(stockData) {
-    if (!stockData) {
-        console.error('Stock data is undefined or null');
-        return;
+    function showLoading() {
+        const infoCard = document.querySelector('.info-card');
+        const chartContainer = document.querySelector('.timeline-chart');
+        
+        infoCard.innerHTML = `
+            <div class="market-cap-highlight">
+                <span class="info-label">Market Cap:</span>
+                <span class="info-value">Loading...</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item"><span class="info-label">P/E Ratio:</span> <span class="info-value">Loading...</span></div>
+                <div class="info-item">
+                    <span class="info-label">52 Week High/Low:</span>
+                    <div class="high-low-gradient">
+                        <span class="low">Loading...</span>
+                        <div class="gradient-bar"></div>
+                        <span class="high">Loading...</span>
+                    </div>
+                </div>
+                <div class="info-item"><span class="info-label">Dividend Yield:</span> <span class="info-value">Loading...</span></div>
+                <div class="info-item"><span class="info-label">Debt to Equity:</span> <span class="info-value">Loading...</span></div>
+                <div class="info-item"><span class="info-label">Return on Equity:</span> <span class="info-value">Loading...</span></div>
+            </div>
+        `;
+
+        chartContainer.innerHTML = '<canvas id="timelineChart"></canvas><div class="text-center py-5">Loading chart...</div>';
     }
 
-    console.log('Populating fundamentals with:', stockData);
-
-    try {
-        // Helper function to safely update or create element
-        function safelyUpdateOrCreateElement(selector, label, value) {
-            let element = document.querySelector(selector);
-            if (!element) {
-                console.log(`Creating new element for: ${selector}`);
-                element = document.createElement('div');
-                element.className = 'info-item';
-                const infoCard = document.querySelector('.info-grid');
-                if (infoCard) {
-                    infoCard.appendChild(element);
-                } else {
-                    console.warn('Info grid not found, appending to body');
-                    document.body.appendChild(element);
-                }
+    function fetchCompanyData(ticker) {
+        fetch(`/company/ticker`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ticker: ticker })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            element.innerHTML = `<span class="info-label">${label}:</span> <span class="info-value">${value}</span>`;
+            return response.json();
+        })
+        .then(data => {
+            console.log("Received data:", data);
+            populateFundamentals(data.stock_data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            displayErrorMessage('Failed to load company data. Please try again later.');
+        });
+    }
+
+    function populateFundamentals(stockData) {
+        if (!stockData) {
+            console.error('Stock data is undefined or null');
+            return;
         }
 
-        // Update company name and ticker
-        document.querySelector('.company-name').textContent = stockData.name || 'N/A';
-        document.querySelector('.company-ticker').textContent = stockData.ticker || 'N/A';
-        
-        // Update market price and change
-        const priceElement = document.querySelector('.market-price');
-        priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
+        console.log('Populating fundamentals with:', stockData);
 
-        const changeElement = document.querySelector('.price-change');
-        const change = stockData.change;
-        if (change !== undefined && change !== null) {
-            const changeNumber = Number(change);
-            if (!isNaN(changeNumber)) {
-                const changeText = `${changeNumber.toFixed(2)}%`;
-                const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
-                changeElement.textContent = `${changeText} ${priceChange}`;
-                changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
+        try {
+            // Update company name and ticker
+            document.querySelector('.company-name').textContent = stockData.name || 'N/A';
+            document.querySelector('.company-ticker').textContent = stockData.ticker || 'N/A';
+            
+            // Update market price and change
+            const priceElement = document.querySelector('.market-price');
+            priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
+
+            const changeElement = document.querySelector('.price-change');
+            const change = stockData.change;
+            if (change !== undefined && change !== null) {
+                const changeNumber = Number(change);
+                if (!isNaN(changeNumber)) {
+                    const changeText = `${changeNumber.toFixed(2)}%`;
+                    const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
+                    changeElement.textContent = `${changeText} ${priceChange}`;
+                    changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
+                } else {
+                    changeElement.textContent = 'N/A';
+                    changeElement.className = 'price-change';
+                }
             } else {
                 changeElement.textContent = 'N/A';
                 changeElement.className = 'price-change';
             }
-        } else {
-            changeElement.textContent = 'N/A';
-            changeElement.className = 'price-change';
-        }
 
-        // Update Market Cap with special styling
-        const marketCapElement = document.querySelector('.market-cap-highlight .info-value');
-        marketCapElement.textContent = stockData.market_cap ? `₹${(Number(stockData.market_cap) / 10000000).toFixed(2)} Cr.` : 'N/A';
-
-        // Update 52 Week High/Low with gradient
-        const highLowElement = document.querySelector('.high-low-gradient');
-        if (highLowElement) {
-            console.log('if',stockData.low_52_week)
-            highLowElement.innerHTML = `
-                <span class="low">₹${stockData.low_52_week || 'N/A'}</span>
-                <div class="gradient-bar"></div>
-                <span class="high">₹${stockData.high_52_week || 'N/A'}</span>
+            // Update info card
+            const infoCard = document.querySelector('.info-card');
+            infoCard.innerHTML = `
+                <div class="market-cap-highlight">
+                    <span class="info-label">Market Cap:</span>
+                    <span class="info-value">${stockData.market_cap ? `₹${(Number(stockData.market_cap) / 10000000).toFixed(2)} Cr.` : 'N/A'}</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item"><span class="info-label">P/E Ratio:</span> <span class="info-value">${stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A'}</span></div>
+                    <div class="info-item">
+                        <span class="info-label">52 Week High/Low:</span>
+                        <div class="high-low-gradient">
+                            <span class="low">₹${stockData.low_52_week || 'N/A'}</span>
+                            <div class="gradient-bar"></div>
+                            <span class="high">₹${stockData.high_52_week || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div class="info-item"><span class="info-label">Dividend Yield:</span> <span class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</span></div>
+                    <div class="info-item"><span class="info-label">Debt to Equity:</span> <span class="info-value">${stockData.debt_to_equity || 'N/A'}</span></div>
+                    <div class="info-item"><span class="info-label">Return on Equity:</span> <span class="info-value">${stockData.return_on_equity ? `${Number(stockData.return_on_equity).toFixed(2)}%` : 'N/A'}</span></div>
+                </div>
             `;
-        } else {
-            console.log('else',stockData.low_52_week)
-            highLowElement.innerHTML = `
-                <span class="low">₹${stockData.low_52_week || 'N/A'}</span>
-                <div class="gradient-bar"></div>
-                <span class="high">₹${stockData.high_52_week || 'N/A'}</span>
-            `;
-            // safelyUpdateOrCreateElement('.info-item:nth-of-type(3)', '52 Week High/Low', `₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}`);
+
+        } catch (error) {
+            console.error('Error populating fundamentals:', error);
         }
-
-        // Update other info elements
-        safelyUpdateOrCreateElement('.info-item:nth-of-type(2)', 'P/E Ratio', stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A');
-        safelyUpdateOrCreateElement('.info-item:nth-of-type(4)', 'Dividend Yield', stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A');
-        safelyUpdateOrCreateElement('.info-item:nth-of-type(5)', 'Debt to Equity', stockData.debt_to_equity || 'N/A');
-        safelyUpdateOrCreateElement('.info-item:nth-of-type(6)', 'Return on Equity', stockData.return_on_equity ? `${Number(stockData.return_on_equity).toFixed(2)}%` : 'N/A');
-
-    } catch (error) {
-        console.error('Error populating fundamentals:', error);
     }
-}
+
     function fetchHistoricalData(ticker) {
         const endDate = new Date();
         const startDate = new Date(endDate);
@@ -613,6 +621,12 @@
             return;
         }
 
+        // Remove the loading message
+        const loadingMessage = ctx.nextElementSibling;
+        if (loadingMessage) {
+            loadingMessage.remove();
+        }
+
         if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
             console.error('Chart data is invalid:', chartData);
             return;
@@ -646,7 +660,12 @@
 
         console.log("Earning call data:", Object(earningCallData));
 
-        const chart = new Chart(ctx, {
+        // Check if a chart instance already exists and destroy it
+        if (window.stockChart instanceof Chart) {
+            window.stockChart.destroy();
+        }
+
+        window.stockChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
@@ -798,7 +817,7 @@
             if (e.intersectionRatio < 1) {
                 mainNav.classList.add('scrolled');
                 stickyCompanyInfo.classList.remove('d-none');
-                navbarBrand.classList.add('d-none');
+                navbarBrand.classList.add('d-none')
             } else {
                 mainNav.classList.remove('scrolled');
                 stickyCompanyInfo.classList.add('d-none');
