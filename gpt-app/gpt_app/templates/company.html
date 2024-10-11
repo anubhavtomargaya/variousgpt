@@ -14,6 +14,7 @@
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <style>
@@ -23,276 +24,209 @@
             --text-color: #333333;
             --secondary-text-color: #666666;
             --background-color: #f8f9fa;
-            --card-background: #ffffff;
-            --link-color: #4a4a4a;
+            --border-color: #e0e0e0;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
-            padding-top: 56px;
+            line-height: 1.6;
+            font-size: 14px;
         }
 
         .navbar {
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            height: 50px;
+            padding: 0 15px;
         }
 
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-green) !important;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            height: 25px;
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-color);
+            font-size: 14px;
+            padding: 0.5rem 1rem;
+        }
+
+        .company-name-scrolled {
+            display: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-purple) !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
         }
 
         .btn-sign-up {
             background-color: var(--primary-green);
             color: white;
             border-radius: 20px;
-            padding: 0.375rem 1rem;
+            padding: 0.25rem 1rem;
+            font-size: 14px;
         }
 
         .company-header {
-            background-color: var(--card-background);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .company-name {
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-purple);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 0;
         }
 
         .company-ticker {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 16px;
             color: var(--secondary-text-color);
-            margin-top: 5px;
         }
 
         .market-price {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
         }
 
         .price-change {
-            font-size: 18px;
+            font-size: 16px;
         }
 
-        .price-change.positive {
-            color: var(--primary-green);
-        }
-
-        .price-change.negative {
-            color: #ff4136;
+        .company-tabs-container {
+            position: sticky;
+            top: 50px;
+            background-color: var(--background-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
         }
 
         .company-tabs {
-            position: sticky;
-            top: 56px;
-            background-color: var(--background-color);
-            z-index: 1000;
-            padding-top: 10px;
+            display: flex;
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
         }
 
         .company-tabs .nav-link {
-            color: var(--link-color);
-            border: none;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
             padding: 10px 20px;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-        .company-tabs .nav-link.active {
-            color: var(--primary-green);
-            border-bottom: 2px solid var(--primary-green);
+        .company-tabs .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-green);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
-        .company-tabs .nav-link:hover {
-            color: var(--primary-green);
+        .company-tabs .nav-link.active::after {
+            transform: scaleX(1);
         }
 
-      .info-card {
-        background-color: var(--card-background);
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .market-cap-highlight {
-        /* background-color: var(--primary-purple); */
-        color: white;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .market-cap-highlight .info-label {
-        font-weight: 600;
-    }
-
-    .market-cap-highlight .info-value {
-        font-size: 1.2em;
-        font-weight: 700;
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .info-item {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .info-label {
-        font-weight: 600;
-        color: var(--secondary-text-color);
-        margin-bottom: 5px;
-    }
-
-    .info-value {
-        font-size: 1.1em;
-    }
-
-    .high-low-gradient {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .gradient-bar {
-        height: 10px;
-        flex-grow: 1;
-        margin: 0 10px;
-        background: linear-gradient(to right, var(--primary-green), var(--primary-purple));
-        border-radius: 5px;
-    }
-
-    .high-low-gradient .low, .high-low-gradient .high {
-        font-size: 0.9em;
-        font-weight: 600;
-    }
-
-    .high-low-gradient .low {
-        color: var(--primary-green);
-    }
-
-    .high-low-gradient .high {
-        color: var(--primary-purple);
-    }
-        .timeline-chart {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            height: 100%;
+        .info-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
         }
 
-        .earning-calls-section h2 {
-            color: var(--primary-purple);
-            margin-bottom: 20px;
+        .info-item {
+            flex: 1;
+            min-width: 150px;
         }
 
-        .call-card {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+        .info-label {
+            font-size: 12px;
+            color: var(--secondary-text-color);
         }
 
-        .call-card .card-title {
-            color: var(--primary-purple);
+        .info-value {
+            font-size: 16px;
             font-weight: 600;
         }
 
-        .call-card .card-subtitle {
-            color: var(--secondary-text-color);
+        .timeline-chart {
+            margin-top: 20px;
+            height: 250px;
+        }
+
+        .call-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .call-date {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-purple);
         }
 
         .btn-primary, .btn-secondary, .btn-info {
             border-radius: 20px;
-            padding: 0.375rem 1rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 12px;
         }
 
-        .btn-primary {
-            background-color: var(--primary-green);
-            border-color: var(--primary-green);
-        }
+        @media (max-width: 768px) {
+            .company-name {
+                font-size: 20px;
+            }
 
-        .btn-secondary, .btn-info {
-            background-color: white;
-            border-color: var(--primary-green);
-            color: var(--primary-green);
-        }
+            .market-price {
+                font-size: 20px;
+            }
 
-        .info-icon {
-            cursor: help;
-            color: var(--primary-green);
-            margin-left: 5px;
-        }
+            .price-change {
+                font-size: 14px;
+            }
 
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
+            .info-section {
+                flex-direction: column;
+            }
 
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 300px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -150px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .section {
-            padding-top: 60px;
-            margin-bottom: 60px;
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: var(--primary-green);
+            .company-tabs .nav-link {
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-        <div class="container">
-            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" style="height: 30px; width: 35px; margin-right: .25rem;">
-            <a class="navbar-brand" href="/" id="navbarBrand">stockrabit</a>
-            <div class="company-info d-none" id="stickyCompanyInfo">
-                <span class="company-name">{{ company_name }}</span>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/logo-stbit.png" alt="stockrabit logo">
+                <span class="brand-text">stockrabit</span>
+                <span class="company-name-scrolled"></span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -312,523 +246,498 @@
         </div>
     </nav>
 
-    <main class="container mt-4">
-        <div class="company-header" id="companyHeader">
+    <main class="container mt-5">
+        <div class="company-header">
             <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h1 class="company-name">
-                        {{ company_name }}
-                        <span class="tooltip">
-                            <i class="info-icon">ℹ️</i>
-                            <span class="tooltiptext">Pondy Oxides & Chemicals Limited (POCL) is a top Secondary Lead Smelter in India, producing high-quality lead, lead alloys, and PVC additives for battery manufacturers, chemical manufacturers, and PVC industries.</span>
-                        </span>
-                    </h1>
-                    <h2 class="company-ticker">{{ ticker }}</h2>
+                <div class="col-md-8">
+                    <h1 class="company-name">{{ company_name }}</h1>
+                    <div class="company-ticker">{{ ticker }}</div>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <span class="market-price">₹2110.1</span>
-                    <span class="price-change negative">-1.14% (-24.4)</span>
+                <div class="col-md-4 text-md-end">
+                    <span class="market-price">₹337.00</span>
+                    <span class="price-change">N/A</span>
                 </div>
             </div>
         </div>
 
-        <ul class="nav nav-tabs company-tabs" id="companyTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" href="#fundamentals">Fundamentals Overview</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" href="#earning-calls">Earning Calls Transcripts</a>
-            </li>
-        </ul>
+        <div class="company-tabs-container">
+            <ul class="company-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" href="#fundamentals">Fundamentals Overview</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" href="#earning-calls">Earning Calls Transcripts</a>
+                </li>
+            </ul>
+        </div>
 
         <div id="fundamentals" class="section">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="info-card">
-                        <div class="market-cap-highlight">
-                            <span class="info-label">Market Cap:</span>
-                            <span class="info-value">₹2,661 Cr.</span>
-                        </div>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">P/E Ratio:</span>
-                                <span class="info-value">65.34</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">52 Week High/Low:</span>
-                                <div class="high-low-gradient">
-                                    <span class="low">₹165.725</span>
-                                    <div class="gradient-bar"></div>
-                                    <span class="high">₹367.2</span>
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Dividend Yield:</span>
-                                <span class="info-value">1.5%</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Debt to Equity:</span>
-                                <span class="info-value">0.45</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Return on Equity:</span>
-                                <span class="info-value">18.2%</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="info-section">
+                <div class="info-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="info-label">Market Cap</div>
+                    <div class="info-value" id="marketCapValue">₹14,42,00.6171648 Cr.</div>
                 </div>
-                <div class="col-md-6">
-                    <div class="timeline-chart">
-                        <canvas id="timelineChart"></canvas>
-                    </div>
+                <div class="info-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <div class="info-label">P/E Ratio</div>
+                    <div class="info-value">7.54</div>
                 </div>
+                <div class="info-item">
+                    <i class="fas fa-balance-scale"></i>
+                    <div class="info-label">52 Week High/Low</div>
+                    <div class="info-value">₹376 / ₹165.725</div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-percent"></i>
+                    <div class="info-label">Dividend Yield</div>
+                    <div class="info-value">6.86%</div>
+                </div>
+            </div>
+            <div class="timeline-chart">
+                <canvas id="timelineChart"></canvas>
             </div>
         </div>
 
-        <div id="earning-calls" class="section">
-            <div class="earning-calls-section">
-                <h2>Earning Call Transcripts</h2>
-                {% set sorted_data = historical_data|sort(attribute='date', reverse=True) %}
-                {% for data in sorted_data %}
-                <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
-                    <h5 class="card-title">{{ data.quarter }} {{ data.financial_year }}</h5>
-                    <!-- <p class="debug-info" style="font-size: 0.8em; color: #888;">
-                        Date: {{ data.date.strftime('%Y-%m-%d') }}
-                    </p> -->
-                    <h6 class="card-subtitle mb-3">{{ data.date.strftime('%B %d, %Y') }}</h6>
-                    <p class="card-text">
-                        <ul class="list-unstyled">
-                            {% for question,answer in data.top_questions.items() %}
-                            {% if loop.index <= 2 %}
-                                <li>
-                                <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
-                                    {{ question }}
-                                </a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions" class="btn btn-info btn-sm">Show More</a>
-                    </p>
-                    <div class="mt-3">
-                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary btn-sm">Read Full Transcript</a>
-                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary btn-sm">Management Insights</a>
-                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info btn-sm">Analyst Questions</a>
-                    </div>
+        <div id="earning-calls" class="section mt-4">
+            <h2 class="section-title">Earning Call Transcripts</h2>
+            {% for data in historical_data|sort(attribute='date', reverse=True) %}
+            <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
+                <div class="call-date">{{ data.quarter }} {{ data.financial_year }} - {{ data.date.strftime('%B %d, %Y') }}</div>
+                <ul class="list-unstyled mt-2">
+                    {% for question, answer in data.top_questions.items() %}
+                    {% if loop.index <= 2 %}
+                        <li>
+                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
+                            {{ question }}
+                        </a>
+                        </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                <div class="mt-2">
+                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary btn-sm">Read Full Transcript</a>
+                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary btn-sm">Management Insights</a>
+                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info btn-sm">Analyst Questions</a>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
     </main>
-
-    <footer class="bg-dark text-white mt-5 py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
-                    <p>Empowering fundamental investors with insights for informed decision-making.</p>
-                </div>
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
-                    <ul class="list-unstyled">
-                      <li class="mb-2"><a href="#" class="text-white">Home</a></li>
-                        <li class="mb-2"><a href="#features" class="text-white">Features</a></li>
-                        <li class="mb-2"><a href="#demo" class="text-white">Demo</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
-                    <p>Email: info@stockrabit.com</p>
-                </div>
-            </div>
-            <div class="border-top border-secondary mt-4 pt-4 text-center">
-                © 2024 stockrabit. All rights reserved.
-            </div>
-        </div>
-        <div id="madeWithLove" class="text-center mt-2">
-            <a href="/about" class="text-white text-decoration-none">
-                Made with ❤️ in the ❤️ of India
-            </a>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
- document.addEventListener('DOMContentLoaded', function() {
-    const ticker = '{{ ticker }}';
-    showLoading();
-    fetchHistoricalData(ticker);
-    fetchCompanyData(ticker);
-
-    function showLoading() {
-        const infoCard = document.querySelector('.info-card');
-        const chartContainer = document.querySelector('.timeline-chart');
-        
-        infoCard.innerHTML = `
-            <div class="market-cap-highlight">
-                <span class="info-label">Market Cap:</span>
-                <span class="info-value">Loading...</span>
-            </div>
-            <div class="info-grid">
-                <div class="info-item"><span class="info-label">P/E Ratio:</span> <span class="info-value">Loading...</span></div>
-                <div class="info-item">
-                    <span class="info-label">52 Week High/Low:</span>
-                    <div class="high-low-gradient">
-                        <span class="low">Loading...</span>
-                        <div class="gradient-bar"></div>
-                        <span class="high">Loading...</span>
+        <footer class="bg-dark text-white mt-5 py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
+                        <p>Empowering fundamental investors with insights for informed decision-making.</p>
+                    </div>
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
+                        <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white">Home</a></li>
+                            <li class="mb-2"><a href="#features" class="text-white">Features</a></li>
+                            <li class="mb-2"><a href="#demo" class="text-white">Demo</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
+                        <p>Email: info@stockrabit.com</p>
                     </div>
                 </div>
-                <div class="info-item"><span class="info-label">Dividend Yield:</span> <span class="info-value">Loading...</span></div>
-                <div class="info-item"><span class="info-label">Debt to Equity:</span> <span class="info-value">Loading...</span></div>
-                <div class="info-item"><span class="info-label">Return on Equity:</span> <span class="info-value">Loading...</span></div>
+                <div class="border-top border-secondary mt-4 pt-4 text-center">
+                    © 2024 stockrabit. All rights reserved.
+                </div>
             </div>
-        `;
+            <div id="madeWithLove" class="text-center mt-2">
+                <a href="/about" class="text-white text-decoration-none">
+                    Made with ❤️ in the ❤️ of India
+                </a>
+            </div>
+        </footer>
 
-        chartContainer.innerHTML = '<canvas id="timelineChart"></canvas><div class="text-center py-5">Loading chart...</div>';
-    }
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    function fetchCompanyData(ticker) {
-        fetch(`/company/ticker`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ticker: ticker })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
-            populateFundamentals(data.stock_data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            displayErrorMessage('Failed to load company data. Please try again later.');
-        });
-    }
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ticker = '{{ ticker }}';
+            showLoading();
+            fetchHistoricalData(ticker);
+            fetchCompanyData(ticker);
+            const companyName = '{{ company_name }}';
+            const navbar = document.querySelector('.navbar');
+            const brandText = document.querySelector('.brand-text');
+            const companyNameScrolled = document.querySelector('.company-name-scrolled');
+            const tabsContainer = document.querySelector('.company-tabs-container');
+            const tabs = document.querySelectorAll('.company-tabs .nav-link');
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+           
+            // window.addEventListener('scroll', function() {
+            //     if (window.scrollY > 50) {
+            //         navbar.classList.add('navbar-scrolled');
+            //         brandText.style.display = 'none';
+            //         companyNameScrolled.style.display = 'inline';
+            //         companyNameScrolled.textContent = companyName;
+            //     } else {
+            //         navbar.classList.remove('navbar-scrolled');
+            //         brandText.style.display = 'inline';
+            //         companyNameScrolled.style.display = 'none';
+            //     }
+            // });
 
-    function populateFundamentals(stockData) {
-        if (!stockData) {
-            console.error('Stock data is undefined or null');
-            return;
-        }
-
-        console.log('Populating fundamentals with:', stockData);
-
-        try {
-            // Update company name and ticker
-            document.querySelector('.company-name').textContent = stockData.name || 'N/A';
-            document.querySelector('.company-ticker').textContent = stockData.ticker || 'N/A';
-            
-            // Update market price and change
-            const priceElement = document.querySelector('.market-price');
-            priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
-
-            const changeElement = document.querySelector('.price-change');
-            const change = stockData.change;
-            if (change !== undefined && change !== null) {
-                const changeNumber = Number(change);
-                if (!isNaN(changeNumber)) {
-                    const changeText = `${changeNumber.toFixed(2)}%`;
-                    const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
-                    changeElement.textContent = `${changeText} ${priceChange}`;
-                    changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('navbar-scrolled');
+                    brandText.style.display = 'none';
+                    companyNameScrolled.style.display = 'inline';
+                    companyNameScrolled.textContent = companyName;
+                    tabsContainer.classList.add('scrolled');
                 } else {
-                    changeElement.textContent = 'N/A';
-                    changeElement.className = 'price-change';
+                    navbar.classList.remove('navbar-scrolled');
+                    brandText.style.display = 'inline';
+                    companyNameScrolled.style.display = 'none';
+                    tabsContainer.classList.remove('scrolled');
                 }
-            } else {
-                changeElement.textContent = 'N/A';
-                changeElement.className = 'price-change';
-            }
+            });
 
-            // Update info card
-            const infoCard = document.querySelector('.info-card');
-            infoCard.innerHTML = `
-                <div class="market-cap-highlight">
-                    <span class="info-label">Market Cap:</span>
-                    <span class="info-value">${stockData.market_cap ? `₹${(Number(stockData.market_cap) / 10000000).toFixed(2)} Cr.` : 'N/A'}</span>
-                </div>
-                <div class="info-grid">
-                    <div class="info-item"><span class="info-label">P/E Ratio:</span> <span class="info-value">${stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A'}</span></div>
-                    <div class="info-item">
-                        <span class="info-label">52 Week High/Low:</span>
-                        <div class="high-low-gradient">
-                            <span class="low">₹${stockData.low_52_week || 'N/A'}</span>
-                            <div class="gradient-bar"></div>
-                            <span class="high">₹${stockData.high_52_week || 'N/A'}</span>
+            // hamburgerMenu.addEventListener('click', function() {
+            //     navbarCollapse.classList.toggle('show');
+            // });
+
+            // // Close the menu when clicking outside
+            // document.addEventListener('click', function(event) {
+            //     if (!hamburgerMenu.contains(event.target) && !navbarCollapse.contains(event.target)) {
+            //         navbarCollapse.classList.remove('show');
+            //     }
+            // });
+        
+                function showLoading() {
+                    const infoSection = document.querySelector('.info-section');
+                    const chartContainer = document.querySelector('.timeline-chart');
+                    
+                    infoSection.innerHTML = `
+                        <div class="info-item">
+                            <i class="fas fa-chart-line"></i>
+                            <div class="info-label">Market Cap</div>
+                            <div class="info-value">Loading...</div>
                         </div>
-                    </div>
-                    <div class="info-item"><span class="info-label">Dividend Yield:</span> <span class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</span></div>
-                    <div class="info-item"><span class="info-label">Debt to Equity:</span> <span class="info-value">${stockData.debt_to_equity || 'N/A'}</span></div>
-                    <div class="info-item"><span class="info-label">Return on Equity:</span> <span class="info-value">${stockData.return_on_equity ? `${Number(stockData.return_on_equity).toFixed(2)}%` : 'N/A'}</span></div>
-                </div>
-            `;
-
-        } catch (error) {
-            console.error('Error populating fundamentals:', error);
-        }
-    }
-
-    function fetchHistoricalData(ticker) {
-        const endDate = new Date();
-        const startDate = new Date(endDate);
-        startDate.setMonth(startDate.getMonth() - 9);
-
-        console.log(`Fetching historical data for ${ticker} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
-
-        fetch(`/company/historical_data/${ticker}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                start_date: startDate.toISOString().split('T')[0],
-                end_date: endDate.toISOString().split('T')[0]
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received historical data:", data);
-            if (data && Array.isArray(data) && data.length > 0) {
-                createChart(data);
-            } else {
-                console.error("Received data is empty or invalid");
-                displayErrorMessage('No historical data available for this stock.');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching historical data:', error);
-            displayErrorMessage('Failed to load historical data. Please try again later.');
-        });
-    }
-
-    function createChart(chartData) {
-        console.log("Creating chart with data:", chartData);
-        const ctx = document.getElementById('timelineChart');
-        if (!ctx) {
-            console.error('Cannot find canvas element with id "timelineChart"');
-            return;
-        }
-
-        // Remove the loading message
-        const loadingMessage = ctx.nextElementSibling;
-        if (loadingMessage) {
-            loadingMessage.remove();
-        }
-
-        if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
-            console.error('Chart data is invalid:', chartData);
-            return;
-        }
-
-        let sortedData;
-        try {
-            sortedData = {{ sorted_data|tojson|safe }};
-            console.log('Sorted Data:', sortedData);
-        } catch (error) {
-            console.error('Error accessing sorted_data:', error);
-            sortedData = [];
-        }
-
-        if (!Array.isArray(sortedData) || sortedData.length === 0) {
-            console.warn('sorted_data is not an array or is empty, proceeding with empty array');
-            sortedData = [];
-        }
-
-        // Prepare data for the chart
-        const labels = chartData.map(data => data.date);
-        const prices = chartData.map(data => data.close);
-
-        console.log("Chart labels:", labels);
-        console.log("Chart prices:", prices);
-
-        const earningCallData = labels.map(label => {
-            const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === label);
-            return earningCall ? prices[labels.indexOf(label)] : null;
-        });
-
-        console.log("Earning call data:", Object(earningCallData));
-
-        // Check if a chart instance already exists and destroy it
-        if (window.stockChart instanceof Chart) {
-            window.stockChart.destroy();
-        }
-
-        window.stockChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Stock Price',
-                        data: prices,
-                        borderColor: 'rgba(24, 153, 78, 1)',
-                        backgroundColor: 'rgba(24, 153, 78, 0.2)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        order: 2
-                    },
-                    {
-                        label: 'Earning Calls',
-                        data: earningCallData,
-                        pointBackgroundColor: '#6a198a',
-                        pointRadius: 8,
-                        pointHoverRadius: 10,
-                        showLine: false,
-                        order: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'month',
-                            displayFormats: {
-                                month: 'MMM yyyy'
-                            }
+                        <div class="info-item">
+                            <i class="fas fa-chart-pie"></i>
+                            <div class="info-label">P/E Ratio</div>
+                            <div class="info-value">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-balance-scale"></i>
+                            <div class="info-label">52 Week High/Low</div>
+                            <div class="info-value">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-percent"></i>
+                            <div class="info-label">Dividend Yield</div>
+                            <div class="info-value">Loading...</div>
+                        </div>
+                    `;
+        
+                    chartContainer.innerHTML = '<canvas id="timelineChart"></canvas><div class="text-center py-5">Loading chart...</div>';
+                }
+        
+                function fetchCompanyData(ticker) {
+                    fetch(`/company/ticker`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
                         },
-                        ticks: {
-                            maxRotation: 0,
-                            autoSkip: true,
-                            maxTicksLimit: 6
+                        body: JSON.stringify({ ticker: ticker })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
                         }
-                    },
-                    y: {
-                        beginAtZero: false
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Received data:", data);
+                        populateFundamentals(data.stock_data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        displayErrorMessage('Failed to load company data. Please try again later.');
+                    });
+                }
+        
+                function populateFundamentals(stockData) {
+                    if (!stockData) {
+                        console.error('Stock data is undefined or null');
+                        return;
                     }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        callbacks: {
-                            title: function(context) {
-                                const date = new Date(context[0].label);
-                                return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+                    console.log('Populating fundamentals with:', stockData);
+        
+                    try {
+                        // Update company name and ticker
+                        document.querySelector('.company-name').textContent = stockData.name || 'N/A';
+                        document.querySelector('.company-ticker').textContent = 'NSE: '+ stockData.ticker || 'N/A';
+                        
+                        // Update market price and change
+                        const priceElement = document.querySelector('.market-price');
+                        priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
+        
+                        const changeElement = document.querySelector('.price-change');
+                        const change = stockData.change;
+                        if (change !== undefined && change !== null) {
+                            const changeNumber = Number(change);
+                            if (!isNaN(changeNumber)) {
+                                const changeText = `${changeNumber.toFixed(2)}%`;
+                                const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
+                                changeElement.textContent = `${changeText} ${priceChange}`;
+                                changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
+                            } else {
+                                changeElement.textContent = 'N/A';
+                                changeElement.className = 'price-change';
+                            }
+                        } else {
+                            changeElement.textContent = 'N/A';
+                            changeElement.className = 'price-change';
+                        }
+        
+                        // Update info section
+                        const infoSection = document.querySelector('.info-section');
+                        infoSection.innerHTML = `
+                            <div class="info-item">
+                                <i class="fas fa-chart-line"></i>
+                                <div class="info-label">Market Cap</div>
+                                <div class="info-value">${stockData.market_cap ? `₹${formatIndianNumber(Number(stockData.market_cap) / 10000000)} Cr.` : 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-chart-pie"></i>
+                                <div class="info-label">P/E Ratio</div>
+                                <div class="info-value">${stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-balance-scale"></i>
+                                <div class="info-label">52 Week High/Low</div>
+                                <div class="info-value">₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-percent"></i>
+                                <div class="info-label">Dividend Yield</div>
+                                <div class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</div>
+                            </div>
+                        `;
+        
+                    } catch (error) {
+                        console.error('Error populating fundamentals:', error);
+                    }
+                }
+        
+                function fetchHistoricalData(ticker) {
+                    const endDate = new Date();
+                    const startDate = new Date(endDate);
+                    startDate.setMonth(startDate.getMonth() - 9);
+        
+                    console.log(`Fetching historical data for ${ticker} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+        
+                    fetch(`/company/historical_data/${ticker}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            start_date: startDate.toISOString().split('T')[0],
+                            end_date: endDate.toISOString().split('T')[0]
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Received historical data:", data);
+                        if (data && Array.isArray(data) && data.length > 0) {
+                            createChart(data);
+                        } else {
+                            console.error("Received data is empty or invalid");
+                            displayErrorMessage('No historical data available for this stock.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching historical data:', error);
+                        displayErrorMessage('Failed to load historical data. Please try again later.');
+                    });
+                }
+        
+                function createChart(chartData) {
+                    const ctx = document.getElementById('timelineChart');
+                    if (!ctx) {
+                        console.error('Cannot find canvas element with id "timelineChart"');
+                        return;
+                    }
+        
+                    const loadingMessage = ctx.nextElementSibling;
+                    if (loadingMessage) {
+                        loadingMessage.remove();
+                    }
+        
+                    const labels = chartData.map(data => data.date);
+                    const prices = chartData.map(data => data.close);
+        
+                    // Get earning call dates from the DOM
+                    const earningCallDates = Array.from(document.querySelectorAll('.call-card'))
+                        .map(card => card.dataset.date);
+        
+                    if (window.stockChart instanceof Chart) {
+                        window.stockChart.destroy();
+                    }
+        
+                    window.stockChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Stock Price',
+                                    data: prices,
+                                    borderColor: 'rgba(24, 153, 78, 1)',
+                                    backgroundColor: 'rgba(24, 153, 78, 0.2)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 0
+                                },
+                                {
+                                    label: 'Earning Calls',
+                                    data: labels.map(date => earningCallDates.includes(date) ? prices[labels.indexOf(date)] : null),
+                                    pointBackgroundColor: 'red',
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8,
+                                    type: 'scatter'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'month',
+                                        displayFormats: {
+                                            month: 'MMM yyyy'
+                                        }
+                                    },
+                                    ticks: {
+                                        maxRotation: 0,
+                                        autoSkip: true,
+                                        maxTicksLimit: 6
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: false
+                                }
                             },
-                            label: function(context) {
-                                if (context.dataset.label === 'Earning Calls' && context.parsed.y !== null) {
-                                    const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === context.label);
-                                    if (earningCall) {
-                                        return `Earning Call: ${earningCall.quarter} ${earningCall.financial_year}`;
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                    callbacks: {
+                                        label: function(context) {
+                                            if (context.datasetIndex === 1 && context.parsed.y !== null) {
+                                                return 'Earning Call: ' + context.label;
+                                            }
+                                            return 'Price: ₹' + context.parsed.y.toFixed(2);
+                                        }
                                     }
                                 }
-                                return `Stock Price: ₹${context.parsed.y.toFixed(2)}`;
+                            },
+                            onClick: (event, elements) => {
+                                if (elements.length > 0) {
+                                    const index = elements[0].index;
+                                    const date = labels[index];
+                                    if (earningCallDates.includes(date)) {
+                                        const callCard = document.querySelector(`.call-card[data-date="${date}"]`);
+                                        if (callCard) {
+                                            callCard.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0 && elements[0].datasetIndex === 1) {
-                        const index = elements[0].index;
-                        const clickedDate = labels[index];
-                        const earningCall = sortedData.find(data => new Date(data.date).toISOString().split('T')[0] === clickedDate);
-
-                        if (earningCall) {
-                            const formattedDate = new Date(earningCall.date).toISOString().split('T')[0];
-                            console.log('Looking for element with data-date:', formattedDate);
-                            
-                            const earningCallSection = document.querySelector(`[data-date="${formattedDate}"]`);
-                            if (earningCallSection) {
-                                earningCallSection.scrollIntoView({ behavior: 'smooth' });
-                            } else {
-                                console.error(`No earning call section found for date: ${formattedDate}`);
-                                const allDataDates = Array.from(document.querySelectorAll('[data-date]')).map(el => el.getAttribute('data-date'));
-                                console.log('All data-date attributes in the DOM:', allDataDates);
-                            }
-                        }
-                    }
+                    });
                 }
-            }
-        });
-    }
-
-    function displayErrorMessage(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'alert alert-danger';
-        errorDiv.textContent = message;
-        document.querySelector('main').prepend(errorDiv);
-    }
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-
-    // Intersection Observer for section visibility
-    const sections = document.querySelectorAll('.section');
-    const navLinks = document.querySelectorAll('.company-tabs .nav-link');
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${id}`) {
-                        link.classList.add('active');
-                    }
+        
+                function displayErrorMessage(message) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'alert alert-danger';
+                    errorDiv.textContent = message;
+                    document.querySelector('main').prepend(errorDiv);
+                }
+        
+                function formatIndianNumber(number) {
+                    const parts = number.toString().split('.');
+                    parts[0] = parts[0].replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+                    return parts.join('.');
+                }
+        
+                // Smooth scrolling for anchor links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        document.querySelector(this.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
                 });
-            }
-        });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        observer.observe(section);
-    });
-
-    // Sticky header functionality
-    const mainNav = document.getElementById('mainNav');
-    const companyHeader = document.getElementById('companyHeader');
-    const stickyCompanyInfo = document.getElementById('stickyCompanyInfo');
-    const navbarBrand = document.getElementById('navbarBrand');
-    const companyHeaderObserver = new IntersectionObserver(
-        ([e]) => {
-            if (e.intersectionRatio < 1) {
-                mainNav.classList.add('scrolled');
-                stickyCompanyInfo.classList.remove('d-none');
-                navbarBrand.classList.add('d-none')
-            } else {
-                mainNav.classList.remove('scrolled');
-                stickyCompanyInfo.classList.add('d-none');
-                navbarBrand.classList.remove('d-none');
-            }
-        },
-        { threshold: [1] }
-    );
-
-    companyHeaderObserver.observe(companyHeader);
-});
-    </script>
-</body>
-</html>
+        
+                // Tabs functionality
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        tabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        const headerOffset = 100;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+        
+                // Intersection Observer for section visibility
+                const sections = document.querySelectorAll('.section');
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '-100px 0px 0px 0px',
+                    threshold: 0.1
+                };
+        
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.getAttribute('id');
+                            tabs.forEach(link => {
+                                link.classList.remove('active');
+                                if (link.getAttribute('href') === `#${id}`) {
+                                    link.classList.add('active');
+                                }
+                            });
+                        }
+                    });
+                }, observerOptions);
+        
+                sections.forEach(section => {
+                    observer.observe(section);
+                });
+            });
+            </script>
+        </body>
+        </html>
