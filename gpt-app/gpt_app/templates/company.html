@@ -150,27 +150,68 @@
         }
 
         .info-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
-        }
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .25rem;
+    margin-top: 15px;
+}
 
-        .info-item {
-            flex: 1;
-            min-width: 150px;
-        }
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: .45rem;
+    background-color: none;
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+}
 
-        .info-label {
-            font-size: 12px;
-            color: var(--secondary-text-color);
-        }
+.info-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: var(--primary-green);
+}
 
-        .info-value {
-            font-size: 16px;
-            font-weight: 600;
-        }
+.info-label {
+    font-size: 12px;
+    color: var(--secondary-text-color);
+    margin-bottom: 2px;
+}
 
+.info-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+@media (max-width: 576px) {
+    .info-section {
+        gap: 1rem;
+    }
+
+    .info-item {
+        padding: 8px;
+    }
+
+    .info-icon {
+        font-size: 20px;
+        margin-bottom: 3px;
+    }
+
+    .info-label {
+        font-size: 10px;
+        margin-bottom: 1px;
+    }
+
+    .info-value {
+        font-size: 12px;
+    }
+
+}
+.info-icon {
+    display: none;
+}
+      
         .timeline-chart {
             margin-top: 20px;
             height: 250px;
@@ -210,7 +251,26 @@
             }
 
             .info-section {
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .info-item {
+                flex-basis: 50%;
+                min-width: unset;
+                padding: 10px 5px;
+            }
+
+            .info-icon {
+                font-size: 20px;
+            }
+
+            .info-label {
+                font-size: 10px;
+            }
+
+            .info-value {
+                font-size: 14px;
             }
 
             .company-tabs .nav-link {
@@ -230,7 +290,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse " id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
@@ -273,26 +333,7 @@
 
         <div id="fundamentals" class="section">
             <div class="info-section">
-                <div class="info-item">
-                    <i class="fas fa-chart-line"></i>
-                    <div class="info-label">Market Cap</div>
-                    <div class="info-value" id="marketCapValue">₹14,42,00.6171648 Cr.</div>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-chart-pie"></i>
-                    <div class="info-label">P/E Ratio</div>
-                    <div class="info-value">7.54</div>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-balance-scale"></i>
-                    <div class="info-label">52 Week High/Low</div>
-                    <div class="info-value">₹376 / ₹165.725</div>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-percent"></i>
-                    <div class="info-label">Dividend Yield</div>
-                    <div class="info-value">6.86%</div>
-                </div>
+                <!-- Info section will be populated by JavaScript -->
             </div>
             <div class="timeline-chart">
                 <canvas id="timelineChart"></canvas>
@@ -324,42 +365,42 @@
             {% endfor %}
         </div>
     </main>
-        <footer class="bg-dark text-white mt-5 py-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
-                        <p>Empowering fundamental investors with insights for informed decision-making.</p>
-                    </div>
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
-                        <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-white">Home</a></li>
-                            <li class="mb-2"><a href="#features" class="text-white">Features</a></li>
-                            <li class="mb-2"><a href="#demo" class="text-white">Demo</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
-                        <p>Email: info@stockrabit.com</p>
-                    </div>
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h3 class="text-secondary font-weight-bold mb-4">stockrabit</h3>
+                    <p>Empowering fundamental investors with insights for informed decision-making.</p>
                 </div>
-                <div class="border-top border-secondary mt-4 pt-4 text-center">
-                    © 2024 stockrabit. All rights reserved.
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h4 class="text-secondary font-weight-bold mb-4">Quick Links</h4>
+                    <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-white">Home</a></li>
+                        <li class="mb-2"><a href="#features" class="text-white">Features</a></li>
+                        <li class="mb-2"><a href="#demo" class="text-white">Demo</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="text-secondary font-weight-bold mb-4">Contact</h4>
+                    <p>Email: info@stockrabit.com</p>
                 </div>
             </div>
-            <div id="madeWithLove" class="text-center mt-2">
-                <a href="/about" class="text-white text-decoration-none">
-                    Made with ❤️ in the ❤️ of India
-                </a>
+            <div class="border-top border-secondary mt-4 pt-4 text-center">
+                © 2024 stockrabit. All rights reserved.
             </div>
-        </footer>
+        </div>
+        <div id="madeWithLove" class="text-center mt-2">
+            <a href="/about" class="text-white text-decoration-none">
+                Made with ❤️ in the ❤️ of India
+            </a>
+        </div>
+    </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-            <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const ticker = '{{ ticker }}';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ticker = '{{ ticker }}';
             showLoading();
             fetchHistoricalData(ticker);
             fetchCompanyData(ticker);
@@ -369,22 +410,7 @@
             const companyNameScrolled = document.querySelector('.company-name-scrolled');
             const tabsContainer = document.querySelector('.company-tabs-container');
             const tabs = document.querySelectorAll('.company-tabs .nav-link');
-            const hamburgerMenu = document.querySelector('.hamburger-menu');
-            const navbarCollapse = document.querySelector('.navbar-collapse');
-           
-            // window.addEventListener('scroll', function() {
-            //     if (window.scrollY > 50) {
-            //         navbar.classList.add('navbar-scrolled');
-            //         brandText.style.display = 'none';
-            //         companyNameScrolled.style.display = 'inline';
-            //         companyNameScrolled.textContent = companyName;
-            //     } else {
-            //         navbar.classList.remove('navbar-scrolled');
-            //         brandText.style.display = 'inline';
-            //         companyNameScrolled.style.display = 'none';
-            //     }
-            // });
-
+    
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 100) {
                     navbar.classList.add('navbar-scrolled');
@@ -399,345 +425,345 @@
                     tabsContainer.classList.remove('scrolled');
                 }
             });
-
-            // hamburgerMenu.addEventListener('click', function() {
-            //     navbarCollapse.classList.toggle('show');
-            // });
-
-            // // Close the menu when clicking outside
-            // document.addEventListener('click', function(event) {
-            //     if (!hamburgerMenu.contains(event.target) && !navbarCollapse.contains(event.target)) {
-            //         navbarCollapse.classList.remove('show');
-            //     }
-            // });
         
-                function showLoading() {
-                    const infoSection = document.querySelector('.info-section');
-                    const chartContainer = document.querySelector('.timeline-chart');
-                    
-                    infoSection.innerHTML = `
-                        <div class="info-item">
-                            <i class="fas fa-chart-line"></i>
-                            <div class="info-label">Market Cap</div>
-                            <div class="info-value">Loading...</div>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-chart-pie"></i>
-                            <div class="info-label">P/E Ratio</div>
-                            <div class="info-value">Loading...</div>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-balance-scale"></i>
-                            <div class="info-label">52 Week High/Low</div>
-                            <div class="info-value">Loading...</div>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-percent"></i>
-                            <div class="info-label">Dividend Yield</div>
-                            <div class="info-value">Loading...</div>
-                        </div>
-                    `;
-        
-                    chartContainer.innerHTML = '<canvas id="timelineChart"></canvas><div class="text-center py-5">Loading chart...</div>';
-                }
-        
-                function fetchCompanyData(ticker) {
-                    fetch(`/company/ticker`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ ticker: ticker })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Received data:", data);
-                        populateFundamentals(data.stock_data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        displayErrorMessage('Failed to load company data. Please try again later.');
-                    });
-                }
-        
-                function populateFundamentals(stockData) {
-                    if (!stockData) {
-                        console.error('Stock data is undefined or null');
-                        return;
+            function showLoading() {
+                const infoSection = document.querySelector('.info-section');
+                const chartContainer = document.querySelector('.timeline-chart');
+                
+                infoSection.innerHTML = `
+                    <div class="info-item">
+                        <i class="fas fa-chart-line info-icon"></i>
+                        <div class="info-label">Market Cap</div>
+                        <div class="info-value">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-chart-pie info-icon"></i>
+                        <div class="info-label">P/E Ratio</div>
+                        <div class="info-value">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-balance-scale info-icon"></i>
+                        <div class="info-label">52 Week High/Low</div>
+                        <div class="info-value">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-percent info-icon"></i>
+                        <div class="info-label">Dividend Yield</div>
+                        <div class="info-value">Loading...</div>
+                    </div>
+                `;
+    
+                chartContainer.innerHTML = '<canvas id="timelineChart"></canvas><div class="text-center py-5">Loading chart...</div>';
+            }
+    
+            function fetchCompanyData(ticker) {
+                fetch(`/company/ticker`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ticker: ticker })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Received data:", data);
+                    populateFundamentals(data.stock_data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayErrorMessage('Failed to load company data. Please try again later.');
+                });
+            }
+    
+            function populateFundamentals(stockData) {
+    if (!stockData) {
+        console.error('Stock data is undefined or null');
+        return;
+    }
+
+    console.log('Populating fundamentals with:', stockData);
+
+    try {
+        // Update company name and ticker
+        document.querySelector('.company-name').textContent = stockData.name || 'N/A';
+        document.querySelector('.company-ticker').textContent = 'NSE: '+ stockData.ticker || 'N/A';
         
-                    console.log('Populating fundamentals with:', stockData);
-        
-                    try {
-                        // Update company name and ticker
-                        document.querySelector('.company-name').textContent = stockData.name || 'N/A';
-                        document.querySelector('.company-ticker').textContent = 'NSE: '+ stockData.ticker || 'N/A';
-                        
-                        // Update market price and change
-                        const priceElement = document.querySelector('.market-price');
-                        priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
-        
-                        const changeElement = document.querySelector('.price-change');
-                        const change = stockData.change;
-                        if (change !== undefined && change !== null) {
-                            const changeNumber = Number(change);
-                            if (!isNaN(changeNumber)) {
-                                const changeText = `${changeNumber.toFixed(2)}%`;
-                                const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
-                                changeElement.textContent = `${changeText} ${priceChange}`;
-                                changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
-                            } else {
-                                changeElement.textContent = 'N/A';
-                                changeElement.className = 'price-change';
+        // Update market price and change
+        const priceElement = document.querySelector('.market-price');
+        priceElement.textContent = stockData.price ? `₹${Number(stockData.price).toFixed(2)}` : 'N/A';
+
+        const changeElement = document.querySelector('.price-change');
+        const change = stockData.change;
+        if (change !== undefined && change !== null) {
+            const changeNumber = Number(change);
+            if (!isNaN(changeNumber)) {
+                const changeText = `${changeNumber.toFixed(2)}%`;
+                const priceChange = stockData.price ? `(₹${(stockData.price * changeNumber / 100).toFixed(2)})` : '';
+                changeElement.textContent = `${changeText} ${priceChange}`;
+                changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
+            } else {
+                changeElement.textContent = 'N/A';
+                changeElement.className = 'price-change';
+            }
+        } else {
+            changeElement.textContent = 'N/A';
+            changeElement.className = 'price-change';
+        }
+
+        // Update info section
+        const infoSection = document.querySelector('.info-section');
+        infoSection.innerHTML = `
+            <div class="info-item">
+                <i class="fas fa-chart-line info-icon"></i>
+                <div class="info-value">${formatLargeNumber(stockData.market_cap)}</div>
+                <div class="info-label">Market Cap</div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-chart-pie info-icon"></i>
+                <div class="info-value">${stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A'}</div>
+                <div class="info-label">P/E Ratio</div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-balance-scale info-icon"></i>
+                <div class="info-value">₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}</div>
+                <div class="info-label">52 Week High/Low</div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-percent info-icon"></i>
+                <div class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</div>
+                <div class="info-label">Dividend Yield</div>
+            </div>
+        `;
+
+    } catch (error) {
+        console.error('Error populating fundamentals:', error);
+    }
+}
+    
+            function formatLargeNumber(number) {
+                if (!number) return 'N/A';
+                number = Number(number);
+                if (isNaN(number)) return 'N/A';
+                
+                const billion = 1000000000;
+                const crore = 10000000;
+                
+                if (number >= billion) {
+                    return `₹${(number / billion).toFixed(2)} Bn`;
+                } else if (number >= crore) {
+                    return `₹${(number / crore).toFixed(2)} Cr`;
+                } else {
+                    return `₹${number.toLocaleString('en-IN')}`;
+                }
+            }
+    
+            function fetchHistoricalData(ticker) {
+                const endDate = new Date();
+                const startDate = new Date(endDate);
+                startDate.setMonth(startDate.getMonth() - 9);
+    
+                console.log(`Fetching historical data for ${ticker} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+    
+                fetch(`/company/historical_data/${ticker}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        start_date: startDate.toISOString().split('T')[0],
+                        end_date: endDate.toISOString().split('T')[0]
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Received historical data:", data);
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        createChart(data);
+                    } else {
+                        console.error("Received data is empty or invalid");
+                        displayErrorMessage('No historical data available for this stock.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching historical data:', error);
+                    displayErrorMessage('Failed to load historical data. Please try again later.');
+                });
+            }
+    
+            function createChart(chartData) {
+                const ctx = document.getElementById('timelineChart');
+                if (!ctx) {
+                    console.error('Cannot find canvas element with id "timelineChart"');
+                    return;
+                }
+    
+                const loadingMessage = ctx.nextElementSibling;
+                if (loadingMessage) {
+                    loadingMessage.remove();
+                }
+    
+                const labels = chartData.map(data => data.date);
+                const prices = chartData.map(data => data.close);
+    
+                // Get earning call dates from the DOM
+                const earningCallDates = Array.from(document.querySelectorAll('.call-card'))
+                    .map(card => card.dataset.date);
+    
+                if (window.stockChart instanceof Chart) {
+                    window.stockChart.destroy();
+                }
+    
+                window.stockChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Stock Price',
+                                data: prices,
+                                borderColor: 'rgba(24, 153, 78, 1)',
+                                backgroundColor: 'rgba(24, 153, 78, 0.2)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 0
+                            },
+                            {
+                                label: 'Earning Calls',
+                                data: labels.map(date => earningCallDates.includes(date) ? prices[labels.indexOf(date)] : null),
+                                pointBackgroundColor: 'red',
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                type: 'scatter'
                             }
-                        } else {
-                            changeElement.textContent = 'N/A';
-                            changeElement.className = 'price-change';
-                        }
-        
-                        // Update info section
-                        const infoSection = document.querySelector('.info-section');
-                        infoSection.innerHTML = `
-                            <div class="info-item">
-                                <i class="fas fa-chart-line"></i>
-                                <div class="info-label">Market Cap</div>
-                                <div class="info-value">${stockData.market_cap ? `₹${formatIndianNumber(Number(stockData.market_cap) / 10000000)} Cr.` : 'N/A'}</div>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-chart-pie"></i>
-                                <div class="info-label">P/E Ratio</div>
-                                <div class="info-value">${stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A'}</div>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-balance-scale"></i>
-                                <div class="info-label">52 Week High/Low</div>
-                                <div class="info-value">₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}</div>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-percent"></i>
-                                <div class="info-label">Dividend Yield</div>
-                                <div class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</div>
-                            </div>
-                        `;
-        
-                    } catch (error) {
-                        console.error('Error populating fundamentals:', error);
-                    }
-                }
-        
-                function fetchHistoricalData(ticker) {
-                    const endDate = new Date();
-                    const startDate = new Date(endDate);
-                    startDate.setMonth(startDate.getMonth() - 9);
-        
-                    console.log(`Fetching historical data for ${ticker} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
-        
-                    fetch(`/company/historical_data/${ticker}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            start_date: startDate.toISOString().split('T')[0],
-                            end_date: endDate.toISOString().split('T')[0]
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Received historical data:", data);
-                        if (data && Array.isArray(data) && data.length > 0) {
-                            createChart(data);
-                        } else {
-                            console.error("Received data is empty or invalid");
-                            displayErrorMessage('No historical data available for this stock.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching historical data:', error);
-                        displayErrorMessage('Failed to load historical data. Please try again later.');
-                    });
-                }
-        
-                function createChart(chartData) {
-                    const ctx = document.getElementById('timelineChart');
-                    if (!ctx) {
-                        console.error('Cannot find canvas element with id "timelineChart"');
-                        return;
-                    }
-        
-                    const loadingMessage = ctx.nextElementSibling;
-                    if (loadingMessage) {
-                        loadingMessage.remove();
-                    }
-        
-                    const labels = chartData.map(data => data.date);
-                    const prices = chartData.map(data => data.close);
-        
-                    // Get earning call dates from the DOM
-                    const earningCallDates = Array.from(document.querySelectorAll('.call-card'))
-                        .map(card => card.dataset.date);
-        
-                    if (window.stockChart instanceof Chart) {
-                        window.stockChart.destroy();
-                    }
-        
-                    window.stockChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [
-                                {
-                                    label: 'Stock Price',
-                                    data: prices,
-                                    borderColor: 'rgba(24, 153, 78, 1)',
-                                    backgroundColor: 'rgba(24, 153, 78, 0.2)',
-                                    fill: true,
-                                    tension: 0.4,
-                                    pointRadius: 0
-                                },
-                                {
-                                    label: 'Earning Calls',
-                                    data: labels.map(date => earningCallDates.includes(date) ? prices[labels.indexOf(date)] : null),
-                                    pointBackgroundColor: 'red',
-                                    pointRadius: 6,
-                                    pointHoverRadius: 8,
-                                    type: 'scatter'
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                x: {
-                                    type: 'time',
-                                    time: {
-                                        unit: 'month',
-                                        displayFormats: {
-                                            month: 'MMM yyyy'
-                                        }
-                                    },
-                                    ticks: {
-                                        maxRotation: 0,
-                                        autoSkip: true,
-                                        maxTicksLimit: 6
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'month',
+                                    displayFormats: {
+                                        month: 'MMM yyyy'
                                     }
                                 },
-                                y: {
-                                    beginAtZero: false
+                                ticks: {
+                                    maxRotation: 0,
+                                    autoSkip: true,
+                                    maxTicksLimit: 6
                                 }
                             },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                },
-                                tooltip: {
-                                    mode: 'index',
-                                    intersect: false,
-                                    callbacks: {
-                                        label: function(context) {
-                                            if (context.datasetIndex === 1 && context.parsed.y !== null) {
-                                                return 'Earning Call: ' + context.label;
-                                            }
-                                            return 'Price: ₹' + context.parsed.y.toFixed(2);
-                                        }
-                                    }
-                                }
+                            y: {
+                                beginAtZero: false
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
                             },
-                            onClick: (event, elements) => {
-                                if (elements.length > 0) {
-                                    const index = elements[0].index;
-                                    const date = labels[index];
-                                    if (earningCallDates.includes(date)) {
-                                        const callCard = document.querySelector(`.call-card[data-date="${date}"]`);
-                                        if (callCard) {
-                                            callCard.scrollIntoView({ behavior: 'smooth' });
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        if (context.datasetIndex === 1 && context.parsed.y !== null) {
+                                            return 'Earning Call: ' + context.label;
                                         }
+                                        return 'Price: ₹' + context.parsed.y.toFixed(2);
                                     }
                                 }
                             }
-                        }
-                    });
-                }
-        
-                function displayErrorMessage(message) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'alert alert-danger';
-                    errorDiv.textContent = message;
-                    document.querySelector('main').prepend(errorDiv);
-                }
-        
-                function formatIndianNumber(number) {
-                    const parts = number.toString().split('.');
-                    parts[0] = parts[0].replace(/\B(?=(\d{2})+(?!\d))/g, ",");
-                    return parts.join('.');
-                }
-        
-                // Smooth scrolling for anchor links
-                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        document.querySelector(this.getAttribute('href')).scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    });
-                });
-        
-                // Tabs functionality
-                tabs.forEach(tab => {
-                    tab.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        tabs.forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                        const targetId = this.getAttribute('href').substring(1);
-                        const targetElement = document.getElementById(targetId);
-                        const headerOffset = 100;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                    });
-                });
-        
-                // Intersection Observer for section visibility
-                const sections = document.querySelectorAll('.section');
-                const observerOptions = {
-                    root: null,
-                    rootMargin: '-100px 0px 0px 0px',
-                    threshold: 0.1
-                };
-        
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const id = entry.target.getAttribute('id');
-                            tabs.forEach(link => {
-                                link.classList.remove('active');
-                                if (link.getAttribute('href') === `#${id}`) {
-                                    link.classList.add('active');
+                        },
+                        onClick: (event, elements) => {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const date = labels[index];
+                                if (earningCallDates.includes(date)) {
+                                    const callCard = document.querySelector(`.call-card[data-date="${date}"]`);
+                                    if (callCard) {
+                                        callCard.scrollIntoView({ behavior: 'smooth' });
+                                    }
                                 }
-                            });
+                            }
                         }
+                    }
+                });
+            }
+    
+            function displayErrorMessage(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = message;
+                document.querySelector('main').prepend(errorDiv);
+            }
+    
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
                     });
-                }, observerOptions);
-        
-                sections.forEach(section => {
-                    observer.observe(section);
                 });
             });
-            </script>
-        </body>
-        </html>
+    
+            // Tabs functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    const headerOffset = 100;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+    
+            // Intersection Observer for section visibility
+            const sections = document.querySelectorAll('.section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '-100px 0px 0px 0px',
+                threshold: 0.1
+            };
+    
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        tabs.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+    
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+        </script>
+    </body>
+    </html>
