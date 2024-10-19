@@ -125,6 +125,58 @@
         .accordion-button:focus {
             box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.25);
         }
+        .breadcrumb {
+        white-space: nowrap;
+        float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        /* flex: 1; */
+        padding: 0.25rem 0;
+        margin-top: .5rem;
+        margin-left: .5rem;
+
+        margin-bottom: .1rem;
+    }
+
+    .breadcrumb-item {
+        display: inline-block;
+        max-width: 350px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .breadcrumb-item.active {
+        max-width: 200px;
+    }
+
+    @media (max-width: 575.98px) {
+        .breadcrumb-item {
+            max-width: 150px;
+        }
+
+        .breadcrumb-item.active {
+            max-width: 120px;
+        }
+    }
+
+    /* Existing styles */
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--secondary-text-color);
+    }
+
+    .breadcrumb-item a {
+        color: var(--primary-green);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--secondary-text-color);
+    }
+        #guidanceBody { text-align: left;
+                        }
 
         .transcript-container {
             /* max-height: 80vh; */
@@ -278,8 +330,16 @@
             </div>
         </div>
     </nav>
-
+  
     <div class="container main-content">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb ">
+              
+                <li class="breadcrumb-item"><a href="{{ url_for('company_app.historical', company_name=company_name) }}">{{ company_name|title }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ quarter }} {{ financial_year }}</li>
+            </ol>
+        </nav>
+    
         <div class="content-wrapper">
             <h1 class="company-title">{{ company_name|title }}</h1>
             <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
