@@ -38,6 +38,7 @@
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            height: 60px;
         }
 
         .navbar-brand {
@@ -54,7 +55,15 @@
         }
 
         .main-content {
-            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 800px;
         }
 
         .card {
@@ -113,8 +122,8 @@
         }
 
         .transcript-container {
-            max-height: 55vh;
-            overflow-y: auto;
+            max-height: none;
+            height: auto;
             line-height: 1.8;
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -156,23 +165,25 @@
             border-bottom: 1px solid var(--border-color);
             width: 100%;
             padding: 10px 0;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
         .company-tabs {
-            display: flex;
+            display: inline-flex;
             padding: 0;
             margin: 0;
             list-style-type: none;
-            justify-content: center;
         }
 
         .company-tabs .nav-link {
             color: var(--text-color);
             text-decoration: none;
             font-weight: 600;
-            padding: 10px 20px;
+            padding: 10px 15px;
             position: relative;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .company-tabs .nav-link::after {
@@ -191,26 +202,32 @@
             transform: scaleX(1);
         }
 
-        .company-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+        .company-info {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
             transition: all 0.3s ease;
         }
 
-        .company-title.scrolled {
-            font-size: 1rem;
+        .company-title {
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-bottom: 0;
+            transition: all 0.3s ease;
         }
 
         .event-title {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             color: var(--secondary-text-color);
             transition: all 0.3s ease;
         }
 
-        .event-title.scrolled {
+        .company-title.scrolled, .event-title.scrolled {
             font-size: 0.8rem;
+            margin-bottom: 0;
         }
 
         .horizontal-line {
@@ -219,12 +236,9 @@
         }
 
         @media (max-width: 767.98px) {
-            .company-tabs {
-                flex-wrap: wrap;
-            }
-
             .company-tabs .nav-link {
-                padding: 8px 12px;
+                padding: 8px 10px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -258,94 +272,96 @@
     </nav>
 
     <div class="container main-content">
-        <h1 class="company-title">{{ company_name|title }}</h1>
-        <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
-        
-        <div class="horizontal-line"></div>
+        <div class="content-wrapper">
+            <h1 class="company-title">{{ company_name|title }}</h1>
+            <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
+            
+            <div class="horizontal-line"></div>
 
-        <div class="company-tabs-container">
-            <ul class="company-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}">
-                        ✨ Top Questions
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link {% if active_section == 'transcript' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}">
-                        📄 Transcript
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link {% if active_section == 'qa_section' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}">
-                        🎙 Q&A Section
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}">
-                        📊 Management Guidance
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="horizontal-line"></div>
-
-        <div id="content-section">
-            {% if active_section == 'top_questions' %}
-            <div class="accordion mt-4" id="topQaAccordion">
-                {% for question, answer in top_questions.items() %}
-                {% set slug = question|slugify %}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="{{ slug }}">
-                        <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
-                            {{ question }}
-                        </button>
-                    </h2>
-                    <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            {{ answer }}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
+            <div class="company-tabs-container">
+                <ul class="company-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}">
+                            ✨ Top Questions
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if active_section == 'transcript' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}">
+                            📄 Transcript
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if active_section == 'qa_section' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}">
+                            🎙 Q&A Section
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}">
+                            📊 Management Guidance
+                        </a>
+                    </li>
+                </ul>
             </div>
-            {% elif active_section == 'transcript' %}
-                <h3 class="text-center text-secondary">Event Transcript</h3>
-                <div class="transcript-container">
-                    {% for entry in transcript %}
-                        <div class="transcript-entry">
-                            <div class="transcript-speaker">{{ entry.speaker }}</div>
-                            <div class="transcript-text">{{ entry.text }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% elif active_section == 'qa_section' %}
-                <h3 class="text-center text-secondary">Analyst Q&A Section</h3>
-                <div class="accordion" id="qaAccordion">
-                    {% for qa in qa_section %}
-                    <div class="card">
-                        <div class="card-header" id="heading{{ loop.index }}">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
-                                    {{ qa['question']['text'] }}
-                                </button>
-                                <h6 style="text-align: right;">{{ qa['question']['speaker']['name'] }}, {{ qa['question']['speaker']['title'] }}</h6>
-                            </h2>
-                        </div>
 
-                        <div id="collapse{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#qaAccordion">
-                            <div style="line-height: 1.6;" class="card-body">
-                                <p>{{ qa['answer']['text'] }}</p>
-                                <p style="text-align: right;">{{ qa['answer']['speaker']['name'] }} ({{ qa['answer']['speaker']['title'] }})</p>
+            <div class="horizontal-line"></div>
+
+            <div id="content-section">
+                {% if active_section == 'top_questions' %}
+                <div class="accordion mt-4" id="topQaAccordion">
+                    {% for question, answer in top_questions.items() %}
+                    {% set slug = question|slugify %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="{{ slug }}">
+                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
+                                {{ question }}
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ answer }}
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
+                {% elif active_section == 'transcript' %}
+                    <h3 class="text-center text-secondary">Event Transcript</h3>
+                    <div class="transcript-container">
+                        {% for entry in transcript %}
+                            <div class="transcript-entry">
+                                <div class="transcript-speaker">{{ entry.speaker }}</div>
+                                <div class="transcript-text">{{ entry.text }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% elif active_section == 'qa_section' %}
+                    <h3 class="text-center text-secondary">Analyst Q&A Section</h3>
+                    <div class="accordion" id="qaAccordion">
+                        {% for qa in qa_section %}
+                        <div class="card">
+                            <div class="card-header" id="heading{{ loop.index }}">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+                                        {{ qa['question']['text'] }}
+                                    </button>
+                                    <h6 style="text-align: right;">{{ qa['question']['speaker']['name'] }}, {{ qa['question']['speaker']['title'] }}</h6>
+                                </h2>
+                            </div>
+
+                            <div id="collapse{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#qaAccordion">
+                                <div style="line-height: 1.6;" class="card-body">
+                                    <p>{{ qa['answer']['text'] }}</p>
+                                    <p style="text-align: right;">{{ qa['answer']['speaker']['name'] }} ({{ qa['answer']['speaker']['title'] }})</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 {% elif active_section == 'management_guidance' %}
-                <h3 class="text-center text-secondary">Management Guidance</h3>
-                <div style="line-height: 1.6;" class="card"><div id='guidanceBody' class="card-body">{{ management_guidance|safe }}</div></div>
-            {% endif %}
+                    <h3 class="text-center text-secondary">Management Guidance</h3>
+                    <div style="line-height: 1.6;" class="card"><div id='guidanceBody' class="card-body">{{ management_guidance|safe }}</div></div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -379,23 +395,25 @@
             });
 
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 100) {
+                if (window.scrollY > 60) {
                     navbar.classList.add('scrolled');
                     companyTitle.classList.add('scrolled');
                     eventTitle.classList.add('scrolled');
                     navbarBrand.classList.add('d-none');
                     companyInfo.classList.remove('d-none');
-                    companyInfo.classList.add('d-flex', 'flex-column', 'align-items-start');
+                    companyInfo.style.top = '50%';
+                    companyInfo.style.transform = 'translate(-50%, -50%)';
                 } else {
                     navbar.classList.remove('scrolled');
                     companyTitle.classList.remove('scrolled');
                     eventTitle.classList.remove('scrolled');
                     navbarBrand.classList.remove('d-none');
                     companyInfo.classList.add('d-none');
-                    companyInfo.classList.remove('d-flex', 'flex-column', 'align-items-start');
+                    companyInfo.style.top = '';
+                    companyInfo.style.transform = 'translateX(-50%)';
                 }
 
-                if (mainContent.scrollHeight - window.scrollY <= window.innerHeight + 1) {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1) {
                     footer.style.display = 'block';
                 } else {
                     footer.style.display = 'none';
@@ -412,21 +430,11 @@
             }
 
             // Initial check for footer visibility
-            if (mainContent.scrollHeight <= window.innerHeight) {
+            if (document.body.offsetHeight <= window.innerHeight) {
                 footer.style.display = 'block';
             } else {
                 footer.style.display = 'none';
             }
-
-            // Adjust tabs container on window resize
-            window.addEventListener('resize', () => {
-                const tabsContainer = document.querySelector('.company-tabs-container');
-                if (window.innerWidth <= 467.98) {
-                    tabsContainer.style.overflowX = 'auto';
-                } else {
-                    tabsContainer.style.overflowX = 'visible';
-                }
-            });
 
             // Truncate company and event titles
             function truncateText(element, maxLength) {
@@ -438,8 +446,22 @@
 
             const companyTitleNav = companyInfo.querySelector('.company-title');
             const eventTitleNav = companyInfo.querySelector('.event-title');
-            truncateText(companyTitleNav, 30);
-            truncateText(eventTitleNav, 20);
+            truncateText(companyTitleNav, 110);
+            truncateText(eventTitleNav, 200);
+
+            // Adjust tabs container on window resize
+            function adjustTabsContainer() {
+                const tabsContainer = document.querySelector('.company-tabs-container');
+                const tabs = document.querySelector('.company-tabs');
+                if (tabs.scrollWidth > tabsContainer.clientWidth) {
+                    tabsContainer.style.justifyContent = 'flex-start';
+                } else {
+                    tabsContainer.style.justifyContent = 'center';
+                }
+            }
+
+            window.addEventListener('resize', adjustTabsContainer);
+            adjustTabsContainer(); // Initial adjustment
         });
     </script>
 </body>
