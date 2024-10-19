@@ -330,7 +330,7 @@
     <div class="container main-content">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('company_app.historical', company_name=company_name) }}">{{ company_name|title }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('company_app.historical', company_name=company_name) }}#earning-calls">{{ company_name|title }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ quarter }} {{ financial_year }}</li>
             </ol>
         </nav>
