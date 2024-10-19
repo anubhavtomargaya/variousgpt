@@ -102,6 +102,13 @@
             font-size: 24px;
             font-weight: 700;
         }
+        
+        .price-label {
+            font-size: 14px;
+            font-weight: 200;
+            color: #666666;
+        }
+
 
         .price-change {
             font-size: 16px;
@@ -314,8 +321,9 @@
                     <div class="company-ticker">{{ ticker }}</div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <span class="market-price">₹337.00</span>
-                    <span class="price-change">N/A</span>
+                    <span class="price-label text-secondary" >LTP </span>
+                    <span class="market-price">N/A</span>
+                    <span class="price-change"></span>
                 </div>
             </div>
         </div>
@@ -507,11 +515,11 @@
                 changeElement.textContent = `${changeText} ${priceChange}`;
                 changeElement.className = `price-change ${changeNumber >= 0 ? 'positive' : 'negative'}`;
             } else {
-                changeElement.textContent = 'N/A';
+                changeElement.textContent = '';
                 changeElement.className = 'price-change';
             }
         } else {
-            changeElement.textContent = 'N/A';
+            changeElement.textContent = '';
             changeElement.className = 'price-change';
         }
 

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import  current_app, jsonify, request
+from flask import  current_app, jsonify, make_response, request
 import yfinance as yf
 from . import company_app
 
@@ -42,7 +42,9 @@ def company_info():
         'chart_data': chart_data
     }
     
-    return jsonify(response_data)
+    response = make_response(jsonify(response_data))
+    response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+    return response
 
 
 
@@ -70,8 +72,10 @@ def get_historical_data(ticker):
                 'close': row['Close']
             })
 
-        return jsonify(historical_data)
-
+            
+        response = make_response(jsonify(historical_data))
+        response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+        return response
     except Exception as e:
         current_app.logger.error(f"Error fetching historical data for {ticker}: {str(e)}")
         return jsonify({"error": "Failed to fetch historical data"}), 500
