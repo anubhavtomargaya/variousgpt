@@ -29,6 +29,10 @@
 
         body {
             font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* transform: translateZ(0); */
+            backface-visibility: hidden;
             background-color: var(--background-color);
             color: var(--text-color);
             padding-top: 60px;
@@ -37,9 +41,10 @@
         .navbar {
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             height: 60px;
         }
+        
 
         .navbar-brand {
             font-weight: 700;
@@ -48,7 +53,7 @@
         }
         #content-section {
             max-height: 90vh;
-            overflow: scroll;
+            overflow-y: auto;
             margin-bottom: 8rem;
         }
 
@@ -62,13 +67,12 @@
         .main-content {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             min-height: calc(100vh - 60px);
         }
 
         .content-wrapper {
             width: 100%;
-            /* max-width: 800px; */
         }
 
         .card {
@@ -126,61 +130,51 @@
             box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.25);
         }
         .breadcrumb {
-        white-space: nowrap;
-        float: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
-        /* flex: 1; */
-        padding: 0.25rem 0;
-        margin-top: .5rem;
-        margin-left: .5rem;
+            font-size: 0.9rem;
+            padding: 0.25rem 0;
+            margin-top: .5rem;
+            /* margin-left: .5rem; */
+            margin-bottom: .1rem;
+        }
 
-        margin-bottom: .1rem;
-    }
-
-    .breadcrumb-item {
-        display: inline-block;
-        max-width: 350px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .breadcrumb-item.active {
-        max-width: 200px;
-    }
-
-    @media (max-width: 575.98px) {
         .breadcrumb-item {
-            max-width: 150px;
+            display: inline-block;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .breadcrumb-item.active {
-            max-width: 120px;
+            max-width: 150px;
         }
-    }
 
-    /* Existing styles */
-    .breadcrumb-item + .breadcrumb-item::before {
-        content: "›";
-        color: var(--secondary-text-color);
-    }
+        @media (max-width: 575.98px) {
+            .breadcrumb-item {
+                max-width: 120px;
+            }
 
-    .breadcrumb-item a {
-        color: var(--primary-green);
-        text-decoration: none;
-    }
+            .breadcrumb-item.active {
+                max-width: 100px;
+            }
+        }
 
-    .breadcrumb-item.active {
-        color: var(--secondary-text-color);
-    }
-        #guidanceBody { text-align: left;
-                        }
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            color: var(--secondary-text-color);
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--secondary-text-color);
+        }
+        #guidanceBody { text-align: left; }
 
         .transcript-container {
-            /* max-height: 80vh; */
-            /* overflow: scroll; */
             height: auto;
             line-height: 1.8;
             border: 1px solid var(--border-color);
@@ -264,6 +258,7 @@
         .company-info {
             position: absolute;
             left: 50%;
+            
             transform: translateX(-50%);
             text-align: center;
             width: 100%;
@@ -274,6 +269,7 @@
         .company-title {
             font-size: 1.2rem;
             font-weight: 600;
+            
             margin-bottom: 0;
             margin-top: 10px;
             transition: all 0.3s ease;
@@ -281,6 +277,7 @@
 
         .event-title {
             font-size: 0.9rem;
+           
             color: var(--secondary-text-color);
             transition: all 0.3s ease;
         }
@@ -291,7 +288,6 @@
         }
 
         .horizontal-line {
-            /* border-top: 1px solid var(--border-color); */
             margin: 1rem 0;
         }
 
@@ -333,8 +329,7 @@
   
     <div class="container main-content">
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb ">
-              
+            <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url_for('company_app.historical', company_name=company_name) }}">{{ company_name|title }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ quarter }} {{ financial_year }}</li>
             </ol>
@@ -393,7 +388,6 @@
                     {% endfor %}
                 </div>
                 {% elif active_section == 'transcript' %}
-                    <!-- <h3 class="text-center text-secondary">Event Transcript</h3> -->
                     <div class="transcript-container">
                         {% for entry in transcript %}
                             <div class="transcript-entry">
@@ -403,7 +397,6 @@
                         {% endfor %}
                     </div>
                 {% elif active_section == 'qa_section' %}
-                    <!-- <h3 class="text-center text-secondary">Analyst Q&A Section</h3> -->
                     <div class="accordion" id="qaAccordion">
                         {% for qa in qa_section %}
                         <div class="card">
@@ -415,7 +408,7 @@
                                     <h6 style="text-align: right;">{{ qa['question']['speaker']['name'] }}, {{ qa['question']['speaker']['title'] }}</h6>
                                 </h2>
                             </div>
-
+    
                             <div id="collapse{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#qaAccordion">
                                 <div style="line-height: 1.6;" class="card-body">
                                     <p>{{ qa['answer']['text'] }}</p>
@@ -426,13 +419,12 @@
                         {% endfor %}
                     </div>
                 {% elif active_section == 'management_guidance' %}
-                    <!-- <h3 class="text-center text-secondary">Management Guidance</h3> -->
                     <div style="line-height: 1.6;" class="card"><div id='guidanceBody' class="card-body">{{ management_guidance|safe }}</div></div>
                 {% endif %}
             </div>
         </div>
     </div>
-
+    
     <footer class="bg-dark">
         <div id="madeWithLove" class="text-center bg-dark">
             <a href="/about" class="text-decoration-none text-white">
@@ -440,7 +432,7 @@
             </a>
         </div>
     </footer>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -452,7 +444,8 @@
             const eventTitle = document.querySelector('.event-title');
             const navbarBrand = document.querySelector('.navbar-brand');
             const companyInfo = document.querySelector('.company-info');
-
+            let ticking = false;
+    
             links.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -461,8 +454,8 @@
                     window.location.href = link.href;
                 });
             });
-
-            window.addEventListener('scroll', () => {
+    
+            function updateScroll() {
                 if (window.scrollY > 60) {
                     navbar.classList.add('scrolled');
                     companyTitle.classList.add('scrolled');
@@ -480,14 +473,23 @@
                     companyInfo.style.top = '';
                     companyInfo.style.transform = 'translateX(-50%)';
                 }
-
+    
                 if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1) {
                     footer.style.display = 'block';
                 } else {
                     footer.style.display = 'none';
                 }
+    
+                ticking = false;
+            }
+    
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateScroll);
+                    ticking = true;
+                }
             });
-
+    
             if (window.location.hash) {
                 const id = window.location.hash.substring(1);
                 const element = document.getElementById(id);
@@ -496,14 +498,14 @@
                     element.querySelector('.accordion-button').click();
                 }
             }
-
+    
             // Initial check for footer visibility
             if (document.body.offsetHeight <= window.innerHeight) {
                 footer.style.display = 'block';
             } else {
                 footer.style.display = 'none';
             }
-
+    
             // Truncate company and event titles
             function truncateText(element, maxLength) {
                 const text = element.textContent;
@@ -511,12 +513,12 @@
                     element.textContent = text.substring(0, maxLength) + '...';
                 }
             }
-
+    
             const companyTitleNav = companyInfo.querySelector('.company-title');
             const eventTitleNav = companyInfo.querySelector('.event-title');
             truncateText(companyTitleNav, 110);
             truncateText(eventTitleNav, 200);
-
+    
             // Adjust tabs container on window resize
             function adjustTabsContainer() {
                 const tabsContainer = document.querySelector('.company-tabs-container');
@@ -527,10 +529,9 @@
                     tabsContainer.style.justifyContent = 'center';
                 }
             }
-
+    
             window.addEventListener('resize', adjustTabsContainer);
             adjustTabsContainer(); // Initial adjustment
         });
-    </script>
-</body>
+    </script></body>
 </html>
