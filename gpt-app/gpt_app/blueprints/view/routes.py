@@ -227,10 +227,12 @@ def get_records(file_name):
     response = make_response(jsonify(user_file_records))
     response.headers['Cache-Control'] = 'public, max-age=360'  # Cache for 1 hour
     return response
+
 def process_transcript(raw_transcript):
     processed_transcript = []
     current_speaker = None
     current_text = []
+    current_start_key = None
 
     print("Raw transcript:", raw_transcript)  # Debug print
 
@@ -240,7 +242,7 @@ def process_transcript(raw_transcript):
     elif not isinstance(raw_transcript, list):
         raise ValueError("Expected raw_transcript to be a list or dict, got {}".format(type(raw_transcript)))
 
-    for item in raw_transcript:
+    for index, item in enumerate(raw_transcript):
         print("Processing item:", item)  # Debug print
         
         # Ensure item is a dictionary
@@ -250,33 +252,44 @@ def process_transcript(raw_transcript):
 
         speaker = item.get('speaker')
         text = item.get('text', '').strip()
-        if speaker=='Speaker Name' or speaker=='Speaker':
-            speaker='.'
+        if speaker == 'Speaker Name' or speaker == 'Speaker':
+            speaker = '.'
         if not text:
             print("Skipping item with empty text")
             continue
 
         if speaker != current_speaker:
             if current_speaker is not None:
-                processed_transcript.append({'speaker': current_speaker, 'text': ' '.join(current_text)})
+                processed_transcript.append({
+                    'key': current_start_key,
+                    'speaker': current_speaker,
+                    'text': ' '.join(current_text)
+                })
             current_speaker = speaker
             current_text = [text]
+            current_start_key = str(index)
         else:
             current_text.append(text)
 
     # Add the last speaker's text
     if current_speaker is not None:
-        processed_transcript.append({'speaker': current_speaker, 'text': ' '.join(current_text)})
+        processed_transcript.append({
+            'key': current_start_key,
+            'speaker': current_speaker,
+            'text': ' '.join(current_text)
+        })
 
     print("Processed transcript:", processed_transcript)  # Debug print
     return processed_transcript
+
 @view_app.route('/concall/<file_name>')
 def concall(file_name):
     section = request.args.get('section', 'top_questions')
     
     # Fetch company details
     details = get_file_meta(file_name)
-    
+    additional_meta = details['addn_meta']
+    QA_START_KEY = 'qa_start_key'
     # Fetch content based on the selected section
     if section == 'top_questions':
         content = get_content_top_questions(file_name)
@@ -301,6 +314,10 @@ def concall(file_name):
                            active_section=section,
                            top_questions=content if section == 'top_questions' else {},
                            transcript=content if content and section == 'transcript' else '',
+                            transcript_keys={
+                                            'QA Section': additional_meta[QA_START_KEY],
+                                            'Financials': ['2' ,'3']
+                                            },
                            qa_section=content if content and section == 'qa_section' else '',
                            management_guidance=content if content and section == 'management_guidance' else '')
 

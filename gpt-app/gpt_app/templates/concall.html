@@ -173,12 +173,59 @@
             color: var(--secondary-text-color);
         }
         #guidanceBody { text-align: left; }
+        .filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-btn {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background-color: var(--primary-green);
+    color: white;
+}
+
+.filter-count {
+    background-color: var(--primary-purple);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.filter-btn:hover .filter-count, .filter-btn.active .filter-count {
+    background-color: white;
+    color: var(--primary-green);
+}
 
         .transcript-container {
-            height: auto;
-            line-height: 1.8;
+            height: 70vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        .transcript-entry.highlight {
+            background-color: rgba(24, 153, 78, 0.1);
+        }
+        .transcript-container {
+            height: 70vh; /* or any appropriate height */
+            overflow-y: auto;
+            position: relative;
             border: 1px solid var(--border-color);
-            border-radius: 2px;
+            border-radius: 4px;
             padding: 20px;
             margin-bottom: 3rem;
             background-color: var(--card-background);
@@ -388,14 +435,28 @@
                     {% endfor %}
                 </div>
                 {% elif active_section == 'transcript' %}
-                    <div class="transcript-container">
-                        {% for entry in transcript %}
-                            <div class="transcript-entry">
-                                <div class="transcript-speaker">{{ entry.speaker }}</div>
-                                <div class="transcript-text">{{ entry.text }}</div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <div class="filter-container">
+                    {% for filter_name, keys in transcript_keys.items() %}
+                        {% if keys is string %}
+                            <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys }}">
+                                {{ filter_name }}
+                            </button>
+                        {% else %}
+                            <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys|join(',') }}">
+                                {{ filter_name|upper }}
+                                <span class="filter-count">{{ keys|length }}</span>
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="transcript-container">
+                    {% for entry in transcript %}
+                        <div class="transcript-entry" id="entry-{{ entry.key }}" data-key="{{ entry.key }}">
+                            <div class="transcript-speaker">{{ entry.speaker }}</div>
+                            <div class="transcript-text">{{ entry.text }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
                 {% elif active_section == 'qa_section' %}
                     <div class="accordion" id="qaAccordion">
                         {% for qa in qa_section %}
@@ -444,6 +505,75 @@
             const eventTitle = document.querySelector('.event-title');
             const navbarBrand = document.querySelector('.navbar-brand');
             const companyInfo = document.querySelector('.company-info');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+    const transcriptContainer = document.querySelector('.transcript-container');
+    const transcriptEntries = document.querySelectorAll('.transcript-entry');
+
+    // Object to keep track of current index for each filter with multiple keys
+    const filterIndices = {};
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filterName = button.getAttribute('data-filter');
+            const keys = button.getAttribute('data-keys').split(',');
+            console.log('Clicked filter:', filterName, 'Keys:', keys);
+
+            let targetKey;
+            if (keys.length > 1) {
+                // Initialize index if not exist
+                if (!(filterName in filterIndices)) {
+                    filterIndices[filterName] = 0;
+                }
+                
+                // Get current key and update index
+                targetKey = keys[filterIndices[filterName]];
+                filterIndices[filterName] = (filterIndices[filterName] + 1) % keys.length;
+            } else {
+                targetKey = keys[0];
+            }
+
+            // Find the first entry with a key greater than or equal to the target key
+            const targetElement = Array.from(transcriptEntries).find(entry => {
+                const entryKey = parseInt(entry.getAttribute('data-key'));
+                return entryKey >= parseInt(targetKey);
+            });
+
+            console.log('Target element:', targetElement);
+
+            if (targetElement && transcriptContainer) {
+                // Remove highlight from all entries
+                transcriptEntries.forEach(entry => entry.classList.remove('highlight'));
+                
+                // Add highlight to the target entry
+                targetElement.classList.add('highlight');
+
+                // Calculate the scroll position
+                const containerRect = transcriptContainer.getBoundingClientRect();
+                const targetRect = targetElement.getBoundingClientRect();
+                const scrollTop = targetRect.top - containerRect.top + transcriptContainer.scrollTop;
+
+                // Scroll the transcript container
+                transcriptContainer.scrollTo({
+                    top: scrollTop,
+                    behavior: 'smooth'
+                });
+                
+                // Update active state of filter buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                console.log('Scrolled to position:', scrollTop);
+            } else {
+                console.log('Target element or container not found for key:', targetKey);
+            }
+        });
+    });
+
+    // Log all transcript entries and their keys for debugging
+    console.log('All transcript entries:', transcriptEntries);
+    transcriptEntries.forEach(entry => {
+        console.log('Entry id:', entry.id, 'Data key:', entry.getAttribute('data-key'));
+    });
             let ticking = false;
     
             links.forEach(link => {
