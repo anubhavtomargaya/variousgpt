@@ -62,7 +62,9 @@
             font-size: 14px;
             padding: 0.5rem 1rem;
         }
-
+        .company-name-container {
+            border-left: solid var(--primary-purple) 5px
+        }
         .company-name-scrolled {
             display: none;
             font-size: 16px;
@@ -81,39 +83,92 @@
             padding: 0.25rem 1rem;
             font-size: 14px;
         }
-
         .company-header {
             padding: 15px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
+        .company-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .company-name-container {
+            flex: 1 1 100%;
+            border-left: solid var(--primary-purple) 5px;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+
         .company-name {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary-purple);
+            margin-bottom: 5px;
+            word-wrap: break-word;
         }
 
         .company-ticker {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--secondary-text-color);
         }
 
-        .market-price {
-            font-size: 24px;
-            font-weight: 700;
+        .info-section {
+            flex: 1 1 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
-        
-        .price-label {
+
+        .info-item, .ltp-container {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--secondary-text-color);
+        }
+
+        .info-value, .market-price {
             font-size: 14px;
-            font-weight: 200;
-            color: #666666;
+            font-weight: 600;
         }
 
+        @media (min-width: 768px) {
+            .company-name-container {
+                flex: 0 1 auto;
+                margin-bottom: 0;
+                margin-right: 15px;
+            }
 
-        .price-change {
-            font-size: 16px;
+            .info-section {
+                flex: 1 1 auto;
+            }
+
+            .company-name {
+                font-size: 24px;
+            }
+
+            .company-ticker {
+                font-size: 16px;
+            }
+
+            .info-item, .ltp-container {
+                padding: 0 10px;
+            }
+
+            .info-label {
+                font-size: 12px;
+            }
+
+            .info-value, .market-price {
+                font-size: 16px;
+            }
         }
-
         .company-tabs-container {
             position: sticky;
             top: 50px;
@@ -123,14 +178,14 @@
             border-bottom: 1px solid var(--border-color);
             width: 100%;
         }
-
+        
         .company-tabs {
             display: flex;
             padding: 0;
             margin: 0;
             list-style-type: none;
         }
-
+        
         .company-tabs .nav-link {
             color: var(--text-color);
             text-decoration: none;
@@ -139,7 +194,7 @@
             position: relative;
             transition: all 0.3s ease;
         }
-
+        
         .company-tabs .nav-link::after {
             content: '';
             position: absolute;
@@ -151,70 +206,10 @@
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
-
+        
         .company-tabs .nav-link.active::after {
             transform: scaleX(1);
         }
-
-        .info-section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: .25rem;
-    margin-top: 15px;
-}
-
-.info-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: .45rem;
-    background-color: none;
-    /* border-radius: 8px; */
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
-}
-
-.info-icon {
-    font-size: 24px;
-    margin-bottom: 5px;
-    color: var(--primary-green);
-}
-
-.info-label {
-    font-size: 12px;
-    color: var(--secondary-text-color);
-    margin-bottom: 2px;
-}
-
-.info-value {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-@media (max-width: 576px) {
-    .info-section {
-        gap: 1rem;
-    }
-
-    .info-item {
-        padding: 8px;
-    }
-
-    .info-icon {
-        font-size: 20px;
-        margin-bottom: 3px;
-    }
-
-    .info-label {
-        font-size: 10px;
-        margin-bottom: 1px;
-    }
-
-    .info-value {
-        font-size: 12px;
-    }
-
-}
 .info-icon {
     display: none;
 }
@@ -244,46 +239,7 @@
             font-size: 12px;
         }
 
-        @media (max-width: 768px) {
-            .company-name {
-                font-size: 20px;
-            }
-
-            .market-price {
-                font-size: 20px;
-            }
-
-            .price-change {
-                font-size: 14px;
-            }
-
-            .info-section {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .info-item {
-                flex-basis: 50%;
-                min-width: unset;
-                padding: 10px 5px;
-            }
-
-            .info-icon {
-                font-size: 20px;
-            }
-
-            .info-label {
-                font-size: 10px;
-            }
-
-            .info-value {
-                font-size: 14px;
-            }
-
-            .company-tabs .nav-link {
-                padding: 8px 12px;
-            }
-        }
+        
     </style>
 </head>
 <body>
@@ -312,37 +268,39 @@
             </div>
         </div>
     </nav>
-
+    <div class="company-tabs-container">
+        <ul class="company-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" href="#fundamentals">Fundamentals Overview</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="#earning-calls">Earning Calls Transcripts</a>
+            </li>
+        </ul>
+    </div>
     <main class="container mt-5">
         <div class="company-header">
-            <div class="row align-items-center">
-                <div class="col-md-8">
+            <div class="company-info-row">
+                <div class="company-name-container">
                     <h1 class="company-name">{{ company_name }}</h1>
                     <div class="company-ticker">{{ ticker }}</div>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <span class="price-label text-secondary" >LTP </span>
+                <div class="info-section">
+                    <!-- Info section will be populated by JavaScript -->
+                </div>
+                <div class="ltp-container">
+                    <span class="price-label text-secondary">LTP </span>
                     <span class="market-price">N/A</span>
                     <span class="price-change"></span>
                 </div>
             </div>
         </div>
-
-        <div class="company-tabs-container">
-            <ul class="company-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active" href="#fundamentals">Fundamentals Overview</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" href="#earning-calls">Earning Calls Transcripts</a>
-                </li>
-            </ul>
-        </div>
+      
 
         <div id="fundamentals" class="section">
-            <div class="info-section">
+            <!-- <div class="info-section"> -->
                 <!-- Info section will be populated by JavaScript -->
-            </div>
+            <!-- </div> -->
             <div class="timeline-chart">
                 <canvas id="timelineChart"></canvas>
             </div>
@@ -536,18 +494,18 @@
                 <div class="info-value">${stockData.pe_ratio ? Number(stockData.pe_ratio).toFixed(2) : 'N/A'}</div>
                 <div class="info-label">P/E Ratio</div>
             </div>
-            <div class="info-item">
-                <i class="fas fa-balance-scale info-icon"></i>
-                <div class="info-value">₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}</div>
-                <div class="info-label">52 Week High/Low</div>
-            </div>
-            <div class="info-item">
-                <i class="fas fa-percent info-icon"></i>
-                <div class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</div>
-                <div class="info-label">Dividend Yield</div>
-            </div>
-        `;
-
+            `;
+            
+            // <div class="info-item">
+            //     <i class="fas fa-balance-scale info-icon"></i>
+            //     <div class="info-value">₹${stockData.high_52_week || 'N/A'} / ₹${stockData.low_52_week || 'N/A'}</div>
+            //     <div class="info-label">52 Week High/Low</div>
+            // </div>
+            // <div class="info-item">
+            //     <i class="fas fa-percent info-icon"></i>
+            //     <div class="info-value">${stockData.dividend_yield ? `${Number(stockData.dividend_yield).toFixed(2)}%` : 'N/A'}</div>
+            //     <div class="info-label">Dividend Yield</div>
+            // </div>
     } catch (error) {
         console.error('Error populating fundamentals:', error);
     }
