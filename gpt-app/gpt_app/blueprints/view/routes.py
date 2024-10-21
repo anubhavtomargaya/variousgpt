@@ -1,7 +1,7 @@
 from flask import jsonify, make_response, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
-from gpt_app.common.supabase_handler import get_content_top_questions,  get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_pdf_chunks_transcript, get_qa_records
+from gpt_app.common.supabase_handler import get_content_top_questions,  get_file_meta, get_itdoc_mg_guidance, get_itdoc_mg_tags, get_itdoc_qa_secrion, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.common.supabase_handler import get_company_transcript_data, get_pdf_chunks_transcript, get_qa_records
 from . import view_app
 
@@ -289,7 +289,11 @@ def concall(file_name):
     # Fetch company details
     details = get_file_meta(file_name)
     additional_meta = details['addn_meta']
+    tags = get_itdoc_mg_tags(file_name)
+
     QA_START_KEY = 'qa_start_key'
+   
+    tags= { 'QA Section':additional_meta[QA_START_KEY], **tags}
     # Fetch content based on the selected section
     if section == 'top_questions':
         content = get_content_top_questions(file_name)
@@ -314,10 +318,7 @@ def concall(file_name):
                            active_section=section,
                            top_questions=content if section == 'top_questions' else {},
                            transcript=content if content and section == 'transcript' else '',
-                            transcript_keys={
-                                            'QA Section': additional_meta[QA_START_KEY],
-                                            'Financials': ['2' ,'3']
-                                            },
+                            transcript_keys=tags,
                            qa_section=content if content and section == 'qa_section' else '',
                            management_guidance=content if content and section == 'management_guidance' else '')
 
