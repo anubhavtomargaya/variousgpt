@@ -290,7 +290,8 @@ def concall(file_name):
     details = get_file_meta(file_name)
     additional_meta = details['addn_meta']
     tags = get_itdoc_mg_tags(file_name)
-
+    if not tags:
+        tags = {}
     QA_START_KEY = 'qa_start_key'
    
     tags= { 'QA Section':additional_meta[QA_START_KEY], **tags}

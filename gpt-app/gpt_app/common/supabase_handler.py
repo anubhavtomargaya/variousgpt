@@ -115,7 +115,7 @@ def get_itdoc_mg_tags(file_name):
     else:
         print("documents supp")
         print(rows.data)
-        return rows.data[0]['management_data']['tags'] if rows.data[0]['management_data'] else False
+        return rows.data[0]['management_data'].get('tags',None) if rows.data[0]['management_data'] else False
     
 def get_itdoc_mg_guidance(file_name):
     print("running supabase query...")
