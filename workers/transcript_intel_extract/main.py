@@ -8,7 +8,7 @@ from handler_supabase import (
                                 get_pdf_transcript_and_meta, 
                                 update_transcript_meta_entry
                             )
-from summary_mg import insert_summary_management, summarize_management_guidance
+from summary_mg import identify_transcript_tags, insert_summary_management, insert_tags_management_transcript, summarize_management_guidance
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -174,6 +174,13 @@ def process_earning_call_summary(file_name):
             print("inserting")
             s_insert_result =  insert_summary_management(file_name,s)
             print("insert success",s_insert_result)
+        else:
+            raise ValueError(f"failed to get summary for section  {section}")
+        tags = identify_transcript_tags(section)
+        if tags:
+            print("inserting")
+            tags_insert_result =  insert_tags_management_transcript(file_name,tags)
+            print("insert success",tags_insert_result)
         else:
             raise ValueError(f"failed to get summary for section  {section}")
         return s_insert_result

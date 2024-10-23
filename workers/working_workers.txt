@@ -25,6 +25,7 @@ docker build -t gcr.io/gmailapi-test-361320/process-pdfipt-intel-function .
 #push in gcr 
 docker push gcr.io/gmailapi-test-361320/ffmpeg-python-function
 docker push gcr.io/gmailapi-test-361320/generate-pdf-transcript-seo-function
+docker push gcr.io/gmailapi-test-361320/process-qa-intel-function
 docker push gcr.io/gmailapi-test-361320/process-pdf-chunk-embed  
 docker push gcr.io/gmailapi-test-361320/process-pdf-transcript-intel-function
 docker push gcr.io/gmailapi-test-361320/gen1_classify_upload_pdf 
