@@ -16,40 +16,68 @@ from utils_qa import load_ts_section_management
 
 SUMMARY_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
-
 def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict[str, List[str]]:
     def process_transcript(transcript: Dict[str, Dict[str, str]]) -> Dict:
-        # Combine all text from the transcript
-        full_text = " ".join([chunk["text"] for chunk in transcript.values()])
+        # Create chunks with relevant content
+        transcript_chunks = {
+            chunk_id: {
+                "id": chunk_id,
+                "text": chunk["text"]
+            }
+            for chunk_id, chunk in transcript.items()
+        }
         
-        prompt = f"""
-        Analyze the following transcript from an earnings call:
+        # Check if all content is from a single key or consecutive keys
+        unique_keys = set(transcript_chunks.keys())
+        is_consolidated = len(unique_keys) <= 2 or (
+            len(unique_keys) > 0 and 
+            max([int(k) for k in unique_keys]) - min([int(k) for k in unique_keys]) <= 2
+        )
 
-        {full_text}
+        if is_consolidated:
+            prompt = f"""
+            Analyze this consolidated section from an earnings call transcript:
+            {json.dumps(transcript_chunks, indent=2)}
 
-        Identify the main topics discussed in this earnings call transcript. Create relevant tags for these topics and provide the key numbers of the transcript chunks where these topics are discussed.
+            Since this content is from a concentrated section, identify ONE single appropriate tag that best describes the overall content.
+            Use general tags like:
+            - "Management Address" (for CEO/executive statements)
+            - "Operational Overview" (for business updates)
+            - "Financial Summary" (for financial discussions)
+            - "Strategic Update" (for future plans and strategies)
 
-        Some example tags could be "Financial Discussion", "Future Outlook", "Product Updates", etc., but you should create tags that best fit the content of this specific transcript.
-
-        Return the result as a valid JSON string with the following format:
-        {{
-            "identified_tags": {{
-                "tag_name": [list of relevant chunk numbers],
-                ...
+            Format your response as a valid JSON with:
+            {{
+                "identified_tags": {{
+                    "tag_name": [chunk_ids_as_strings]
+                }}
             }}
-        }}
+            """
+        else:
+            prompt = f"""
+            Analyze these distributed chunks from an earnings call transcript:
+            {json.dumps(transcript_chunks, indent=2)}
 
-        Chunk numbers should be integers corresponding to the keys in the original transcript JSON.
-        If no relevant tags are found, return an empty dictionary for "identified_tags".
-        """
+            Create 3-5 high-level tags for distinct topics. Each tag should have chunks that strongly relate to that topic.
+            Use standard tags like "Financial Results", "Strategic Initiatives", "Market Overview", "Operational Updates"
 
-        print("tokens", count_tokens(prompt, SUMMARY_MODEL))
+            Format your response as a valid JSON with:
+            {{
+                "identified_tags": {{
+                    "tag_name": [chunk_ids_as_strings],
+                    ...
+                }}
+            }}
+            """
 
         response = openai_client.chat.completions.create(
             model=SUMMARY_MODEL,
-            response_format={"type": 'json_object'},
+            response_format={"type": "json_object"},
             messages=[
-                {"role": "system", "content": "You are a financial transcript analyzer specializing in identifying key topics and themes in earnings calls."},
+                {
+                    "role": "system",
+                    "content": "You are a precise financial analyst. For consolidated content from consecutive transcript sections, use a single general tag. For distributed content, identify distinct topic tags."
+                },
                 {"role": "user", "content": prompt}
             ]
         )
@@ -58,8 +86,7 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
         return json.loads(response.choices[0].message.content)
 
     result = process_transcript(transcript_json)
-    return result['identified_tags']
-
+    return result["identified_tags"]
 def summarize_management_guidance(transcript_json: Dict[str, Dict[str, str]]) -> Optional[str]:
 
 
