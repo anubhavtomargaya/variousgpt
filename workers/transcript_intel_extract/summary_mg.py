@@ -18,57 +18,32 @@ SUMMARY_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
 def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict[str, List[str]]:
     def process_transcript(transcript: Dict[str, Dict[str, str]]) -> Dict:
-        # Create chunks with relevant content
         transcript_chunks = {
-            chunk_id: {
-                "id": chunk_id,
-                "text": chunk["text"]
-            }
+            chunk_id: chunk["text"]
             for chunk_id, chunk in transcript.items()
         }
         
-        # Check if all content is from a single key or consecutive keys
-        unique_keys = set(transcript_chunks.keys())
-        is_consolidated = len(unique_keys) <= 2 or (
-            len(unique_keys) > 0 and 
-            max([int(k) for k in unique_keys]) - min([int(k) for k in unique_keys]) <= 2
-        )
+        prompt = f"""
+        Review these transcript chunks and categorize them into one of these specific tags:
+        - Management Address
+        - Financial Update 
+        - Operational Update
 
-        if is_consolidated:
-            prompt = f"""
-            Analyze this consolidated section from an earnings call transcript:
-            {json.dumps(transcript_chunks, indent=2)}
+        Transcript chunks:
+        {json.dumps(transcript_chunks)}
 
-            Since this content is from a concentrated section, identify ONE single appropriate tag that best describes the overall content.
-            Use general tags like:
-            - "Management Address" (for CEO/executive statements)
-            - "Operational Overview" (for business updates)
-            - "Financial Summary" (for financial discussions)
-            - "Strategic Update" (for future plans and strategies)
+        IMPORTANT: DO NOT use "tag_name" as the key. Use one of the exact tags listed above based on the content.
+        Each chunk should be assigned to the most relevant tag.
+        Respond in JSON format only.
 
-            Format your response as a valid JSON with:
-            {{
-                "identified_tags": {{
-                    "tag_name": [chunk_ids_as_strings]
-                }}
+        Required format example:
+        {{
+            "identified_tags": {{
+                "Management Address": ["0", "1"],
+                "Financial Update": ["2", "3"]
             }}
-            """
-        else:
-            prompt = f"""
-            Analyze these distributed chunks from an earnings call transcript:
-            {json.dumps(transcript_chunks, indent=2)}
-
-            Create 3-5 high-level tags for distinct topics. Each tag should have chunks that strongly relate to that topic.
-            Use standard tags like "Financial Results", "Strategic Initiatives", "Market Overview", "Operational Updates"
-
-            Format your response as a valid JSON with:
-            {{
-                "identified_tags": {{
-                    "tag_name": [chunk_ids_as_strings],
-                    ...
-                }}
-            }}
-            """
+        }}
+        """
 
         response = openai_client.chat.completions.create(
             model=SUMMARY_MODEL,
@@ -76,7 +51,7 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a precise financial analyst. For consolidated content from consecutive transcript sections, use a single general tag. For distributed content, identify distinct topic tags."
+                    "content": "You are a financial analyst. Use the exact tag names provided (Management Address, Financial Update, or Operational Update) to categorize the content. Do not use generic keys like 'tag_name'."
                 },
                 {"role": "user", "content": prompt}
             ]
@@ -154,6 +129,8 @@ if __name__ =='__main__':
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
     f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
+    f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
+    f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
 
     def test_management_content_get():
         return load_ts_section_management(f)

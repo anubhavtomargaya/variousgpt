@@ -25,7 +25,7 @@ def get_pdf_transcript_and_meta(file_name):
         return False
     else:
         print("documents supp")
-        print(rows.data)
+        # print(rows.data)
         return rows.data[0]
     
  
