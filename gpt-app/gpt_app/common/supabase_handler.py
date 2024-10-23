@@ -117,7 +117,22 @@ def get_itdoc_mg_guidance(file_name):
         print("documents supp")
         print(rows.data)
         return rows.data[0]['management_data']['overview'] if rows.data[0]['management_data'] else False
+
+def get_files_without_tags():
+    print("Querying for files without management tags...")
+    query = supabase.table('transcripts-intel') \
+        .select('file_name, management_data') \
+        .is_('management_data->>tags', 'null') \
+        .execute()
     
+    if not query.data:
+        print("No files found without tags")
+        return []
+    
+    files = [row['file_name'] for row in query.data]
+    print(f"Found {len(files)} files without tags")
+    return files
+
 def get_company_content_all(copname):
     print("running supabase query...")
     rows =  supabase.table('company-content').select('company_name,upcoming,latest,faq').eq('company_name', f'{copname}').execute()
@@ -388,5 +403,9 @@ if __name__=='__main__':
     def test_get_content_top_qa():
         return get_content_top_questions(f)
     
+    def test_get_intel_files():
+        return get_files_without_tags()
+    
     # print(test_get_qa_section())
-    print(test_get_content_top_qa())
+    # print(test_get_content_top_qa())
+    print(test_get_intel_files())

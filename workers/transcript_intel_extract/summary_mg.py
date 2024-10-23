@@ -27,7 +27,6 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
         Review these transcript chunks and categorize them into one of these specific tags:
         - Management Address
         - Financial Update 
-        - Operational Update
 
         Transcript chunks:
         {json.dumps(transcript_chunks)}
@@ -124,6 +123,7 @@ def insert_tags_management_transcript(file: str, tags: dict) -> str:
     
     # Update the database with the new management_data
     return update_transcript_intel_entry(file_name=file, mg_data=current_mg_data)
+
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'

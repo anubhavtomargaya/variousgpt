@@ -5,6 +5,20 @@ from config_qa import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def get_files_without_tags():
+    print("Querying for files without management tags...")
+    query = supabase.table('transcripts-intel') \
+        .select('file_name, management_data') \
+        .is_('management_data->>tags', 'null') \
+        .execute()
+    
+    if not query.data:
+        print("No files found without tags")
+        return []
+    
+    files = [row['file_name'] for row in query.data]
+    print(f"Found {len(files)} files without tags")
+    return files
 def get_pdf_chunks_transcript(file_name):
     print("running supabase query...")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
