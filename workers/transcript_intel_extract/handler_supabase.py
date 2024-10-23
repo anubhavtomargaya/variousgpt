@@ -5,6 +5,20 @@ from config_qa import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def get_files_without_tags():
+    print("Querying for files without management tags...")
+    query = supabase.table('transcripts-intel') \
+        .select('file_name, management_data') \
+        .is_('management_data->>tags', 'null') \
+        .execute()
+    
+    if not query.data:
+        print("No files found without tags")
+        return []
+    
+    files = [row['file_name'] for row in query.data]
+    print(f"Found {len(files)} files without tags")
+    return files
 def get_pdf_chunks_transcript(file_name):
     print("running supabase query...")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
@@ -25,7 +39,7 @@ def get_pdf_transcript_and_meta(file_name):
         return False
     else:
         print("documents supp")
-        print(rows.data)
+        # print(rows.data)
         return rows.data[0]
     
  
@@ -67,3 +81,14 @@ def update_transcript_intel_entry(file_name,
     result = supabase.table('transcripts-intel').update(meta).eq('file_name', file_name).execute()
     print("Inserted document:", result)
     return result.data[0]['id'] if result.data else None  
+
+def fetch_management_data(file_name: str) -> dict:
+    result = supabase.table('transcripts-intel').select('management_data').eq('file_name', file_name).execute()
+    if not result.data:
+        raise ValueError(f"No entry found for file_name: {file_name}")
+    return result.data[0]['management_data'] or {}
+
+def update_transcript_intel(file_name: str, meta: dict) -> str:
+    result = supabase.table('transcripts-intel').update(meta).eq('file_name', file_name).execute()
+    print("Updated document:", result)
+    return result.data[0]['id'] if result.data else None
