@@ -292,8 +292,9 @@ def concall(file_name):
     tags = get_itdoc_mg_tags(file_name)
     if not tags:
         tags = {}
+    # del tags['Management Address']
     QA_START_KEY = 'qa_start_key'
-   
+  
     tags= { 'QA Section':additional_meta[QA_START_KEY], **tags}
     # Fetch content based on the selected section
     if section == 'top_questions':

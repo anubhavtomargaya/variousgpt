@@ -437,16 +437,16 @@
                 {% elif active_section == 'transcript' %}
                 <div class="filter-container">
                     {% for filter_name, keys in transcript_keys.items() %}
-                        {% if keys is string %}
-                            <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys }}">
-                                {{ filter_name }}
-                            </button>
-                        {% else %}
-                            <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys|join(',') }}">
-                                {{ filter_name|upper }}
-                                <span class="filter-count">{{ keys|length }}</span>
-                            </button>
-                        {% endif %}
+                    {% if keys is string %}
+                        <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys }}">
+                            {{ filter_name }}
+                        </button>
+                    {% else %}
+                        <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys[0] }}">
+                            {{ filter_name|upper }}
+                            <span class="filter-count">1</span>
+                        </button>
+                    {% endif %}
                     {% endfor %}
                 </div>
                 <div class="transcript-container">
