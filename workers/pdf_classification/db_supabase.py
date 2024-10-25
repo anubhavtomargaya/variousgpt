@@ -19,6 +19,21 @@ def insert_classifier_entry(import_filename,given_filename,file_metadata={}):
     supabase.table('pdf-classification').insert(classifier_doc).execute()
     return True 
 
+def validate_company_data(company_name: str, ticker: str) -> bool:
+    """
+    Validates if company name and ticker exist in company-data table
+    Returns True if found, False otherwise
+    """
+    try:
+        result = supabase.table('company-data')\
+            .select('*')\
+            .or_(f"company_name.eq.{company_name},ticker.eq.{ticker}")\
+            .execute()
+        
+        return bool(result.data)
+    except Exception as e:
+        print("Exception in supabse, %s",e)
+        
 def check_pdf_exist(company_name, quarter, financial_year, doc_type):
     existing_ts = supabase.table('pdf-transcripts') \
                           .select('*') \

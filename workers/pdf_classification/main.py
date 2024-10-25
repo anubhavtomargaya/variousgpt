@@ -5,7 +5,7 @@ from flask import jsonify
 from google.cloud import storage
 from dirs import PDF_DIR
 from classify_pdf import classify_pdf_transcript
-from db_supabase import check_pdf_exist, insert_classifier_entry, insert_initial_transcript_entry
+from db_supabase import check_pdf_exist, insert_classifier_entry, insert_initial_transcript_entry, validate_company_data
 
 #utils.py
 def _make_file_path(direcotry:Path,
@@ -114,6 +114,7 @@ def build_file_name(metadata):
 
 def process_concall_metadata():pass 
 
+
 def insert_metadata_entry(metadata):
 
     try:
@@ -125,6 +126,15 @@ def insert_metadata_entry(metadata):
                             "quarter":metadata['quarter'],
                         }
         existing= check_pdf_exist(**check_request)
+        company_name = metadata['company_name']
+        ticker = f"{metadata['nse_scrip_code']}"
+        
+        if not validate_company_data(company_name, ticker):
+            print(f"Company validation failed: {company_name} ({ticker}) not found in company-data table")
+            pass
+        else:
+            print(f"Company validation succeded: {company_name} ({ticker}) exists in company-data table")
+            print("")
 
         if not existing:
             entry = {
@@ -137,7 +147,7 @@ def insert_metadata_entry(metadata):
                     "description":metadata['description'],
                     "key_people":metadata['key_people'],
                     "ticker":f"{metadata['nse_scrip_code']}",
-                    "addn_meta":{"website":metadata.get('website',None)}
+                    "addn_meta": metadata['addn_meta']
                     }
             row_id = insert_initial_transcript_entry(**entry)
             print("new row id",row_id)
@@ -203,7 +213,7 @@ def validate_and_classify_pdf(event, context=None):
 
 if __name__=='__main__':
     # f = 'Earnings-Call-Transcript-Q1-FY-2021.pdf'
-    f= 'CC-Jun23.pdf'
+    f= 'CC-Mar23.pdf'
     # f = 'fy-2024_q1_investor_conference_transcript_raymond_500330.pdf'
     def test_download_from_bucket_as_tmp():
         return download_pdf_from_pdf_bucket_file(f)
