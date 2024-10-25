@@ -53,7 +53,8 @@ def insert_initial_transcript_entry(company_name,
                                     financial_year,
                                     doc_type,
                                     description,
-                                    key_people
+                                    key_people,
+                                    addn_meta
                                     ):
     ts_document = {
         'company_name': company_name,
@@ -65,11 +66,48 @@ def insert_initial_transcript_entry(company_name,
         'doc_type': doc_type,
         'description': description,
         'key_people': key_people,
+        'addn_meta':addn_meta,
     }
 
     result = supabase.table('pdf-transcripts').insert(ts_document).execute()
     # print("Inserted document:", result)
     return result.data[0]['id'] if result.data else None  
+
+def get_distinct_transcript_files():
+    """
+    Queries the pdf-transcripts table and returns a list of all distinct file names.
+    
+    Returns:
+        list: A list of unique file names from the pdf-transcripts table
+    """
+    # Query the table selecting only distinct file names
+    result = supabase.table('pdf-transcripts').select('file_name').execute()
+    
+    # Extract file names from the result and return as a list
+    file_names = [record['file_name'] for record in result.data] if result.data else []
+    
+    # Remove any duplicates (though they shouldn't exist due to table structure)
+    unique_files = list(set(file_names))
+    
+    return sorted(unique_files)  # Return sorted list for consistency
+
+def update_transcript_meta(file_name, key,value):
+    # First, fetch the existing record to get current metadata
+    existing_record = supabase.table('pdf-transcripts').select('addn_meta').eq('file_name', file_name).execute()
+    
+    # Get existing additional metadata or initialize empty dict if none exists
+    current_addn_meta = existing_record.data[0].get('addn_meta', {}) if existing_record.data else {}
+    
+    # Update the metadata with new website URL while preserving existing entries
+    current_addn_meta[key] = value
+    
+    meta = {
+        'addn_meta': current_addn_meta
+    }
+
+    result = supabase.table('pdf-transcripts').update(meta).eq('file_name', file_name).execute()
+    print("Updated document:", result)
+    return result.data[0]['id'] if result.data else None
 
 def get_transcript_row(id)->dict:
     rows =  supabase.table('pdf-transcripts').select('*').eq('id', id).execute()

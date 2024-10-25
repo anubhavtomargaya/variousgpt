@@ -53,6 +53,7 @@ def is_india_concall_transcript(text, filename):
                 "financial_year": "Financial year in format FYxx (e.g., FY24, FY23)",
                 "nse_scrip_code": string   // NSE ticker symbol as TEXT not the number. (if available, else empty string),
                 "bse_scrip_code": string   // BSE ticker symbol . (if available, else empty string),
+                "website" : string / company website if mentioned in the first few pages; DO NOT consider website of exchange or the event organiser, only check if the company's website is mentioned somewhere and extract that
                 "description": "short description of the document based on your knowledge, write a 350 word passage on what you think the pdf is about",
                 "key_people": {{
                     "person1": {{"name": "Name of person", "role": "Role/designation"}},
@@ -111,7 +112,7 @@ def is_india_concall_transcript(text, filename):
         print(f"Error decoding JSON: {response.choices[0].message.content}...")
         return {}
     
-def classify_pdf_transcript(pdf_path):
+def classify_pdf_transcript(pdf_path)->dict:
     """
     Classify if a PDF is an Indian company earnings call transcript.
     """

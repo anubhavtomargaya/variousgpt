@@ -137,6 +137,7 @@ def insert_metadata_entry(metadata):
                     "description":metadata['description'],
                     "key_people":metadata['key_people'],
                     "ticker":f"{metadata['nse_scrip_code']}",
+                    "addn_meta":{"website":metadata.get('website',None)}
                     }
             row_id = insert_initial_transcript_entry(**entry)
             print("new row id",row_id)
@@ -223,17 +224,6 @@ if __name__=='__main__':
         return insert_meta
         
     
-    def test_transcript_extract_service():
-        # f_path=  download_pdf_from_pdf_bucket(f)
-        f_path=  f
-        row_id = service_extract_pdf_metadata(f_path)
-        ts_entry = service_extract_transcript_texts(f_path,row_id)
-        return ts_entry
-    
-    def test_process_main():
-        bucket_file = 'fy-2024_q1_investor_conference_transcript_raymond_500330.pdf'
-        event = { "name":bucket_file,"bucket":'app_bucket'}
-        return process_valid_pdf(event)
         
     # print(test_download_from_bucket_as_tmp())
     # print(test_metadata_service())
