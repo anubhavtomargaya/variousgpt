@@ -5,6 +5,7 @@ AUTH_TOKEN_KEY = 'auth_token'
 AUTH_STATE_KEY = 'oauth_state'
 EXEC_ID_KEY = 'execution_id'
 EMAIL_MESSAGES = 'email_messages'
+PROCESS_FILE_KEY = 'current_process_id'
 
 def set_auth_token(token):
     session[AUTH_TOKEN_KEY] = token
@@ -14,6 +15,12 @@ def set_exec_key(exec_id):
 
 def get_exec_key():
     return session.get(EXEC_ID_KEY, None)
+
+def set_process_id(process_id):
+    session[PROCESS_FILE_KEY] = process_id
+
+def get_process_id():
+    return session.get(PROCESS_FILE_KEY, None)
 
 def set_email_list(email_list):
     session[EMAIL_MESSAGES] = email_list

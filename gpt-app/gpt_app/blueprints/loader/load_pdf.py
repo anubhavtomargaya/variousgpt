@@ -19,6 +19,7 @@ from gpt_app.common.utils_dir import _make_file_path
 
 def load_pdf_link_into_bucket(pdf_link,bucket=None):
     try:
+        # return
         # Create a session to persist parameters across requests
         session = requests.Session()
         retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])

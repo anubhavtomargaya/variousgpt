@@ -1,4 +1,5 @@
 
+import time
 from  gpt_app.blueprints.loader.load_pdf import download_pdf_from_bucket
 from  gpt_app.blueprints.loader.helpers_pdf import extract_text_from_pdf_bytes
 from  gpt_app.blueprints.loader.helpers_db import create_doc_for_file
@@ -47,24 +48,56 @@ def run_classifier(name):
         return {"error": response.status_code, "message": response.text}
 
 
-def run_extract_pdf_transcript(name):
-    # url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel"
-    url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_extract_main_http"
-    headers = {"Content-Type": "application/json"}
-    data = {"name": name}
+def run_extract_pdf_transcript(name,process_id):
+    start_time = time.time()
+    try:
 
-    response = requests.post(url, headers=headers, json=data)
-    print("response extact", response.__dict__)
-    
-    if response.status_code == 200:
-        return response.json()  # Assuming the response is in JSON format
-    else:
-        return {"error": response.status_code, "message": response.text}
+        # url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel"
+        url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_extract_main_http"
+        headers = {"Content-Type": "application/json"}
+        data = {"name": name}
+
+        response = requests.post(url, headers=headers, json=data)
+        print("response extact", response.__dict__)
+        
+        if response.status_code == 200:
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+                file_name=name,
+                process_id=process_id,
+                stage=PipelineStage.TS_EXTRACTION,
+                status=ProcessStatus.COMPLETED,
+                processing_time=processing_time,
+                metadata={'source': 'file_upload', 'original_filename': file.filename}
+            )
+            return response.json()  # Assuming the response is in JSON format
+        else:
+            return {"error": response.status_code, "message": response.text}
+    except Exception as e:
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=name ,
+            process_id=process_id,
+            stage=PipelineStage.TS_EXTRACTION,
+            status=ProcessStatus.FAILED,
+            error_message=str(e),
+            processing_time=processing_time
+        )
+        return {"error": "fatal", "message": str(e)}
 
 
 
+from  gpt_app.blueprints.loader.worker_logging import log_pipeline_event,PipelineStage,ProcessStatus
+from  gpt_app.common.session_manager import get_process_id
 
 def process_pdf_to_doc(file,added_by=None):
+     
+    start_time = time.time()
+    process_id = get_process_id()
+    if not process_id:
+        print("No process_id found in session")
+        return {"error": "Process ID not found"}
+
     # tdoc = check_tdoc_exist(file)
     # if  tdoc:
     #     return False
@@ -81,13 +114,35 @@ def process_pdf_to_doc(file,added_by=None):
     #     else:
     #         print("earning call NOT detected! response", classificaiton) 
     #         return False 
-    classification = run_classifier(file)
+    try:
 
-    # file_name = json.loads(classification).__dict__['_content']
-    print('classf',classification)
-    print('file name',classification.split('/')[-1])
+        classification = run_classifier(file)
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.COMPLETED,
+            processing_time=processing_time,
+            metadata={'valid':None}
+        )
+        # file_name = json.loads(classification).__dict__['_content']
+        print('classf',classification)
+        print('file name',classification.split('/')[-1])
+    except Exception as e:
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.FAILED,
+            error_message=str(e),
+            processing_time=processing_time
+        )
+
     if classification:
-        extract_transcript = run_extract_pdf_transcript(classification.split('/')[-1])
+        extract_transcript = run_extract_pdf_transcript(classification.split('/')[-1],
+                                                        process_id=process_id)
         if extract_transcript:
 
         # txt = get_pdf_txt(file)
@@ -111,6 +166,15 @@ def process_pdf_to_doc(file,added_by=None):
                     "etc":extract_transcript
                     }
         else:
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file,
+            process_id=process_id,
+            stage=PipelineStage.TS_EXTRACTION,
+            status=ProcessStatus.FAILED,
+            error_message=str(e),
+            processing_time=processing_time
+        )
             return {"url":"unable to extract transcript from Document"}
         
         
