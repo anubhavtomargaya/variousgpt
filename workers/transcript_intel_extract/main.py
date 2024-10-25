@@ -217,6 +217,7 @@ if __name__=='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     # f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
     f = 'fy-2024_q4_Earnings_Conference_Raymond Limited.pdf'
+    f = 'fy2024_q1_aegis_logistics_limited_quarterly_earnings_call_transcript_aegischem.pdf'
 
     def test_get_ts_chunks():
         ts =  get_pdf_chunks_transcript(f)

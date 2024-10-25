@@ -44,14 +44,22 @@ def get_pdf_transcript_and_meta(file_name):
     
  
 def update_transcript_meta_entry(file_name, qa_start_key):
+    # First, fetch the existing record to get current metadata
+    existing_record = supabase.table('pdf-transcripts').select('addn_meta').eq('file_name', file_name).execute()
+    
+    # Get existing additional metadata or initialize empty dict if none exists
+    current_addn_meta = existing_record.data[0].get('addn_meta', {}) if existing_record.data else {}
+    
+    # Update the metadata with new qa_start_key while preserving existing entries
+    current_addn_meta['qa_start_key'] = qa_start_key
+    
     meta = {
-        'addn_meta': {'qa_start_key':qa_start_key}
+        'addn_meta': current_addn_meta
     }
 
     result = supabase.table('pdf-transcripts').update(meta).eq('file_name', file_name).execute()
-    print("Inserted document:", result)
-    return result.data[0]['id'] if result.data else None  
-
+    print("Updated document:", result)
+    return result.data[0]['id'] if result.data else None
 
 def insert_transcript_intel_entry(file_name,
                                   qa_data=None,
