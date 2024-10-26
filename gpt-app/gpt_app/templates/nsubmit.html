@@ -10,7 +10,6 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-5DF5GL4LB5');
     </script>
     <style>
@@ -92,9 +91,21 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        iframe {
-            width: 100%;
-            height: 315px;
+        .status-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
@@ -111,19 +122,9 @@
         <button onclick="uploadPdfLink()">Upload PDF Link</button>
     </div>
     
-    <!-- <div class="input-container">
-        <input type="text" id="youtubeUrl" placeholder="Enter YouTube URL">
-        <button onclick="submitYouTube()">Fetch YouTube</button>
-    </div>
-    
-    <div class="input-container">
-        <input type="text" id="contextContent" placeholder="Enter Context Content (optional)">
-        <button onclick="transcribeYouTube()">Transcribe YouTube</button>
-    </div> -->
-    
     <div id="loader"><div class="loader"></div></div>
+    <div id="statusMessage" class="status-message"></div>
     <div id="response"></div>
-    <!-- <div id="video-container"></div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
@@ -166,136 +167,102 @@
             }
         }
 
+        function showStatusMessage(message, isError = false) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status-message ' + (isError ? 'error' : 'success');
+            statusDiv.style.display = 'block';
+            
+            // Hide after 5 seconds if it's a success message
+            if (!isError) {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
         function uploadFile(file) {
-            const url = '/loader/upload';
+            const uploadUrl = '/loader/upload';
             const formData = new FormData();
             formData.append('file', file);
 
             showLoader();
-            axios.post(url, formData)
+            axios.post(uploadUrl, formData)
                 .then(function (response) {
-                    hideLoader();
                     const data = response.data;
                     if (data.error) {
-                        showResponse('Error: ' + data.error);
+                        hideLoader();
+                        showStatusMessage(data.error, true);
                     } else {
-                        showResponse('File uploaded successfully: ' + data.file_name);
-                        window.location.href = "/loader/status?file=" + data.file_name.split('.')[0];
+                        // Show upload success
+                        showStatusMessage(`File ${data.file_name} uploaded successfully. Starting processing...`);
+                        
+                        // Trigger processing
+                        triggerProcessing(data.file_name, data.process_id);
                     }
                 })
                 .catch(function (error) {
                     hideLoader();
-                    console.error('Error:', error.response ? error.response.data : error);
-                    showResponse('An error occurred while uploading the file.');
+                    console.error('Error:', error);
+                    showStatusMessage('An error occurred while uploading the file.', true);
                 });
         }
 
         function uploadPdfLink() {
             const pdfLink = document.getElementById('pdfLinkInput').value;
             if (!pdfLink) {
-                showResponse('Please enter a PDF link.');
+                showStatusMessage('Please enter a PDF link.', true);
                 return;
             }
 
-            const url = '/loader/upload';
+            const uploadUrl = '/loader/upload';
             const formData = new FormData();
             formData.append('pdf_link', pdfLink);
 
             showLoader();
-            axios.post(url, formData)
+            axios.post(uploadUrl, formData)
                 .then(function (response) {
-                    hideLoader();
                     const data = response.data;
                     if (data.error) {
-                        showResponse('Error: ' + data.error);
+                        hideLoader();
+                        showStatusMessage(data.error, true);
                     } else {
-                        showResponse('PDF link uploaded successfully: ' + data.file_name);
-                        window.location.href = "/loader/status?file=" + data.file_name.split('.')[0];
+                        // Show upload success
+                        showStatusMessage(`PDF link ${data.file_name} uploaded successfully. Starting processing...`);
+                        
+                        // Trigger processing
+                        triggerProcessing(data.file_name, data.process_id);
                     }
                 })
                 .catch(function (error) {
                     hideLoader();
-                    console.error('Error:', error.response ? error.response.data : error);
-                    showResponse('An error occurred while uploading the PDF link. Please upload manually.');
+                    console.error('Error:', error);
+                    showStatusMessage('An error occurred while uploading the PDF link.', true);
                 });
         }
 
-
-        function getYouTubeID(url) {
-            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[7].length == 11) ? match[7] : false;
-        }
-
-        function submitYouTube() {
-            var url = document.getElementById('youtubeUrl').value.trim();
-            if (!url) {
-                alert('Please enter a YouTube URL.');
-                return;
-            }
-
-            var loader = document.getElementById('loader');
-            var responseDiv = document.getElementById('response');
-            var videoContainer = document.getElementById('video-container');
-
-            loader.style.display = 'block';
-            responseDiv.innerHTML = '';
-            videoContainer.innerHTML = '';
-
-            axios.post('/api/v1/gptube/yt/submit', { url: url })
-            .then(function (response) {
-                console.log(response.data);
-                loader.style.display = 'none';
-                responseDiv.innerHTML = `
-                    <p id="title">${response.data.title}</p>
-                    <p id="file_path">${response.data.file_path}</p>
-                    <h3 id="cost">Approx Cost: $${response.data.whisper_approx_cost}</h3>
-                    <p>Description: ${response.data.description}</p>
-                `;
-
-                videoContainer.innerHTML = `
-                    <iframe src="https://www.youtube.com/embed/${getYouTubeID(url)}" frameborder="0" allowfullscreen></iframe>
-                `;
-            })
-            .catch(function (error) {
-                console.error('Error:', error.response.data);
-                loader.style.display = 'none';
-                responseDiv.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
-            });
-        }
-
-        function transcribeYouTube() {
-            var title = document.getElementById('youtubeUrl').value.trim();
-            var userPrompt = document.getElementById('contextContent').value.trim();
-            if (!title) {
-                alert('Please enter a YouTube URL.');
-                return;
-            }
+        function triggerProcessing(fileName, processId) {
+            const processUrl = '/loader/process/pdf';
             
-            console.log(userPrompt);
-            var loader = document.getElementById('loader');
-            var responseDiv = document.getElementById('response');
-            var titleElement = responseDiv.querySelector('#file_path');
-            console.log(titleElement.textContent);
-            loader.style.display = 'block';
-            responseDiv.innerHTML = '';
-            console.log("calling transcription api");
-            axios.post('/api/v1/gptube/transcribe/youtube', { title: titleElement.textContent, user_prompt: userPrompt })
+            axios.post(processUrl, {
+                file: fileName
+            })
             .then(function (response) {
-                console.log("response");
-                console.log(response.data);
-                loader.style.display = 'none';
-                responseDiv.innerHTML = `
-                    <p>Transcription Result:</p>
-                    <pre>${response.data}</pre>
-                `;
-                window.location.href = "/view/procpdf?extn=json&file="+ titleElement.textContent.split('.')[0];
+                // Redirect to status page without waiting for processing to complete
+                hideLoader();
+                window.location.href = `/loader/view/status/${processId}`;
             })
             .catch(function (error) {
-                console.error('Error:', error.response.data);
-                loader.style.display = 'none';
-                responseDiv.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
+                console.error('Error triggering processing:', error);
+                // Still redirect to status page even if there's an error
+                hideLoader();
+                window.location.href = `/loader/view/status/${processId}`;
             });
+
+            // Optional: Add a small delay before redirect to ensure the success message is visible
+            setTimeout(() => {
+                window.location.href = `/loader/view/status/${processId}`;
+            }, 1500);
         }
 
         function showLoader() {
@@ -304,10 +271,6 @@
 
         function hideLoader() {
             document.getElementById('loader').style.display = 'none';
-        }
-
-        function showResponse(message) {
-            document.getElementById('response').innerText = message;
         }
     </script>
 </body>

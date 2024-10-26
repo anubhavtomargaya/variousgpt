@@ -6,18 +6,24 @@ import time
 from typing import Optional, Dict, Any
 import shortuuid
 from  gpt_app.common.supabase_handler import supabase_insert
+
 class PipelineStage(str, Enum):
+
     UPLOAD = 'upload'
     CLASSIFICATION = 'classification'
     METADATA = 'metadata'
     TS_EXTRACTION = 'text_extraction'
     QA_GENERATION = 'qa_generation'
+    QA_MG_INTEL_GENERATION = 'intel_generation'
     EMBEDDING_GENERATION = 'embedding_generation'
-    INDEXING = 'indexing'
+
 
 class ProcessStatus(str, Enum):
     COMPLETED = 'completed'
     FAILED = 'failed'
+    STARTED = 'started'
+
+
 def generate_process_id():
     """Generate a unique process ID with timestamp prefix"""
     # Get current date in MMDD format

@@ -56,10 +56,15 @@ def run_extract_pdf_transcript(name,process_id):
         url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_extract_main_http"
         headers = {"Content-Type": "application/json"}
         data = {"name": name}
-
+        log_pipeline_event(
+            file_name=name,
+            process_id=process_id,
+            stage=PipelineStage.TS_EXTRACTION,
+            status=ProcessStatus.STARTED,
+        )
         response = requests.post(url, headers=headers, json=data)
         print("response extact", response.__dict__)
-        
+        data = response.json()
         if response.status_code == 200:
             processing_time = time.time() - start_time
             log_pipeline_event(
@@ -68,7 +73,7 @@ def run_extract_pdf_transcript(name,process_id):
                 stage=PipelineStage.TS_EXTRACTION,
                 status=ProcessStatus.COMPLETED,
                 processing_time=processing_time,
-                metadata={'source': 'file_upload', 'original_filename': file.filename}
+                metadata=data
             )
             return response.json()  # Assuming the response is in JSON format
         else:
@@ -115,8 +120,15 @@ def process_pdf_to_doc(file,added_by=None):
     #         print("earning call NOT detected! response", classificaiton) 
     #         return False 
     try:
-
+        log_pipeline_event(
+            file_name=file,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.STARTED,
+        )
         classification = run_classifier(file)
+        if not classification:
+            raise Exception("ClassifierError: Returned None",classification)
         processing_time = time.time() - start_time
         log_pipeline_event(
             file_name=file,
@@ -141,6 +153,7 @@ def process_pdf_to_doc(file,added_by=None):
         )
 
     if classification:
+        
         extract_transcript = run_extract_pdf_transcript(classification.split('/')[-1],
                                                         process_id=process_id)
         if extract_transcript:
