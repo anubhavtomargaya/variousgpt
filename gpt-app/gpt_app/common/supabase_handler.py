@@ -23,6 +23,47 @@ def supabase_insert(table_name: str, data: dict) -> Optional[dict]:
         print(f"Supabase insert error for table {table_name}: {str(e)}")
         return None
     
+def get_latest_transcripts(limit: int = 5, offset: int = 0):
+    """
+    Queries the pdf-transcripts table and returns the latest transcripts with specified columns.
+    Orders results by created_at timestamp in descending order.
+    
+    Args:
+        limit (int, optional): Maximum number of records to return. Defaults to 5.
+        offset (int, optional): Number of records to skip. Defaults to 0.
+    
+    Returns:
+        list: A list of dictionaries containing transcript details
+              Each dictionary has keys: filename, quarter, financial_year, company_name, ticker
+    """
+    try:
+        # Query the table with pagination
+        result = supabase.table('pdf-transcripts')\
+            .select('file_name,date,quarter,financial_year,company_name,ticker,created_at')\
+            .order('created_at', desc=True)\
+            .limit(limit)\
+            .offset(offset)\
+            .execute()
+        
+        # Transform the results into the desired format
+        transcripts = []
+        if result.data:
+            for record in result.data:
+                transcript = {
+                    'file_name': record['file_name'],
+                    'quarter': record['quarter'],
+                    'date': record['date'],
+                    'financial_year': record['financial_year'],
+                    'company_name': record['company_name'],
+                    'ticker': record['ticker']
+                }
+                transcripts.append(transcript)
+                
+        return transcripts
+        
+    except Exception as e:
+        print(f"Error fetching latest transcripts: {str(e)}")
+        return []
 
 def get_pipeline_events(process_id: str):
     """Query pipeline events for a specific process"""
@@ -449,6 +490,12 @@ if __name__=='__main__':
     def test_get_intel_files():
         return get_files_without_tags()
     
+    def test_get_latest_files():
+        return get_latest_transcripts()
+    
+
+    
     # print(test_get_qa_section())
     # print(test_get_content_top_qa())
-    print(test_get_intel_files())
+    # print(test_get_intel_files())
+    print(test_get_latest_files())
