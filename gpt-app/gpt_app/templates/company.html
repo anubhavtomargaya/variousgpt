@@ -238,6 +238,115 @@
             padding: 0.25rem 0.75rem;
             font-size: 12px;
         }
+        .horizontal-scroll-container {
+    position: relative;
+    padding: 0 20px;
+}
+
+.horizontal-scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.scroll-item {
+    flex: 0 0 auto;
+    width: 300px;
+}
+
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+    color: var(--primary-purple);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.scroll-arrow:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.scroll-left {
+    left: 10px;
+}
+
+.scroll-right {
+    right: 10px;
+}
+
+.horizontal-scroll-container:hover .scroll-arrow {
+    opacity: 1;
+}
+
+.fade-edge-left, .fade-edge-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.fade-edge-left {
+    left: 0;
+    background: linear-gradient(to right, var(--background-color) 0%, transparent 100%);
+}
+
+.fade-edge-right {
+    right: 0;
+    background: linear-gradient(to left, var(--background-color) 0%, transparent 100%);
+}
+
+.scroll-arrow.hidden {
+    display: none;
+}
+
+.recent-results .card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: 100%;
+}
+
+.recent-results .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.text-purple {
+    color: var(--primary-purple);
+}
+
+.executive-summary {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
         
     </style>
@@ -296,7 +405,7 @@
             </div>
         </div>
       
-
+      
         <div id="fundamentals" class="section">
             <div class="timeline-chart">
                 <canvas id="timelineChart"></canvas>
@@ -326,6 +435,45 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
+        <!-- Add this right after the company-header div and before the fundamentals section -->
+         
+        <div class="recent-results mb-4">
+            <h2 class="section-title mb-3">Recent Results</h2>
+    
+            <div class="horizontal-scroll-container">
+                <button class="scroll-arrow scroll-left" aria-label="Scroll left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="horizontal-scroll-wrapper">
+                    {% for transcript in latest_transcripts %}
+                    <div class="scroll-item">
+                        <a href="{{ url_for('view_app.concall', file_name=transcript.file_name) }}?section=transcript" class="text-decoration-none">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="company-name-small text-purple mb-2">{{ transcript.company_name }}</h5>
+                                    <h5 class="quarter-info text-purple mb-2">{{ transcript.quarter }} {{ transcript.financial_year }}</h5>
+                                    <div class="date-info text-muted mb-2">
+                                        {{ transcript.date.strftime('%Y-%m-%d') if transcript.date else '' }}
+                                    </div>
+                                    <!-- <p class="executive-summary">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+                                    </p> -->
+                                    <div class="mt-2">
+                                        <button class="btn btn-primary btn-sm">View Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="scroll-arrow scroll-right" aria-label="Scroll right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="fade-edge-left"></div>
+                <div class="fade-edge-right"></div>
+            </div>
         </div>
     </main>
     <footer class="bg-dark text-white mt-5 py-4">
@@ -373,6 +521,52 @@
             const companyNameScrolled = document.querySelector('.company-name-scrolled');
             const tabsContainer = document.querySelector('.company-tabs-container');
             const tabs = document.querySelectorAll('.company-tabs .nav-link');
+
+            const container = document.querySelector('.horizontal-scroll-wrapper');
+            const leftArrow = document.querySelector('.scroll-left');
+            const rightArrow = document.querySelector('.scroll-right');
+
+            // Scroll amount for each arrow click
+            const scrollAmount = 300;
+
+            // Function to check scroll position and update arrow visibility
+            function updateArrowVisibility() {
+                if (container.scrollLeft > 0) {
+                    leftArrow.classList.remove('hidden');
+                } else {
+                    leftArrow.classList.add('hidden');
+                }
+
+                if (container.scrollLeft < (container.scrollWidth - container.clientWidth)) {
+                    rightArrow.classList.remove('hidden');
+                } else {
+                    rightArrow.classList.add('hidden');
+                }
+            }
+
+            // Initial check
+            updateArrowVisibility();
+
+            // Scroll handlers
+            leftArrow.addEventListener('click', () => {
+                container.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+
+            rightArrow.addEventListener('click', () => {
+                container.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Update arrow visibility on scroll
+            container.addEventListener('scroll', updateArrowVisibility);
+
+            // Update arrow visibility on window resize
+            window.addEventListener('resize', updateArrowVisibility);
     
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 100) {

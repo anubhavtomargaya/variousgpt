@@ -5,7 +5,7 @@ from flask import jsonify, make_response, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
-from gpt_app.common.supabase_handler import get_company_file_names, get_company_list, get_content_top_questions, get_file_extn_doc, get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
+from gpt_app.common.supabase_handler import get_company_file_names, get_company_list, get_content_top_questions, get_file_extn_doc, get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_latest_transcripts, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.common.supabase_handler import get_company_transcript_data, get_file_extn_doc, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.blueprints.company.format_content import get_faq_content, get_upcoming_content
 from . import company_app
@@ -34,6 +34,7 @@ def upcoming(company_name, question_slug=None):
                            active_page="upcoming", 
                            upcoming_data=upcoming_data,
                            question_slug=question_slug)
+
 @company_app.route('/<company_name>')
 @company_app.route('/<company_name>/historical')
 def historical(company_name):
@@ -65,12 +66,29 @@ def historical(company_name):
                 'financial_year': details['financial_year'],
                 'top_questions': top_questions
             })
+    latest_transcripts = get_latest_transcripts(limit=5)  # Get 5 latest transcripts
+    
+    # Filter latest transcripts for current company
+    company_latest_transcripts = []
+    for transcript in latest_transcripts:
+        # Replace hyphens in company name for comparison
+        # if transcript['company_name'].replace(' ', '-').lower() == company_name.lower():
+            # Convert date string to datetime object if it exists
+            if transcript['date'] and isinstance(transcript['date'], str):
+                try:
+                    transcript['date'] = datetime.strptime(transcript['date'], '%Y-%m-%d').date()
+                except ValueError:
+                    pass
+            
+            company_latest_transcripts.append(transcript)
+    print("Latest transcripts:", company_latest_transcripts)
     
     return render_template('company.html', 
                            company_name=company_name.replace('-', ' '), 
                            active_page="historical", 
                             ticker=details['ticker'],
-                           historical_data=historical_data)
+                           historical_data=historical_data,
+                           latest_transcripts=company_latest_transcripts)  # Add latest)
 
     # return render_template('company.html', 
     #                        company_name=company_name.replace('-', ' '), 
@@ -107,36 +125,50 @@ def company_sample():
 @company_app.route('/landing')
 def company_landing():
     return render_template('newlp.html')
+
+from datetime import datetime
+
 @company_app.route('/')
 def company_index():
     data = get_company_list()
-    # print("data",data)
+    # Get all latest transcripts
+    latest_transcripts = get_latest_transcripts(limit=5)
+    
+    # Convert date strings to datetime objects
+    for transcript in latest_transcripts:
+        if transcript['date'] and isinstance(transcript['date'], str):
+            try:
+                # Assuming the date is in ISO format (YYYY-MM-DD)
+                transcript['date'] = datetime.strptime(transcript['date'], '%Y-%m-%d')
+            except ValueError:
+                # If date conversion fails, keep it as string
+                pass
+    
+    
     company_data = {
-    'indices': ['NIFTY100', 'NIFTY50', 'OTHERS','NASDAQ100'],
-    'indices_companies': {
-        'NIFTY100': [],
-        'NIFTY50': [],
-        'OTHERS':[],
-        'NASDAQ100': []
-    },
-    'market_cap': ['Large Cap', 'Mid Cap', 'Small Cap'],
-    'market_cap_companies': {
-        'Large Cap': [],
-        'Mid Cap': [],
-        'Small Cap': []
-    },
-    'sectors': ['Technology', 'Finance', 'Healthcare', 'Energy'],
-    'sector_companies': {
-        'Technology': [],
-        'Finance': [],
-        'Healthcare': [],
-        'Energy': []
-    },
-
-    'recently_updated': []
-}
-
-    # Process the data
+        'indices': ['NIFTY100', 'NIFTY50', 'OTHERS', 'NASDAQ100'],
+        'indices_companies': {
+            'NIFTY100': [],
+            'NIFTY50': [],
+            'OTHERS': [],
+            'NASDAQ100': []
+        },
+        'market_cap': ['Large Cap', 'Mid Cap', 'Small Cap'],
+        'market_cap_companies': {
+            'Large Cap': [],
+            'Mid Cap': [],
+            'Small Cap': []
+        },
+        'sectors': ['Technology', 'Finance', 'Healthcare', 'Energy'],
+        'sector_companies': {
+            'Technology': [],
+            'Finance': [],
+            'Healthcare': [],
+            'Energy': []
+        },
+        'recently_updated': latest_transcripts
+    }
+ # Process the data
     for item in data:
         print("item",item)
         company_name = item['company_name']
@@ -165,8 +197,7 @@ def company_index():
                 for sector in tags['sectors']:
                     if sector in company_data['sector_companies']:
                         company_data['sector_companies'][sector].append(company_name)
-        
-        
+            
     return render_template('companies.html', 
-                        active_page="company_index", 
-                        company_data=company_data)
+                         active_page="company_index", 
+                         company_data=company_data)
