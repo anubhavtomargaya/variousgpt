@@ -4,7 +4,7 @@ import random
 import string
 import time
 from typing import Optional, Dict, Any
-import shortuuid
+
 from  gpt_app.common.supabase_handler import supabase_insert
 
 class PipelineStage(str, Enum):
