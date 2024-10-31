@@ -65,6 +65,8 @@ def split_document(doc, chunk_size=1000, overlap=200):
 
 def create_seo_content_doc_for_file(filename,
                                     top_questions:dict,
+                                    addn_content:dict,
+                                
                                     meta:dict={}):
     """ make the dict in first stage of storing content doc
     """
@@ -72,7 +74,7 @@ def create_seo_content_doc_for_file(filename,
 
     doc = {'file_name':filename,
            'top_qa':top_questions, #dict
-           'addn_content':None, #dict 
+           'addn_content':addn_content, #dict 
            'metadata':meta # dict 
            }
    
@@ -111,30 +113,105 @@ def upload_blob_to_gcs_bucket_by_filename(gcs_client,
 
 openai_client = get_openai_client()
 import json
-
 def query_gpt(prompt,
               model="gpt-4o-mini",
-              response='text'):
-    tokens = count_tokens(text=prompt,
-                        model=model)
-    print("tokens",tokens)
-    response = openai_client.chat.completions.create(
-    model=model,
-    temperature=0.4,  
-    messages=[
-        {"role": "system", "content": "You are a helpful analyst."},
-        {"role": "user", "content": prompt}
-        ]
-)
+              response_format='text',
+                temperature=0.1,
+              max_tokens=15000):
 
+    """
+    Query GPT with support for different response formats
+    
+    Args:
+        prompt (str): The input prompt
+        model (str): The model to use
+        response_format (str): Desired response format - 'text', 'json', or 'structured'
+    
+    Returns:
+        The formatted response or False if error occurs
+    """
+    tokens = count_tokens(text=prompt, model=model)
+    print("tokens", tokens)
+    
+    # Adjust system message based on response format
+    system_message = get_system_message(response_format)
+    
     try:
+        # Add format instructions to prompt if needed
+        formatted_prompt = format_prompt(prompt, response_format)
+        
+        # Configure response format parameter
+        response_params = {}
+        if response_format == 'json':
+            response_params['response_format'] = {"type": "json_object"}
+        
+        response = openai_client.chat.completions.create(
+            model=model,
+            temperature=temperature,  # Low temperature for consistency
+            max_tokens=max_tokens,    # Control response length
+            top_p=0.1,               # Lower top_p for more focused responses
+            frequency_penalty=0.2,    # Slight penalty for repetition
+            presence_penalty=0.1,   
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": formatted_prompt}
+            ],
+            **response_params
+        )
         
         result = response.choices[0].message.content
-        return result 
-    except json.JSONDecodeError:
-        print(f"Error decoding JSON for chunk starting with: {prompt[:100]}...")
-        print(f"Error decoding JSON : {response.choices[0].message.content}...")
+        
+        # Process the result based on response format
+        if response_format == 'json':
+            try:
+                return json.loads(result)
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON response: {str(e)}")
+                print(f"Raw response: {result[:200]}...")
+                return False
+        
+        elif response_format == 'structured':
+            # For structured format, attempt to parse as JSON first
+            try:
+                return json.loads(result)
+            except json.JSONDecodeError:
+                # If not valid JSON, return as is
+                return result
+        
+        return result
+        
+    except Exception as e:
+        print(f"Error in query_gpt: {str(e)}")
+        if hasattr(response, 'choices') and len(response.choices) > 0:
+            print(f"Raw response content: {response.choices[0].message.content[:200]}...")
         return False
+
+def get_system_message(response_format):
+    """
+    Get appropriate system message based on response format
+    """
+    base_message = "You are a helpful analyst."
+    
+    if response_format == 'json':
+        return base_message + " Always respond with valid JSON."
+    elif response_format == 'structured':
+        return base_message + " Provide structured, detailed responses."
+    return base_message
+
+def format_prompt(prompt, response_format):
+    """
+    Format the prompt based on desired response format
+    """
+    if response_format == 'json':
+        # Add explicit JSON formatting instruction if not already present
+        if not any(keyword in prompt.lower() for keyword in ['json', 'format']):
+            prompt += "\nProvide the response in JSON format."
+    
+    elif response_format == 'structured':
+        if not 'structure' in prompt.lower():
+            prompt += "\nProvide a well-structured response."
+    
+    return prompt
 
 
 def _make_file_path(direcotry:Path,

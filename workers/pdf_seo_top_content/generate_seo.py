@@ -26,7 +26,7 @@ def top_questions(pdf_content, num_questions=10):
 
     Here's the content:
 
-    {pdf_content[:13000]}  # Limiting to first 3000 characters to avoid token limits
+    {pdf_content[:13000]}  # Limiting to first 13000 characters to avoid token limits
 
     Please provide the top {num_questions} SEO-optimized questions based on this content.
     Be direct and avoid using leadings phrases like here are the questions etc.
@@ -44,7 +44,9 @@ def top_questions(pdf_content, num_questions=10):
         return []
 
 def generate_answer(pdf_content,
-                        question,file_name):
+                        question,
+                        output_format="text",
+                        max_tokens=15000):
     """
     Generate SEO-optimized content based on the top questions.
     
@@ -70,6 +72,6 @@ def generate_answer(pdf_content,
     Pleaase provide the answer to the question above based on the excrept.
     """
 
-    answer = query_gpt(prompt)
+    answer = query_gpt(prompt,response_format=output_format,max_tokens=max_tokens)
     if answer:
         return answer
