@@ -420,11 +420,11 @@
                 <ul class="list-unstyled mt-2">
                     {% for question, answer in data.top_questions.items() %}
                     {% if loop.index <= 2 %}
-                        <li>
-                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=top_questions#question-{{ loop.index }}">
+                    <li>
+                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}/questions/{{ question|slugify }}">
                             {{ question }}
                         </a>
-                        </li>
+                    </li>
                     {% endif %}
                     {% endfor %}
                 </ul>

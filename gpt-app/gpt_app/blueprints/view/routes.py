@@ -320,6 +320,8 @@ def concall(file_name, question_slug=None):
             print("con", content)
         elif section == 'management_guidance':
             content = get_itdoc_mg_guidance(file_name)
+        else:
+            content = {}
 
         return render_template('concall.html',
                             company_name=details['company_name'],
