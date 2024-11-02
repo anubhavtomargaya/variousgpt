@@ -254,6 +254,23 @@ def get_company_file_names(company_name):
         return rows.data[0]['top_qa']
 
 
+def get_distinct_transcript_files():
+    """
+    Queries the pdf-transcripts table and returns a list of all distinct file names.
+    
+    Returns:
+        list: A list of unique file names from the pdf-transcripts table
+    """
+    # Query the table selecting only distinct file names
+    result = supabase.table('pdf-transcripts').select('file_name').execute()
+    
+    # Extract file names from the result and return as a list
+    file_names = [record['file_name'] for record in result.data] if result.data else []
+    
+    # Remove any duplicates (though they shouldn't exist due to table structure)
+    unique_files = list(set(file_names))
+    
+    return sorted(unique_files)  # Return sorted list for consistency
 def get_content_top_questions(file_name):
     print("running supabase query...")
     rows =  supabase.table('content-docs').select('top_qa').eq('file_name', f'{file_name}').execute()
@@ -262,7 +279,7 @@ def get_content_top_questions(file_name):
         return False
     else:
         print("documents supp")
-        print(rows.data)
+        # print(rows.data)
         return rows.data[0]['top_qa']
     
 def get_list_transcripts():
@@ -496,6 +513,6 @@ if __name__=='__main__':
 
     
     # print(test_get_qa_section())
-    # print(test_get_content_top_qa())
+    print(test_get_content_top_qa())
     # print(test_get_intel_files())
-    print(test_get_latest_files())
+    # print(test_get_latest_files())

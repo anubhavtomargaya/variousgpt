@@ -283,47 +283,59 @@ def process_transcript(raw_transcript):
     return processed_transcript
 
 @view_app.route('/concall/<file_name>')
-def concall(file_name):
-    section = request.args.get('section', 'top_questions')
-    
-    # Fetch company details
-    details = get_file_meta(file_name)
-    additional_meta = details['addn_meta']
-    tags = get_itdoc_mg_tags(file_name)
-    if not tags:
-        tags = {}
-    # del tags['Management Address']
-    QA_START_KEY = 'qa_start_key'
-  
-    tags= { 'QA Section':additional_meta[QA_START_KEY], **tags}
-    # Fetch content based on the selected section
-    if section == 'top_questions':
-        content = get_content_top_questions(file_name)
-        content = {k:str(v).replace("**",'') for k,v in content.items()}
-        print("content",content)
-        print("type",type(content))
-    elif section == 'transcript':
-        raw_transcript = get_pdf_chunks_transcript(file_name)['extracted_transcript']
-        content = process_transcript(raw_transcript)
-        print(content) 
-    elif section == 'qa_section':
-        content = get_itdoc_qa_secrion(file_name)
-        print("con",content)
-    elif section == 'management_guidance':
-        content = get_itdoc_mg_guidance(file_name)
-    
-    return render_template('concall.html',
-                           company_name=details['company_name'],
-                           quarter=details['quarter'],
-                           financial_year=details['financial_year'],
-                           file_name=file_name,
-                           active_section=section,
-                           top_questions=content if section == 'top_questions' else {},
-                           transcript=content if content and section == 'transcript' else '',
-                            transcript_keys=tags,
-                           qa_section=content if content and section == 'qa_section' else '',
-                           management_guidance=content if content and section == 'management_guidance' else '')
+@view_app.route('/concall/<file_name>/questions/<question_slug>')
+def concall(file_name, question_slug=None):
+    # Get section from query params, default to 'top_questions' if question_slug exists
+    try:
+        print(f"\nAccessing with file_name: {file_name}, question_slug: {question_slug}")
+        
+        section = request.args.get('section', 'top_questions')
+        
+        # If accessing via question URL, force section to be top_questions
+        if question_slug:
+            section = 'top_questions'
+        
+        # Fetch company details
+        details = get_file_meta(file_name)
+        additional_meta = details['addn_meta']
+        tags = get_itdoc_mg_tags(file_name)
+        if not tags:
+            tags = {}
+            
+        QA_START_KEY = 'qa_start_key'
+        tags = {'QA Section': additional_meta[QA_START_KEY], **tags}
 
+        # Fetch content based on the selected section
+        if section == 'top_questions':
+            content = get_content_top_questions(file_name)
+            content = {k: str(v).replace("**", '') for k, v in content.items()}
+            print("content", content)
+            print("type", type(content))
+        elif section == 'transcript':
+            raw_transcript = get_pdf_chunks_transcript(file_name)['extracted_transcript']
+            content = process_transcript(raw_transcript)
+            print(content)
+        elif section == 'qa_section':
+            content = get_itdoc_qa_secrion(file_name)
+            print("con", content)
+        elif section == 'management_guidance':
+            content = get_itdoc_mg_guidance(file_name)
+
+        return render_template('concall.html',
+                            company_name=details['company_name'],
+                            quarter=details['quarter'],
+                            financial_year=details['financial_year'],
+                            file_name=file_name,
+                            active_section=section,
+                            question_slug=question_slug,  # Pass question_slug to template
+                            top_questions=content if section == 'top_questions' else {},
+                            transcript=content if content and section == 'transcript' else '',
+                            transcript_keys=tags,
+                            qa_section=content if content and section == 'qa_section' else '',
+                            management_guidance=content if content and section == 'management_guidance' else '')
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return f"Error: {str(e)}", 500  # Show error in browser for testing
 # @view_app.route('/transcript/update/<file_name>',methods=['POST'])
 # #@login_required
 # def update_transcript(file_name):
