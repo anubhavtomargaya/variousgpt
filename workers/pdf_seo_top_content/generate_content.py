@@ -2,7 +2,7 @@
 from load_pdf import download_pdf_from_bucket
 import fitz
 from utils_em import split_document, create_seo_content_doc_for_file
-from db_supabase import insert_content_doc_entry
+from db_supabase import insert_content_doc_entry, upsert_content_doc_entry
 import generate_seo
 import json
 APP_BUCKET = 'gpt-app-data'
@@ -54,7 +54,7 @@ def service_extract_seo_top_questions(file_name, added_by=None):
                                               top_questions=seo_top_qa,
                                               addn_content = key_info
                                             )
-        sp = insert_content_doc_entry(doc=doc,added_by=added_by)
+        sp = upsert_content_doc_entry(doc=doc,added_by=added_by)
         print(sp)
         return True
     except Exception as e:

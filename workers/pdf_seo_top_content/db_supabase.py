@@ -26,12 +26,44 @@ def insert_content_doc_entry(doc:dict,added_by):
     supabase.table('content-docs').insert(user_document).execute()
     return True 
 
+def upsert_content_doc_entry(doc: dict, added_by: str) -> bool:
+    print("upserting...")
+    user_document = doc
+    user_document['metadata']['added_by'] = added_by
+    
+    # Perform upsert operation using file_name as the unique key
+    supabase.table('content-docs')\
+        .upsert(user_document, on_conflict='file_name')\
+        .execute()
+    
+    return True
+
 def update_doc_chunk(file,rich_chunks):
     response = (supabase.table("chunk_docs")
                 .update({"chunks": rich_chunks})
                 .eq("file_name", file)
                 .execute())
     return response
+
+
+def get_distinct_transcript_files():
+    """
+    Queries the pdf-transcripts table and returns a list of all distinct file names.
+    
+    Returns:
+        list: A list of unique file names from the pdf-transcripts table
+    """
+    # Query the table selecting only distinct file names
+    result = supabase.table('pdf-transcripts').select('file_name').execute()
+    
+    # Extract file names from the result and return as a list
+    file_names = [record['file_name'] for record in result.data] if result.data else []
+    
+    # Remove any duplicates (though they shouldn't exist due to table structure)
+    unique_files = list(set(file_names))
+    
+    return sorted(unique_files)  # Return sorted list for consistency
+
 
 
 if __name__ == '__main__':
