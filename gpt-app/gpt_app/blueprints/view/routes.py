@@ -322,12 +322,14 @@ def concall(file_name, question_slug=None):
             content = get_itdoc_mg_guidance(file_name)
         else:
             content = {}
-
+        print("dateee,",details['date'])
         return render_template('concall.html',
                             company_name=details['company_name'],
                             quarter=details['quarter'],
+                            ticker = f"NSE:{details['ticker']}",
                             financial_year=details['financial_year'],
                             file_name=file_name,
+                            cc_date=details['date'],
                             active_section=section,
                             question_slug=question_slug,  # Pass question_slug to template
                             top_questions=content if section == 'top_questions' else {},

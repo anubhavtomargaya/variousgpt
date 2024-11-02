@@ -161,7 +161,7 @@ def get_pdf_chunks_transcript(file_name):
 def get_file_meta(file_name):
     print("running supabase query...")
     print('filename',file_name)
-    rows =  supabase.table('pdf-transcripts').select('company_name,ticker,quarter,date,financial_year,addn_meta').eq('file_name', f'{file_name}').execute()
+    rows =  supabase.table('pdf-transcripts').select('company_name,date,ticker,quarter,date,financial_year,addn_meta').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False

@@ -21,6 +21,56 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="{{ company_name|title }} {{ quarter }} Earnings Call">
     <meta name="twitter:description" content="Key insights from {{ company_name }}'s earnings call">
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "AnalysisNewsArticle",
+          "headline": "{{ company_name }} {{ quarter }} {{ financial_year }} Earnings Call Analysis",
+          "description": "Analysis of {{ company_name }}'s quarterly performance, including revenue growth, profit margins,management guidance and future outlook based on their earnings call.",
+          "datePublished": "{{ cc_date if cc_date else '' }}",
+          "keywords": [
+            "{{ company_name }}",
+            "Earnings Call",
+            "Financial Analysis",
+            "Quarterly Results",
+            "{{ quarter }} {{ financial_year }}"
+          ],
+          "articleSection": "Earnings Analysis",
+          "about": {
+            "@type": "Corporation",
+            "name": "{{ company_name }}",
+            "tickerSymbol": "{{ ticker }}"
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ request.url }}"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "StockRabit",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://stockrabit.com/static/images/logo-stbit.png"
+            }
+          },
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [".company-name", ".top-questions"]
+          },
+          "analysis": {
+            "@type": "FinancialData",
+            "timeRange": "{{ quarter }} {{ financial_year }}",
+            "about": [
+              {% for question in top_questions.keys() %}
+              {
+                "@type": "Question",
+                "text": "{{ question|replace('"', '\\"')|safe }}"
+              }{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+          }
+        }
+    </script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
