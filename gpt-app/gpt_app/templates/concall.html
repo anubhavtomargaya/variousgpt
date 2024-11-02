@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <title>{{ company_name|title }} - Earning Call - {{ quarter }} {{ financial_year }} - {{active_section}} | stockrabit</title>
+    <meta name="description" content="{{ company_name|title }} Earnings Call - {{ quarter }} {{ financial_year }} {{ active_section}}">
+    
+    <!-- Add these enhanced meta tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="{{ company_name }}, earnings call, {{ quarter }}, {{ financial_year }}, financial results, investor relations">
+    
+    <!-- Social sharing meta tags -->
+    <meta property="og:title" content="{{ company_name|title }} {{ quarter }} {{ financial_year }} Earnings Call">
+    <meta property="og:description" content="Key insights from {{ company_name }}'s {{ quarter }} {{ financial_year }} earnings call including financial results, management guidance, and Q&A.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ request.url }}">
+    
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ company_name|title }} {{ quarter }} Earnings Call">
+    <meta name="twitter:description" content="Key insights from {{ company_name }}'s earnings call">
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -483,6 +500,7 @@
                     <div style="line-height: 1.6;" class="card"><div id='guidanceBody' class="card-body">{{ management_guidance|safe }}</div></div>
                 {% endif %}
             </div>
+            <div> add related concalls </div>
         </div>
     </div>
     
