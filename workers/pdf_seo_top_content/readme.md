@@ -1,3 +1,3 @@
 - docker build -t gcr.io/gmailapi-test-361320/generate-pdf-transcript-seo-function .
 - docker push gcr.io/gmailapi-test-361320/generate-pdf-transcript-seo-function
-- gcloud functions deploy process_pdf_content_seo_auto --region=asia-southeast1     --runtime=python39     --trigger-resource=pdf-transcripts     --trigger-event=google.storage.object.finalize     --entry-point=generate_content_valid_pdf --timeout=540s --memory=512MB D
+- gcloud functions deploy process_pdf_content_seo_auto --region=asia-southeast1     --runtime=python39     --trigger-resource=pdf-transcripts     --trigger-event=google.storage.object.finalize     --entry-point=generate_content_valid_pdf --timeout=540s --memory=512MB 

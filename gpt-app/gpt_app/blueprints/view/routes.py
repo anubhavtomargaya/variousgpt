@@ -288,7 +288,9 @@ def concall(file_name, question_slug=None):
     # Get section from query params, default to 'top_questions' if question_slug exists
     try:
         print(f"\nAccessing with file_name: {file_name}, question_slug: {question_slug}")
-        
+        canonical_url = url_for('view_app.concall', 
+                        file_name=file_name, 
+                        _external=True)
         section = request.args.get('section', 'top_questions')
         
         # If accessing via question URL, force section to be top_questions
@@ -325,6 +327,7 @@ def concall(file_name, question_slug=None):
         print("dateee,",details['date'])
         return render_template('concall.html',
                             company_name=details['company_name'],
+                            canonical_url=canonical_url,
                             quarter=details['quarter'],
                             ticker = f"NSE:{details['ticker']}",
                             financial_year=details['financial_year'],

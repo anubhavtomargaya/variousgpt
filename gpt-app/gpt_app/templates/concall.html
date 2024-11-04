@@ -6,7 +6,8 @@
     <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <title>{{ company_name|title }} - Earning Call - {{ quarter }} {{ financial_year }} - {{active_section}} | stockrabit</title>
     <meta name="description" content="{{ company_name|title }} Earnings Call - {{ quarter }} {{ financial_year }} {{ active_section}}">
-    
+    <link rel="canonical" href="{{ canonical_url }}" />
+
     <!-- Add these enhanced meta tags -->
     <meta name="robots" content="index, follow">
     <meta name="keywords" content="{{ company_name }}, earnings call, {{ quarter }}, {{ financial_year }}, financial results, investor relations">
