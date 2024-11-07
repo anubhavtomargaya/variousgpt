@@ -19,6 +19,25 @@ def get_files_without_tags():
     files = [row['file_name'] for row in query.data]
     print(f"Found {len(files)} files without tags")
     return files
+def get_distinct_transcript_files():
+    """
+    Queries the pdf-transcripts table and returns a list of all distinct file names.
+    
+    Returns:
+        list: A list of unique file names from the pdf-transcripts table
+    """
+    # Query the table selecting only distinct file names
+    result = supabase.table('pdf-transcripts').select('file_name').execute()
+    
+    # Extract file names from the result and return as a list
+    file_names = [record['file_name'] for record in result.data] if result.data else []
+    
+    # Remove any duplicates (though they shouldn't exist due to table structure)
+    unique_files = list(set(file_names))
+    
+    return sorted(unique_files)  # Return sorted list for consistency
+
+
 def get_pdf_chunks_transcript(file_name):
     print("running supabase query...")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
