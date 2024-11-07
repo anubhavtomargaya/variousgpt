@@ -321,7 +321,7 @@ def concall(file_name, question_slug=None):
             content = get_itdoc_qa_secrion(file_name)
             print("con", content)
         elif section == 'management_guidance':
-            content = get_itdoc_mg_guidance(file_name)
+            content = get_itdoc_mg_guidance(file_name,key='structured_guidance')
         else:
             content = {}
         print("dateee,",details['date'])

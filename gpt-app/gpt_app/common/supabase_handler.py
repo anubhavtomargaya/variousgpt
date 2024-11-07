@@ -191,7 +191,7 @@ def get_itdoc_mg_tags(file_name):
         print(rows.data)
         return rows.data[0]['management_data'].get('tags',None) if rows.data[0]['management_data'] else False
     
-def get_itdoc_mg_guidance(file_name):
+def get_itdoc_mg_guidance(file_name,key='overview'):
     print("running supabase query...")
     rows =  supabase.table('transcripts-intel').select('management_data').eq('file_name', f'{file_name}').execute()
     if not rows.data:
@@ -200,7 +200,7 @@ def get_itdoc_mg_guidance(file_name):
     else:
         print("documents supp")
         print(rows.data)
-        return rows.data[0]['management_data']['overview'] if rows.data[0]['management_data'] else False
+        return rows.data[0]['management_data'][key] if rows.data[0]['management_data'] else False
 
 def get_files_without_tags():
     print("Querying for files without management tags...")

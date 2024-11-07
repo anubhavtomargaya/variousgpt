@@ -62,43 +62,29 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
     result = process_transcript(transcript_json)
     return result["identified_tags"]
 
+
 def extract_management_insights(transcript_json: Dict[str, Dict[str, str]]) -> Dict:
     """
-    Extract structured insights from earnings call transcript focusing on management commentary.
-    
-    Args:
-        transcript_json: Dictionary containing transcript text with speaker segments
-        
-    Returns:
-        Dictionary containing structured summary with categorized insights
+    Extract structured insights from earnings call transcript, formatted as management quotes.
     """
     
     def get_base_prompt() -> str:
         return """
-        Analyze the provided earnings call transcript and extract key management insights, focusing on strategic direction, sentiment, and important takeaways.
+        Analyze this earnings call transcript and extract key management quotes and insights. 
+        Focus on direct statements from management that provide strategic insights, future outlook, or important context.
 
-        Focus on extracting insights that reveal:
-        - Management's strategic thinking and priorities
-        - Their view on challenges and opportunities
-        - Notable changes in strategy or outlook
-        - Commentary on market conditions and competitive position
-        - Forward-looking statements and guidance
+        For each section, identify the most impactful direct quotes or paraphrased statements that:
+        - Reveal management's strategic thinking and sentiment
+        - Provide meaningful context about performance or outlook
+        - Indicate significant changes or developments
+        - Show management's response to challenges or opportunities
 
-        For each insight:
-        - Keep it concise but include context (15-25 words)
-        - Focus on implications rather than just facts
-        - Capture the underlying sentiment
-        - Include relevant context when needed
-        - Prioritize insights that would be valuable for investment decisions
-
-        Guidelines for insights:
-        1. Financial Performance: Focus on management's commentary about financial trends and underlying drivers, not just numbers
-        2. Business Operations: Extract insights about operational efficiency, market share, and business health indicators
-        3. Growth Initiatives: Capture specific plans, investments, and new business initiatives
-        4. Market Dynamics: Include insights about industry trends and competitive landscape
-        5. Future Outlook: Focus on both explicit guidance and implied outlook, including risks and opportunities
-
-        Each section should have 1-3 most relevant insights. Skip categories where no meaningful insights are found.
+        Guidelines for quote selection:
+        1. Prioritize actual quotes that sound natural and conversational
+        2. Include relevant context and implications
+        3. Identify the speaker role (CEO, CFO, etc.) when clear
+        4. Note the topic and its broader implications
+        5. Assess the sentiment and confidence level in the statement
         """
 
     def get_output_format() -> str:
@@ -109,9 +95,16 @@ def extract_management_insights(transcript_json: Dict[str, Dict[str, str]]) -> D
                 "financial_performance": {
                     "revenue_profits_margins": [
                         {
-                            "insight": "string",
+                            "quote": "string (the actual management quote or paraphrased statement)",
+                            "speaker": "string (role of the speaker, e.g., CEO, CFO)",
+                            "context": "string (additional context or implications)",
+                            "topic_tags": ["string"],
                             "sentiment": "positive/neutral/negative",
-                            "context": "string (optional)"
+                            "confidence_level": "high/moderate/low",
+                            "key_metrics": {
+                                "metric_name": "value",
+                                "trend": "up/down/stable"
+                            }
                         }
                     ]
                 },
@@ -141,7 +134,35 @@ def extract_management_insights(transcript_json: Dict[str, Dict[str, str]]) -> D
         output_format = get_output_format()
         transcript_text = json.dumps(chunk, indent=2)
         
-        full_prompt = f"Transcript:\n{transcript_text}\n\n{base_prompt}\n\n{output_format}"
+        full_prompt = f"""
+        Transcript:
+        {transcript_text}
+
+        Instructions:
+        {base_prompt}
+
+        Required Format:
+        {output_format}
+
+        Additional Guidelines:
+        1. For each quote, identify:
+           - Main topic or theme
+           - Broader business implications
+           - Level of certainty in statements
+           - Any specific metrics or targets mentioned
+           
+        2. Focus on quotes that:
+           - Provide strategic insights
+           - Discuss future plans or guidance
+           - Address key challenges or opportunities
+           - Explain important changes or trends
+
+        3. When paraphrasing:
+           - Maintain the original tone and intent
+           - Keep management's perspective clear
+           - Include essential numbers and metrics
+           - Preserve important qualifiers and context
+        """
 
         response = openai_client.chat.completions.create(
             model=SUMMARY_MODEL,
@@ -149,12 +170,12 @@ def extract_management_insights(transcript_json: Dict[str, Dict[str, str]]) -> D
             messages=[
                 {
                     "role": "system", 
-                    "content": "You are a financial analyst specializing in analyzing earnings calls. \
-                        Focus on extracting meaningful management insights rather than surface-level information."
+                    "content": "You are a financial analyst specializing in earnings call analysis. \
+                        Focus on extracting meaningful quotes and insights from management commentary."
                 },
                 {"role": "user", "content": full_prompt}
             ],
-            temperature=0.2  # Keep it focused and consistent
+            temperature=0.2
         )
         
         return json.loads(response.choices[0].message.content)
@@ -171,49 +192,65 @@ def extract_management_insights(transcript_json: Dict[str, Dict[str, str]]) -> D
             if section not in summary["sections"]:
                 summary["sections"][section] = {}
         
-        # Remove empty insights
-        for section in summary["sections"]:
-            for subsection in summary["sections"][section]:
-                insights = summary["sections"][section][subsection]
-                summary["sections"][section][subsection] = [
-                    insight for insight in insights 
-                    if insight.get("insight") and insight.get("insight").strip()
-                ]
+        # Validate each quote has required fields
+        for section in summary["sections"].values():
+            for subsection in section.values():
+                for quote in subsection:
+                    # Ensure minimum required fields
+                    quote["quote"] = quote.get("quote", "")
+                    quote["speaker"] = quote.get("speaker", "Management")
+                    quote["context"] = quote.get("context", "")
+                    quote["sentiment"] = quote.get("sentiment", "neutral")
+                    quote["topic_tags"] = quote.get("topic_tags", [])
+                    
+                    # Remove empty quotes
+                    subsection[:] = [q for q in subsection if q["quote"].strip()]
         
         return summary
 
     # def enrich_summary(summary: Dict) -> Dict:
-    #     """Add any additional metadata or enrichments."""
-    #     # Add generation timestamp
+    #     """Add additional metadata and insights."""
     #     summary["metadata"]["generated_at"] = datetime.now().isoformat()
         
-    #     # Add insight counts
-    #     insight_counts = {
-    #         section: sum(len(subsection) for subsection in summary["sections"][section].values())
-    #         for section in summary["sections"]
+    #     # Add quote statistics
+    #     quote_stats = {
+    #         "total_quotes": sum(
+    #             len(subsection)
+    #             for section in summary["sections"].values()
+    #             for subsection in section.values()
+    #         ),
+    #         "sentiment_distribution": {
+    #             "positive": 0,
+    #             "neutral": 0,
+    #             "negative": 0
+    #         }
     #     }
-    #     summary["metadata"]["insight_counts"] = insight_counts
+        
+    #     # Calculate sentiment distribution
+    #     for section in summary["sections"].values():
+    #         for subsection in section.values():
+    #             for quote in subsection:
+    #                 quote_stats["sentiment_distribution"][quote["sentiment"]] += 1
+        
+    #     summary["metadata"]["quote_stats"] = quote_stats
         
     #     return summary
 
     try:
-        # Generate initial summary
         summary = process_transcript(transcript_json)
-        
-        # Validate and clean
         summary = validate_insights(summary)
-        
-        # Enrich with additional metadata
         # summary = enrich_summary(summary)
-        
         return summary
         
     except Exception as e:
         print(f"Error generating summary: {str(e)}")
         raise
+
     
-def insert_summary_management(file,mg_summary_guidance:list):
-    mg_entry =  {'overview':mg_summary_guidance}
+def insert_summary_management(file,
+                              mg_summary_guidance:list,
+                              key='overview'):
+    mg_entry =  {key:mg_summary_guidance}
     return update_transcript_intel_entry(file_name=file,
                                          mg_data=mg_entry)
 
@@ -235,7 +272,7 @@ if __name__ =='__main__':
     f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
     f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
     f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
-    f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
+    # f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
 
     def test_management_content_get():
         return load_ts_section_management(f)
@@ -249,11 +286,13 @@ if __name__ =='__main__':
         return identify_transcript_tags(section)
     
     def test_insert_management_content():
+        key = 'structured_guidance'
+        # key = 'structured_summary'
         section = load_ts_section_management(f)
         s = extract_management_insights(section)
         if s:
             print("inserting")
-            return insert_summary_management(f,s)
+            return insert_summary_management(f,s,key=key)
         else:
             print("not found")
             return None
