@@ -61,51 +61,156 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
 
     result = process_transcript(transcript_json)
     return result["identified_tags"]
-def summarize_management_guidance(transcript_json: Dict[str, Dict[str, str]]) -> Optional[str]:
 
+def extract_management_insights(transcript_json: Dict[str, Dict[str, str]]) -> Dict:
+    """
+    Extract structured insights from earnings call transcript focusing on management commentary.
+    
+    Args:
+        transcript_json: Dictionary containing transcript text with speaker segments
+        
+    Returns:
+        Dictionary containing structured summary with categorized insights
+    """
+    
+    def get_base_prompt() -> str:
+        return """
+        Analyze the provided earnings call transcript and extract key management insights, focusing on strategic direction, sentiment, and important takeaways.
 
-    def process_chunk(chunk: Dict[str, Dict[str, str]]) -> Dict:
-        prompt = f"""
-        Analyze the following chunk of a transcript from an earnings call:
+        Focus on extracting insights that reveal:
+        - Management's strategic thinking and priorities
+        - Their view on challenges and opportunities
+        - Notable changes in strategy or outlook
+        - Commentary on market conditions and competitive position
+        - Forward-looking statements and guidance
 
-        {json.dumps(chunk, indent=2)}
+        For each insight:
+        - Keep it concise but include context (15-25 words)
+        - Focus on implications rather than just facts
+        - Capture the underlying sentiment
+        - Include relevant context when needed
+        - Prioritize insights that would be valuable for investment decisions
 
-        Determine if this chunk contains management overview or guidance. If it does, provide a comprehensive summary of the management guidance in 400-500 words. If it doesn't contain management guidance, respond with "No management guidance found."
+        Guidelines for insights:
+        1. Financial Performance: Focus on management's commentary about financial trends and underlying drivers, not just numbers
+        2. Business Operations: Extract insights about operational efficiency, market share, and business health indicators
+        3. Growth Initiatives: Capture specific plans, investments, and new business initiatives
+        4. Market Dynamics: Include insights about industry trends and competitive landscape
+        5. Future Outlook: Focus on both explicit guidance and implied outlook, including risks and opportunities
 
-        Guidelines:
-        1. Focus on key points related to the company's future plans, strategies, and financial outlook.
-        2. Include specific metrics, targets, or projections mentioned by the management.
-        3. Highlight any significant changes in the company's direction or focus.
-        4. Mention any challenges or opportunities the management discusses.
-        5. If multiple speakers contribute to the guidance, combine their insights into a cohesive summary.
-
-        Return the result as a valid JSON string with the following format:
-        {{
-            "contains_guidance": true/false,
-            "summary": "<400-500 word summary if guidance is found, otherwise null>"
-        }}
+        Each section should have 1-3 most relevant insights. Skip categories where no meaningful insights are found.
         """
-        print("tokens",count_tokens(prompt,SUMMARY_MODEL))
+
+    def get_output_format() -> str:
+        return """
+        Return a JSON object with exactly this structure:
+        {
+            "sections": {
+                "financial_performance": {
+                    "revenue_profits_margins": [
+                        {
+                            "insight": "string",
+                            "sentiment": "positive/neutral/negative",
+                            "context": "string (optional)"
+                        }
+                    ]
+                },
+                "business_operations": {
+                    "core_metrics": [],
+                    "market_position": []
+                },
+                "growth_initiatives": {
+                    "expansion_plans": [],
+                    "new_launches": []
+                },
+                "market_dynamics": {
+                    "industry_trends": [],
+                    "competition": []
+                },
+                "future_outlook": {
+                    "guidance": [],
+                    "challenges": []
+                }
+            }
+        }
+        """
+
+    def process_transcript(chunk: Dict[str, Dict[str, str]]) -> Dict:
+        # Construct the full prompt
+        base_prompt = get_base_prompt()
+        output_format = get_output_format()
+        transcript_text = json.dumps(chunk, indent=2)
+        
+        full_prompt = f"Transcript:\n{transcript_text}\n\n{base_prompt}\n\n{output_format}"
+
         response = openai_client.chat.completions.create(
             model=SUMMARY_MODEL,
-            response_format={"type":'json_object'},
+            response_format={"type": "json_object"},
             messages=[
-                {"role": "system", "content": "You are a financial transcript analyzer specializing in management guidance."},
-                {"role": "user", "content": prompt}
-            ]
+                {
+                    "role": "system", 
+                    "content": "You are a financial analyst specializing in analyzing earnings calls. \
+                        Focus on extracting meaningful management insights rather than surface-level information."
+                },
+                {"role": "user", "content": full_prompt}
+            ],
+            temperature=0.2  # Keep it focused and consistent
         )
-        print('res',response.choices[0].message)
+        
         return json.loads(response.choices[0].message.content)
 
-    # Process the entire transcript as one chunk
-    result = process_chunk(transcript_json)
+    def validate_insights(summary: Dict) -> Dict:
+        """Validate and clean the generated summary."""
+        required_sections = [
+            "financial_performance", "business_operations", 
+            "growth_initiatives", "market_dynamics", "future_outlook"
+        ]
+        
+        # Ensure all required sections exist
+        for section in required_sections:
+            if section not in summary["sections"]:
+                summary["sections"][section] = {}
+        
+        # Remove empty insights
+        for section in summary["sections"]:
+            for subsection in summary["sections"][section]:
+                insights = summary["sections"][section][subsection]
+                summary["sections"][section][subsection] = [
+                    insight for insight in insights 
+                    if insight.get("insight") and insight.get("insight").strip()
+                ]
+        
+        return summary
 
-    if result['contains_guidance']:
-        print("guidance")
-        return result['summary']
-    else:
-        print("no guidance")
-        return None
+    # def enrich_summary(summary: Dict) -> Dict:
+    #     """Add any additional metadata or enrichments."""
+    #     # Add generation timestamp
+    #     summary["metadata"]["generated_at"] = datetime.now().isoformat()
+        
+    #     # Add insight counts
+    #     insight_counts = {
+    #         section: sum(len(subsection) for subsection in summary["sections"][section].values())
+    #         for section in summary["sections"]
+    #     }
+    #     summary["metadata"]["insight_counts"] = insight_counts
+        
+    #     return summary
+
+    try:
+        # Generate initial summary
+        summary = process_transcript(transcript_json)
+        
+        # Validate and clean
+        summary = validate_insights(summary)
+        
+        # Enrich with additional metadata
+        # summary = enrich_summary(summary)
+        
+        return summary
+        
+    except Exception as e:
+        print(f"Error generating summary: {str(e)}")
+        raise
     
 def insert_summary_management(file,mg_summary_guidance:list):
     mg_entry =  {'overview':mg_summary_guidance}
@@ -137,7 +242,7 @@ if __name__ =='__main__':
     
     def test_management_content_summary_idfication():
         section = load_ts_section_management(f)
-        return summarize_management_guidance(section)
+        return extract_management_insights(section)
     
     def test_management_tags_idfication():
         section = load_ts_section_management(f)
@@ -145,7 +250,7 @@ if __name__ =='__main__':
     
     def test_insert_management_content():
         section = load_ts_section_management(f)
-        s = summarize_management_guidance(section)
+        s = extract_management_insights(section)
         if s:
             print("inserting")
             return insert_summary_management(f,s)
@@ -164,6 +269,6 @@ if __name__ =='__main__':
     
     # print(test_management_content_get())
     # print(test_management_tags_idfication())
-    print(test_insert_management_tags())
+    # print(test_insert_management_tags())
     # print(test_management_content_summary_idfication())
-    # print(test_insert_management_content())
+    print(test_insert_management_content())
