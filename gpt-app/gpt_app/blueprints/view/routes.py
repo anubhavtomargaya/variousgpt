@@ -303,7 +303,7 @@ def concall(file_name, question_slug=None):
         tags = get_itdoc_mg_tags(file_name)
         if not tags:
             tags = {}
-            
+        tags = {t:v for t,v in tags.items() if len(v)>0}
         QA_START_KEY = 'qa_start_key'
         tags = {'QA Section': additional_meta[QA_START_KEY], **tags}
 

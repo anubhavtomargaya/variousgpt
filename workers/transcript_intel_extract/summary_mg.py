@@ -16,6 +16,7 @@ from utils_qa import load_ts_section_management
 
 SUMMARY_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
+
 def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict[str, List[str]]:
     def process_transcript(transcript: Dict[str, Dict[str, str]]) -> Dict:
         transcript_chunks = {
@@ -25,7 +26,6 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
         
         prompt = f"""
         Review these transcript chunks and categorize them into one of these specific tags:
-        - Management Address
         - Financial Update 
 
         Transcript chunks:
@@ -38,8 +38,9 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
         Required format example:
         {{
             "identified_tags": {{
-                "Management Address": ["0", "1"],
-                "Financial Update": ["2", "3"]
+                "Financial Update": ["2", "3"],
+                
+                ...
             }}
         }}
         """
@@ -50,7 +51,7 @@ def identify_transcript_tags(transcript_json: Dict[str, Dict[str, str]]) -> Dict
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a financial analyst. Use the exact tag names provided (Management Address, Financial Update, or Operational Update) to categorize the content. Do not use generic keys like 'tag_name'."
+                    "content": "You are a financial analyst. Use the exact tag names provided ( Financial Update, Challenges etc) to categorize the content. Do not use generic keys like 'tag_name'."
                 },
                 {"role": "user", "content": prompt}
             ]
@@ -270,8 +271,8 @@ if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
-    f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
-    f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
+    # f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
+    # f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
     # f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
 
     def test_management_content_get():
@@ -308,6 +309,6 @@ if __name__ =='__main__':
     
     # print(test_management_content_get())
     # print(test_management_tags_idfication())
-    # print(test_insert_management_tags())
+    # print(test_insert_management_content())
+    print(test_insert_management_tags())
     # print(test_management_content_summary_idfication())
-    print(test_insert_management_content())
