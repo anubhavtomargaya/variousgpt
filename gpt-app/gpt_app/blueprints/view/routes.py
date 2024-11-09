@@ -285,7 +285,6 @@ def process_transcript(raw_transcript):
 @view_app.route('/concall/<file_name>')
 @view_app.route('/concall/<file_name>/questions/<question_slug>')
 def concall(file_name, question_slug=None):
-    # Get section from query params, default to 'top_questions' if question_slug exists
     try:
         print(f"\nAccessing with file_name: {file_name}, question_slug: {question_slug}")
         canonical_url = url_for('view_app.concall', 
@@ -296,6 +295,26 @@ def concall(file_name, question_slug=None):
         # If accessing via question URL, force section to be top_questions
         if question_slug:
             section = 'top_questions'
+        
+        # Define info content for each section
+        info_contents = {
+            'top_questions': (
+                "stockrabit's AI finds and simplifies the most important insights from this earnings call",
+                url_for('view_app.concall', file_name=file_name, section='transcript')
+            ),
+            'transcript': (
+                "Navigate through the complete earnings call with our smart filters and search",
+                "#"  # Replace with appropriate help/documentation link
+            ),
+            'qa_section': (
+                "stockrabit digs through the analyst questions using AI, highlights the important parts for you",
+                url_for('view_app.concall', file_name=file_name, section='transcript')
+            ),
+            'management_guidance': (
+                "stockrabit simplifies the management commentary to help you better understand the industry and sentiments",
+                url_for('view_app.concall', file_name=file_name, section='transcript', _anchor='reader')
+            )
+        }
         
         # Fetch company details
         details = get_file_meta(file_name)
@@ -311,20 +330,16 @@ def concall(file_name, question_slug=None):
         if section == 'top_questions':
             content = get_content_top_questions(file_name)
             content = {k: str(v).replace("**", '') for k, v in content.items()}
-            print("content", content)
-            print("type", type(content))
         elif section == 'transcript':
             raw_transcript = get_pdf_chunks_transcript(file_name)['extracted_transcript']
             content = process_transcript(raw_transcript)
-            print(content)
         elif section == 'qa_section':
             content = get_itdoc_qa_secrion(file_name)
-            print("con", content)
         elif section == 'management_guidance':
             content = get_itdoc_mg_guidance(file_name,key='structured_guidance')
         else:
             content = {}
-        print("dateee,",details['date'])
+
         return render_template('concall.html',
                             company_name=details['company_name'],
                             canonical_url=canonical_url,
@@ -334,7 +349,8 @@ def concall(file_name, question_slug=None):
                             file_name=file_name,
                             cc_date=details['date'],
                             active_section=section,
-                            question_slug=question_slug,  # Pass question_slug to template
+                            question_slug=question_slug,
+                            info_content=info_contents.get(section),  # Add info_content
                             top_questions=content if section == 'top_questions' else {},
                             transcript=content if content and section == 'transcript' else '',
                             transcript_keys=tags,
@@ -342,7 +358,7 @@ def concall(file_name, question_slug=None):
                             management_guidance=content if content and section == 'management_guidance' else '')
     except Exception as e:
         print(f"Error: {str(e)}")
-        return f"Error: {str(e)}", 500  # Show error in browser for testing
+        return f"Error: {str(e)}", 500
 # @view_app.route('/transcript/update/<file_name>',methods=['POST'])
 # #@login_required
 # def update_transcript(file_name):
