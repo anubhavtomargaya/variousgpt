@@ -126,7 +126,9 @@
         #content-section {
             max-height: 90vh;
             overflow-y: auto;
-            margin-bottom: 8rem;
+            padding-right: 1.5rem; /* Space between content and scrollbar */
+            margin-bottom: 4rem;
+            
         }
 
         .btn-sign-up {
@@ -145,6 +147,7 @@
 
         .content-wrapper {
             width: 100%;
+            
         }
 
         .card {
@@ -250,6 +253,8 @@
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 15px;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .filter-btn {
@@ -449,7 +454,18 @@
         background-color: var(--card-background);
         border-radius: 8px;
         padding: 1.5rem;
+        max-width: 1200px;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-bottom: 2rem;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #topQaAccordion {
+        max-height: 25vh;
+        max-width: 1200px;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-bottom: 2rem;
     }
 
     .speakers-scroll-container {
@@ -687,10 +703,14 @@
     }
 </style>
 <style>
-    .insights-container {
-        max-width: 1200px;  /* Keep wider max-width like QA section */
-        margin-left: 1rem;
-    }
+    .insights-container,
+#qaAccordion{
+    max-width: 1200px;
+    margin-left: 1rem;
+    max-height:60vh ;
+    margin-right: 1rem;
+    padding-top: 0.5rem; /* Consistent spacing from floating bar */
+}
     
     .insight-section {
         background-color: var(--card-background);
@@ -976,7 +996,7 @@
  <style>
     .floating-info {
         position: relative;
-        margin: 0.75rem 1rem 1.5rem;  /* Match content spacing */
+        margin: 0.75rem 1rem 1.5rem; /*  Match content spacing */ 
         padding: 12px 20px;
         background: linear-gradient(
             135deg, 
@@ -985,8 +1005,10 @@
             rgba(106, 25, 138, 0.08) 100%
         );
         border-radius: 6px;
+        
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         display: flex;
+        margin-bottom: 1.5rem;
         align-items: center;
         gap: 14px;
         max-width: 1200px;  /* Match content max-width */
@@ -1015,12 +1037,7 @@
         border-radius: inherit;
     }
 
-    .floating-info.hidden {
-        opacity: 0;
-        transform: translateY(-10px);
-        pointer-events: none;
-    }
-
+   
     .floating-info:hover {
         background: linear-gradient(
             135deg, 
@@ -1100,16 +1117,41 @@
     .close-button:hover {
         opacity: 1;
     }
+    #content-section,
+    .insights-container,
+    #qaAccordion,
+    .speakers-summary {
+        transition: transform 0.3s ease;
+    }
 
+    .floating-info.hidden {
+        margin-top: -44px;
+        margin-bottom: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .content-shifted {
+        transform: translateY(-.15rem); /* Accounts for floating info height + margin */
+    }
     @media (max-width: 768px) {
         
-        .floating-info {
+        .floating-info,.speakers-summary {
             margin: 0.5rem;
-            padding: 10px 16px;
+            padding: 8px 12px;
+            margin-bottom: 1.5rem;
             height: auto;
+            font-size: xx-small;
             min-height: 44px;
+            
             flex-wrap: wrap;  /* Allow content to wrap on mobile */
         }
+        #content-section {
+        padding-right: 1rem;
+    }
+    .content-shifted {
+        transform: translateY(-1rem); /* Accounts for floating info height + margin */
+    }
 
         .info-content {
             font-size: 0.85rem;
@@ -1127,7 +1169,113 @@
             font-size: 0.8rem;
         }
     }
+
 </style>
+<style>
+    /* Modern scrollbar styles for Webkit browsers (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: transparent;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Firefox scrollbar styles */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+    
+    /* Custom styles for specific containers */
+    .transcript-container {
+        scrollbar-gutter: stable;
+        scroll-behavior: smooth;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    
+    .transcript-container::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .transcript-container::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+    }
+    
+    .transcript-container::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Speakers scroll container styles */
+    .speakers-scroll-container::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .speakers-scroll-container::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+    }
+    
+    .speakers-scroll-container::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Content section scrollbar */
+    #content-section::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #content-section::-webkit-scrollbar-track {
+        margin: 4px 0;
+    }
+    
+    #content-section::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        min-height: 40px;
+    }
+    
+    #content-section::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .transcript-container::-webkit-scrollbar-thumb,
+        .speakers-scroll-container::-webkit-scrollbar-thumb,
+        #content-section::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .transcript-container::-webkit-scrollbar-thumb:hover,
+        .speakers-scroll-container::-webkit-scrollbar-thumb:hover,
+        #content-section::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+    }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -1219,7 +1367,7 @@
     
     <div class="info-content">
         <span class="info-text">{{ info_content[0] }}</span>
-        <a href="{{ info_content[1] }}" class="info-link">Read more →</a>
+        <!-- <a href="{{ info_content[1] }}" class="info-link">Read more →</a> -->
     </div>
     
     <button class="close-button" onclick="hideFloatingInfo()" aria-label="Close">
@@ -1815,32 +1963,43 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const floatingInfo = document.getElementById('floatingInfo');
+            const contentElements = document.querySelectorAll('#content-section, .insights-container, #qaAccordion, .speakers-summary');
             
             function toggleInfoVisibility(show) {
                 if (show) {
+                    // Show floating info
                     floatingInfo?.classList.remove('hidden');
+                    // Reset content position
+                    contentElements.forEach(element => {
+                        element?.classList.remove('content-shifted');
+                    });
                     localStorage.removeItem('hideFloatingInfo');
                 } else {
+                    // Hide floating info
                     floatingInfo?.classList.add('hidden');
+                    // Shift content up
+                    contentElements.forEach(element => {
+                        element?.classList.add('content-shifted');
+                    });
                     localStorage.setItem('hideFloatingInfo', 'true');
                 }
             }
-    
+        
             // Initialize visibility
             if (localStorage.getItem('hideFloatingInfo') === 'true') {
                 toggleInfoVisibility(false);
             }
-    
+        
             // Handle close button
             window.hideFloatingInfo = () => toggleInfoVisibility(false);
-    
+        
             // Handle tab changes
             const tabLinks = document.querySelectorAll('.company-tabs .nav-link');
             tabLinks.forEach(link => {
                 link.addEventListener('click', () => toggleInfoVisibility(true));
             });
         });
-    </script>
+        </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.company-tabs .nav-link');
