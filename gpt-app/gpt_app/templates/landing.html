@@ -63,41 +63,136 @@
     </header>
 
     <main class="pt-20">
-        <!-- Hero Section -->
-        <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-light py-20 px-4">
-            <div class="container mx-auto flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Beyond the Balance Sheet</h1>
-                    <p class="text-xl md:text-2xl mb-8 max-w-2xl">stockrabit - Elevating Earnings Call Analysis for Fundamental Investors</p>
-                    <p class="text-lg mb-8">Unlock the power of earnings call transcripts. Get latest, deep insights to fuel your investment decisions. Simplify complex data, spot trends, and stay ahead of the market.</p>
-                    <a href="{{url_for('company_app.company_index')}}" style="background-color: #18994e;" class=" text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-80 transition duration-300">Start Your Research</a>
-                    
-                    <!-- New Company Pills Section -->
-                    <section class="mt-8">
-                        <div class="flex flex-wrap justify-left gap-4">
-                            <a href="/company/Bosch Limited" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Bosch Limited</a>
-                            <a href="/company/ABB%20India%20Limited" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">ABB India Limited</a>
-                            <a href="/company/Reliance Industries Limited"  class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Reliance Industries Limited</a>
-                          <!-- <a href="/company/tata-consultancy-services" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Tata Consultancy Services</a> -->
-                          <!-- <a href="/company/hdfc-bank" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">HDFC Bank Limited</a> -->
-                        </div>
-                      </section>
-                    <!-- End of New Company Pills Section -->
-        
+      <!-- Hero Section -->
+      <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-light py-20 px-4">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 text-center md:text-left space-y-8" data-aos="fade-right">
+                <!-- Brand name styled as logo -->
+                <div class="mb-4 inline-flex items-baseline gap-3">
+                    <div class="font-sans text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">
+                        stockrabit
+                        <span class="text-xs align-super">™</span>
+                    </div>
+                    <span class="text-2xl md:text-3xl font-light tracking-wide text-white/80">is</span>
                 </div>
-        
-                <div class="md:w-1/2 mt-10 md:mt-0" data-aos="fade-left">
+                
+                <!-- Main headline -->
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+                    The Smartest Way to Track Management Quality Through Earnings Calls
+                </h1>
+                
+                <!-- Subheadline -->
+                <p class="text-xl md:text-2xl font-light text-white/90 max-w-2xl">
+                    Decode what leaders say about their business, track their promises, and spot red flags before the market.
+                </p>
+                
+                <!-- Value propositions -->
+                <div class="text-lg space-y-2 font-medium">
+                    <p>🎯 SPOT WINNERS BEFORE THE MARKET</p>
+                    <p>🌟 EVERY LISTED COMPANY IN INDIA</p>
+                    <p>💎 FREE FOR EARLY ADOPTERS</p>
+                </div>
+                
+                <!-- Main CTA -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search any company..." class="w-full sm:w-80 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30" />
+                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="px-8 py-3 rounded-full bg-secondary text-white font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2 group">
+                        Explore Companies
+                        <svg class="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+                </div>
+    
+                <!-- Trusted By Section -->
+                <div class="pt-12">
+                    <p class="text-sm uppercase tracking-wider text-white/60 mb-6">TRUSTED BY INVESTORS TRACKING</p>
+                    <div class="flex flex-wrap gap-8 items-center justify-center md:justify-start">
+                        <!-- Company logos with images -->
+                        <a href="/company/Bosch Limited" class="group">
+                            <div class="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-all duration-300 flex items-center justify-center h-16">
+                                <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
+                                     alt="Bosch" 
+                                     class="h-8 w-auto opacity-60 group-hover:opacity-90 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
+                                >
+                            </div>
+                        </a>
+                        <a href="/company/ABB%20India%20Limited" class="group">
+                            <div class="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-all duration-300 flex items-center justify-center h-16">
+                                <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
+                                     alt="ABB India" 
+                                     class="h-8 w-auto opacity-60 group-hover:opacity-90 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
+                                >
+                            </div>
+                        </a>
+                        <a href="/company/Reliance Industries Limited" class="group">
+                            <div class="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-all duration-300 flex items-center justify-center h-16">
+                                <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                                     alt="Reliance" 
+                                     class="h-8 w-auto opacity-60 group-hover:opacity-90 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
+                                >
+                            </div>
+                        </a>
+                        <button class="text-white/60 hover:text-white text-sm flex items-center gap-2 group transition duration-300"
+                                onclick="toggleCompanyList()">
+                            See more companies
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Expandable Company List (Initially Hidden) -->
+                    <div id="companyList" class="hidden mt-4 bg-white/5 p-4 rounded-xl">
+                        <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            <!-- Company Pills -->
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">HDFC Bank</a>
+                            <!-- <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">BHEL </a> -->
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Tanla Platforms</a>
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Laurus Labs</a>
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Zomato</a>
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Cipla</a>
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Bata</a>
+                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Dixon Technologies</a>
+                            <!-- Add more companies as needed -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Right side with illustration -->
+            <div class="md:w-1/2 mt-10 md:mt-0" data-aos="fade-left">
+                <div class="relative">
+                    <!-- Updated placeholder SVG with more dynamic elements -->
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" class="w-full h-auto">
-                        <rect x="10" y="50" width="380" height="200" rx="10" fill="#F8FAFC" opacity="0.1"/>
-                        <path d="M50 200 L150 100 L250 150 L350 50" stroke="#10B981" stroke-width="4" fill="none"/>
-                        <circle cx="50" cy="200" r="5" fill="#10B981"/>
-                        <circle cx="150" cy="100" r="5" fill="#10B981"/>
-                        <circle cx="250" cy="150" r="5" fill="#10B981"/>
-                        <circle cx="350" cy="50" r="5" fill="#10B981"/>
+                        <!-- Background elements -->
+                        <rect x="0" y="0" width="400" height="300" fill="#ffffff" fill-opacity="0.05" rx="20"/>
+                        
+                        <!-- Abstract data visualization elements -->
+                        <path d="M50 250 Q150 50 250 200 T400 150" stroke="#10B981" stroke-width="3" fill="none" opacity="0.6"/>
+                        <path d="M50 200 Q150 100 250 150 T400 100" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.3"/>
+                        
+                        <!-- Data points -->
+                        <circle cx="50" cy="250" r="6" fill="#10B981"/>
+                        <circle cx="150" cy="100" r="6" fill="#10B981"/>
+                        <circle cx="250" cy="150" r="6" fill="#10B981"/>
+                        <circle cx="350" cy="120" r="6" fill="#10B981"/>
+                        
+                        <!-- Decorative elements -->
+                        <circle cx="200" cy="150" r="50" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+                        <circle cx="200" cy="150" r="80" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.1"/>
                     </svg>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
         <!-- Features Section -->
         <section id="features" class="py-20 px-4">
@@ -161,7 +256,12 @@
             Made with ❤️ in the ❤️ of India
         </a>
     </div>
-
+    <script>
+        function toggleCompanyList() {
+            const companyList = document.getElementById('companyList');
+            companyList.classList.toggle('hidden');
+        }
+        </script>
     <script>
         AOS.init({
             duration: 800,
