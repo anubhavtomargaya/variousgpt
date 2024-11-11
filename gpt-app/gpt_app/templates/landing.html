@@ -41,272 +41,540 @@
         }
     </script>
 </head>
-<body class="font-sans bg-light text-dark" x-data="{ mobileMenu: false }">
-    <header class="fixed w-full bg-white z-50 shadow-sm">
-        <nav class="container mx-auto px-4 py-2 flex justify-between items-center">
-            <a href="#" class="flex items-center space-x-2">
-                <img src="{{ url_for('static', filename='images/logo-stbit.png') }}" alt="stockrabit logo" class="w-10 h-10 object-contain">
-                <span class="text-2xl font-bold text-secondary">stockrabit</span>
-            </a>
-            <button @click="mobileMenu = !mobileMenu" class="md:hidden text-dark focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
-            <div class="hidden md:flex space-x-6">
-                <a href="#features" class="text-dark hover:text-secondary transition duration-300">Features</a>
-                <a href="#demo" class="text-dark hover:text-secondary transition duration-300">Demo</a>
-                <!-- <a href="#" class="bg-primary text-white px-4 py-2 rounded-full hover:bg-opacity-80 transition duration-300">Sign Up</a> -->
-            </div>
-        </nav>
-        <!-- <div x-show="mobileMenu" x-transition class="md:hidden bg-white py-2">
-            <a href="#features" class="block py-2 px-4 text-dark hover:text-secondary">Features</a>
-            <a href="#demo" class="block py-2 px-4 text-dark hover:text-secondary">Demo</a>
-            <a href="#" class="block py-2 px-4 text-secondary hover:text-opacity-80">Sign Up</a>
-        </div> -->
-    </header>
-
-    <main class="pt-20">
-      <!-- Hero Section -->
-      <section class="min-h-screen flex items-start justify-center bg-gradient-to-br from-primary to-secondary text-light py-12 px-4">
-        <div class="container mx-auto flex flex-col md:flex-row items-start gap-8 pt-8", style="margin-top: 0;">
-            <!-- Left content -->
-            <div class="md:w-1/2 text-center md:text-left space-y-8 pt-8" data-aos="fade-right">
-                <!-- Brand name styled as logo -->
-                <div class="inline-flex items-baseline gap-3">
-                    <div class="font-sans text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">
-                        stockrabit
-                        <span class="text-xs align-super">™</span>
-                    </div>
-                </div>
-                
-                <!-- Main headline -->
-                <h1 class="text-4xl md:text-6xl font-bold leading-tight">
-                    The Smartest Way to Track Management Quality Through Earnings Calls
-                </h1>
-                
-                <!-- Subheadline -->
-                <p class="text-xl md:text-2xl font-light text-white/90 max-w-2xl">
-                    Decode what leaders say about their business, track their promises, and spot red flags before the market.
-                </p>
-                
-                <!-- Value propositions -->
-                <div class="text-lg space-y-2 font-medium">
-                    <p style="font-size:.9rem;">🎯 SPOT WINNERS BEFORE THE MARKET
-                    🌟 100% COVERAGE
-                    💎 FREE FOR EARLY ADOPTERS</p>
-                </div>
-                
-                <!-- Main CTA -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search any company..." class="w-full sm:w-80 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30" />
-                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                            <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
-                    </div>
-                    <button class="px-8 py-3 rounded-full bg-secondary text-white font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2 group">
-                        Explore Companies
-                        <svg class="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                    </button>
-                </div>
-    
-                <!-- Trusted By Section -->
-                <div class="pt-12">
-                    <p class="text-sm uppercase tracking-wider text-white/60 mb-6">TRUSTED BY INVESTORS TRACKING</p>
-                    <div class="flex flex-wrap gap-8 items-center justify-center md:justify-start">
-                        <!-- Company logos with images -->
-                        <a href="/company/Bosch Limited" class="group">
-                            <div class="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-all duration-300 flex items-center justify-center h-16">
-                                <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
-                                     alt="Bosch" 
-                                     class="h-8 w-auto opacity-60 group-hover:opacity-90 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
-                                >
-                            </div>
-                        </a>
-                        <a href="/company/ABB%20India%20Limited" class="group">
-                            <div class="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-all duration-300 flex items-center justify-center h-16">
-                                <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
-                                     alt="ABB India" 
-                                     class="h-8 w-auto opacity-60 group-hover:opacity-90 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
-                                >
-                            </div>
-                        </a>
-                        <a href="/company/Reliance Industries Limited" class="group">
-                            <div class="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-all duration-300 flex items-center justify-center h-16">
-                                <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
-                                     alt="Reliance" 
-                                     class="h-8 w-auto opacity-60 group-hover:opacity-90 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
-                                >
-                            </div>
-                        </a>
-                        <button class="text-white/60 hover:text-white text-sm flex items-center gap-2 group transition duration-300"
-                                onclick="toggleCompanyList()">
-                            See more companies
-                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <!-- Expandable Company List (Initially Hidden) -->
-                    <div id="companyList" class="hidden mt-4 bg-white/5 p-4 rounded-xl">
-                        <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                            <!-- Company Pills -->
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">HDFC Bank</a>
-                            <!-- <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">BHEL </a> -->
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Tanla Platforms</a>
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Laurus Labs</a>
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Zomato</a>
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Cipla</a>
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Bata</a>
-                            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm text-center transition duration-300">Dixon Technologies</a>
-                            <!-- Add more companies as needed -->
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <!-- Right side with illustration -->
-            <div class="md:w-1/2 flex items-start justify-center md:justify-end mt-10 md:mt-0" data-aos="fade-left">
-                <div class="relative w-full max-w-[500px] mx-auto">
-                    <!-- <div class="absolute inset-0 bg-white/5 rounded-2xl backdrop-blur-sm transform rotate-2"></div> -->
-                    <div class="absolute inset-0 bg-white/5 rounded-2xl backdrop-blur-sm -rotate-3"></div>
-                    
-                    <!-- Main illustration container -->
-                    <div class="relative bg-white/10 rounded-2xl p-8 backdrop-blur-md">
-        <!-- Smokey background circle -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[51%] h-[50%]">
-            <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[#644756]/40 via-[#8B7355]/25 to-[#4A5D4C]/20 backdrop-blur-sm animate-pulse"></div>
-            <!-- <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[#4A5D4C]/20 via-[#8B7355]/15 to-[#644756]/10 backdrop-blur-sm animate-pulse"></div> -->
-        </div>
-
-        <svg id="heroIllustration" viewBox="0 0 400 400" class="relative w-full h-full transform -translate-y-4">
-            <defs>
-                <linearGradient id="paperGradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#FFFFFF" />
-                    <stop offset="100%" stop-color="#F8FAFC" />
-                </linearGradient>
-                <filter id="softShadow">
-                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-                    <feOffset dx="2" dy="4"/>
-                    <feComponentTransfer>
-                        <feFuncA type="linear" slope="0.3"/>
-                    </feComponentTransfer>
-                    <feMerge>
-                        <feMergeNode/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-
-            <!-- Traditional Analysis (Left Side) -->
-            <g class="traditional-side" transform="translate(40, 180) scale(0.8)" filter="url(#softShadow)">
-                <path d="M0,20 L80,50 L160,20 L80,-10 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" />
-                <path d="M0,30 L80,60 L160,30 L80,0 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" opacity="0.8" />
-                <path d="M0,40 L80,70 L160,40 L80,10 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" opacity="0.6" />
-                <circle cx="80" cy="-5" r="6" fill="#644756" opacity="0.8" />
-            </g>
-
-            <!-- Curved Connection Path -->
-            <path class="connection-path" 
-                  d="M120,200 C180,150 220,250 280,200" 
-                  stroke="#644756" 
-                  stroke-width="2" 
-                  fill="none" 
-                  stroke-dasharray="4,3"
-                  opacity="0.4" />
-
-            <!-- Mac Window -->
-            <g class="window-container" transform="translate(240, 130)" filter="url(#softShadow)">
-                <!-- Main Window Container -->
-                <rect x="0" y="0" width="120" height="140" rx="8" 
-                      fill="#644756" fill-opacity="0.05" 
-                      stroke="#644756" stroke-opacity="0.1" />
-                
-                <!-- Title Bar -->
-                <rect x="0" y="0" width="120" height="22" rx="8" 
-                      fill="#644756" fill-opacity="0.1" />
-                
-                <!-- Window Controls -->
-                <g transform="translate(8, 11)">
-                    <circle cx="0" cy="0" r="2.5" fill="#FF5F57" opacity="0.5"/>
-                    <circle cx="10" cy="0" r="2.5" fill="#FFBD2E" opacity="0.5"/>
-                    <circle cx="20" cy="0" r="2.5" fill="#28C840" opacity="0.5"/>
-                </g>
-
-                <!-- Pills Container -->
-                <g class="pills-container" transform="translate(10, 32)">
-                    <!-- Promise Pill -->
-                    <g class="analysis-pill transform-3d">
-                        <rect width="100" height="24" rx="12" fill="rgba(139, 115, 85, 0.15)" 
-                              stroke="#8B7355" stroke-width="1" />
-                        <circle cx="16" cy="12" r="8" fill="rgba(139, 115, 85, 0.2)" />
-                        <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
-                              class="font-bold">3</text>
-                        <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
-                              class="font-medium tracking-wider">PROMISES</text>
-                    </g>
-
-                    <!-- Red Flag Pill -->
-                    <g class="analysis-pill transform-3d" transform="translate(0, 32)">
-                        <rect width="100" height="24" rx="12" fill="rgba(239, 68, 68, 0.15)" 
-                              stroke="#EF4444" stroke-width="1" />
-                        <circle cx="16" cy="12" r="8" fill="rgba(239, 68, 68, 0.2)" />
-                        <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
-                              class="font-bold">1</text>
-                        <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
-                              class="font-medium tracking-wider">CONCERN</text>
-                    </g>
-
-                    <!-- Growth Pill -->
-                    <g class="analysis-pill transform-3d" transform="translate(0, 64)">
-                        <rect width="100" height="24" rx="12" fill="rgba(34, 197, 94, 0.15)" 
-                              stroke="#22C55E" stroke-width="1" />
-                        <circle cx="16" cy="12" r="8" fill="rgba(34, 197, 94, 0.2)" />
-                        <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
-                              class="font-bold">2</text>
-                        <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
-                              class="font-medium tracking-wider">GROWTH</text>
-                    </g>
-                </g>
-            </g>
-        </svg>
-    </div>
-
-    </div>
-</div>
 
 <style>
+    .bg-hero {
+        background: linear-gradient(135deg, #4A5D4C 0%, #644756 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .bg-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(139, 115, 85, 0.05) 0%,
+            rgba(74, 93, 76, 0.05) 100%);
+        pointer-events: none;
+    }
+    
+    /* Enhance text readability */
+    .bg-hero h1 {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bg-hero p {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Company logos section enhancement */
+    .bg-hero .company-logo {
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .bg-hero .company-logo:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    .bg-grid {
+    background-size: 40px 40px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+.bg-dot-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.drop-shadow-sm {
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+</style>
+<!-- <img src= alt="stockrabit logo" class="w-10 h-10 object-contain"> -->
+<body class="font-sans bg-light text-dark" x-data="{ mobileMenu: false }">
+    <header class="fixed w-full bg-white z-50 border-b border-gray-100">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <img src="{{ url_for('static', filename='images/logo-stbit.png') }}" alt="stockrabit logo" class="w-8 h-8 object-contain">
+                <span class="text-[#10B981] text-xl font-semibold">stockrabit</span>
+            </div>
+            
+            <div class="flex items-center gap-8">
+                <a href="#features" class="text-gray-600 hover:text-[#10B981] transition-colors">Features</a>
+                <a href="#demo" class="text-gray-600 hover:text-[#10B981] transition-colors">Demo</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section - Fixed the gap by removing main tag and adjusting padding -->
+    <section class="min-h-screen bg-[#4A5D4C] text-light relative">
+        <!-- Subtle Dot Grid -->
+        <div class="absolute inset-0 bg-dot-pattern opacity-[0.07] pointer-events-none"></div>
+        
+        <div class="container mx-auto px-4 sm:px-6 pt-20 pb-12">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <!-- Left content -->
+                <div class="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
+                    <!-- Brand name -->
+                    <div class="inline-flex items-baseline gap-3">
+                        <div class="font-sans text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+                            stockrabit
+                            <span class="text-xs align-super">™</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Main headline -->
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
+                        The Smartest Way to Track Management Quality Through Earnings Calls
+                    </h1>
+                    
+                    <!-- Subheadline -->
+                    <p class="text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-2xl">
+                        Decode what leaders say about their business, track their promises, and spot red flags before the market.
+                    </p>
+                    
+                    <!-- Value propositions -->
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 text-sm sm:text-base text-white/90 font-medium">
+                        <span>🎯 SPOT WINNERS BEFORE THE MARKET</span>
+                        <span class="hidden sm:inline">•</span>
+                        <span>⭐ 100% COVERAGE</span>
+                        <span class="hidden sm:inline">•</span>
+                        <span>💎 FREE FOR EARLY ADOPTERS</span>
+                    </div>
+                    
+                   <!-- Search and CTA -->
+<div class="w-full flex items-center gap-2 sm:gap-4">
+    <div class="relative flex-1" x-data="{ 
+        suggestions: ['HDFC Bank', 'Bosch Limited', 'Laurus Labs', 'Zomato', 'Cipla'],
+        currentIndex: 0,
+        focused: false,
+        inputValue: ''
+    }">
+        <input type="text" 
+               x-model="inputValue"
+               @focus="focused = true; if(!inputValue) inputValue = suggestions[currentIndex]"
+               @blur="focused = false"
+               placeholder="Search for "
+               class="w-full px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 text-sm sm:text-base" />
+        
+        <!-- Animated suggestion text (only shows when not focused) -->
+        <div x-show="!focused && !inputValue"
+             class="absolute left-[90px] sm:left-[102px] top-1/2 -translate-y-1/2 h-6 overflow-hidden pointer-events-none">
+            <div class="flip-suggestions">
+                <template x-for="suggestion in suggestions">
+                    <div class="suggestion text-white/60 text-sm sm:text-base" x-text="suggestion + '...'"></div>
+                </template>
+            </div>
+        </div>
+        
+        <button class="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+    </div>
+    
+    <!-- Mobile optimized button -->
+    <button class="shrink-0 w-10 h-10 sm:w-auto sm:h-auto sm:px-8 sm:py-3 rounded-full bg-[#10B981] text-white font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
+        <span class="hidden sm:inline">Explore Companies</span>
+        <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+    </button>
+</div>
+    
+                    <!-- Trusted By Section -->
+                    <div class="w-full pt-8 sm:pt-12">
+                        <p class="text-sm uppercase tracking-wider text-white/60 mb-6">TRUSTED BY INVESTORS TRACKING</p>
+                        
+                        <!-- Logo Marquee -->
+                       <!-- Logo Marquee -->
+<div class="relative overflow-hidden py-4 group">
+    <!-- Paper-like background -->
+    <div class="absolute inset-0 bg-white/5">
+        <div class="absolute inset-0 bg-paper-lines opacity-[0.03]"></div>
+    </div>
+    
+    <!-- Fade edges -->
+    <div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#4A5D4C] to-transparent z-10"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#4A5D4C] to-transparent z-10"></div>
+    
+    <!-- Marquee wrapper -->
+    <div class="flex marquee-wrapper group">
+        <!-- First marquee -->
+        <div class="flex animate-marquee whitespace-nowrap group-hover:pause-animation">
+            <div class="flex items-center gap-12 mx-8">
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
+                         alt="Bosch" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
+                         alt="ABB" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="Reliance" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="HDFC Bank" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="Cipla" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/zomato-logo.png') }}" 
+                         alt="Zomato" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Duplicate for seamless loop -->
+        <div class="flex animate-marquee whitespace-nowrap group-hover:pause-animation">
+            <div class="flex items-center gap-12 mx-8">
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
+                         alt="Bosch" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
+                         alt="ABB" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="Reliance" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="HDFC Bank" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="Cipla" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+                <div class="flex items-center h-12 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                         alt="Zomato" 
+                         class="h-8 grayscale mix-blend-luminosity">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </div>
+                <!-- <div class="absolute inset-0 bg-white/5 rounded-2xl backdrop-blur-sm -rotate-3"></div> -->
+<!-- Right side with illustration -->
+<div class="md:w-1/2 flex items-start justify-center md:justify-end mt-10 md:mt-0" data-aos="fade-left">
+    <div class="relative w-full max-w-[500px]">
+        <!-- Background blur effects -->
+        
+        <!-- Main illustration container -->
+        <div class="relative bg-white/0 rounded-2xl p-8 backdrop-blur-md">
+            <!-- Smokey background circle -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[51%] h-[50%]">
+                <!-- <div class="absolute inset-0 rounded-full bg-gradient-to-b from-slate-50/40 via-slate-200/30 to-white/5 backdrop-blur-sm"></div> -->
+               <!-- Option 2: Warmer, more contrasty -->
+<div class="absolute inset-0 rounded-full bg-gradient-to-b from-amber-50/50 via-slate-200/30 to-white/5 backdrop-blur-sm"></div>
+
+            </div>
+           
+            
+            <!-- SVG Illustration -->
+            <svg id="heroIllustration" viewBox="0 0 400 400" class="relative w-full h-full transform -translate-y-4">
+                <defs>
+                    <linearGradient id="paperGradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="100%" stop-color="#F8FAFC" />
+                    </linearGradient>
+                    <filter id="softShadow">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                        <feOffset dx="2" dy="4"/>
+                        <feComponentTransfer>
+                            <feFuncA type="linear" slope="0.3"/>
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Traditional Analysis (Left Side) -->
+                <g class="traditional-side" transform="translate(40, 180) scale(0.8)" filter="url(#softShadow)">
+                    <path d="M0,20 L80,50 L160,20 L80,-10 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" />
+                    <path d="M0,30 L80,60 L160,30 L80,0 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" opacity="0.8" />
+                    <path d="M0,40 L80,70 L160,40 L80,10 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" opacity="0.6" />
+                    <circle cx="80" cy="-5" r="6" fill="#644756" opacity="0.8" />
+                </g>
+
+                <!-- Curved Connection Path -->
+                <path class="connection-path" 
+                      d="M120,200 C180,150 220,250 280,200" 
+                      stroke="#644756" 
+                      stroke-width="2" 
+                      fill="none" 
+                      stroke-dasharray="4,3"
+                      opacity="0.4" />
+
+                <!-- Mac Window -->
+                <g class="window-container" transform="translate(240, 130)" filter="url(#softShadow)">
+                    <!-- Main Window Container -->
+                    <rect x="0" y="0" width="120" height="140" rx="8" 
+                          fill="#644756" fill-opacity="0.05" 
+                          stroke="#644756" stroke-opacity="0.1" />
+                    
+                    <!-- Title Bar -->
+                    <rect x="0" y="0" width="120" height="22" rx="8" 
+                          fill="#644756" fill-opacity="0.1" />
+                    
+                    <!-- Window Controls -->
+                    <g transform="translate(8, 11)">
+                        <circle cx="0" cy="0" r="2.5" fill="#FF5F57" opacity="0.5"/>
+                        <circle cx="10" cy="0" r="2.5" fill="#FFBD2E" opacity="0.5"/>
+                        <circle cx="20" cy="0" r="2.5" fill="#28C840" opacity="0.5"/>
+                    </g>
+
+                    <!-- Pills Container -->
+                    <g class="pills-container" transform="translate(10, 32)">
+                        <!-- Promise Pill -->
+                        <g class="analysis-pill transform-3d">
+                            <rect width="100" height="24" rx="12" fill="rgba(139, 115, 85, 0.15)" 
+                                  stroke="#8B7355" stroke-width="1" />
+                            <circle cx="16" cy="12" r="8" fill="rgba(139, 115, 85, 0.2)" />
+                            <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-bold">3</text>
+                            <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-medium tracking-wider">PROMISES</text>
+                        </g>
+
+                        <!-- Red Flag Pill -->
+                        <g class="analysis-pill transform-3d" transform="translate(0, 32)">
+                            <rect width="100" height="24" rx="12" fill="rgba(239, 68, 68, 0.15)" 
+                                  stroke="#EF4444" stroke-width="1" />
+                            <circle cx="16" cy="12" r="8" fill="rgba(239, 68, 68, 0.2)" />
+                            <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-bold">1</text>
+                            <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-medium tracking-wider">CONCERN</text>
+                        </g>
+
+                        <!-- Growth Pill -->
+                        <g class="analysis-pill transform-3d" transform="translate(0, 64)">
+                            <rect width="100" height="24" rx="12" fill="rgba(34, 197, 94, 0.15)" 
+                                  stroke="#22C55E" stroke-width="1" />
+                            <circle cx="16" cy="12" r="8" fill="rgba(34, 197, 94, 0.2)" />
+                            <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-bold">2</text>
+                            <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-medium tracking-wider">GROWTH</text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+</div>
+            </div>
+        
+    </section>
+
+<style>
+/* Existing styles */
 .transform-3d {
     transform-style: preserve-3d;
     perspective: 1000px;
 }
+
+/* Limit backdrop-blur to specific containers */
 .backdrop-blur-sm {
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
+
 .backdrop-blur-md {
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
-.hero-section {
-    overflow: hidden;
+
+/* Ensure proper containment for transforms */
+.relative {
+    isolation: isolate;
 }
-@media (min-width: 768px) {
-    .hero-section > .container {
-        padding-top: 2rem;
+
+
+/* New marquee animation */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .animate-marquee {
+        animation-duration: 15s;
     }
 }
+
+
+.bg-dot-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+@keyframes soft-pulse {
+    0% { opacity: 0.9; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 0.9; transform: scale(0.98); }
+}
+
+.animate-soft-pulse {
+    animation: soft-pulse 3s ease-in-out infinite;
+}
+
+.bg-gradient-radial {
+    background: radial-gradient(circle at center,
+        var(--tw-gradient-from) 0%,
+        var(--tw-gradient-via) 30%,
+        var(--tw-gradient-to) 70%
+    );
+}
 </style>
+<style>
+    /* Paper lines background */
+    .bg-paper-lines {
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 23px,
+        rgba(255, 255, 255, 0.1) 24px
+    );
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+    animation: marquee 30s linear infinite;
+}
+
+.pause-animation {
+    animation-play-state: paused;
+}
+
+.marquee-wrapper:hover .animate-marquee {
+    animation-play-state: paused;
+}
+
+.marquee-wrapper {
+    display: flex;
+    overflow: hidden;
+}
+
+.marquee {
+    flex-shrink: 0;
+    display: flex;
+    animation: scroll 30s linear infinite;
+    animation-play-state: running;
+}
+.marquee-wrapper:hover .marquee {
+    animation-play-state: paused;
+}
+@keyframes smooth-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+.animate-smooth-scroll {
+    animation: smooth-scroll 40s linear infinite;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+@keyframes gentle-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-gentle-scroll {
+    animation: gentle-scroll 40s linear infinite;
+}
+
+/* Enhance image rendering */
+.mix-blend-luminosity {
+    mix-blend-mode: luminosity;
+}
+    </style>
+    <style> 
+        .flip-suggestions {
+    animation: flip 10s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+.suggestion {
+    height: 24px;
+    display: flex;
+    /* margin: 0rem .5rem; */
+    align-items: center;
+}
+
+@keyframes flip {
+    0%, 20% { transform: translateY(0); }
+    20%, 40% { transform: translateY(-24px); }
+    40%, 60% { transform: translateY(-48px); }
+    60%, 80% { transform: translateY(-72px); }
+    80%, 100% { transform: translateY(-96px); }
+}
+
+    </style>
 
  <!-- end  -->
 
-        </div>
-    </section>
+ 
 
+ <script>
+    // Update the current suggestion index
+    setInterval(() => {
+        if (!document.querySelector('input:focus')) {  // Only update if input is not focused
+            const suggestions = ['HDFC Bank', 'Bosch Limited', 'Laurus Labs', 'Zomato', 'Cipla'];
+            currentIndex = (currentIndex + 1) % suggestions.length;
+        }
+    }, 2000);
+    </script>
         <!-- Features Section -->
         <section id="features" class="py-20 px-4">
             <div class="container mx-auto">
