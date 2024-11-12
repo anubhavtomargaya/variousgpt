@@ -20,20 +20,6 @@ def slugify_filter(s):
     return slugify(s)
 from flask import render_template, redirect, url_for
 
-company_app.route('/<company_name>/upcoming')
-@company_app.route('/<company_name>/upcoming/<question_slug>')
-def upcoming(company_name, question_slug=None):
-    upcoming_data = get_upcoming_content(company_name)
-    if question_slug:
-        valid_slugs = [slugify(q) for q in upcoming_data.keys()]
-        if question_slug not in valid_slugs:
-            return redirect(url_for('company_app.upcoming', company_name=company_name))
-    
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="upcoming", 
-                           upcoming_data=upcoming_data,
-                           question_slug=question_slug)
 
 @company_app.route('/<company_name>')
 @company_app.route('/<company_name>/historical')
@@ -52,6 +38,9 @@ def historical(company_name):
             date -= timedelta(days=1)
         return date
 
+    # Mock insights data
+    mock_insights = {'highlight': {'metric': '21.7% YoY Growth', 'title': 'Strong Revenue Surge', 'context': 'Total income reached Rs. 444.4 crores, up from Rs. 365 crores.'}, 'metrics': {'promises': [{'text': 'New production blocks', 'timeline': 'FY25', 'category': 'Expansion'}, {'text': 'Specialty product launches', 'timeline': 'H2 FY26', 'category': 'Innovation'}], 'concerns': [{'text': 'Market volatility risks', 'severity': 'High'}, {'text': 'Product performance variability', 'severity': 'Moderate'}], 'drivers': [{'text': 'CMS revenues', 'impact': 'Rs. 235 crores from commercial molecules'}, {'text': 'Profit after tax', 'impact': 'Rs. 98.3 crores, up from Rs. 62.2 crores'}]}, 'tags': {'industry': ['Pharmaceuticals', 'API', 'CDMO'], 'business': ['Neuland Laboratories'], 'themes': ['Financial Growth', 'Market Positioning', 'Operational Efficiency']}, 'stats': {'promise_count': 2, 'concern_count': 2, 'driver_count': 2}}
+
     for file_name in file_names:
         print("name",file_name)
         if file_name:
@@ -62,61 +51,39 @@ def historical(company_name):
                 'file_name': file_name,
                 'company_name': details['company_name'],
                 'quarter': details['quarter'],
-               'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
+                'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
                 'financial_year': details['financial_year'],
-                'top_questions': top_questions
+                'top_questions': top_questions,
+                'insights': mock_insights  # Add mock insights to each historical data entry
             })
     latest_transcripts = get_latest_transcripts(limit=5)  # Get 5 latest transcripts
     
     # Filter latest transcripts for current company
     company_latest_transcripts = []
     for transcript in latest_transcripts:
-        # Replace hyphens in company name for comparison
-        # if transcript['company_name'].replace(' ', '-').lower() == company_name.lower():
-            # Convert date string to datetime object if it exists
-            if transcript['date'] and isinstance(transcript['date'], str):
-                try:
-                    transcript['date'] = datetime.strptime(transcript['date'], '%Y-%m-%d').date()
-                except ValueError:
-                    pass
-            
-            company_latest_transcripts.append(transcript)
+        if transcript['date'] and isinstance(transcript['date'], str):
+            try:
+                transcript['date'] = datetime.strptime(transcript['date'], '%Y-%m-%d').date()
+            except ValueError:
+                pass
+        
+        company_latest_transcripts.append(transcript)
     print("Latest transcripts:", company_latest_transcripts)
     
     return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="historical", 
-                            ticker=details['ticker'],
-                           historical_data=historical_data,
-                           latest_transcripts=company_latest_transcripts)  # Add latest)
+                         company_name=company_name.replace('-', ' '), 
+                         active_page="historical", 
+                         ticker=details['ticker'],
+                         historical_data=historical_data,
+                         latest_transcripts=company_latest_transcripts)
 
     # return render_template('company.html', 
     #                        company_name=company_name.replace('-', ' '), 
     #                        active_page="historical", 
     #                        content=f"Historical data for {company_name.replace('-', ' ').title()}")
 
-@company_app.route('/<company_name>/faq')
-@company_app.route('/<company_name>/faq/<question_slug>')
-def faq(company_name, question_slug=None):
-    faq_data = get_faq_content(company_name)
-    
-    if question_slug:
-        valid_slugs = [slugify(q) for q in faq_data.keys()]
-        if question_slug not in valid_slugs:
-            return redirect(url_for('company_app.faq', company_name=company_name))
-    
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="faq", 
-                           faq_data=faq_data,
-                           question_slug=question_slug)
 
-@company_app.route('/<company_name>/links')
-def links(company_name):
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="links", 
-                           content=f"Useful links for {company_name.replace('-', ' ').title()}")
+
 
 @company_app.route('/sample')
 def company_sample():

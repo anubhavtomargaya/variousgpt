@@ -267,6 +267,240 @@ def insert_tags_management_transcript(file: str, tags: dict) -> str:
     # Update the database with the new management_data
     return update_transcript_intel_entry(file_name=file, mg_data=current_mg_data)
 
+# summary structured
+def generate_structured_summary(transcript_json: Dict) -> Dict:
+    """
+    Generate a comprehensive earnings call summary with performance context and TLDR.
+    
+    Args:
+        transcript_json: Dictionary containing management commentary
+        
+    Returns:
+        Dictionary with structured summaries and performance assessment
+    """
+    
+    def get_summary_prompt() -> str:
+        return """
+        Create a comprehensive summary of this earnings call that includes:
+
+        TLDR (2-3 lines):
+        - Overall quarter assessment with key metrics vs expectations
+        - Key Highlights & Major developments with their business impact
+        - Forward outlook with key growth drivers/concerns
+        - overall sentiment or guidance
+
+
+        Then summarize under these headings with performance context:
+
+        1. Financial Performance
+           - Revenue, Profits, Margins
+           - Compare with previous quarters/years
+            - Segment-wise performance and key drivers
+           - Any exceptional/one-off items
+           - Sustainable vs temporary improvements
+           - Performance vs market expectations
+           - Management's tone on numbers
+           
+        2. Business Operations
+           - Core business metrics vs historical trend
+           - Market position changes
+           - Changes in business mix/strategy
+           - Operational improvements/challenges
+           - Key products/clients performance
+
+        3. Growth Initiatives
+           - Progress on previous announcements
+           - Status of ongoing projects
+           - New initiatives announced
+           - Timeline and expected impact
+           - Management confidence in execution
+           - Investment and return expectations
+
+
+        4. Market Dynamics
+           - Key industry trends and their specific impact on company
+           - Company's response to market changes
+           - Competitive strengths/challenges
+           - Market share movements
+           - Geographic/segment opportunities
+           - Customer behavior changes
+        
+          
+
+        5. Future Outlook
+           - Guidance vs previous statements
+           - Specific guidance for near/medium term
+           - Key growth drivers
+           - Potential risks and mitigation
+           - Management confidence indicators
+
+        For each section, whenever possible try to:
+        - Include YoY and QoQ comparisons
+        - Note performance vs expectations
+        - Capture management sentiment
+        - Flag any concerns or positive developments
+        """
+
+    def get_output_format() -> str:
+        return """
+        {
+            "tldr": {
+                "summary": "string (2-3 line overall assessment)",
+                "performance_rating": "string (good/mixed/concerning)",
+                "key_developments": []
+            },
+            "summary": {
+               "financial_performance": {
+                    "revenue_profits_margins": {
+                        "content": "string (with comparatives)",
+                        "key_figures": {},
+                        "segment_performance": {},
+                        "management_tone": "string"
+                    }
+                },
+                "business_operations": {
+                    "core_metrics": {
+                         "content": "string (operational details)",
+                        "segment_highlights": {},
+                        "key_developments": [],
+                        "concerns": []
+                    },
+                    "market_position": {
+                        "content": "string (with competitive context)",
+                        "key_changes": []
+                    }
+                },
+                "growth_initiatives": {
+                    "expansion_plans": {
+                        "content": "string (with progress updates)",
+                        "status": "string (on-track/delayed/ahead)",
+                        "execution_confidence": "string"
+                    },
+                    "new_launches": {
+                        "content": "string (with timeline context)",
+                        "key_points": [],
+                        "risk_assessment": "string"
+                    }
+                },
+                "market_dynamics": {
+                    "industry_trends": {
+                        "content": "string (with impact assessment)",
+                        "key_points": [],
+                        "company_positioning": "string"
+                    },
+                    "competition": {
+                        "content": "string (with market share context)",
+                        "key_points": [],
+                        "competitive_advantage": "string"
+                    }
+                },
+                "future_outlook": {
+                    "guidance": {
+                        "content": "string (with previous context)",
+                        "key_figures": {},
+                        "confidence_level": "string",
+                        "risk_factors": []
+                    },
+                    "challenges": {
+                        "content": "string (with mitigation plans)",
+                        "key_points": [],
+                        "management_preparedness": "string"
+                    }
+                }
+            },
+            "metadata": {
+                "industry_tags": [],
+                "company_tags": [],
+                "key_themes": []
+                "key_concerns": [],
+                "positive_developments": []
+            }
+        }
+        """
+    def create_summary(transcript: Dict) -> Dict:
+        summary_prompt = f"""
+        Transcript:
+        {json.dumps(transcript, indent=2)}
+
+        Instructions:
+        {get_summary_prompt()}
+
+        Output Format:
+        RETURN IN FOLLOWING JSON FORMAT
+        {get_output_format()}
+
+        Guidelines:
+        1. Keep summaries factual and direct
+        2. Include specific metrics when stated
+        3. Maintain objective tone
+        4. Focus on key information without interpretation
+        5. Use clear, straightforward language
+        """
+
+        response = openai_client.chat.completions.create(
+            model=SUMMARY_MODEL,
+            response_format={"type": "json_object"},
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a precise summarizer. Create clear, structured \
+                        summaries organized by specific headings. Focus on facts and key points \
+                        without analysis."
+                },
+                {"role": "user", "content": summary_prompt}
+            ],
+            temperature=0.2
+        )
+
+        return json.loads(response.choices[0].message.content)
+
+    def validate_summary(summary: Dict) -> Dict:
+        """Ensure all sections have required content."""
+        required_sections = {
+            "financial_performance": ["revenue_profits_margins"],
+            "business_operations": ["core_metrics", "market_position"],
+            "growth_initiatives": ["expansion_plans", "new_launches"],
+            "market_dynamics": ["industry_trends", "competition"],
+            "future_outlook": ["guidance", "challenges"]
+        }
+
+        for section, subsections in required_sections.items():
+            if section not in summary["summary"]:
+                summary["summary"][section] = {}
+            
+            for subsection in subsections:
+                if subsection not in summary["summary"][section]:
+                    summary["summary"][section][subsection] = {
+                        "content": "No information provided.",
+                        "key_points" if "points" in subsection else "key_figures": {}
+                    }
+
+        if "metadata" not in summary:
+            summary["metadata"] = {
+                "industry_tags": [],
+                "company_tags": []
+            }
+
+        return summary
+
+    try:
+        summary = create_summary(transcript_json)
+        validated_summary = validate_summary(summary)
+        return validated_summary
+
+    except Exception as e:
+        print(f"Error in summary generation: {str(e)}")
+        raise
+
+def save_structured_summary(file_name: str, 
+                          summary_data: Dict,
+                          key: str = 'structured_summary') -> Dict:
+    """Save the structured summary to the transcript file."""
+    summary_entry = {key: summary_data}
+    return update_transcript_intel_entry(file_name=file_name,
+                                       mg_data=summary_entry)
+
+
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
@@ -281,6 +515,10 @@ if __name__ =='__main__':
     def test_management_content_summary_idfication():
         section = load_ts_section_management(f)
         return extract_management_insights(section)
+    
+    def test_management_struct_summary():
+        section = load_ts_section_management(f)
+        return generate_structured_summary(section)
     
     def test_management_tags_idfication():
         section = load_ts_section_management(f)
@@ -309,6 +547,7 @@ if __name__ =='__main__':
     
     # print(test_management_content_get())
     # print(test_management_tags_idfication())
+    print(test_management_struct_summary())
     # print(test_insert_management_content())
-    print(test_insert_management_tags())
+    # print(test_insert_management_tags())
     # print(test_management_content_summary_idfication())
