@@ -136,11 +136,11 @@
                     
                     <!-- Subheadline -->
                     <p class="text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-2xl">
-                        Decode what leaders say about their business, track their promises, and spot red flags before the market.
+                        Decode what leaders are saying, track their promises, and spot red flags before the market.
                     </p>
                     
                     <!-- Value propositions -->
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 text-sm sm:text-base text-white/90 font-medium">
+                    <div class="relative flex flex-col sm:flex-row gap-3 sm:gap-4 text-sm sm:text-base text-white/90 font-medium">
                         <span>🎯 SPOT WINNERS FIRST</span>
                         <span class="hidden sm:inline">•</span>
                         <span>⭐ 100% COVERAGE</span>
@@ -168,7 +168,7 @@
              class="absolute left-[90px] sm:left-[102px] top-1/2 -translate-y-1/2 h-6 overflow-hidden pointer-events-none">
             <div class="flip-suggestions">
                 <template x-for="suggestion in suggestions">
-                    <div class="suggestion text-white/60 text-sm sm:text-base" x-text="suggestion + '...'"></div>
+                    <div class="suggestion text-white/60 text-sm sm:text-base" x-text="suggestion "></div>
                 </template>
             </div>
         </div>
@@ -195,7 +195,8 @@
                         
                         <!-- Logo Marquee -->
                        <!-- Logo Marquee -->
-<div class="relative overflow-hidden py-4 group">
+<!-- Logo Marquee -->
+<div class="relative overflow-hidden py-8 group">
     <!-- Paper-like background -->
     <div class="absolute inset-0 bg-white/5">
         <div class="absolute inset-0 bg-paper-lines opacity-[0.03]"></div>
@@ -209,72 +210,73 @@
     <div class="flex marquee-wrapper group">
         <!-- First marquee -->
         <div class="flex animate-marquee whitespace-nowrap group-hover:pause-animation">
-            <div class="flex items-center gap-12 mx-8">
-                <div class="flex items-center h-12 opacity-60">
+            <div class="flex items-center gap-16 mx-12">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
                          alt="Bosch" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
                          alt="ABB" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="Reliance" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="HDFC Bank" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="Cipla" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
-                    <img src="{{ url_for('static', filename='images/companies/zomato-logo.png') }}" 
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
+                    <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="Zomato" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
             </div>
         </div>
         
         <!-- Duplicate for seamless loop -->
         <div class="flex animate-marquee whitespace-nowrap group-hover:pause-animation">
-            <div class="flex items-center gap-12 mx-8">
-                <div class="flex items-center h-12 opacity-60">
+            <div class="flex items-center gap-16 mx-12">
+                <!-- Duplicate the same blocks with same dimensions -->
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
                          alt="Bosch" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
                          alt="ABB" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="Reliance" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="HDFC Bank" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="Cipla" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
-                <div class="flex items-center h-12 opacity-60">
+                <div class="flex items-center justify-center h-24 w-48 opacity-60">
                     <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
                          alt="Zomato" 
-                         class="h-8 grayscale mix-blend-luminosity">
+                         class="max-h-20 w-auto object-contain grayscale mix-blend-luminosity">
                 </div>
             </div>
         </div>
@@ -540,6 +542,8 @@
     mix-blend-mode: luminosity;
 }
     </style>
+
+    
     <style> 
         .flip-suggestions {
     animation: flip 10s cubic-bezier(0.23, 1, 0.32, 1) infinite;
