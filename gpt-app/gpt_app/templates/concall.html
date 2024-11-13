@@ -1276,6 +1276,136 @@
         }
     }
     </style>
+   <style>
+    .tab-section {
+        margin: 0 1rem;
+    }
+    
+    .tab-row {
+        display: flex;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 2rem;
+        gap: 2rem;
+    }
+    
+    .tab-item {
+        padding: 1rem 0;
+        color: #6b7280;
+        cursor: pointer;
+        position: relative;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .tab-item.active {
+        color: #1a1a1a;
+        font-weight: 600;
+    }
+    
+    .tab-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #18994e;
+    }
+
+    .quarter-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #4a4a4a;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .section-icon {
+        color: #6a198a;
+    }
+
+    .section-content {
+        color: #4a4a4a;
+        line-height: 1.6;
+    }
+
+    .highlight-box {
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+    }
+
+    .highlight-title {
+        font-weight: 600;
+        color: #4a4a4a;
+        margin-bottom: 1rem;
+    }
+
+    .management-quote {
+        background: #f0f9ff;
+        border-left: 3px solid #6a198a;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-style: italic;
+        color: #4a4a4a;
+    }
+
+    .quote-attribution {
+        color: #6a198a;
+        font-weight: 500;
+        margin-top: 0.5rem;
+    }
+
+    .content-section {
+        display: none;
+    }
+
+    .content-section.active {
+        display: block;
+    }
+
+    .metrics-list {
+        margin: 1rem 0;
+    }
+
+    .metric-item {
+        margin-bottom: 1rem;
+        color: #4a4a4a;
+    }
+
+    .bullet-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .bullet-list li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #4a4a4a;
+    }
+
+    .bullet-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.5rem;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #18994e;
+    }
+</style>
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -1320,6 +1450,12 @@
             <div class="horizontal-line"></div>
             <div class="company-tabs-container">
                 <ul class="company-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if active_section == 'structured_summary' %}active{% endif %}" 
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='structured_summary') }}">
+                            📈 Summary
+                        </a>
+                    </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}">
                             ✨ Top Questions
@@ -1381,7 +1517,116 @@
             
 
             <div id="content-section">
-                {% if active_section == 'top_questions' %}
+                <!-- Add this to your existing styles section -->
+
+          
+          
+{% if active_section == 'structured_summary' %}
+<div class="tab-section">
+    <div class="tab-row">
+        <div class="tab-item active" onclick="showContent('overview')">Performance Overview</div>
+        <div class="tab-item" onclick="showContent('progress')">Business Progress</div>
+        <div class="tab-item" onclick="showContent('outlook')">Future Outlook</div>
+    </div>
+
+    <div class="content-section active" id="content-overview">
+        <div class="quarter-section">
+            <div class="section-title">
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Quarter at a Glance
+            </div>
+            <div class="section-content">
+                {{ structured_summary.sections[0].narrative }}
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Financial Highlights</div>
+            <div class="metrics-list">
+                {% for key, value in structured_summary.sections[0].metrics.items() %}
+                <div class="metric-item">{{ key }}: {{ value }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Operational Excellence</div>
+            <ul class="bullet-list">
+                {% for highlight in structured_summary.sections[0].highlights %}
+                <li>{{ highlight }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if structured_summary.sections[0].management_quotes %}
+        <div class="management-quote">
+            {{ structured_summary.sections[0].management_quotes[0] }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="content-section" id="content-progress">
+        <div class="section-content">
+            {{ structured_summary.sections[1].narrative }}
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Key Achievements</div>
+            <ul class="bullet-list">
+                {% for achievement in structured_summary.sections[1].achievements %}
+                <li>{{ achievement }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Strategic Updates</div>
+            <ul class="bullet-list">
+                {% for update in structured_summary.sections[1].strategic_updates %}
+                <li>{{ update }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-section" id="content-outlook">
+        <div class="section-content">
+            {{ structured_summary.sections[2].narrative }}
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Future Guidance</div>
+            <ul class="bullet-list">
+                {% for item in structured_summary.sections[2].guidance %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Strategic Priorities</div>
+            <ul class="bullet-list">
+                {% for priority in structured_summary.sections[2].priorities %}
+                <li>{{ priority }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Risk Factors</div>
+            <ul class="bullet-list">
+                {% for risk in structured_summary.sections[2].risks %}
+                <li>{{ risk }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+                {% elif active_section == 'top_questions' %}
                 <div class="accordion mt-4" id="topQaAccordion">
                     {% for question, answer in top_questions.items() %}
                     {% set slug = question|slugify %}
@@ -2168,5 +2413,22 @@
             window.addEventListener('resize', adjustTabsContainer);
             adjustTabsContainer(); // Initial adjustment
         });
-    </script></body>
+    </script>
+
+<script>
+    function showContent(section) {
+        // Update active tab
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+    
+        // Show selected content
+        document.querySelectorAll('.content-section').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`content-${section}`).classList.add('active');
+    }
+    </script>
+</body>
 </html>

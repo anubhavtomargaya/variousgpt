@@ -217,6 +217,26 @@ def get_files_without_tags():
     print(f"Found {len(files)} files without tags")
     return files
 
+def get_itdoc_structured_summary(file_name):
+    """
+    Fetch structured summary data from the database
+    """
+    print("Fetching structured summary from database...")
+    try:
+        rows = supabase.table('transcripts-intel').select('management_data').eq('file_name', f'{file_name}').execute()
+        if not rows.data:
+            print("No structured summary found")
+            return False
+        
+        management_data = rows.data[0].get('management_data', {})
+        if not management_data:
+            return False
+            
+        return management_data.get('struct_summary', False)
+    except Exception as e:
+        print(f"Error fetching structured summary: {str(e)}")
+        return False
+    
 def get_company_content_all(copname):
     print("running supabase query...")
     rows =  supabase.table('company-content').select('company_name,upcoming,latest,faq').eq('company_name', f'{copname}').execute()
@@ -498,9 +518,12 @@ def update_transcript_pdf_entry(transcript_id, extracted_transcript, extra_text)
 if __name__=='__main__':
     f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2025_q1_earnings_call_transcript_amara_raja_energy_&_mobility_limited_are&m.pdf'
-
+    f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
+    # f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
     def test_get_qa_section():
         return get_itdoc_qa_secrion(f)
+    def test_get_struct_summary():
+        return get_itdoc_structured_summary(f)
     def test_get_content_top_qa():
         return get_content_top_questions(f)
     
@@ -513,6 +536,7 @@ if __name__=='__main__':
 
     
     # print(test_get_qa_section())
-    print(test_get_content_top_qa())
+    # print(test_get_content_top_qa())
+    print(test_get_struct_summary())
     # print(test_get_intel_files())
     # print(test_get_latest_files())
