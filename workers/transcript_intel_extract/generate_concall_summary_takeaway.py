@@ -5,7 +5,8 @@ from typing import Dict, List, Optional
 from utils_qa import get_openai_client,count_tokens
 from handler_supabase import fetch_management_data, get_pdf_transcript_and_meta, insert_transcript_intel_entry, update_transcript_intel_entry, update_transcript_meta_entry
 from utils_qa import load_ts_section_management
-from summary_mg import generate_structured_summary
+from generate_concall_summary_parent import generate_structured_summary
+from summary_mg import insert_management_intel
 
 SUMMARY_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -23,7 +24,7 @@ def generate_concall_takeaway(transcript_json: Dict) -> Dict:
     
     def get_summary_prompt() -> str:
         return """
-    Create a punchy, UI-optimized summary focusing on brevity and impact:
+    Create a punchy but professional, UI-optimized summary focusing on brevity and impact:
 
     1. Highlight Section (Keep it ultra-concise):
        - Metric: Just the number and label (e.g., "21.7% YoY Growth")
@@ -172,14 +173,7 @@ def generate_concall_takeaway(transcript_json: Dict) -> Dict:
     except Exception as e:
         print(f"Error in takeaway generation: {str(e)}")
         raise
-def save_concall_takeaway(file_name: str, 
-                         takeaway_data: Dict,
-                         key: str = 'concall_takeaway') -> Dict:
-    """Save the structured concall takeaway to the transcript file."""
-    takeaway_entry = {key: takeaway_data}
-    return update_transcript_intel_entry(file_name=file_name,
-                                       mg_data=takeaway_entry)
-
+    
 
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
@@ -188,14 +182,22 @@ if __name__ =='__main__':
     # f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
     # f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
     # f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
-    def test_management_struct_summary():
-        section = load_ts_section_management(f)
-        return generate_structured_summary(section)
-    
+
     def test_generate_takeaway():
         section = load_ts_section_management(f)
         xl_summary = generate_structured_summary(section)
         return generate_concall_takeaway(xl_summary)
     
+    def test_insert_struct_takeaways():
+        key = 'struct_takeaway'
+        section = load_ts_section_management(f)
+        s = generate_structured_summary(section)
+        if s:
+            print("inserting")
+            return insert_management_intel(f,key,s)
+        else:
+            print("not found")
+            return None
     
+   
     print(test_generate_takeaway())
