@@ -193,6 +193,7 @@ def generate_structured_summary(transcript_json: Dict) -> Dict:
         if "highlights" not in summary:
             summary["highlights"] = {}
         for field in required_sections["highlights"]:
+            print("validating highlight",field)
             if field not in summary["highlights"]:
                 summary["highlights"][field] = "No information provided"
             if field == "key_metrics" and not isinstance(summary["highlights"][field], list):
@@ -236,13 +237,8 @@ def generate_structured_summary(transcript_json: Dict) -> Dict:
     except Exception as e:
         print(f"Error in summary generation: {str(e)}")
         raise
-def save_structured_summary(file_name: str, 
-                          summary_data: Dict,
-                          key: str = 'structured_summary') -> Dict:
-    """Save the structured summary to the transcript file."""
-    summary_entry = {key: summary_data}
-    return update_transcript_intel_entry(file_name=file_name,
-                                       mg_data=summary_entry)
+
+    
 
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
