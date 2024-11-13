@@ -341,11 +341,11 @@ def concall(file_name, question_slug=None):
             content = get_itdoc_qa_secrion(file_name)
         elif section == 'management_guidance':
             content = get_itdoc_mg_guidance(file_name, key='structured_guidance')
-        elif section == 'structured_summary':
-            content = get_itdoc_structured_summary(file_name)
+        # elif section == 'structured_summary':
         else:
             content = {}
 
+        struct_content = get_itdoc_structured_summary(file_name)
         return render_template('concall.html',
                             company_name=details['company_name'],
                             canonical_url=canonical_url,
@@ -362,7 +362,7 @@ def concall(file_name, question_slug=None):
                             transcript_keys=tags,
                             qa_section=content if content and section == 'qa_section' else '',
                             management_guidance=content if content and section == 'management_guidance' else '',
-                            structured_summary=content if section == 'structured_summary' else {})
+                            structured_summary=struct_content )
     except Exception as e:
         print(f"Error: {str(e)}")
         return f"Error: {str(e)}", 500
