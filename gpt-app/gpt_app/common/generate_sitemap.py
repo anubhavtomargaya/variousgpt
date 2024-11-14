@@ -56,16 +56,17 @@ def generate_sitemap():
             # Base URLs - using f-strings with BASE_URL
             base_urls = [
                 f"{BASE_URL}/company/{company_name}",
-                f"{BASE_URL}/company/{company_name}/historical",
-                f"{BASE_URL}/view/chat/{file_name}",
-                f"{BASE_URL}/view/document/{file_name}",
-                f"{BASE_URL}/view/document/section/qa/{file_name}",
-                f"{BASE_URL}/view/document/section/management/{file_name}",
-                f"{BASE_URL}/view/content/top_questions/{file_name}",
+        
+                # f"{BASE_URL}/view/chat/{file_name}",
+                # f"{BASE_URL}/view/document/{file_name}",
+                # f"{BASE_URL}/view/document/section/qa/{file_name}",
+                # f"{BASE_URL}/view/document/section/management/{file_name}",
+                # f"{BASE_URL}/view/content/top_questions/{file_name}",
                 f"{BASE_URL}/view/concall/{file_name}?section=top_questions",
                 f"{BASE_URL}/view/concall/{file_name}?section=qa_section",
                 f"{BASE_URL}/view/concall/{file_name}?section=management_guidance",
                 f"{BASE_URL}/view/concall/{file_name}?section=transcript"
+                f"{BASE_URL}/view/concall/{file_name}?section=structured_summary"
             ]
 
             # Add base URLs to sitemap
