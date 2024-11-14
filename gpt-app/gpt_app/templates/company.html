@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% if request.path.startswith('/company/') and '/historical' in request.path %}
-    <!-- Historical pages point to main company page -->
+    {% if request.path.startswith('/company/') %}
     <link rel="canonical" href="https://stockrabit.com/company/{{ company_name }}" />
-    {% elif request.path.startswith('/company/') %}
-        <!-- Main company pages -->
-        <link rel="canonical" href="https://stockrabit.com/company/{{ company_name }}" />
-  
     {% endif %}
+    <title>{{ company_name|title }} - stockrabit</title>
     <title>{{ company_name|title }} - stockrabit</title>
     <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>

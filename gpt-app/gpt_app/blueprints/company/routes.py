@@ -20,20 +20,6 @@ def slugify_filter(s):
     return slugify(s)
 from flask import render_template, redirect, url_for
 
-company_app.route('/<company_name>/upcoming')
-@company_app.route('/<company_name>/upcoming/<question_slug>')
-def upcoming(company_name, question_slug=None):
-    upcoming_data = get_upcoming_content(company_name)
-    if question_slug:
-        valid_slugs = [slugify(q) for q in upcoming_data.keys()]
-        if question_slug not in valid_slugs:
-            return redirect(url_for('company_app.upcoming', company_name=company_name))
-    
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="upcoming", 
-                           upcoming_data=upcoming_data,
-                           question_slug=question_slug)
 
 @company_app.route('/api/search/suggestions')
 def search_suggestions():
@@ -47,93 +33,61 @@ def search_suggestions():
     except Exception as e:
         print(f"Error in search suggestions route: {str(e)}")
         return jsonify([]), 500
-
+    
 @company_app.route('/<company_name>')
-@company_app.route('/<company_name>/historical')
 def historical(company_name):
-    print('com',company_name)
-    file_names = get_company_file_names(company_name)  # Implement this function
-    print("filen ames",file_names)
-    if not file_names:
-        return redirect(url_for('company_app.company_index'))
-    historical_data = []
-    
-    print("names",file_names)
-    def adjust_to_latest_friday(date):
-    # If it's Saturday (5) or Sunday (6), adjust to the latest Friday
-        while date.weekday() > 4:
-            date -= timedelta(days=1)
-        return date
+    try:
+        canonical_url = url_for('company_app.historical',
+                              company_name=company_name,
+                              _external=True)
 
-    for file_name in file_names:
-        print("name",file_name)
-        if file_name:
-            top_questions = get_content_top_questions(file_name)  # Fetch top questions
-            details = get_file_meta(file_name)  # Fetch file details
-            
-            historical_data.append({
-                'file_name': file_name,
-                'company_name': details['company_name'],
-                'quarter': details['quarter'],
-               'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
-                'financial_year': details['financial_year'],
-                'top_questions': top_questions
-            })
-    latest_transcripts = get_latest_transcripts(limit=5)  # Get 5 latest transcripts
-    
-    # Filter latest transcripts for current company
-    company_latest_transcripts = []
-    for transcript in latest_transcripts:
-        # Replace hyphens in company name for comparison
-        # if transcript['company_name'].replace(' ', '-').lower() == company_name.lower():
-            # Convert date string to datetime object if it exists
+        file_names = get_company_file_names(company_name)
+        if not file_names:
+            return redirect(url_for('company_app.company_index'))
+
+        historical_data = []
+        def adjust_to_latest_friday(date):
+            while date.weekday() > 4:
+                date -= timedelta(days=1)
+            return date
+
+        for file_name in file_names:
+            if file_name:
+                top_questions = get_content_top_questions(file_name)
+                details = get_file_meta(file_name)
+                historical_data.append({
+                    'file_name': file_name,
+                    'company_name': details['company_name'],
+                    'quarter': details['quarter'],
+                    'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
+                    'financial_year': details['financial_year'],
+                    'top_questions': top_questions
+                })
+
+        latest_transcripts = get_latest_transcripts(limit=5)
+        company_latest_transcripts = []
+        for transcript in latest_transcripts:
             if transcript['date'] and isinstance(transcript['date'], str):
                 try:
                     transcript['date'] = datetime.strptime(transcript['date'], '%Y-%m-%d').date()
                 except ValueError:
                     pass
-            
             company_latest_transcripts.append(transcript)
-    print("Latest transcripts:", company_latest_transcripts)
-    
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="historical", 
-                            ticker=details['ticker'],
-                           historical_data=historical_data,
-                           latest_transcripts=company_latest_transcripts)  # Add latest)
 
+        return render_template('company.html',
+                            canonical_url=canonical_url,
+                            company_name=company_name.replace('-', ' '),
+                            active_page="historical",
+                            ticker=details['ticker'],
+                            historical_data=historical_data,
+                            latest_transcripts=company_latest_transcripts)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return f"Error: {str(e)}", 500
     # return render_template('company.html', 
     #                        company_name=company_name.replace('-', ' '), 
     #                        active_page="historical", 
     #                        content=f"Historical data for {company_name.replace('-', ' ').title()}")
-
-@company_app.route('/<company_name>/faq')
-@company_app.route('/<company_name>/faq/<question_slug>')
-def faq(company_name, question_slug=None):
-    faq_data = get_faq_content(company_name)
-    
-    if question_slug:
-        valid_slugs = [slugify(q) for q in faq_data.keys()]
-        if question_slug not in valid_slugs:
-            return redirect(url_for('company_app.faq', company_name=company_name))
-    
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="faq", 
-                           faq_data=faq_data,
-                           question_slug=question_slug)
-
-@company_app.route('/<company_name>/links')
-def links(company_name):
-    return render_template('company.html', 
-                           company_name=company_name.replace('-', ' '), 
-                           active_page="links", 
-                           content=f"Useful links for {company_name.replace('-', ' ').title()}")
-
-@company_app.route('/sample')
-def company_sample():
-    return render_template('sample.html')
 
 @company_app.route('/landing')
 def company_landing():

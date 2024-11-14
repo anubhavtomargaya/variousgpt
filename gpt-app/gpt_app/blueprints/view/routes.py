@@ -287,14 +287,21 @@ def process_transcript(raw_transcript):
 def concall(file_name, question_slug=None):
     try:
         print(f"\nAccessing with file_name: {file_name}, question_slug: {question_slug}")
-        canonical_url = url_for('view_app.concall', 
-                        file_name=file_name, 
-                        _external=True)
-        section = request.args.get('section', 'top_questions')
         
-        # If accessing via question URL, force section to be top_questions
+        section = request.args.get('section', 'top_questions')
         if question_slug:
+            canonical_url = url_for('view_app.concall',
+                            file_name=file_name,
+                            question_slug=question_slug,
+                            _external=True)
             section = 'top_questions'
+        else:
+            canonical_url = url_for('view_app.concall',
+                            file_name=file_name,
+                            section=section,
+                            _external=True)
+        # If accessing via question URL, force section to be top_questions
+       
         
         # Define info content for each section
         info_contents = {
