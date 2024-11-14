@@ -139,14 +139,46 @@
                         Decode what leaders are saying, track their promises, and spot red flags before the market.
                     </p>
                     
-                    <!-- Value propositions -->
-                    <div class="relative flex flex-col sm:flex-row gap-3 sm:gap-4 text-sm sm:text-base text-white/90 font-medium">
-                        <span>🎯 SPOT WINNERS FIRST</span>
-                        <span class="hidden sm:inline">•</span>
-                        <span>⭐ 100% COVERAGE</span>
-                        <span class="hidden sm:inline">•</span>
-                        <span>💎 FREE FOR EARLY ADOPTERS</span>
-                    </div>
+<!-- Value propositions only -->
+<div class="w-full grid grid-cols-2 gap-2 text-[0.65rem] sm:text-sm text-white/90 font-medium">
+    <!-- First row -->
+    <div class="flex items-center gap-1 justify-center sm:justify-start">
+        <span class="text-rose-500">🎯</span>
+        <span>SPOT WINNERS BEFORE THE MARKET</span>
+    </div>
+    
+    <div class="flex items-center gap-1 justify-center sm:justify-start">
+        <span class="text-yellow-400">⭐</span>
+        <span>100% COVERAGE</span>
+    </div>
+    
+    <!-- Second row -->
+    <div class="flex items-center gap-1 justify-center sm:justify-start col-span-2">
+        <span class="text-blue-400">💎</span>
+        <span>FREE FOR EARLY ADOPTERS</span>
+    </div>
+</div>
+
+<style>
+@media (max-width: 640px) {
+    .text-[0.65rem] {
+        font-size: 0.65rem;
+        line-height: 1rem;
+    }
+}
+
+
+/* Smooth transitions */
+.flex {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Prevent text wrapping within each item */
+.min-w-fit {
+    min-width: fit-content;
+    white-space: nowrap;
+}
+</style>
                     <!-- Search and CTA -->
 <div class="w-full flex items-center gap-2 sm:gap-4">
     <div class="relative flex-1" x-data="{ 
