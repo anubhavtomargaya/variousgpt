@@ -23,6 +23,43 @@ def supabase_insert(table_name: str, data: dict) -> Optional[dict]:
         print(f"Supabase insert error for table {table_name}: {str(e)}")
         return None
     
+def get_search_suggestions(query: str, limit: int = 5) -> list:
+    """
+    Get search suggestions using Supabase
+    """
+    try:
+        # Clean the query
+        query = query.strip()
+        if len(query) < 2:
+            return []
+            
+        # Query Supabase using ilike for case-insensitive search
+        result = supabase.table('pdf-transcripts')\
+            .select('company_name, ticker')\
+            .or_(f"company_name.ilike.%{query}%,ticker.ilike.%{query}%")\
+            .limit(limit)\
+            .execute()
+            
+        # Convert to list of unique companies
+        seen = set()
+        suggestions = []
+        
+        if result.data:
+            for item in result.data:
+                key = (item['company_name'], item['ticker'])
+                if key not in seen and len(suggestions) < limit:
+                    seen.add(key)
+                    suggestions.append({
+                        'company_name': item['company_name'],
+                        'ticker': item['ticker']
+                    })
+                    
+        return suggestions
+        
+    except Exception as e:
+        print(f"Error in search suggestions: {str(e)}")
+        return []
+    
 def get_latest_transcripts(limit: int = 5, offset: int = 0):
     """
     Queries the pdf-transcripts table and returns the latest transcripts with specified columns.
