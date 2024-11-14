@@ -316,12 +316,14 @@
     </div>
     
     <!-- Mobile optimized button -->
-    <button class="shrink-0 w-10 h-10 sm:w-auto sm:h-auto sm:px-8 sm:py-3 rounded-full bg-[#10B981] text-white font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
-        <span class="hidden sm:inline">Explore Companies</span>
-        <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-        </svg>
-    </button>
+    <a href="{{ url_for('company_app.company_index') }}" class="inline-block">
+        <button class="shrink-0 w-10 h-10 sm:w-auto sm:h-auto sm:px-8 sm:py-3 rounded-full bg-emerald-500 text-white font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            <span class="hidden sm:inline">Explore Companies</span>
+            <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+        </button>
+    </a>
 </div>
 
 <style>

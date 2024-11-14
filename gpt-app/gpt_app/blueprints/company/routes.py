@@ -159,10 +159,10 @@ def company_index():
     
     
     company_data = {
-        'indices': ['NIFTY100', 'NIFTY50', 'OTHERS', 'NASDAQ100'],
+        'indices': ['NIFTY100',  'OTHERS', 'NASDAQ100'],
         'indices_companies': {
             'NIFTY100': [],
-            'NIFTY50': [],
+            # 'NIFTY50': [],
             'OTHERS': [],
             'NASDAQ100': []
         },
