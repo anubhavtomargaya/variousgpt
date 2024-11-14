@@ -5,7 +5,7 @@ from flask import jsonify, make_response, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
 from gpt_app.common.utils_dir import _load_chunks_diarized_doc, _load_chunks_segment_doc, _load_chunks_summary_doc, check_digest_dir, check_question_dir, list_embedding_dir, load_question_doc, load_transcript_doc, save_questions_doc, update_transcript_doc
-from gpt_app.common.supabase_handler import get_company_file_names, get_company_list, get_content_top_questions, get_file_extn_doc, get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_latest_transcripts, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
+from gpt_app.common.supabase_handler import get_company_file_names, get_company_list, get_content_top_questions, get_file_extn_doc, get_file_meta, get_itdoc_mg_guidance, get_itdoc_qa_secrion, get_latest_transcripts, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records, get_search_suggestions
 from gpt_app.common.supabase_handler import get_company_transcript_data, get_file_extn_doc, get_list_docs, get_list_pdf_transcripts, get_list_transcripts, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.blueprints.company.format_content import get_faq_content, get_upcoming_content
 from . import company_app
@@ -34,6 +34,19 @@ def upcoming(company_name, question_slug=None):
                            active_page="upcoming", 
                            upcoming_data=upcoming_data,
                            question_slug=question_slug)
+
+@company_app.route('/api/search/suggestions')
+def search_suggestions():
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:
+        return jsonify([])
+    
+    try:
+        suggestions = get_search_suggestions(query,limit=3)
+        return jsonify(suggestions)
+    except Exception as e:
+        print(f"Error in search suggestions route: {str(e)}")
+        return jsonify([]), 500
 
 @company_app.route('/<company_name>')
 @company_app.route('/<company_name>/historical')
