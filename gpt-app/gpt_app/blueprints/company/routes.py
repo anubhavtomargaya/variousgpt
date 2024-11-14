@@ -61,7 +61,9 @@ def historical(company_name):
                     'quarter': details['quarter'],
                     'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
                     'financial_year': details['financial_year'],
-                    'top_questions': top_questions
+                    'top_questions': top_questions,
+                    'structured_content': get_itdoc_mg_guidance(file_name, key='struct_summary')  
+
                 })
 
         latest_transcripts = get_latest_transcripts(limit=5)
@@ -70,6 +72,7 @@ def historical(company_name):
             if transcript['date'] and isinstance(transcript['date'], str):
                 try:
                     transcript['date'] = datetime.strptime(transcript['date'], '%Y-%m-%d').date()
+                    # transcript['structured_content'] =  get_itdoc_mg_guidance(file_name, key='structured_guidance')
                 except ValueError:
                     pass
             company_latest_transcripts.append(transcript)
