@@ -532,9 +532,9 @@
     #topQaAccordion {
         max-height: 25vh;
         max-width: 1200px;
-        margin-left: 1rem;
+        /* margin-left: 1rem;
         margin-right: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 2rem; */
     }
 
     .speakers-scroll-container {
@@ -1064,7 +1064,7 @@
  <style>
     .floating-info {
         position: relative;
-        margin: 0.75rem 1rem 1.5rem; /*  Match content spacing */ 
+        margin: 0.75rem .1rem;
         padding: 12px 20px;
         background: linear-gradient(
             135deg, 
@@ -1076,7 +1076,7 @@
         
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         display: flex;
-        margin-bottom: 1.5rem;
+        /* margin-bottom: 1.5rem; */
         align-items: center;
         gap: 14px;
         max-width: 1200px;  /* Match content max-width */
@@ -1194,6 +1194,7 @@
 
     .floating-info.hidden {
         margin-top: -44px;
+        display: none;
         margin-bottom: 0;
         opacity: 0;
         pointer-events: none;
@@ -1897,7 +1898,7 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}">
-                            📊 Management Commentary
+                            🗣️ Management Commentary
                         </a>
                     </li>
                 </ul>
@@ -2076,7 +2077,7 @@
 </div>
 
                 {% elif active_section == 'top_questions' %}
-                <div class="accordion mt-4" id="topQaAccordion">
+                <div class="accordion " id="topQaAccordion">
                     {% for question, answer in top_questions.items() %}
                     {% set slug = question|slugify %}
                     <div class="accordion-item">

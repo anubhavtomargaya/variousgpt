@@ -96,6 +96,27 @@
     filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
 }
 </style>
+
+<style>
+    @media (max-width: 640px) {
+        .text-[0.65rem] {
+            font-size: 0.65rem;
+            line-height: 1rem;
+        }
+    }
+    
+    
+    /* Smooth transitions */
+    .flex {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Prevent text wrapping within each item */
+    .min-w-fit {
+        min-width: fit-content;
+        white-space: nowrap;
+    }
+    </style>
 <!-- <img src= alt="stockrabit logo" class="w-10 h-10 object-contain"> -->
 <body class="font-sans bg-light text-dark" x-data="{ mobileMenu: false }">
     <header class="fixed w-full bg-white z-50 border-b border-gray-100">
@@ -122,16 +143,16 @@
                 <!-- Left content -->
                 <div class="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
                     <!-- Brand name -->
-                    <!-- <div class="inline-flex items-baseline gap-3">
+                    <div class="inline-flex items-baseline gap-3">
                         <div class="font-sans text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
-                            stockrabit
-                            <span class="text-xs align-super">™</span>
+                            
+                            <!-- <span class="text-xs align-super">™</span> -->
                         </div>
-                    </div> -->
+                    </div>
                     
                     <!-- Main headline -->
                     <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
-                        The Smartest Way to Track Management Quality Through Earnings Calls
+                        The Smartest Way to Track Fundamentals Through Earnings Calls
                     </h1>
                     
                     <!-- Subheadline -->
@@ -159,26 +180,6 @@
     </div>
 </div>
 
-<style>
-@media (max-width: 640px) {
-    .text-[0.65rem] {
-        font-size: 0.65rem;
-        line-height: 1rem;
-    }
-}
-
-
-/* Smooth transitions */
-.flex {
-    transition: all 0.2s ease-in-out;
-}
-
-/* Prevent text wrapping within each item */
-.min-w-fit {
-    min-width: fit-content;
-    white-space: nowrap;
-}
-</style>
                     <!-- Search and CTA -->
 <div class="w-full flex items-center gap-2 sm:gap-4">
     <div class="relative flex-1" x-data="{ 
