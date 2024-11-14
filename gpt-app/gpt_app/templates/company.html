@@ -246,12 +246,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid #f0f0f0;
 }
 
 .call-date {
+    display: flex;
     color: #6a198a;
     font-size: 1.1rem;
     font-weight: 600;
@@ -301,6 +303,21 @@
    width: 100%;
 }
 
+
+.latest-badge {
+    padding: 0.25rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    
+    font-size: 1.1rem;
+    background: linear-gradient(150deg,#d468ff20,#1a874942);
+    color: rgb(204, 69, 69);
+    font-family:Arial, Helvetica, sans-serif;
+    
+
+ 
+ 
+}
 .rating-pill {
    display: inline-block;
    padding: 0.4rem 1rem;
@@ -556,11 +573,16 @@
 <div id="earning-calls" class="earning-calls-section">
     <h2 class="section-title">Earning Call Transcripts</h2>
     {% for data in historical_data|sort(attribute='date', reverse=True) %}
+    
     <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
         <div class="call-header">
             <div class="call-date">{{ data.quarter }} {{ data.financial_year }} - {{ data.date.strftime('%B %d, %Y') }}</div>
+            {% if loop.first %}
+                <div class="latest-badge">Latest</div>
+            {% endif %}
         </div>
         <div class="structured-summary">
+            <!-- <div> Latest</div> -->
             {% if data.structured_content.highlights %}
                 <div class="summary-content">
                     <div class="rating-pill">{{ data.structured_content.highlights.rating }}</div>
