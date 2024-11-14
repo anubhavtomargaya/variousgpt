@@ -127,7 +127,7 @@
             max-height: 90vh;
             overflow-y: auto;
             padding-right: 1.5rem; /* Space between content and scrollbar */
-            margin-bottom: 4rem;
+            /* margin-bottom: 4rem; */
             
         }
 
@@ -392,8 +392,8 @@
 
         .content-wrapper {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    /* margin: 0 auto; */
+    /* padding: 0 1.5rem; */
 }
 
 .page-header {
@@ -431,7 +431,7 @@
         var(--primary-green),
         transparent
     );
-    margin: 1rem 0 2rem;
+    margin: .1rem 0 0rem;
     opacity: 0.2;
 }
 
@@ -1834,19 +1834,20 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- <div>  -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/other-links">Other Links</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link btn btn-sign-up" href="/signup">Sign Up</a>
                     </li>
                 </ul>
-            </div>
+            </div> 
         </div>
     </nav>
   
@@ -1869,34 +1870,7 @@
             <div class="horizontal-line"></div>
         
 
-            <!-- add new section here -->
-            <div class="summary-container">
-                <div class="summary-header">
-                    <div class="header-quote">
-                        {{ structured_summary.sections[0].management_quotes[0] }}
-                    </div>
-                    <div class="section-content">
-                        {{ structured_summary.highlights.summary }}
-                    </div>
-                
-                    
-                    <div class="header-pills">
-                        <div class="pill pill-success">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                <polyline points="22 4 12 14.01 9 11.01"/>
-                            </svg>
-                            {{ structured_summary.highlights.rating }}
-                        </div>
-                        <div class="pill pill-purple">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                            </svg>
-                            Management Tone: {{ structured_summary.highlights.management_tone }}
-                        </div>
-                    </div>
-                </div>
-            </div>
+         
 
             <div class="company-tabs-container">
                 <ul class="company-tabs" role="tablist">
@@ -1973,7 +1947,34 @@
           
 
                 {% if active_section == 'structured_summary' %}
+                   <!-- add new section here -->
+            <div class="summary-container">
+                <div class="summary-header">
+                    <div class="header-quote">
+                        {{ structured_summary.sections[0].management_quotes[0] }}
+                    </div>
+                    <div class="section-content">
+                        {{ structured_summary.highlights.summary }}
+                    </div>
                 
+                    
+                    <div class="header-pills">
+                        <div class="pill pill-success">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            {{ structured_summary.highlights.rating }}
+                        </div>
+                        <div class="pill pill-purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Management Tone: {{ structured_summary.highlights.management_tone }}
+                        </div>
+                    </div>
+                </div>
+            </div>
 <div class="tab-section">
     <div class="tab-row">
         <div class="tab-item active" onclick="showContent('overview')">Performance Overview</div>
@@ -2811,21 +2812,21 @@
                 ticking = false;
             }
     
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(updateScroll);
-                    ticking = true;
-                }
-            });
+            // window.addEventListener('scroll', () => {
+            //     if (!ticking) {
+            //         window.requestAnimationFrame(updateScroll);
+            //         ticking = true;
+            //     }
+            // });
     
-            if (window.location.hash) {
-                const id = window.location.hash.substring(1);
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView();
-                    element.querySelector('.accordion-button').click();
-                }
-            }
+            // if (window.location.hash) {
+            //     const id = window.location.hash.substring(1);
+            //     const element = document.getElementById(id);
+            //     if (element) {
+            //         element.scrollIntoView();
+            //         element.querySelector('.accordion-button').click();
+            //     }
+            // }
     
             // Initial check for footer visibility
             if (document.body.offsetHeight <= window.innerHeight) {
@@ -2858,8 +2859,8 @@
                 }
             }
     
-            window.addEventListener('resize', adjustTabsContainer);
-            adjustTabsContainer(); // Initial adjustment
+            // window.addEventListener('resize', adjustTabsContainer);
+            // adjustTabsContainer(); // Initial adjustment
         });
     </script>
 
