@@ -11,7 +11,7 @@ from handler_supabase import (
 from summary_mg import  insert_management_intel
 from generate_concall_management_guidance import extract_management_insights
 from generate_concall_management_tags import identify_transcript_tags
-from workers.transcript_intel_extract.generate_concall_summary_parent import generate_structured_summary
+from generate_concall_summary_parent import generate_structured_summary
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -58,7 +58,7 @@ def find_qa_section_start(transcript_json, openai_client):
             # print(transcript_json[str(int(result)+1)])
             return int(result)
 
-    return None  # If Q&A section start is not found
+    # return None  # If Q&A section start is not found
 
 
 #w2
@@ -172,9 +172,9 @@ def process_earning_call_summary(file_name):
             raise ValueError(f"Unable to get management section from ts for: {file_name}")
         
         status = {
-            'guidance': None,
-            'tags': None,
-            'summary': None
+            'guidance': 'NONE',
+            'tags': 'NONE',
+            'summary': "NONE"
         }
         
         guidance_key = 'structured_guidance'
@@ -264,7 +264,7 @@ if __name__=='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     # f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
     f = 'fy-2024_q4_Earnings_Conference_Raymond Limited.pdf'
-    f = 'fy2024_q1_aegis_logistics_limited_quarterly_earnings_call_transcript_aegischem.pdf'
+    f = 'fy2025_q2_adf_foods_limited_quarterly_earnings_call_transcript_adffoods.pdf'
 
     def test_get_ts_chunks():
         ts =  get_pdf_chunks_transcript(f)
@@ -306,16 +306,21 @@ if __name__=='__main__':
         processed_qa = process_transcript_qa_section(d, key)
         return insert_qa_section(f,processed_qa)
         
+    def test_pipeline_v2():
+        return process_earning_call_summary(f)
+       
 
     #main -tests
     def test_pipeline():
         return process_earnings_call_qa(f)
     # print(test_get_ts_chunks())
     # print(test_get_qa_start())
+    
     # print(test_get_ts_and_meta())
-    # print(test_format_qa_section())
     # print(test_update_qa_start_meta())
+    # print(test_format_qa_section())
 
     # print(test_insert_qa_section_intel())
 
-    print(test_pipeline())
+    # print(test_pipeline())
+    print(test_pipeline_v2())
