@@ -8,7 +8,10 @@ from handler_supabase import (
                                 get_pdf_transcript_and_meta, 
                                 update_transcript_meta_entry
                             )
-from summary_mg import identify_transcript_tags, insert_summary_management, insert_tags_management_transcript, summarize_management_guidance
+from summary_mg import  insert_management_intel
+from generate_concall_management_guidance import extract_management_insights
+from generate_concall_management_tags import identify_transcript_tags
+from workers.transcript_intel_extract.generate_concall_summary_parent import generate_structured_summary
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -162,33 +165,77 @@ def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
             "filename": filename
         }
     
-
 def process_earning_call_summary(file_name):
     try:
         section = load_ts_section_management(file_name)
         if not section:
-            raise ValueError(f"Unable to get management section from ts for :{file_name}")
+            raise ValueError(f"Unable to get management section from ts for: {file_name}")
         
-        s = summarize_management_guidance(section)
-        if s:
-            print("inserting")
-            s_insert_result =  insert_summary_management(file_name,s)
-            print("insert success",s_insert_result)
-        else:
-            raise ValueError(f"failed to get summary for section  {section}")
-        tags = identify_transcript_tags(section)
-        if tags:
-            print("inserting")
-            tags_insert_result =  insert_tags_management_transcript(file_name,tags)
-            print("insert success",tags_insert_result)
-        else:
-            raise ValueError(f"failed to get summary for section  {section}")
-        return s_insert_result
-
-    except Exception as e:
-        print("Exce",e)
-        return False
+        status = {
+            'guidance': None,
+            'tags': None,
+            'summary': None
+        }
+        
+        guidance_key = 'structured_guidance'
+        summary_key = 'struct_summary'
+        tags_key = 'tags'
+        
+        try:
+            print("Extracting Guidance .... ")
+            s = extract_management_insights(section)
+            if s:
+                print("inserting")
+                # Fixed: Changed 'f' to 'file_name'
+                i = insert_management_intel(file=file_name, key=guidance_key, document=s)
+                status["guidance"] = 'COMPLETE'
+            else:
+                print("not extracted")
+        except Exception as e:
+            print(f"Error processing guidance: {str(e)}")
+            # Don't suppress the error silently
+            status["guidance"] = f"ERROR: {str(e)}"
+        
+        try:
+            print("Extracting Tags .... ")
+            s = identify_transcript_tags(section)
+            if s:
+                print("inserting")
+                # Fixed: Changed 'f' to 'file_name' and added missing named parameters
+                i = insert_management_intel(file=file_name, key=tags_key, document=s)
+                print("inserted")
+                status["tags"] = 'COMPLETE'
+            else:
+                print("not extracted")
+        except Exception as e:
+            print(f"Error processing tags: {str(e)}")  # Fixed error message
+            status["tags"] = f"ERROR: {str(e)}"
+        
+        try:
+            print("Extracting Summary .... ")
+            s = generate_structured_summary(section)
+            if s:
+                print("inserting")
+                # Fixed: Changed 'f' to 'file_name' and added missing named parameters
+                i = insert_management_intel(file=file_name, key=summary_key, document=s)
+                status["summary"] = 'COMPLETE'
+                print("inserted")
+            else:
+                print("not extracted")
+        except Exception as e:
+            print(f"Error processing summary: {str(e)}")  # Fixed error message
+            status["summary"] = f"ERROR: {str(e)}"
+        
+        return status
     
+    except Exception as e:
+        print(f"Intel Exception: {str(e)}")
+        # Return the status with error information instead of False
+        return {
+            'guidance': f"ERROR: {str(e)}",
+            'tags': f"ERROR: {str(e)}",
+            'summary': f"ERROR: {str(e)}"
+        }
 
 def main_process_qa_fx(event,context=None):
     print("Processing ts intel qa section")
