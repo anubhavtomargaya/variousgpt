@@ -127,7 +127,7 @@
             max-height: 90vh;
             overflow-y: auto;
             padding-right: 1.5rem; /* Space between content and scrollbar */
-            margin-bottom: 4rem;
+            /* margin-bottom: 4rem; */
             
         }
 
@@ -390,30 +390,99 @@
             transition: all 0.3s ease;
         }
 
-        .company-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            
-            margin-bottom: 0;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
+        .content-wrapper {
+    max-width: 1200px;
+    /* margin: 0 auto; */
+    /* padding: 0 1.5rem; */
+}
 
-        .event-title {
-            font-size: 0.9rem;
-           
-            color: var(--secondary-text-color);
-            transition: all 0.3s ease;
-        }
+.page-header {
+    padding: 2rem 0 1.5rem;
+}
 
-        .company-title.scrolled, .event-title.scrolled {
+.title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.company-title {
+    color: var(--primary-purple);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.event-title {
+    color: #64748b;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.horizontal-line {
+    height: 1px;
+    background: linear-gradient(90deg, 
+        var(--primary-purple),
+        var(--primary-green),
+        transparent
+    );
+    margin: .1rem 0 0rem;
+    opacity: 0.2;
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 0 1rem;
+    }
+
+    .page-header {
+        padding: 1.5rem 0 1rem;
+    }
+
+    .company-title {
+        font-size: 1.5rem;
+    }
+
+    .event-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-wrapper {
+        padding: 0 0.75rem;
+    }
+
+    .page-header {
+        padding: 1rem 0 0.75rem;
+    }
+
+    .company-title {
+        font-size: 1.25rem;
+    }
+
+    .event-title {
+        font-size: 0.9rem;
+    }
+}
+
+        .company-title.scrolled
+        { 
+
             font-size: 0.8rem;
             margin-bottom: 0;
+        } 
+        .event-title.scrolled {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            display: none;
         }
 
-        .horizontal-line {
-            margin: 1rem 0;
-        }
 
         @media (max-width: 767.98px) {
             .company-tabs .nav-link {
@@ -461,11 +530,11 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     #topQaAccordion {
-        max-height: 25vh;
+        max-height: 60vh;
         max-width: 1200px;
-        margin-left: 1rem;
+        /* margin-left: 1rem;
         margin-right: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 2rem; */
     }
 
     .speakers-scroll-container {
@@ -730,17 +799,14 @@
     }
 
     .section-icon {
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f8fafc;
-        border-radius: 8px;
-        margin-right: 0.75rem;
-        color: #1e293b;
-    }
-    
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: 6px;
+    background: linear-gradient(45deg, #6a198a, #18994e);
+    color: white;
+    flex-shrink: 0;
+}
     .section-header::after {
         content: '';
         position: absolute;
@@ -963,6 +1029,8 @@
             color: #1e293b;
             margin-bottom: 0.75rem;
         }
+
+    
     
     
     @media (max-width: 768px) {
@@ -996,7 +1064,7 @@
  <style>
     .floating-info {
         position: relative;
-        margin: 0.75rem 1rem 1.5rem; /*  Match content spacing */ 
+        margin: 0.75rem .1rem;
         padding: 12px 20px;
         background: linear-gradient(
             135deg, 
@@ -1008,7 +1076,7 @@
         
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         display: flex;
-        margin-bottom: 1.5rem;
+        /* margin-bottom: 1.5rem; */
         align-items: center;
         gap: 14px;
         max-width: 1200px;  /* Match content max-width */
@@ -1126,6 +1194,7 @@
 
     .floating-info.hidden {
         margin-top: -44px;
+        display: none;
         margin-bottom: 0;
         opacity: 0;
         pointer-events: none;
@@ -1276,6 +1345,483 @@
         }
     }
     </style>
+ 
+
+
+
+
+
+
+
+<style>
+/* Base layout styles */
+/* .tab-section {
+    margin: 0 1rem;
+} */
+
+.tab-row {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+}
+
+.tab-item {
+    padding: 0.75rem 0;
+    color: #6b7280;
+    cursor: pointer;
+    position: relative;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Section layouts */
+.quarter-section {
+    background: linear-gradient(to right, #f8fafc, #ffffff);
+    border-radius: 8px;
+    border-left: 3px solid #18994e;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.highlight-box {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: relative;
+}
+
+/* Headers and titles */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #1a1a1a;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.highlight-title {
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Icons */
+.section-icon {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: 6px;
+    background: linear-gradient(45deg, #6a198a, #18994e);
+    color: white;
+}
+
+/* Lists and content */
+.bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bullet-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: #4a4a4a;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.bullet-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #18994e, #6a198a);
+}
+
+/* Metrics grid */
+.metrics-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.metric-item {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.metric-value {
+    font-weight: 600;
+    color: #18994e;
+}
+
+/* Management quote */
+.management-quote {
+    background: linear-gradient(to right, #f0f9ff, #ffffff);
+    border-left: 3px solid #6a198a;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: #4a4a4a;
+    position: relative;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.management-quote::before {
+    content: '"';
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    font-size: 3rem;
+    color: #6a198a;
+    opacity: 0.2;
+    font-family: serif;
+}
+
+/* Active states and transitions */
+.tab-item:hover {
+    color: #18994e;
+}
+
+.tab-item.active {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #18994e, #6a198a);
+}
+
+.content-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Header section */
+/* .summary-header { */
+    /* margin: 0 1rem 1.5rem; */
+    /* padding-bottom: 1rem; */
+/* } */
+
+.header-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    gap: 0.4rem;
+}
+
+.pill svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pill-success {
+    background: rgba(24, 153, 78, 0.1);
+    color: #18994e;
+}
+
+.pill-purple {
+    background: rgba(106, 25, 138, 0.1);
+    color: #6a198a;
+}
+
+.header-quote {
+    background: linear-gradient(to right, #f8fafc, #ffffff);
+    border-left: 3px solid #6a198a;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #4a4a4a;
+    /* margin-bottom: 1rem; */
+    line-height: 1.6;
+}
+
+/* Gradients and dividers */
+.highlight-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #18994e, #6a198a);
+    opacity: 0.7;
+}
+
+.horizontal-divider {
+    height: 1px;
+    background: linear-gradient(90deg, #f0f0f0, #e5e7eb, #f0f0f0);
+    margin: 1.5rem 0;
+}
+
+.tab-content-container {
+    position: relative;
+    min-height: 600px; /* Adjust based on your content */
+    margin-bottom: 2rem;
+}
+
+.content-section {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+}
+
+.content-section.active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Consistent section styling */
+.overview-box {
+    background: linear-gradient(to right, #f8fafc, #ffffff);
+    border-radius: 8px;
+    border-left: 3px solid #18994e;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #1a1a1a;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.section-content {
+    color: #4a4a4a;
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .summary-header {
+        margin: 0 0.5rem 1rem;
+    }
+    
+    .header-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+    
+    .pill {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9);
+        white-space: nowrap;
+        flex: 0 1 auto;
+        max-width: calc(50% - 0.25rem); /* Ensures 2 pills per row with gap */
+        min-width: max-content;
+    }
+
+    .pill-success {
+        background: linear-gradient(145deg, rgba(24, 153, 78, 0.15), rgba(24, 153, 78, 0.08));
+        box-shadow: inset 0 1px 2px rgba(24, 153, 78, 0.1);
+    }
+
+    .pill-purple {
+        background: linear-gradient(145deg, rgba(106, 25, 138, 0.15), rgba(106, 25, 138, 0.08));
+        box-shadow: inset 0 1px 2px rgba(106, 25, 138, 0.1);
+    }
+
+    .pill svg {
+        width: 12px;
+        height: 12px;
+    }
+}
+/* Base pill transitions */
+.pill {
+    transition: all 0.2s ease;
+}
+
+.pill:active {
+    transform: scale(0.98);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tablet styles */
+@media (max-width: 768px) {
+    .summary-header {
+        margin: 0 0.5rem 1rem;
+    }
+    
+    .header-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .pill {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        align-items: center;
+    }
+
+    .pill svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .tab-section {
+        margin: 0 0.5rem;
+    }
+    
+    .tab-row {
+        gap: 1rem;
+    }
+    
+    .quarter-section,
+    .highlight-box {
+        padding: 1rem;
+    }
+    
+    .metrics-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+    .header-pills {
+        display: flex;
+        align-items: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .header-pills::-webkit-scrollbar {
+        display: none;
+    }
+
+    .pill {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .pill svg {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .tab-row {
+        gap: 0.75rem;
+    }
+    
+    .section-title {
+        font-size: 0.95rem;
+    }
+}
+.summary-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.summary-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.section-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4a4a4a;
+}
+
+@media (max-width: 768px) {
+    .summary-container {
+        padding: 1rem;
+        /* margin: 0 0.5rem; */
+        border-radius: 6px;
+    }
+
+    .summary-header {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-container {
+        padding: 0.75rem;
+        margin: 0 0.25rem;
+    }
+}
+</style>
+
+
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -1289,19 +1835,20 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- <div>  -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/other-links">Other Links</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link btn btn-sign-up" href="/signup">Sign Up</a>
                     </li>
                 </ul>
-            </div>
+            </div> 
         </div>
     </nav>
   
@@ -1314,12 +1861,26 @@
         </nav>
     
         <div class="content-wrapper">
-            <h1 class="company-title">{{ company_name|title }}</h1>
-            <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
+            <div class="page-header">
+                <div class="title-section">
+                    <h1 class="company-title">{{ company_name|title }}</h1>
+                    <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
+                </div>
+            </div>
             
             <div class="horizontal-line"></div>
+        
+
+         
+
             <div class="company-tabs-container">
                 <ul class="company-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {% if active_section == 'structured_summary' %}active{% endif %}" 
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='structured_summary') }}">
+                            📈 Summary
+                        </a>
+                    </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}">
                             ✨ Top Questions
@@ -1337,13 +1898,13 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}">
-                            📊 Management Commentary
+                            🗣️ Management Commentary
                         </a>
                     </li>
                 </ul>
             </div>
 
-            <div class="horizontal-line"></div>
+            <!-- <div class="horizontal-line"></div> -->
            <!-- Updated Floating Info Section -->
 
 
@@ -1381,8 +1942,142 @@
             
 
             <div id="content-section">
-                {% if active_section == 'top_questions' %}
-                <div class="accordion mt-4" id="topQaAccordion">
+                <!-- Add this to your existing styles section -->
+
+          
+          
+
+                {% if active_section == 'structured_summary' %}
+                   <!-- add new section here -->
+            <div class="summary-container">
+                <div class="summary-header">
+                    <div class="header-quote">
+                        {{ structured_summary.sections[0].management_quotes[0] }}
+                    </div>
+                    <div class="section-content">
+                        {{ structured_summary.highlights.summary }}
+                    </div>
+                
+                    
+                    <div class="header-pills">
+                        <div class="pill pill-success">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            {{ structured_summary.highlights.rating }}
+                        </div>
+                        <div class="pill pill-purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Management Tone: {{ structured_summary.highlights.management_tone }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="tab-section">
+    <div class="tab-row">
+        <div class="tab-item active" onclick="showContent('overview')">Performance Overview</div>
+        <div class="tab-item" onclick="showContent('progress')">Business Progress</div>
+        <div class="tab-item" onclick="showContent('outlook')">Future Outlook</div>
+    </div>
+
+    <div class="content-section active" id="content-overview">
+        <div class="quarter-section">
+            <div class="section-title">
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Quarter at a Glance
+            </div>
+            <div class="section-content">
+                {{ structured_summary.sections[0].narrative }}
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Financial Highlights</div>
+            <div class="metrics-list">
+                {% for key, value in structured_summary.sections[0].metrics.items() %}
+                <div class="metric-item">{{ key }}: {{ value }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Operational Excellence</div>
+            <ul class="bullet-list">
+                {% for highlight in structured_summary.sections[0].highlights %}
+                <li>{{ highlight }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+      
+    </div>
+
+    <div class="content-section" id="content-progress">
+        <!-- <div class="section-content">
+            {{ structured_summary.sections[1].narrative }}
+        </div> -->
+
+        <div class="highlight-box">
+            <div class="highlight-title">Key Achievements</div>
+            <ul class="bullet-list">
+                {% for achievement in structured_summary.sections[1].achievements %}
+                <li>{{ achievement }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Strategic Updates</div>
+            <ul class="bullet-list">
+                {% for update in structured_summary.sections[1].strategic_updates %}
+                <li>{{ update }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-section" id="content-outlook">
+        <!-- <div class="section-content">
+            {{ structured_summary.sections[2].narrative }}
+        </div> -->
+
+        <div class="highlight-box">
+            <div class="highlight-title">Future Guidance</div>
+            <ul class="bullet-list">
+                {% for item in structured_summary.sections[2].guidance %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Strategic Priorities</div>
+            <ul class="bullet-list">
+                {% for priority in structured_summary.sections[2].priorities %}
+                <li>{{ priority }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">Risk Factors</div>
+            <ul class="bullet-list">
+                {% for risk in structured_summary.sections[2].risks %}
+                <li>{{ risk }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+                {% elif active_section == 'top_questions' %}
+                <div class="accordion " id="topQaAccordion">
                     {% for question, answer in top_questions.items() %}
                     {% set slug = question|slugify %}
                     <div class="accordion-item">
@@ -2118,21 +2813,21 @@
                 ticking = false;
             }
     
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(updateScroll);
-                    ticking = true;
-                }
-            });
+            // window.addEventListener('scroll', () => {
+            //     if (!ticking) {
+            //         window.requestAnimationFrame(updateScroll);
+            //         ticking = true;
+            //     }
+            // });
     
-            if (window.location.hash) {
-                const id = window.location.hash.substring(1);
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView();
-                    element.querySelector('.accordion-button').click();
-                }
-            }
+            // if (window.location.hash) {
+            //     const id = window.location.hash.substring(1);
+            //     const element = document.getElementById(id);
+            //     if (element) {
+            //         element.scrollIntoView();
+            //         element.querySelector('.accordion-button').click();
+            //     }
+            // }
     
             // Initial check for footer visibility
             if (document.body.offsetHeight <= window.innerHeight) {
@@ -2165,8 +2860,25 @@
                 }
             }
     
-            window.addEventListener('resize', adjustTabsContainer);
-            adjustTabsContainer(); // Initial adjustment
+            // window.addEventListener('resize', adjustTabsContainer);
+            // adjustTabsContainer(); // Initial adjustment
         });
-    </script></body>
+    </script>
+
+<script>
+    function showContent(section) {
+        // Update active tab
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+    
+        // Show selected content
+        document.querySelectorAll('.content-section').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`content-${section}`).classList.add('active');
+    }
+    </script>
+</body>
 </html>

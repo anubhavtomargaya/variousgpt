@@ -184,7 +184,7 @@ def service_extract_transcript_texts(pdf_path):
     if not check_transcript_extracted(file_name):
         print("start time")
         print(datetime.datetime.now())
-        transcript_data = extract_transcript_from_pdf(pdf_path,csize=12000)
+        transcript_data = extract_transcript_from_pdf(pdf_path,csize=8000)
         # print(json.dumps(transcript_data, indent=2))
         entry_up = {"file_name":file_name,
                     "extracted_transcript":transcript_data['transcript'],

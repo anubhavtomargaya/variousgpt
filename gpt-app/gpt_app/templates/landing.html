@@ -13,10 +13,14 @@
       gtag('js', new Date());
       gtag('config', 'G-5DF5GL4LB5');
       </script>
+
     <meta name="description" content="stockrabit provides in-depth analysis of earnings call transcripts, empowering fundamental investors with fresh, accurate insights for informed decision-making.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        <!-- for illustration section -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script>
@@ -37,68 +41,761 @@
         }
     </script>
 </head>
+
+<style>
+    .bg-hero {
+        background: linear-gradient(135deg, #4A5D4C 0%, #644756 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .bg-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(139, 115, 85, 0.05) 0%,
+            rgba(74, 93, 76, 0.05) 100%);
+        pointer-events: none;
+    }
+    
+    /* Enhance text readability */
+    .bg-hero h1 {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bg-hero p {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Company logos section enhancement */
+    .bg-hero .company-logo {
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .bg-hero .company-logo:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    .bg-grid {
+    background-size: 40px 40px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+.bg-dot-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.drop-shadow-sm {
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+</style>
+
+<style>
+    @media (max-width: 640px) {
+        .text-[0.65rem] {
+            font-size: 0.65rem;
+            line-height: 1rem;
+        }
+    }
+    
+    
+    /* Smooth transitions */
+    .flex {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Prevent text wrapping within each item */
+    .min-w-fit {
+        min-width: fit-content;
+        white-space: nowrap;
+    }
+    </style>
+<!-- <img src= alt="stockrabit logo" class="w-10 h-10 object-contain"> -->
 <body class="font-sans bg-light text-dark" x-data="{ mobileMenu: false }">
-    <header class="fixed w-full bg-white z-50 shadow-sm">
-        <nav class="container mx-auto px-4 py-2 flex justify-between items-center">
-            <a href="#" class="flex items-center space-x-2">
-                <img src="{{ url_for('static', filename='images/logo-stbit.png') }}" alt="stockrabit logo" class="w-10 h-10 object-contain">
-                <span class="text-2xl font-bold text-secondary">stockrabit</span>
-            </a>
-            <button @click="mobileMenu = !mobileMenu" class="md:hidden text-dark focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
-            <div class="hidden md:flex space-x-6">
-                <a href="#features" class="text-dark hover:text-secondary transition duration-300">Features</a>
-                <a href="#demo" class="text-dark hover:text-secondary transition duration-300">Demo</a>
-                <a href="#" class="bg-primary text-white px-4 py-2 rounded-full hover:bg-opacity-80 transition duration-300">Sign Up</a>
+    <header class="fixed w-full bg-white z-50 border-b border-gray-100">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <img src="{{ url_for('static', filename='images/logo-stbit.png') }}" alt="stockrabit logo" class="w-8 h-8 object-contain">
+                <span class="text-[#10B981] text-xl font-semibold">stockrabit</span>
+            </div>
+            
+            <div class="flex items-center gap-8">
+                <a href="#features" class="text-gray-600 hover:text-[#10B981] transition-colors">Features</a>
+                <a href="#demo" class="text-gray-600 hover:text-[#10B981] transition-colors">Demo</a>
             </div>
         </nav>
-        <div x-show="mobileMenu" x-transition class="md:hidden bg-white py-2">
-            <a href="#features" class="block py-2 px-4 text-dark hover:text-secondary">Features</a>
-            <a href="#demo" class="block py-2 px-4 text-dark hover:text-secondary">Demo</a>
-            <a href="#" class="block py-2 px-4 text-secondary hover:text-opacity-80">Sign Up</a>
-        </div>
     </header>
 
-    <main class="pt-20">
-        <!-- Hero Section -->
-        <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-light py-20 px-4">
-            <div class="container mx-auto flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Beyond the Balance Sheet</h1>
-                    <p class="text-xl md:text-2xl mb-8 max-w-2xl">stockrabit - Elevating Earnings Call Analysis for Fundamental Investors</p>
-                    <p class="text-lg mb-8">Unlock the power of earnings call transcripts. Get latest, deep insights to fuel your investment decisions. Simplify complex data, spot trends, and stay ahead of the market.</p>
-                    <a href="{{url_for('company_app.company_index')}}" style="background-color: #18994e;" class=" text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-80 transition duration-300">Start Your Research</a>
-                    
-                    <!-- New Company Pills Section -->
-                    <section class="mt-8">
-                        <div class="flex flex-wrap justify-left gap-4">
-                            <a href="/company/Bosch Limited" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Bosch Limited</a>
-                            <a href="/company/ABB%20India%20Limited" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">ABB India Limited</a>
-                            <a href="/company/Reliance Industries Limited"  class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Reliance Industries Limited</a>
-                          <!-- <a href="/company/tata-consultancy-services" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">Tata Consultancy Services</a> -->
-                          <!-- <a href="/company/hdfc-bank" class="px-4 py-2 bg-white text-primary rounded-full text-sm font-semibold hover:bg-opacity-80 transition duration-300">HDFC Bank Limited</a> -->
+    <!-- Hero Section - Fixed the gap by removing main tag and adjusting padding -->
+    <section class="min-h-screen bg-[#4A5D4C] text-light relative">
+        <!-- Subtle Dot Grid -->
+        <div class="absolute inset-0 bg-dot-pattern opacity-[0.07] pointer-events-none"></div>
+        
+        <div class="container mx-auto px-4 sm:px-6 pt-20 pb-12">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <!-- Left content -->
+                <div class="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
+                    <!-- Brand name -->
+                    <div class="inline-flex items-baseline gap-3">
+                        <div class="font-sans text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+                            
+                            <!-- <span class="text-xs align-super">™</span> -->
                         </div>
-                      </section>
-                    <!-- End of New Company Pills Section -->
+                    </div>
+                    
+                    <!-- Main headline -->
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
+                        The Smartest Way to Track Fundamentals Through Earnings Calls
+                    </h1>
+                    
+                    <!-- Subheadline -->
+                    <p class="text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-2xl">
+                        Decode what leaders are saying, track their promises, and spot red flags before the market.
+                    </p>
+                    
+<!-- Value propositions only -->
+<div class="w-full grid grid-cols-2 gap-2 text-[0.65rem] sm:text-sm text-white/90 font-medium">
+    <!-- First row -->
+    <div class="flex items-center gap-1 justify-center sm:justify-start">
+        <span class="text-rose-500">🎯</span>
+        <span>SPOT WINNERS BEFORE THE MARKET</span>
+    </div>
+    
+    <div class="flex items-center gap-1 justify-center sm:justify-start">
+        <span class="text-yellow-400">⭐</span>
+        <span>100% COVERAGE</span>
+    </div>
+    
+    <!-- Second row -->
+    <div class="flex items-center gap-1 justify-center sm:justify-start col-span-2">
+        <span class="text-blue-400">💎</span>
+        <span>FREE FOR EARLY ADOPTERS</span>
+    </div>
+</div>
+
+                    <!-- Search and CTA -->
+<div class="w-full flex items-center gap-2 sm:gap-4">
+    <div class="relative flex-1" x-data="{ 
+        query: '',
+        suggestions: [],
+        showSuggestions: false,
+        isLoading: false,
+        searchTimer: null,
+        cachedResults: {},
+        placeholder: '',
+        defaultSuggestions: ['HDFC Bank', 'Bosch Limited', 'Laurus Labs', 'Zomato', 'Cipla'],
+        currentIndex: 0,
         
-                </div>
+        async searchCompanies() {
+            if (this.query.length < 2) {
+                this.suggestions = [];
+                return;
+            }
+
+            // Check cache first
+            if (this.cachedResults[this.query]) {
+                this.suggestions = this.cachedResults[this.query];
+                return;
+            }
+            
+            // Clear previous timer
+            if (this.searchTimer) {
+                clearTimeout(this.searchTimer);
+            }
+            
+            // Set loading state immediately
+            this.isLoading = true;
+            
+            // Debounce the API call
+            this.searchTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/company/api/search/suggestions?q=${encodeURIComponent(this.query)}`);
+                    if (!response.ok) throw new Error('Search failed');
+                    const results = await response.json();
+                    
+                    // Cache the results
+                    this.cachedResults[this.query] = results;
+                    this.suggestions = results;
+                } catch (error) {
+                    console.error('Search error:', error);
+                    this.suggestions = [];
+                } finally {
+                    this.isLoading = false;
+                }
+            }, 200); // Reduced debounce time
+        },
         
-                <div class="md:w-1/2 mt-10 md:mt-0" data-aos="fade-left">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" class="w-full h-auto">
-                        <rect x="10" y="50" width="380" height="200" rx="10" fill="#F8FAFC" opacity="0.1"/>
-                        <path d="M50 200 L150 100 L250 150 L350 50" stroke="#10B981" stroke-width="4" fill="none"/>
-                        <circle cx="50" cy="200" r="5" fill="#10B981"/>
-                        <circle cx="150" cy="100" r="5" fill="#10B981"/>
-                        <circle cx="250" cy="150" r="5" fill="#10B981"/>
-                        <circle cx="350" cy="50" r="5" fill="#10B981"/>
+        handleCompanySelect(company) {
+            window.location.href = `/company/${encodeURIComponent(company.company_name)}`;
+        },
+        
+        init() {
+            this.cycleDefaultSuggestions();
+            setInterval(() => this.cycleDefaultSuggestions(), 2000);
+            
+            // Close suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!this.$el.contains(e.target)) {
+                    this.showSuggestions = false;
+                }
+            });
+        },
+        
+        cycleDefaultSuggestions() {
+            if (this.query === '') {
+                this.currentIndex = (this.currentIndex + 1) % this.defaultSuggestions.length;
+                this.placeholder = `Search for ${this.defaultSuggestions[this.currentIndex]}...`;
+            }
+        }
+    }"
+    @keyup="searchCompanies()"
+    >
+        <input type="text" 
+               x-model="query"
+               :placeholder="placeholder"
+               @focus="showSuggestions = true"
+               class="w-full px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 text-sm sm:text-base" />
+        
+        <button class="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+
+        <!-- Suggestions Dropdown -->
+        <div 
+            x-show="showSuggestions && query.length >= 2"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-1"
+            class="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-64 overflow-y-auto top-full"
+        >
+            <!-- Loading State -->
+            <template x-if="isLoading">
+                <div class="p-4 text-center text-gray-500 flex items-center justify-center space-x-2">
+                    <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
+                    <span>Searching...</span>
+                </div>
+            </template>
+            
+            <!-- Results -->
+            <template x-if="!isLoading && suggestions.length > 0">
+                <ul class="py-2">
+                    <template x-for="suggestion in suggestions" :key="suggestion.ticker">
+                        <li 
+                            @click="handleCompanySelect(suggestion)"
+                            class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
+                        >
+                            <span class="text-gray-800" x-text="suggestion.company_name"></span>
+                            <span class="text-gray-500 text-sm" x-text="suggestion.ticker"></span>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            
+            <!-- No Results (only show when not loading) -->
+            <template x-if="!isLoading && suggestions.length === 0 && query.length >= 2">
+                <div class="p-4 text-center text-gray-500">
+                    No results found
+                </div>
+            </template>
+        </div>
+    </div>
+    
+    <!-- Mobile optimized button -->
+    <a href="{{ url_for('company_app.company_index') }}" class="inline-block">
+        <button class="shrink-0 w-10 h-10 sm:w-auto sm:h-auto sm:px-8 sm:py-3 rounded-full bg-emerald-500 text-white font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            <span class="hidden sm:inline">Explore Companies</span>
+            <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+        </button>
+    </a>
+</div>
+
+<style>
+/* Add these styles to your existing CSS */
+.transition {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duration-200 {
+    transition-duration: 200ms;
+}
+
+.duration-150 {
+    transition-duration: 150ms;
+}
+
+.ease-out {
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ease-in {
+    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.translate-y-1 {
+    transform: translateY(0.25rem);
+}
+
+.translate-y-0 {
+    transform: translateY(0);
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+</style>
+                    <!-- Trusted By Section -->
+<div class="w-full pt-8 sm:pt-12">
+                   <!-- Logo Marquee -->
+<!-- Trusted By Section -->
+<div class="w-full mt-12">
+    <p class="text-sm uppercase tracking-wider text-white/60 mb-4 text-center">TRUSTED BY INVESTORS TRACKING</p>
+    
+    <!-- Logo Marquee with reduced height -->
+    <div class="relative overflow-hidden py-4 group">
+        <!-- Subtle background -->
+        <div class="absolute inset-0 bg-white/[0.02]">
+            <div class="absolute inset-0 bg-paper-lines opacity-[0.02]"></div>
+        </div>
+        
+        <!-- Fade edges -->
+        <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#4A5D4C] to-transparent z-10"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#4A5D4C] to-transparent z-10"></div>
+        
+        <!-- Marquee wrapper with reduced height -->
+        <div class="flex marquee-wrapper group">
+            <!-- First marquee -->
+            <div class="flex animate-marquee whitespace-nowrap group-hover:pause-animation">
+                <div class="flex items-center gap-12 mx-8">
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
+                             alt="Bosch" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
+                             alt="ABB" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                             alt="Reliance" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/hdfc-bank-logo.png') }}" 
+                             alt="HDFC Bank" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/cipla-logo.png') }}" 
+                             alt="Cipla" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/zomato-logo.png') }}" 
+                             alt="Zomato" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
                 </div>
             </div>
-        </section>
+            
+            <!-- Duplicate for seamless loop -->
+            <div class="flex animate-marquee whitespace-nowrap group-hover:pause-animation">
+                <div class="flex items-center gap-12 mx-8">
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/bosch-logo.png') }}" 
+                             alt="Bosch" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/abb-logo.png') }}" 
+                             alt="ABB" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/reliance-logo.png') }}" 
+                             alt="Reliance" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/hdfc-bank-logo.png') }}" 
+                             alt="HDFC Bank" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/cipla-logo.png') }}" 
+                             alt="Cipla" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                    <div class="flex items-center justify-center h-16 w-32 opacity-50 transition-opacity hover:opacity-70">
+                        <img src="{{ url_for('static', filename='images/companies/zomato-logo.png') }}" 
+                             alt="Zomato" 
+                             class="max-h-12 w-auto object-contain grayscale mix-blend-luminosity">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<style>
+/* Updated marquee animation */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+    animation: marquee 30s linear infinite;
+}
+
+.group:hover .pause-animation {
+    animation-play-state: paused;
+}
+
+/* Paper lines background */
+/* .bg-paper-lines {
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 15px,
+        rgba(255, 255, 255, 0.05) 16px
+    );
+} */
+
+/* Enhanced image transitions */
+.mix-blend-luminosity {
+    mix-blend-mode: luminosity;
+}
+
+.transition-opacity {
+    transition: opacity 0.3s ease;
+}
+</style>
+                    </div>
+                </div>
+                <!-- <div class="absolute inset-0 bg-white/5 rounded-2xl backdrop-blur-sm -rotate-3"></div> -->
+<!-- Right side with illustration -->
+<div class="md:w-1/2 flex items-start justify-center md:justify-end mt-10 md:mt-0" data-aos="fade-left">
+    <div class="relative w-full max-w-[500px]">
+        <!-- Background blur effects -->
+        
+        <!-- Main illustration container -->
+        <div class="relative bg-white/0 rounded-2xl p-8 backdrop-blur-md">
+            <!-- Smokey background circle -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[51%] h-[50%]">
+                <!-- <div class="absolute inset-0 rounded-full bg-gradient-to-b from-slate-50/40 via-slate-200/30 to-white/5 backdrop-blur-sm"></div> -->
+               <!-- Option 2: Warmer, more contrasty -->
+<div class="absolute inset-0 rounded-full bg-gradient-to-b from-amber-50/50 via-slate-200/30 to-white/5 backdrop-blur-sm"></div>
+
+            </div>
+           
+            
+            <!-- SVG Illustration -->
+            <svg id="heroIllustration" viewBox="0 0 400 400" class="relative w-full h-full transform -translate-y-4">
+                <defs>
+                    <linearGradient id="paperGradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="100%" stop-color="#F8FAFC" />
+                    </linearGradient>
+                    <filter id="softShadow">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                        <feOffset dx="2" dy="4"/>
+                        <feComponentTransfer>
+                            <feFuncA type="linear" slope="0.3"/>
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Traditional Analysis (Left Side) -->
+                <g class="traditional-side" transform="translate(40, 180) scale(0.8)" filter="url(#softShadow)">
+                    <path d="M0,20 L80,50 L160,20 L80,-10 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" />
+                    <path d="M0,30 L80,60 L160,30 L80,0 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" opacity="0.8" />
+                    <path d="M0,40 L80,70 L160,40 L80,10 Z" fill="url(#paperGradient)" class="paper-stack transform-3d" opacity="0.6" />
+                    <circle cx="80" cy="-5" r="6" fill="#644756" opacity="0.8" />
+                </g>
+
+                <!-- Curved Connection Path -->
+                <path class="connection-path" 
+                      d="M120,200 C180,150 220,250 280,200" 
+                      stroke="#644756" 
+                      stroke-width="2" 
+                      fill="none" 
+                      stroke-dasharray="4,3"
+                      opacity="0.4" />
+
+                <!-- Mac Window -->
+                <g class="window-container" transform="translate(240, 130)" filter="url(#softShadow)">
+                    <!-- Main Window Container -->
+                    <rect x="0" y="0" width="120" height="140" rx="8" 
+                          fill="#644756" fill-opacity="0.05" 
+                          stroke="#644756" stroke-opacity="0.1" />
+                    
+                    <!-- Title Bar -->
+                    <rect x="0" y="0" width="120" height="22" rx="8" 
+                          fill="#644756" fill-opacity="0.1" />
+                    
+                    <!-- Window Controls -->
+                    <g transform="translate(8, 11)">
+                        <circle cx="0" cy="0" r="2.5" fill="#FF5F57" opacity="0.5"/>
+                        <circle cx="10" cy="0" r="2.5" fill="#FFBD2E" opacity="0.5"/>
+                        <circle cx="20" cy="0" r="2.5" fill="#28C840" opacity="0.5"/>
+                    </g>
+
+                    <!-- Pills Container -->
+                    <g class="pills-container" transform="translate(10, 32)">
+                        <!-- Promise Pill -->
+                        <g class="analysis-pill transform-3d">
+                            <rect width="100" height="24" rx="12" fill="rgba(139, 115, 85, 0.15)" 
+                                  stroke="#8B7355" stroke-width="1" />
+                            <circle cx="16" cy="12" r="8" fill="rgba(139, 115, 85, 0.2)" />
+                            <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-bold">3</text>
+                            <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-medium tracking-wider">PROMISES</text>
+                        </g>
+
+                        <!-- Red Flag Pill -->
+                        <g class="analysis-pill transform-3d" transform="translate(0, 32)">
+                            <rect width="100" height="24" rx="12" fill="rgba(239, 68, 68, 0.15)" 
+                                  stroke="#EF4444" stroke-width="1" />
+                            <circle cx="16" cy="12" r="8" fill="rgba(239, 68, 68, 0.2)" />
+                            <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-bold">1</text>
+                            <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-medium tracking-wider">CONCERN</text>
+                        </g>
+
+                        <!-- Growth Pill -->
+                        <g class="analysis-pill transform-3d" transform="translate(0, 64)">
+                            <rect width="100" height="24" rx="12" fill="rgba(34, 197, 94, 0.15)" 
+                                  stroke="#22C55E" stroke-width="1" />
+                            <circle cx="16" cy="12" r="8" fill="rgba(34, 197, 94, 0.2)" />
+                            <text x="16" y="12" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-bold">2</text>
+                            <text x="62" y="12" font-size="9" fill="white" text-anchor="middle" dominant-baseline="middle" 
+                                  class="font-medium tracking-wider">GROWTH</text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+</div>
+            </div>
+        
+    </section>
+
+<style>
+/* Existing styles */
+.transform-3d {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+/* Limit backdrop-blur to specific containers */
+.backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-md {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Ensure proper containment for transforms */
+.relative {
+    isolation: isolate;
+}
+
+
+/* New marquee animation */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .animate-marquee {
+        animation-duration: 15s;
+    }
+}
+
+
+.bg-dot-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+@keyframes soft-pulse {
+    0% { opacity: 0.9; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 0.9; transform: scale(0.98); }
+}
+
+.animate-soft-pulse {
+    animation: soft-pulse 3s ease-in-out infinite;
+}
+
+.bg-gradient-radial {
+    background: radial-gradient(circle at center,
+        var(--tw-gradient-from) 0%,
+        var(--tw-gradient-via) 30%,
+        var(--tw-gradient-to) 70%
+    );
+}
+</style>
+<style>
+    /* Paper lines background */
+    .bg-paper-lines {
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 23px,
+        rgba(255, 255, 255, 0.1) 24px
+    );
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+    animation: marquee 30s linear infinite;
+}
+
+.pause-animation {
+    animation-play-state: paused;
+}
+
+.marquee-wrapper:hover .animate-marquee {
+    animation-play-state: paused;
+}
+
+.marquee-wrapper {
+    display: flex;
+    overflow: hidden;
+}
+
+.marquee {
+    flex-shrink: 0;
+    display: flex;
+    animation: scroll 30s linear infinite;
+    animation-play-state: running;
+}
+.marquee-wrapper:hover .marquee {
+    animation-play-state: paused;
+}
+@keyframes smooth-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+.animate-smooth-scroll {
+    animation: smooth-scroll 40s linear infinite;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+@keyframes gentle-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-gentle-scroll {
+    animation: gentle-scroll 40s linear infinite;
+}
+
+/* Enhance image rendering */
+.mix-blend-luminosity {
+    mix-blend-mode: luminosity;
+}
+    </style>
+
+    
+    <style> 
+        .flip-suggestions {
+    animation: flip 10s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+.suggestion {
+    height: 24px;
+    display: flex;
+    /* margin: 0rem .5rem; */
+    align-items: center;
+}
+
+@keyframes flip {
+    0%, 20% { transform: translateY(0); }
+    20%, 40% { transform: translateY(-24px); }
+    40%, 60% { transform: translateY(-48px); }
+    60%, 80% { transform: translateY(-72px); }
+    80%, 100% { transform: translateY(-96px); }
+}
+
+    </style>
+
+ <!-- end  -->
+
+ 
+
+ <script>
+    // Update the current suggestion index
+    setInterval(() => {
+        if (!document.querySelector('input:focus')) {  // Only update if input is not focused
+            const suggestions = ['HDFC Bank', 'Bosch Limited', 'Laurus Labs', 'Zomato', 'Cipla'];
+            currentIndex = (currentIndex + 1) % suggestions.length;
+        }
+    }, 2000);
+    </script>
         <!-- Features Section -->
         <section id="features" class="py-20 px-4">
             <div class="container mx-auto">
@@ -161,8 +858,92 @@
             Made with ❤️ in the ❤️ of India
         </a>
     </div>
-
     <script>
+        function toggleCompanyList() {
+            const companyList = document.getElementById('companyList');
+            companyList.classList.toggle('hidden');
+        }
+        </script>
+      
+        
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Paper stack floating
+        gsap.to('.paper-stack', {
+            y: '-=6',
+            rotation: 1.5,
+            duration: 2.5,
+            repeat: -1,
+            yoyo: true,
+            stagger: {
+                each: 0.2,
+                from: "end"
+            },
+            ease: "power1.inOut"
+        });
+    
+        // Window container gentle float
+        gsap.to('.window-container', {
+            y: '-=4',
+            rotation: 0.5,
+            duration: 3,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut"
+        });
+    
+        // Subtle pill movements inside window
+        gsap.to('.analysis-pill', {
+            y: '-=2',
+            x: '+=1',
+            rotation: 0.5,
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            stagger: {
+                each: 0.3,
+                from: "start"
+            },
+            ease: "power1.inOut"
+        });
+    
+        // Animated connection path
+        gsap.to('.connection-path', {
+            strokeDashoffset: -8,
+            duration: 1.2,
+            repeat: -1,
+            ease: "linear"
+        });
+    
+        // Initial animations
+        gsap.from('.traditional-side', {
+            x: -30,
+            y: 20,
+            rotation: -5,
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out"
+        });
+    
+        gsap.from('.window-container', {
+            x: 30,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+    
+        gsap.from('.analysis-pill', {
+            x: -20,
+            rotation: -2,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power2.out",
+            delay: 0.4
+        });
+    });
+    </script>
+        <script>
         AOS.init({
             duration: 800,
             once: true,

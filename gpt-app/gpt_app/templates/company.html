@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% if request.path.startswith('/company/') and '/historical' in request.path %}
-    <!-- Historical pages point to main company page -->
+    {% if request.path.startswith('/company/') %}
     <link rel="canonical" href="https://stockrabit.com/company/{{ company_name }}" />
-    {% elif request.path.startswith('/company/') %}
-        <!-- Main company pages -->
-        <link rel="canonical" href="https://stockrabit.com/company/{{ company_name }}" />
-  
     {% endif %}
     <title>{{ company_name|title }} - stockrabit</title>
+    <!-- <title>{{ company_name|title }} - stockrabit</title> -->
     <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
     <script>
@@ -227,19 +223,172 @@
             height: 250px;
         }
 
-        .call-card {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transition: box-shadow 0.3s ease;
-        }
+        .earning-calls-section {
+    margin-top: 2rem;
+}
 
-        .call-date {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary-purple);
-        }
+.call-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+}
+
+.call-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+.call-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.call-date {
+    display: flex;
+    color: #6a198a;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+
+
+.view-commentary-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #18994e;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.view-commentary-btn:hover {
+    background-color: #147940;
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+.view-commentary-btn i {
+    margin-left: 0.5rem;
+}
+.structured-summary {
+   padding: 1.25rem;
+   background-color: #ffffff;
+   border-radius: 8px;
+   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+   max-width: 100%;
+   box-sizing: border-box;
+}
+
+.summary-content {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+   width: 100%;
+}
+
+
+.latest-badge {
+    padding: 0.25rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    
+    font-size: 1.1rem;
+    background: linear-gradient(150deg,#d468ff20,#1a874942);
+    color: rgb(204, 69, 69);
+    font-family:Arial, Helvetica, sans-serif;
+    
+
+ 
+ 
+}
+.rating-pill {
+   display: inline-block;
+   padding: 0.4rem 1rem;
+   background: #f0f9ff;
+   color: #0369a1;
+   border-radius: 16px;
+   font-size: 0.875rem;
+   font-weight: 500;
+   align-self: flex-start;
+}
+
+.summary-box {
+   font-size: 0.95rem;
+   line-height: 1.6;
+   color: #374151;
+   margin: 0.5rem 0;
+   word-wrap: break-word;
+   overflow-wrap: break-word;
+}
+
+.metrics-box {
+   display: inline-block;
+   padding: 0.75rem 1rem;
+   background: #f8fafc;
+   border-left: 3px solid #0ea5e9;
+   border-radius: 4px;
+   font-size: 0.9rem;
+   color: #1f2937;
+   font-weight: 500;
+   width: 100%;
+   box-sizing: border-box;
+}
+
+.no-summary {
+   color: #6b7280;
+   font-size: 0.875rem;
+   font-style: italic;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+   .structured-summary {
+       padding: 0.75rem;
+       margin: 0;
+       border-radius: 4px;
+   }
+   
+   .summary-content {
+       gap: 0.5rem;
+   }
+   
+   .rating-pill {
+       padding: 0.25rem 0.75rem;
+       font-size: 0.75rem;
+   }
+   
+   .summary-box {
+       font-size: 0.813rem;
+       line-height: 1.4;
+       margin: 0.25rem 0;
+   }
+   
+   .metrics-box {
+       font-size: 0.75rem;
+       padding: 0.5rem 0.75rem;
+   }
+
+   .mobile-hide {
+       display: none;
+   }
+}
 
         .btn-primary, .btn-secondary, .btn-info {
             border-radius: 20px;
@@ -518,103 +667,55 @@
                 </div>
             </div>
         </div>
-      <!-- Inside the fundamentals section -->
-<div id="fundamentals" class="section mt-4">
-    <div class="row g-4">
-        <!-- Left side - Main insight card -->
-        <div class="col-lg-8">
-            <div class="card h-100 insight-card">
-                <div class="card-body p-4">
-                    <!-- Highlight number -->
-                    <div class="highlight-number mb-4">
-                        <span class="number">{{ historical_data[0].insights.highlight.metric }}</span>
+      
+      
+        <div id="fundamentals" class="section">
+            <div class="timeline-chart">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+
+        
+<div id="earning-calls" class="earning-calls-section">
+    <h2 class="section-title">Earning Call Transcripts</h2>
+    {% for data in historical_data|sort(attribute='date', reverse=True) %}
+    
+    <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
+        <div class="call-header">
+            <div class="call-date">{{ data.quarter }} {{ data.financial_year }} - {{ data.date.strftime('%B %d, %Y') }}</div>
+            {% if loop.first %}
+                <div class="latest-badge">Latest</div>
+            {% endif %}
+        </div>
+        <div class="structured-summary">
+            <!-- <div> Latest</div> -->
+            {% if data.structured_content.highlights %}
+                <div class="summary-content">
+                    <div class="rating-pill">{{ data.structured_content.highlights.rating }}</div>
+                    
+                    <div class="summary-box">
+                        {{ data.structured_content.highlights.summary }}
                     </div>
                     
-                    <!-- Title and context -->
-                    <div class="insight-header mb-4">
-                        <h4 class="mb-3">{{ historical_data[0].insights.highlight.title }}</h4>
-                        <p class="text-secondary">{{ historical_data[0].insights.highlight.context }}</p>
-                    </div>
-
-                    <!-- Key metrics -->
-                    <div class="metrics-grid mb-4">
-                        <!-- Promises -->
-                        {% for promise in historical_data[0].insights.metrics.promises[:2] %}
-                        <div class="metric-item" data-bs-toggle="tooltip" title="{{ promise.text }} ({{ promise.timeline }})">
-                            <i class="fas fa-handshake"></i>
-                            <small class="mt-2">{{ promise.category }}</small>
-                            <small class="text-muted">{{ promise.timeline }}</small>
-                        </div>
-                        {% endfor %}
-
-                        <!-- Concerns -->
-                        {% for concern in historical_data[0].insights.metrics.concerns[:2] %}
-                        <div class="metric-item" data-bs-toggle="tooltip" title="{{ concern.text }}">
-                            <i class="fas fa-exclamation-circle" style="color: {% if concern.severity == 'High' %}#dc3545{% elif concern.severity == 'Moderate' %}#ffc107{% else %}#28a745{% endif %}"></i>
-                            <small class="mt-2">{{ concern.text }}</small>
-                            <small class="text-muted">{{ concern.severity }}</small>
-                        </div>
-                        {% endfor %}
-
-                        <!-- Growth Drivers -->
-                        {% for driver in historical_data[0].insights.metrics.drivers[:2] %}
-                        <div class="metric-item" data-bs-toggle="tooltip" title="{{ driver.impact }}">
-                            <i class="fas fa-rocket"></i>
-                            <small class="mt-2">{{ driver.text }}</small>
-                            <small class="text-muted">{{ driver.impact }}</small>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <!-- Tags -->
-                    <div class="tags-wrapper">
-                        {% for tag in historical_data[0].insights.tags.industry %}
-                        <span class="insight-tag">{{ tag }}</span>
-                        {% endfor %}
-                        {% for tag in historical_data[0].insights.tags.themes %}
-                        <span class="insight-tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right side - Chart -->
-        <div class="col-lg-4">
-            <div class="card chart-card">
-                <div class="card-body p-3">
-                    <div class="timeline-chart">
-                        <canvas id="timelineChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-        <div id="earning-calls" class="section mt-4">
-            <h2 class="section-title">Earning Call Transcripts</h2>
-            {% for data in historical_data|sort(attribute='date', reverse=True) %}
-            <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">
-                <div class="call-date">{{ data.quarter }} {{ data.financial_year }} - {{ data.date.strftime('%B %d, %Y') }}</div>
-                <ul class="list-unstyled mt-2">
-                    {% for question, answer in data.top_questions.items() %}
-                    {% if loop.index <= 2 %}
-                    <li>
-                        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}/questions/{{ question|slugify }}">
-                            {{ question }}
-                        </a>
-                    </li>
+                    {% if data.structured_content.highlights.key_metrics %}
+                        <!-- <div class="metrics-box mobile-hide">
+                            {{ data.structured_content.highlights.key_metrics[0] }}
+                        </div> -->
                     {% endif %}
-                    {% endfor %}
-                </ul>
-                <div class="mt-2">
-                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=transcript" class="btn btn-primary btn-sm">Read Full Transcript</a>
-                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=management_guidance" class="btn btn-secondary btn-sm">Management Insights</a>
-                    <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=qa_section" class="btn btn-info btn-sm">Analyst Questions</a>
                 </div>
-            </div>
-            {% endfor %}
-        </div>
+            {% else %}
+                <span class="no-summary">No structured summary available for this earnings call.</span>
+            {% endif %}
+         </div>
+         
+        <a href="{{ url_for('view_app.concall', file_name=data.file_name) }}?section=structured_summary" 
+           class="view-commentary-btn">
+            Dig Deeper
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    {% endfor %}
+</div>
         <!-- Add this right after the company-header div and before the fundamentals section -->
          
         <div class="recent-results mb-4">

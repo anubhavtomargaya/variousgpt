@@ -1,7 +1,7 @@
 from flask import jsonify, make_response, render_template,redirect,url_for
 from flask import current_app as app,jsonify,request
 from gpt_app.common.session_manager import get_user_email, login_required
-from gpt_app.common.supabase_handler import get_content_top_questions,  get_file_meta, get_itdoc_mg_guidance, get_itdoc_mg_tags, get_itdoc_qa_secrion, get_pdf_chunks_transcript, get_qa_records
+from gpt_app.common.supabase_handler import get_content_top_questions,  get_file_meta, get_itdoc_mg_guidance, get_itdoc_mg_tags, get_itdoc_qa_secrion, get_itdoc_structured_summary, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.common.supabase_handler import get_company_transcript_data, get_pdf_chunks_transcript, get_qa_records
 from . import view_app
 
@@ -287,14 +287,21 @@ def process_transcript(raw_transcript):
 def concall(file_name, question_slug=None):
     try:
         print(f"\nAccessing with file_name: {file_name}, question_slug: {question_slug}")
-        canonical_url = url_for('view_app.concall', 
-                        file_name=file_name, 
-                        _external=True)
-        section = request.args.get('section', 'top_questions')
         
-        # If accessing via question URL, force section to be top_questions
+        section = request.args.get('section', 'top_questions')
         if question_slug:
+            canonical_url = url_for('view_app.concall',
+                            file_name=file_name,
+                            question_slug=question_slug,
+                            _external=True)
             section = 'top_questions'
+        else:
+            canonical_url = url_for('view_app.concall',
+                            file_name=file_name,
+                            section=section,
+                            _external=True)
+        # If accessing via question URL, force section to be top_questions
+       
         
         # Define info content for each section
         info_contents = {
@@ -304,7 +311,7 @@ def concall(file_name, question_slug=None):
             ),
             'transcript': (
                 "Navigate through the complete earnings call with our smart filters and search",
-                "#"  # Replace with appropriate help/documentation link
+                "#"
             ),
             'qa_section': (
                 "stockrabit digs through the analyst questions using AI, highlights the important parts for you",
@@ -313,6 +320,10 @@ def concall(file_name, question_slug=None):
             'management_guidance': (
                 "stockrabit simplifies the management commentary to help you better understand the industry and sentiments",
                 url_for('view_app.concall', file_name=file_name, section='transcript', _anchor='reader')
+            ),
+            'structured_summary': (
+                "AI-powered analysis providing a comprehensive overview of the earnings call",
+                url_for('view_app.concall', file_name=file_name, section='transcript')
             )
         }
         
@@ -336,26 +347,29 @@ def concall(file_name, question_slug=None):
         elif section == 'qa_section':
             content = get_itdoc_qa_secrion(file_name)
         elif section == 'management_guidance':
-            content = get_itdoc_mg_guidance(file_name,key='structured_guidance')
+            content = get_itdoc_mg_guidance(file_name, key='structured_guidance')
+        # elif section == 'structured_summary':
         else:
             content = {}
 
+        struct_content = get_itdoc_structured_summary(file_name)
         return render_template('concall.html',
                             company_name=details['company_name'],
                             canonical_url=canonical_url,
                             quarter=details['quarter'],
-                            ticker = f"NSE:{details['ticker']}",
+                            ticker=f"NSE:{details['ticker']}",
                             financial_year=details['financial_year'],
                             file_name=file_name,
                             cc_date=details['date'],
                             active_section=section,
                             question_slug=question_slug,
-                            info_content=info_contents.get(section),  # Add info_content
+                            info_content=info_contents.get(section),
                             top_questions=content if section == 'top_questions' else {},
                             transcript=content if content and section == 'transcript' else '',
                             transcript_keys=tags,
                             qa_section=content if content and section == 'qa_section' else '',
-                            management_guidance=content if content and section == 'management_guidance' else '')
+                            management_guidance=content if content and section == 'management_guidance' else '',
+                            structured_summary=struct_content )
     except Exception as e:
         print(f"Error: {str(e)}")
         return f"Error: {str(e)}", 500
