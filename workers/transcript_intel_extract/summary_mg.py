@@ -24,7 +24,7 @@ def insert_management_intel(file: str,
         raise TypeError("Tags must be a dictionary")
     
     current_mg_data = fetch_management_data(file)
-    
+    print("current_data exist")
     # Add the new tags to the management_data
     current_mg_data[key] = document
     

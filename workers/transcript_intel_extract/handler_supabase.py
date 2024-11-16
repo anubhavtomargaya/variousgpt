@@ -117,7 +117,7 @@ def update_transcript_intel_entry(file_name,
     }
 
     result = supabase.table('transcripts-intel').update(meta).eq('file_name', file_name).execute()
-    print("Inserted document:", )
+    print("Updated document:",file_name )
     return result.data[0]['id'] if result.data else None  
 
 def fetch_management_data(file_name: str) -> dict:

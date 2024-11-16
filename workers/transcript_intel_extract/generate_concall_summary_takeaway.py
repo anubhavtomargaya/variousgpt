@@ -11,117 +11,93 @@ from summary_mg import insert_management_intel
 SUMMARY_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
 
-def generate_concall_takeaway(transcript_json: Dict) -> Dict:
+def generate_engaging_update(financial_data: Dict) -> Dict:
     """
-    Generate a focused, design-friendly earnings call summary optimized for visual presentation.
+    Transform quarterly financial data into an engaging, UI-friendly corporate update.
     
     Args:
-        transcript_json: Dictionary containing management commentary
+        financial_data: Dictionary containing quarterly performance data
         
     Returns:
-        Dictionary with streamlined insights and key metrics
+        Dictionary with narrative-driven content optimized for front-page presentation
     """
     
-    def get_summary_prompt() -> str:
+    def get_narrative_prompt() -> str:
         return """
-    Create a punchy but professional, UI-optimized summary focusing on brevity and impact:
+        Transform this quarterly financial data into an engaging narrative by identifying:
 
-    1. Highlight Section (Keep it ultra-concise):
-       - Metric: Just the number and label (e.g., "21.7% YoY Growth")
-       - Title: Max 3-4 words, focus on transformation
-       - Context: Single clear sentence, lead with specific numbers
-       
-    2. Metrics (Keep everything brief):
-       Promises (2-3):
-       - Remove words like "Complete", "Achieve", "Implement"
-       - Just state the item and timeline
-       - No auxiliary words like "by", "in", "during"
-       
-       Concerns (2-3):
-       - Focus on the core issue
-       - One-line descriptions
-       - Clear severity marking
-       
-       Drivers (2-3):
-       - Lead with numbers when available
-       - Direct impact statements
-       - No unnecessary elaboration
+        1. Core Story:
+           - What's the dominant theme this quarter?
+           - What single narrative thread connects the numbers?
+           - How does performance reflect company's journey?
+           - What makes this update newsworthy?
 
-    3. Tags:
-       - Maximum 3 per category
-       - Single or two-word tags only
-       - No elaborate descriptions
+        2. Supporting Evidence:
+           - Which metric best illustrates the main story?
+           - What achievements reinforce this narrative?
+           - How do the numbers support our story?
 
-    Remember:
-    - Minimize words, maximize impact
-    - Focus on numbers and concrete facts
-    - Avoid business jargon
-    - Think in terms of UI cards and quick scanning
-    - Each item should fit in one line on a card
-    """
+        3. Future Momentum:
+           - Which initiatives show most promise?
+           - What developments signal future growth?
+           - How is the company positioning for tomorrow?
+
+        Narrative Guidelines:
+        - Lead with impact - what matters most?
+        - Connect performance to potential
+        - Make numbers tell a story
+        - Focus on momentum and direction
+        - Keep language crisp and engaging
+        - Keep the CTA as a 1-2 words or 3-4 words MAXIMUM. IT SHOULD BE LIKE A Call to Action.
+        """
 
     def get_output_format() -> str:
         return """
         {
-            "highlight": {
-                "metric": "string (e.g., '21.7% YoY Growth')",
-                "title": "string (3-5 words, strategic focus)",
-                "context": "string (one clear sentence about transformation)"
+            "story": {
+                "headline": {
+                    "main": "string (impactful 4-5 word statement)",
+                    "supporting": "string (context, max 8 words)"
+                },
+                "key_theme": "string (one sentence narrative)",
+                "tone": "string (growth/resilience/transformation)"
             },
-            "metrics": {
-                "promises": [
+            "evidence": {
+                "primary_metric": {
+                    "label": "string (metric name)",
+                    "value": "string (with comparison)",
+                    "significance": "string (why this matters)"
+                },
+                "supporting_points": [
                     {
-                        "text": "string (clear, concise commitment)",
-                        "timeline": "string",
-                        "category": "string"
-                    }
-                ],
-                "concerns": [
-                    {
-                        "text": "string (clear risk statement)",
-                        "severity": "string (High/Moderate/Low)"
-                    }
-                ],
-                "drivers": [
-                    {
-                        "text": "string (growth driver)",
-                        "impact": "string (quantifiable result)"
+                        "text": "string (forward-looking achievement)",
+                        "category": "string (growth/strategy/innovation)"
                     }
                 ]
             },
-            "tags": {
-                "industry": ["string"],
-                "business": ["string"],
-                "themes": ["string"]
-            },
-            "stats": {
-                "promise_count": "integer",
-                "concern_count": "integer",
-                "driver_count": "integer"
+            "engagement": {
+                "hook": "string (why readers should care)",
+                "cta": "string (action prompt)"
             }
         }
         """
 
-    def create_summary(transcript: Dict) -> Dict:
-        summary_prompt = f"""
-        Transcript:
-        {json.dumps(transcript, indent=2)}
+    def create_narrative(data: Dict) -> Dict:
+        transform_prompt = f"""
+        Financial Data:
+        {json.dumps(data, indent=2)}
 
         Instructions:
-        {get_summary_prompt()}
+        {get_narrative_prompt()}
 
-        Output Format:
-        RETURN IN FOLLOWING JSON FORMAT
+        Output Format ONLY JSON:
         {get_output_format()}
 
-        Guidelines:
-        1. Optimize for visual presentation and scannability
-        2. Focus on quantitative metrics whenever possible
-        3. Keep all text concise and impactful
-        4. Each section should work independently in a card-based layout
-        5. Ensure content is suitable for at-a-glance consumption
-        6. Prioritize strategic transformation narrative
-        7. Keep total promises/concerns/drivers to 2-3 each maximum
+        Key Considerations:
+        1. Make every word count - grab attention fast
+        2. Build narrative momentum
+        3. Connect present results to future potential
+        4. Keep language accessible yet impactful
         """
 
         response = openai_client.chat.completions.create(
@@ -134,47 +110,47 @@ def generate_concall_takeaway(transcript_json: Dict) -> Dict:
                         visual-first earnings summaries. Focus on key metrics and \
                         transformational narratives that work well in a modern UI."
                 },
-                {"role": "user", "content": summary_prompt}
+                {"role": "user", "content": transform_prompt}
             ],
             temperature=0.2
         )
 
         return json.loads(response.choices[0].message.content)
 
-    def validate_summary(summary: Dict) -> Dict:
-        """Ensure all required sections are present with proper structure."""
-        required_sections = {
-            "highlight": ["metric", "title", "context"],
-            "metrics": ["promises", "concerns", "drivers"],
-            "tags": ["industry", "business", "themes"],
-            "stats": ["promise_count", "concern_count", "driver_count"]
+    def validate_narrative(update: Dict) -> Dict:
+        """Ensure the narrative structure is complete and engaging."""
+        required_elements = {
+            "story": ["headline", "key_theme", "tone"],
+            "evidence": ["primary_metric", "supporting_points"],
+            "engagement": ["hook", "cta"]
         }
 
-        for section, subsections in required_sections.items():
-            if section not in summary:
-                summary[section] = {}
+        for section, subsections in required_elements.items():
+            if section not in update:
+                update[section] = {}
             
             for subsection in subsections:
-                if subsection not in summary[section]:
+                if subsection not in update[section]:
                     if section == "metrics":
-                        summary[section][subsection] = []
+                        update[section][subsection] = []
                     elif section == "tags":
-                        summary[section][subsection] = []
+                        update[section][subsection] = []
                     else:
-                        summary[section][subsection] = ""
+                        update[section][subsection] = ""
 
-        return summary
+        return update
 
     try:
-        summary = create_summary(transcript_json)
-        validated_summary = validate_summary(summary)
-        return validated_summary
+        narrative = create_narrative(financial_data)
+        validated_update = validate_narrative(narrative)
+        return validated_update
 
     except Exception as e:
-        print(f"Error in takeaway generation: {str(e)}")
+        print(f"Error in update generation: {str(e)}")
         raise
     
 
+from gpt_app.common.supabase_handler import  get_itdoc_mg_guidance
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
@@ -182,16 +158,15 @@ if __name__ =='__main__':
     # f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
     # f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
     # f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
-
     def test_generate_takeaway():
-        section = load_ts_section_management(f)
-        xl_summary = generate_structured_summary(section)
-        return generate_concall_takeaway(xl_summary)
+        m_summary = get_itdoc_mg_guidance(f, key='struct_summary')  
+       
+        return generate_engaging_update(m_summary)
     
     def test_insert_struct_takeaways():
         key = 'struct_takeaway'
-        section = load_ts_section_management(f)
-        s = generate_structured_summary(section)
+        m_summary = get_itdoc_mg_guidance(f, key='struct_summary')  
+        s = generate_engaging_update(m_summary)
         if s:
             print("inserting")
             return insert_management_intel(f,key,s)
