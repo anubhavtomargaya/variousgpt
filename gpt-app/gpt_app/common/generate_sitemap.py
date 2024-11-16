@@ -65,7 +65,7 @@ def generate_sitemap():
                 f"{BASE_URL}/view/concall/{file_name}?section=top_questions",
                 f"{BASE_URL}/view/concall/{file_name}?section=qa_section",
                 f"{BASE_URL}/view/concall/{file_name}?section=management_guidance",
-                f"{BASE_URL}/view/concall/{file_name}?section=transcript"
+                f"{BASE_URL}/view/concall/{file_name}?section=transcript",
                 f"{BASE_URL}/view/concall/{file_name}?section=structured_summary"
             ]
 
@@ -94,20 +94,20 @@ def generate_sitemap():
     with open(Path(APP_DIR, 'sitemap.xml'), 'wb') as file:
         tree.write(file)
     print("Sitemap generated successfully!")
-def count_sitemap_urls():
-    try:
-        tree = ElementTree.parse(Path(APP_DIR, 'sitemap.xml'))
-        root = tree.getroot()
-        urls = root.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url')
-        return len(urls)
-    except Exception as e:
-        print(f"Error counting URLs: {e}")
-        return 0
+# def count_sitemap_urls():
+#     try:
+#         tree = ElementTree.parse(Path(APP_DIR, 'sitemap.xml'))
+#         root = tree.getroot()
+#         urls = root.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url')
+#         return len(urls)
+#     except Exception as e:
+#         print(f"Error counting URLs: {e}")
+#         return 0
 
 if __name__ == "__main__":
     # fetch_questions()
     generate_sitemap()
 
     # Add after generating sitemap
-    actual_urls = count_sitemap_urls()
-    print(f"\nVerification: Found {actual_urls} URLs in sitemap.xml")
+    # actual_urls = count_sitemap_urls()
+    # print(f"\nVerification: Found {actual_urls} URLs in sitemap.xml")

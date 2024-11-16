@@ -686,24 +686,24 @@
                             
                             <!-- Main Content -->
                             <div class="card-content">
-                                {% if historical_data and historical_data|length > 0 and historical_data[0].struct_takeaway %}
+                                {% if historical_data and historical_data|length > 0 and historical_data[-1].struct_takeaway %}
                                     <!-- Headline -->
                                     <h2 class="headline">
-                                        {{ historical_data[0].struct_takeaway.story.headline.main if historical_data[0].struct_takeaway.story.headline.main else 'No headline available' }}
+                                        {{ historical_data[-1].struct_takeaway.story.headline.main if historical_data[-1].struct_takeaway.story.headline.main else 'No headline available' }}
                                         <span>
-                                            {{ historical_data[0].struct_takeaway.story.headline.supporting if historical_data[0].struct_takeaway.story.headline.supporting else '' }}
+                                            {{ historical_data[-1].struct_takeaway.story.headline.supporting if historical_data[-1].struct_takeaway.story.headline.supporting else '' }}
                                         </span>
                                     </h2>
                                     
                                     <!-- Key Metric Highlight -->
-                                    {% if historical_data[0].struct_takeaway.evidence and historical_data[0].struct_takeaway.evidence.primary_metric %}
+                                    {% if historical_data[-1].struct_takeaway.evidence and historical_data[-1].struct_takeaway.evidence.primary_metric %}
                                     <div class="metric-highlight">
                                         <div class="metric-icon">
                                             <i class="fas fa-chart-line"></i>
                                         </div>
                                         <div class="metric-details">
-                                            <p class="metric-label">{{ historical_data[0].struct_takeaway.evidence.primary_metric.label }}</p>
-                                            {% set metric_value = historical_data[0].struct_takeaway.evidence.primary_metric.value %}
+                                            <p class="metric-label">{{ historical_data[-1].struct_takeaway.evidence.primary_metric.label }}</p>
+                                            {% set metric_value = historical_data[-1].struct_takeaway.evidence.primary_metric.value %}
                                             {% if metric_value %}
                                                 {% if "up" in metric_value.lower() %}
                                                     <p class="metric-value positive">{{ metric_value.split('(')[1].split(')')[0] if '(' in metric_value else metric_value }}</p>
@@ -717,9 +717,9 @@
                                     {% endif %}
                         
                                     <!-- Quick Highlights -->
-                                    {% if historical_data[0].struct_takeaway.evidence and historical_data[0].struct_takeaway.evidence.supporting_points %}
+                                    {% if historical_data[-1].struct_takeaway.evidence and historical_data[-1].struct_takeaway.evidence.supporting_points %}
                                     <div class="highlights">
-                                        {% for point in historical_data[0].struct_takeaway.evidence.supporting_points %}
+                                        {% for point in historical_data[-1].struct_takeaway.evidence.supporting_points %}
                                         <div class="highlight-item">
                                             <div class="highlight-dot"></div>
                                             <p>{{ point.text if point.text else '' }}</p>
@@ -729,10 +729,10 @@
                                     {% endif %}
                         
                                     <!-- Call to Action -->
-                                    {% if historical_data[0].struct_takeaway.engagement and historical_data[0].struct_takeaway.engagement.cta %}
-                                    <a href="{{ url_for('view_app.concall', file_name=historical_data[0].file_name) }}?section=structured_summary" 
+                                    {% if historical_data[-1].struct_takeaway.engagement and historical_data[-1].struct_takeaway.engagement.cta %}
+                                    <a href="{{ url_for('view_app.concall', file_name=historical_data[-1].file_name) }}?section=structured_summary" 
                                     class="cta-button">
-                                     <span>{{ historical_data[0].struct_takeaway.engagement.cta }}</span>
+                                     <span>{{ historical_data[-1].struct_takeaway.engagement.cta }}</span>
                                      <i class="fas fa-arrow-right"></i>
                                  </a>
                                     {% endif %}
@@ -923,7 +923,7 @@
             }
             </style>
 <div id="earning-calls" class="earning-calls-section">
-    <h2 class="section-title">Earning Call Transcripts</h2>
+    <h2 class="section-title">Earning Calls History</h2>
     {% for data in historical_data|sort(attribute='date', reverse=True) %}
     
     <div class="call-card" data-date="{{ data.date.strftime('%Y-%m-%d') }}">

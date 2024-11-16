@@ -150,11 +150,12 @@ def generate_engaging_update(financial_data: Dict) -> Dict:
         raise
     
 
-from gpt_app.common.supabase_handler import  get_itdoc_mg_guidance
+from handler_supabase import get_itdoc_mg_guidance
 if __name__ =='__main__':
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
+    f = 'fy2025_q1_infosys_limited_quarterly_earnings_call_transcript_infy.pdf'
     # f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
     # f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
     # f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
@@ -175,4 +176,5 @@ if __name__ =='__main__':
             return None
     
    
-    print(test_generate_takeaway())
+    # print(test_generate_takeaway())
+    # print(test_insert_struct_takeaways())

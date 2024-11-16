@@ -12,6 +12,7 @@ from summary_mg import  insert_management_intel
 from generate_concall_management_guidance import extract_management_insights
 from generate_concall_management_tags import identify_transcript_tags
 from generate_concall_summary_parent import generate_structured_summary
+from generate_concall_summary_takeaway import generate_engaging_update
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -174,12 +175,14 @@ def process_earning_call_summary(file_name):
         status = {
             'guidance': 'NONE',
             'tags': 'NONE',
-            'summary': "NONE"
+            'summary': "NONE",
+            'takeaway':'NONE'
         }
         
         guidance_key = 'structured_guidance'
         summary_key = 'struct_summary'
         tags_key = 'tags'
+        takeaway_key = 'struct_takeaway'
         
         try:
             print("Extracting Guidance .... ")
@@ -190,7 +193,7 @@ def process_earning_call_summary(file_name):
                 i = insert_management_intel(file=file_name, key=guidance_key, document=s)
                 status["guidance"] = 'COMPLETE'
             else:
-                print("not extracted")
+                print("not guidance")
         except Exception as e:
             print(f"Error processing guidance: {str(e)}")
             # Don't suppress the error silently
@@ -206,7 +209,7 @@ def process_earning_call_summary(file_name):
                 print("inserted")
                 status["tags"] = 'COMPLETE'
             else:
-                print("not extracted")
+                print("not tags")
         except Exception as e:
             print(f"Error processing tags: {str(e)}")  # Fixed error message
             status["tags"] = f"ERROR: {str(e)}"
@@ -221,10 +224,25 @@ def process_earning_call_summary(file_name):
                 status["summary"] = 'COMPLETE'
                 print("inserted")
             else:
-                print("not extracted")
+                print("not summary")
+            try:
+                s = generate_engaging_update(section)
+                if s:
+                    print("inserting")
+                    # Fixed: Changed 'f' to 'file_name' and added missing named parameters
+                    i = insert_management_intel(file=file_name, key=takeaway_key, document=s)
+                    status["takeaway"] = 'COMPLETE'
+                    print("inserted")
+                else:
+                    print("not takeaway")
+            except Exception as e:
+                print(f"Error processing takeaway: {str(e)}")  # Fixed error message
+                status["takeaway"] = f"ERROR: {str(e)}"
         except Exception as e:
             print(f"Error processing summary: {str(e)}")  # Fixed error message
             status["summary"] = f"ERROR: {str(e)}"
+
+        
         
         return status
     
