@@ -37,6 +37,7 @@
             color: var(--text-color);
             line-height: 1.6;
             font-size: 14px;
+            text-decoration: none;
         }
 
         .navbar {
@@ -685,46 +686,61 @@
                             
                             <!-- Main Content -->
                             <div class="card-content">
-                                <!-- Headline -->
-                                <h2 class="headline">
-                                    {{ historical_data[0].struct_takeaway.story.headline.main }}
-                                    <span>
-                                        {{ historical_data[0].struct_takeaway.story.headline.supporting }}
-                                    </span>
-                                </h2>
-                                
-                                <!-- Key Metric Highlight -->
-                                <div class="metric-highlight">
-                                    <div class="metric-icon">
-                                        <i class="fas fa-chart-line"></i>
+                                {% if historical_data and historical_data|length > 0 and historical_data[0].struct_takeaway %}
+                                    <!-- Headline -->
+                                    <h2 class="headline">
+                                        {{ historical_data[0].struct_takeaway.story.headline.main if historical_data[0].struct_takeaway.story.headline.main else 'No headline available' }}
+                                        <span>
+                                            {{ historical_data[0].struct_takeaway.story.headline.supporting if historical_data[0].struct_takeaway.story.headline.supporting else '' }}
+                                        </span>
+                                    </h2>
+                                    
+                                    <!-- Key Metric Highlight -->
+                                    {% if historical_data[0].struct_takeaway.evidence and historical_data[0].struct_takeaway.evidence.primary_metric %}
+                                    <div class="metric-highlight">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="metric-details">
+                                            <p class="metric-label">{{ historical_data[0].struct_takeaway.evidence.primary_metric.label }}</p>
+                                            {% set metric_value = historical_data[0].struct_takeaway.evidence.primary_metric.value %}
+                                            {% if metric_value %}
+                                                {% if "up" in metric_value.lower() %}
+                                                    <p class="metric-value positive">{{ metric_value.split('(')[1].split(')')[0] if '(' in metric_value else metric_value }}</p>
+                                                {% else %}
+                                                    <p class="metric-value negative">{{ metric_value.split('(')[1].split(')')[0] if '(' in metric_value else metric_value }}</p>
+                                                {% endif %}
+                                                <p class="metric-absolute">{{ metric_value.split('(')[0].strip() if '(' in metric_value else '' }}</p>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                    <div class="metric-details">
-                                        <p class="metric-label">{{ historical_data[0].struct_takeaway.evidence.primary_metric.label }}</p>
-                                        {% set metric_value = historical_data[0].struct_takeaway.evidence.primary_metric.value %}
-                                        {% if "up" in metric_value.lower() %}
-                                            <p class="metric-value positive">{{ metric_value.split('(')[1].split(')')[0] }}</p>
-                                        {% else %}
-                                            <p class="metric-value negative">{{ metric_value.split('(')[1].split(')')[0] }}</p>
-                                        {% endif %}
-                                        <p class="metric-absolute">{{ metric_value.split('(')[0].strip() }}</p>
+                                    {% endif %}
+                        
+                                    <!-- Quick Highlights -->
+                                    {% if historical_data[0].struct_takeaway.evidence and historical_data[0].struct_takeaway.evidence.supporting_points %}
+                                    <div class="highlights">
+                                        {% for point in historical_data[0].struct_takeaway.evidence.supporting_points %}
+                                        <div class="highlight-item">
+                                            <div class="highlight-dot"></div>
+                                            <p>{{ point.text if point.text else '' }}</p>
+                                        </div>
+                                        {% endfor %}
                                     </div>
-                                </div>
-            
-                                <!-- Quick Highlights -->
-                                <div class="highlights">
-                                    {% for point in historical_data[0].struct_takeaway.evidence.supporting_points %}
-                                    <div class="highlight-item">
-                                        <div class="highlight-dot"></div>
-                                        <p>{{ point.text }}</p>
+                                    {% endif %}
+                        
+                                    <!-- Call to Action -->
+                                    {% if historical_data[0].struct_takeaway.engagement and historical_data[0].struct_takeaway.engagement.cta %}
+                                    <a href="{{ url_for('view_app.concall', file_name=historical_data[0].file_name) }}?section=structured_summary" 
+                                    class="cta-button">
+                                     <span>{{ historical_data[0].struct_takeaway.engagement.cta }}</span>
+                                     <i class="fas fa-arrow-right"></i>
+                                 </a>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="no-data-message">
+                                        <p>No quarterly update data available at this time.</p>
                                     </div>
-                                    {% endfor %}
-                                </div>
-            
-                                <!-- Call to Action -->                         ""
-                                <button class="cta-button", onclick="window.location.href='{{ url_for('view_app.concall', file_name=latest_transcripts[0].file_name) }}?section=structured_summary'">
-                                    <span>{{ historical_data[0].struct_takeaway.engagement.cta }}</span>
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -862,25 +878,29 @@
             }
             
             .cta-button {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.375rem;
-                background-color: #f3f6ff;
-                color: #6366f1;
-                font-weight: 500;
-                font-size: 0.875rem;
-                padding: 0.625rem;
-                border-radius: 0.375rem;
-                transition: all 0.2s ease;
-                border: none;
-            }
-            
-            .cta-button:hover {
-                background-color: #e5e7ff;
-            }
-            
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    background-color: #f3f6ff;
+    color: #6366f1;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.625rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    border: none;
+    text-decoration: none; /* Added for <a> tag */
+    cursor: pointer;
+}
+
+
+.cta-button:hover {
+    background-color: #e5e7ff;
+    color: #6366f1; /* Maintain text color on hover */
+    text-decoration: none; /* Prevent underline on hover */
+}
             .cta-button i {
                 width: 0.875rem;
                 height: 0.875rem;
