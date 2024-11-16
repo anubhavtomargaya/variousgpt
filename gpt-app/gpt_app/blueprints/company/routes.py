@@ -62,7 +62,8 @@ def historical(company_name):
                     'date': adjust_to_latest_friday(datetime.utcnow().date() if not details['date'] else datetime.strptime(details['date'], '%Y-%m-%d').date()),
                     'financial_year': details['financial_year'],
                     'top_questions': top_questions,
-                    'structured_content': get_itdoc_mg_guidance(file_name, key='struct_summary')  
+                    'structured_content': get_itdoc_mg_guidance(file_name, key='struct_summary')  ,
+                    'struct_takeaway': get_itdoc_mg_guidance(file_name, key='struct_takeaway')  
 
                 })
 

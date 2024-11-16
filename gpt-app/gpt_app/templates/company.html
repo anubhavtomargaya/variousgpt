@@ -612,6 +612,7 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
     </style>
 </head>
 <body>
@@ -667,15 +668,240 @@
                 </div>
             </div>
         </div>
-      
-      
-        <div id="fundamentals" class="section">
-            <div class="timeline-chart">
-                <canvas id="timelineChart"></canvas>
+        <div id="fundamentals" class="section mt-4">
+            <div id="fundamentals" class="section mt-4">
+                <div class="row g-4">
+                    <!-- Left side - Main insight card -->
+                    <div class="col-lg-7">
+                        <!-- Template HTML -->
+                        <div class="insight-card">
+                            <!-- Header gradient -->
+                            <div class="card-header">
+                                <div class="header-content">
+                                    <i class="fas fa-bolt text-sm"></i>
+                                    <span>Latest Quarter Update</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Main Content -->
+                            <div class="card-content">
+                                <!-- Headline -->
+                                <h2 class="headline">
+                                    {{ historical_data[0].struct_takeaway.story.headline.main }}
+                                    <span>
+                                        {{ historical_data[0].struct_takeaway.story.headline.supporting }}
+                                    </span>
+                                </h2>
+                                
+                                <!-- Key Metric Highlight -->
+                                <div class="metric-highlight">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="metric-details">
+                                        <p class="metric-label">{{ historical_data[0].struct_takeaway.evidence.primary_metric.label }}</p>
+                                        {% set metric_value = historical_data[0].struct_takeaway.evidence.primary_metric.value %}
+                                        {% if "up" in metric_value.lower() %}
+                                            <p class="metric-value positive">{{ metric_value.split('(')[1].split(')')[0] }}</p>
+                                        {% else %}
+                                            <p class="metric-value negative">{{ metric_value.split('(')[1].split(')')[0] }}</p>
+                                        {% endif %}
+                                        <p class="metric-absolute">{{ metric_value.split('(')[0].strip() }}</p>
+                                    </div>
+                                </div>
+            
+                                <!-- Quick Highlights -->
+                                <div class="highlights">
+                                    {% for point in historical_data[0].struct_takeaway.evidence.supporting_points %}
+                                    <div class="highlight-item">
+                                        <div class="highlight-dot"></div>
+                                        <p>{{ point.text }}</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+            
+                                <!-- Call to Action -->                         ""
+                                <button class="cta-button", onclick="window.location.href='{{ url_for('view_app.concall', file_name=latest_transcripts[0].file_name) }}?section=structured_summary'">
+                                    <span>{{ historical_data[0].struct_takeaway.engagement.cta }}</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Right side - Chart -->
+                    <div class="col-lg-5">
+                        <div class="card chart-card">
+                            <div class="card-body p-3">
+                                <div class="timeline-chart">
+                                    <canvas id="timelineChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        
+            
+            <style>
+            /* Updated CSS with tighter spacing and smaller elements */
+            .insight-card {
+                border: 1px solid #e5efff;
+                border-radius: 0.5rem;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                background: white;
+            }
+            
+            .card-header {
+                background: #f3f6ff;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .header-content {
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+            }
+            
+            .header-content i {
+                width: 0.875rem;
+                height: 0.875rem;
+                color: #6366f1;
+            }
+            
+            .header-content span {
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: #6366f1;
+            }
+            
+            .card-content {
+                padding: 1rem;
+            }
+            
+            .headline {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: #111827;
+                margin-bottom: 0.75rem;
+            }
+            
+            .headline span {
+                display: block;
+                font-size: 0.813rem;
+                font-weight: 400;
+                color: #6b7280;
+                margin-top: 0.125rem;
+            }
+            
+            .metric-highlight {
+                display: flex;
+                align-items: center;
+                gap: 0.625rem;
+                margin-bottom: 1rem;
+            }
+            
+            .metric-icon {
+                background-color: #f0fdf4;
+                padding: 0.5rem;
+                border-radius: 0.375rem;
+            }
+            
+            .metric-icon i {
+                width: 1.125rem;
+                height: 1.125rem;
+                color: #16a34a;
+            }
+            
+            .metric-details p {
+                font-size: 0.813rem;
+                color: #6b7280;
+                margin: 0;
+            }
+            
+            .metric-value {
+                font-size: 1rem;
+                font-weight: 600;
+                margin: 0.125rem 0;
+            }
+            
+            .metric-value.positive {
+                color: #16a34a;
+            }
+            
+            .metric-value.negative {
+                color: #dc2626;
+            }
+            
+            .highlights {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .highlight-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 0.375rem;
+            }
+            
+            .highlight-dot {
+                width: 0.375rem;
+                height: 0.375rem;
+                background-color: #6366f1;
+                border-radius: 9999px;
+                margin-top: 0.5rem;
+            }
+            
+            .highlight-item p {
+                color: #4b5563;
+                font-size: 0.875rem;
+                margin: 0;
+                line-height: 1.4;
+            }
+            
+            .cta-button {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.375rem;
+                background-color: #f3f6ff;
+                color: #6366f1;
+                font-weight: 500;
+                font-size: 0.875rem;
+                padding: 0.625rem;
+                border-radius: 0.375rem;
+                transition: all 0.2s ease;
+                border: none;
+            }
+            
+            .cta-button:hover {
+                background-color: #e5e7ff;
+            }
+            
+            .cta-button i {
+                width: 0.875rem;
+                height: 0.875rem;
+                transition: transform 0.2s ease;
+            }
+            
+            .cta-button:hover i {
+                transform: translateX(0.25rem);
+            }
+            
+            /* Chart card styling */
+            .chart-card {
+                height: 100%;
+                border: 1px solid #e5e7eb;
+            }
+            
+            .timeline-chart {
+                height: 100%;
+                min-height: 300px;
+            }
+            </style>
 <div id="earning-calls" class="earning-calls-section">
     <h2 class="section-title">Earning Call Transcripts</h2>
     {% for data in historical_data|sort(attribute='date', reverse=True) %}

@@ -235,8 +235,8 @@ def get_itdoc_mg_guidance(file_name,key='overview'):
         print("no rows found")
         return False
     else:
-        print("documents supp")
-        print(rows.data)
+        print("documents supp",key)
+        # print(rows.data)
         return rows.data[0]['management_data'][key] if rows.data[0]['management_data'] else False
 
 def get_files_without_tags():
