@@ -12,6 +12,7 @@ from gpt_app.blueprints.gptube import gpt_app
 from gpt_app.blueprints.google_auth import google_auth
 from gpt_app.blueprints.view import view_app
 from gpt_app.blueprints.company import company_app
+from gpt_app.blueprints.gflow.routes import loader_bp
 from gpt_app.blueprints.loader import loader_app
 from gpt_app.common.session_manager import *
 
@@ -46,6 +47,9 @@ def create_app():
 
     app.register_blueprint(loader_app, url_prefix='/loader')
     app.logger.info('Flask bp registerd, %s',"/loader")
+
+    app.register_blueprint(loader_bp, url_prefix='/gflow')
+    app.logger.info('Flask bp registerd, %s',"/gflow")
 
     @app.route('/session',methods=['GET'])
     def session_debugger():
