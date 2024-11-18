@@ -156,6 +156,7 @@ if __name__ =='__main__':
     f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
     f = 'fy2025_q1_infosys_limited_quarterly_earnings_call_transcript_infy.pdf'
+    f = 'fy2024_q4_ultratech_cement_limited_quarterly_earnings_call_transcript_ultracemco.pdf'
     # f = 'fy2024_q2_gravita_india_limited_quarterly_earnings_call_transcript_gravita.pdf'
     # f = 'fy2025_q1_pondy_oxides_and_chemicals_limited_quarterly_earnings_call_transcript_pocl.pdf'
     # f = 'fy-2025_q1_earnings_call_transcript_asian_paints_500820.pdf'
@@ -177,4 +178,4 @@ if __name__ =='__main__':
     
    
     # print(test_generate_takeaway())
-    # print(test_insert_struct_takeaways())
+    print(test_insert_struct_takeaways())

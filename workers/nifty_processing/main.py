@@ -10,6 +10,16 @@ def update_ltd(x:str ):
         return x
     else:
         return x
+nifty_code  = {'MARUTI':4470,
+               'HINDUNILVR':369,
+                'ULTRACEMCO':   4499,
+                'BAJAJ-AUTO':4946, 
+                'EICHERMOT': 697,
+                'BHARTIARTL':4438,
+                'TATAMOTORS':354,
+                'DRREDDY':87,
+                
+                 }
 
 def process_nifty_dataframe(path):
     data = pd.read_csv(path)
