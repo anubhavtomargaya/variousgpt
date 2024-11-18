@@ -43,7 +43,7 @@
 
                 async loadProcessDetails(processId) {
                     try {
-                        const response = await fetch(`/loader/process/${processId}`);
+                        const response = await fetch(`/gflow/process/${processId}`);
                         const data = await response.json();
                         const process = this.processes.find(p => p.process_id === processId);
                         if (process) {
@@ -180,7 +180,7 @@
                             <div class="relative p-4 flex flex-wrap gap-4">
                                 <template x-for="stage in process.stages" :key="stage.id">
                                     <div 
-                                        @click="showJsonDiff(stage.metadata?.input, stage.metadata?.output)"
+                                        @click="showJsonDiff(stage.metadata, stage.metadata)"
                                         class="w-64 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow cursor-pointer p-4"
                                     >
                                         <div class="flex justify-between items-center">
