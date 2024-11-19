@@ -61,36 +61,36 @@ def get_distinct_transcript_files():
 
 
 def get_pdf_chunks_transcript(file_name):
-    print("running supabase query...")
+    print("running supabase query...to get pdf chunks")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
-        print("documents supp")
+        print("documents fetched")
         # print(rows.data)
         return rows.data[0]['extracted_transcript']
     
  
 def get_pdf_transcript_and_meta(file_name):
-    print("running supabase query...")
+    print("running supabase query to get transcript & meta...")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript,addn_meta').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
-        print("documents supp")
+        # print("documents supp")
         # print(rows.data)
         return rows.data[0]
     
 def get_itdoc_mg_guidance(file_name,key='overview'):
-    print("running supabase query...")
+    print("running supabase query...to get mg guidance")
     rows =  supabase.table('transcripts-intel').select('management_data').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
-        print("documents supp",key)
+        # print("documents supp",key)
         # print(rows.data)
         return rows.data[0]['management_data'][key] if rows.data[0]['management_data'] else False
 

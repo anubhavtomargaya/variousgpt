@@ -15,6 +15,11 @@ class PipelineStage(str, Enum):
     TS_EXTRACTION = 'text_extraction'
     QA_GENERATION = 'qa_generation'
     QA_MG_INTEL_GENERATION = 'intel_generation'
+    PARENT_SUMMARY = 'summary'
+    GUIDANCE = 'guidance'
+    TAGS = 'tags'
+    TAKEAWAY = 'takeaway'
+    EXTRA = 'extra'
     EMBEDDING_GENERATION = 'embedding_generation'
 
 

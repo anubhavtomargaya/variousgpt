@@ -7,6 +7,7 @@ from typing import Optional, Dict, Any
 
 from handler_supabase import supabase_insert
 
+
 class PipelineStage(str, Enum):
 
     UPLOAD = 'upload'
@@ -15,6 +16,11 @@ class PipelineStage(str, Enum):
     TS_EXTRACTION = 'text_extraction'
     QA_GENERATION = 'qa_generation'
     QA_MG_INTEL_GENERATION = 'intel_generation'
+    PARENT_SUMMARY = 'summary'
+    GUIDANCE = 'guidance'
+    TAGS = 'tags'
+    TAKEAWAY = 'takeaway'
+    EXTRA = 'extra'
     EMBEDDING_GENERATION = 'embedding_generation'
 
 
@@ -55,8 +61,8 @@ def log_pipeline_event(
             'user_email': 'getstockrabit@gmail.com'
         }
         
-        if error_message:
-            data['error_message'] = error_message
+       
+        data['error_message'] = error_message if error_message else ''
         if processing_time:
             data['processing_time'] = processing_time
         if metadata:

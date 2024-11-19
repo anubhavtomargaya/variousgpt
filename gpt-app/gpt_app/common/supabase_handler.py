@@ -110,6 +110,7 @@ def get_pipeline_events(process_id: str):
             .eq('process_id', process_id)\
             .order('created_at', desc=False)\
             .execute()
+        print("pip evs",result.data)
         return result.data if result.data else None
     except Exception as e:
         print(f"Error querying pipeline events: {str(e)}")

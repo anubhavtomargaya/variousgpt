@@ -172,7 +172,12 @@ def get_pipeline_status(process_id):
             'classification',
             # 'metadata',
             'text_extraction',
-            # 'qa_generation',
+            'summary',
+            'guidance',
+            'tags',
+            'extra',
+            'takeaway',
+            'qa_generation',
             'intel_generation',
             # 'embedding_generation'
         ]
