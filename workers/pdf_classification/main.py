@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
+import time
 
 from flask import jsonify
 from google.cloud import storage
 from dirs import PDF_DIR
 from classify_pdf import classify_pdf_transcript
 from db_supabase import check_pdf_exist, insert_classifier_entry, insert_initial_transcript_entry, validate_company_data
+from worker_logging import PipelineStage, ProcessStatus, log_pipeline_event
 
 #utils.py
 def _make_file_path(direcotry:Path,
@@ -162,16 +164,28 @@ def insert_metadata_entry(metadata):
 
 def validate_and_classify_pdf(event, context=None):
     print("Processing file")
+    start_time = time.time()
+
     if not isinstance(event,dict):
         request_json = event.get_json()
+        process_id = request_json['process_id']
         file_name = request_json['name']
     else:
         file_path = event['name']
+        process_id = event['process_id']
         file_name = Path(file_path).name
       
         print(f"Processing file: {file_name} ") #replace with new bucket for pdfs specifically
 
     try:
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.STARTED,
+        
+        )
         classifcation = None
         path = download_pdf_from_pdf_bucket_file(file_name=file_name,
                                                 bucket=IMPORT_BUCKET)
@@ -183,7 +197,7 @@ def validate_and_classify_pdf(event, context=None):
 
         if classifcation:
             f_name_new = metadata.get('doc_name',None)
-            if not file_name:
+            if not f_name_new:
                 raise Exception("file name not found in response")
             print("earning call detected! path:", metadata) 
             insert = insert_classifier_entry(import_filename=file_name,given_filename=f_name_new)
@@ -200,14 +214,41 @@ def validate_and_classify_pdf(event, context=None):
             if not insert_meta:
                 raise Exception("Problem inserting metadata")
             print("inserted",insert_meta )
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.COMPLETED,
+            processing_time=processing_time,
+            metadata={'output':metadata,'input':''}
+        )
             # insert = update_classifier_entry(path) # update confirmation for pdf upload
             return jsonify(url)
         else:
             print("earning call NOT detected! response", metadata) 
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file_name ,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.FAILED,
+            error_message=f"Earning call not detected {metadata}",
+            processing_time=processing_time
+        )
             return jsonify(False )
    
     except Exception as e:
         print("error in processing pdf",e)
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file_name ,
+            process_id=process_id,
+            stage=PipelineStage.CLASSIFICATION,
+            status=ProcessStatus.FAILED,
+            error_message=str(e),
+            processing_time=processing_time
+        )
         return  jsonify(False )
     
 

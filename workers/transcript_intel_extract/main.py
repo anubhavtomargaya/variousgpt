@@ -1,6 +1,7 @@
 
 import json
 from pathlib import Path
+import time
 from typing import Any, Dict
 from utils_qa import get_openai_client,count_tokens, insert_qa_section, load_ts_section_management
 from handler_supabase import ( 
@@ -13,6 +14,7 @@ from generate_concall_management_guidance import extract_management_insights
 from generate_concall_management_tags import identify_transcript_tags
 from generate_concall_summary_parent import generate_structured_summary
 from generate_concall_summary_takeaway import generate_engaging_update
+from worker_logging import log_pipeline_event,PipelineStage,ProcessStatus
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -33,7 +35,7 @@ def find_qa_section_start(transcript_json, openai_client):
         Return only the integer key where the Q&A section starts. 
         If the Q&A section does not start in this chunk, return 'Not found'.
         """
-        print("tokens",count_tokens(prompt,model=QA_START_MODEL))
+        print("finding qa section; tokens:",count_tokens(prompt,model=QA_START_MODEL))
         response = openai_client.chat.completions.create(
             model=QA_START_MODEL,
             temperature=0.2,
@@ -88,7 +90,7 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
         Return the result as a valid JSON string.
         """
 
-        print("token",count_tokens(prompt,model=QA_START_MODEL))
+        print("extracting Transcript with prompt",count_tokens(prompt,model=QA_START_MODEL))
         response = openai_client.chat.completions.create(
             model=QA_START_MODEL,
              response_format={"type":'json_object'},
@@ -98,10 +100,10 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
                 {"role": "user", "content": prompt}
             ]
         )
-        print("repso")
+        # print("repso")
         # print(response.choices[0].message.content.strip())
         return json.loads(response.choices[0].message.content.strip())
-    print('qas')
+ 
     qa_section = {k: v for k, v in transcript_json.items() if int(k) >= int(qa_start_key)}
     
     results = []
@@ -109,16 +111,24 @@ def process_transcript_qa_section(transcript_json, qa_start_key):
     for i in range(0, len(qa_section), chunk_size):
         chunk = dict(list(qa_section.items())[i:i+chunk_size])
         chunk_results = process_chunk(chunk)['result']
-        print("cresi;t"
-              )
+       
         results.extend(chunk_results)
-    print("results,")
+
     # results)
     return results
 
 
-def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
+def process_earnings_call_qa(filename: str,process_id:str) -> Dict[str, Any]:
+    start_time = time.time()
     try:
+        log_pipeline_event(
+            file_name=filename,
+            process_id=process_id,
+            error_message='',
+            stage=PipelineStage.QA_GENERATION,
+            status=ProcessStatus.STARTED,
+        
+        )
         # Step 1: Get transcript chunks
         transcript_json = get_pdf_chunks_transcript(filename)
         if not transcript_json:
@@ -147,9 +157,30 @@ def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
         # Step 6: Insert processed Q&A section
         insert_result = insert_qa_section(filename, qa_section)
         if not insert_result:
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=filename,
+            process_id=process_id,
+            stage=PipelineStage.QA_GENERATION,
+            status=ProcessStatus.FAILED,
+            error_message=str("Error in getting qa section"),
+            processing_time=processing_time,
+            metadata={}
+        )
+
             raise ValueError(f"Failed to insert Q&A section for {filename}")
+        processing_time = time.time() - start_time
+       
+        log_pipeline_event(
+            file_name=filename,
+            process_id=process_id,
+            stage=PipelineStage.QA_GENERATION,
+            status=ProcessStatus.COMPLETED,
+            error_message='',
+            processing_time=processing_time,
+            metadata={'output':qa_start_key,'input':''}
+        )
         
-   
       
 
         return {
@@ -166,7 +197,8 @@ def process_earnings_call_qa(filename: str) -> Dict[str, Any]:
             "filename": filename
         }
     
-def process_earning_call_summary(file_name):
+def process_earning_call_summary(file_name,process_id):
+    start_time = time.time()
     try:
         section = load_ts_section_management(file_name)
         if not section:
@@ -185,6 +217,13 @@ def process_earning_call_summary(file_name):
         takeaway_key = 'struct_takeaway'
         
         try:
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.GUIDANCE,
+            status=ProcessStatus.STARTED,
+        
+        )
             print("Extracting Guidance .... ")
             s = extract_management_insights(section)
             if s:
@@ -192,15 +231,40 @@ def process_earning_call_summary(file_name):
                 # Fixed: Changed 'f' to 'file_name'
                 i = insert_management_intel(file=file_name, key=guidance_key, document=s)
                 status["guidance"] = 'COMPLETE'
+                processing_time = time.time() - start_time
+                log_pipeline_event(
+                    file_name=file_name,
+                    process_id=process_id,
+                    stage=PipelineStage.GUIDANCE,
+                    status=ProcessStatus.COMPLETED,
+                    processing_time=processing_time,
+                    metadata={'output':s,'input':''}
+                )
             else:
                 print("not guidance")
         except Exception as e:
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.GUIDANCE,
+            status=ProcessStatus.FAILED,
+            error_message=str("Error in getting qa section"),
+            processing_time=processing_time
+        )
             print(f"Error processing guidance: {str(e)}")
             # Don't suppress the error silently
             status["guidance"] = f"ERROR: {str(e)}"
         
         try:
             print("Extracting Tags .... ")
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.TAGS,
+            status=ProcessStatus.STARTED,
+        
+        )
             s = identify_transcript_tags(section)
             if s:
                 print("inserting")
@@ -208,14 +272,40 @@ def process_earning_call_summary(file_name):
                 i = insert_management_intel(file=file_name, key=tags_key, document=s)
                 print("inserted")
                 status["tags"] = 'COMPLETE'
+                processing_time = time.time() - start_time
+    
+                log_pipeline_event(
+                    file_name=file_name,
+                    process_id=process_id,
+                    stage=PipelineStage.TAGS,
+                    status=ProcessStatus.COMPLETED,
+                    processing_time=processing_time,
+                    metadata={'output':s,'input':''}
+                )
             else:
                 print("not tags")
         except Exception as e:
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.TAGS,
+            status=ProcessStatus.FAILED,
+            error_message=str("Error in getting tags"),
+            processing_time=processing_time
+             )
             print(f"Error processing tags: {str(e)}")  # Fixed error message
             status["tags"] = f"ERROR: {str(e)}"
         
         try:
             print("Extracting Summary .... ")
+            log_pipeline_event(
+                file_name=file_name,
+                process_id=process_id,
+                stage=PipelineStage.PARENT_SUMMARY,
+                status=ProcessStatus.STARTED,
+            
+            )
             s = generate_structured_summary(section)
             if s:
                 print("inserting")
@@ -223,9 +313,26 @@ def process_earning_call_summary(file_name):
                 i = insert_management_intel(file=file_name, key=summary_key, document=s)
                 status["summary"] = 'COMPLETE'
                 print("inserted")
+                processing_time = time.time() - start_time
+    
+                log_pipeline_event(
+                    file_name=file_name,
+                    process_id=process_id,
+                    stage=PipelineStage.PARENT_SUMMARY,
+                    status=ProcessStatus.COMPLETED,
+                    processing_time=processing_time,
+                    metadata={'output':s,'input':''}
+                )
             else:
                 print("not summary")
             try:
+                log_pipeline_event(
+                    file_name=file_name,
+                    process_id=process_id,
+                    stage=PipelineStage.TAKEAWAY,
+                    status=ProcessStatus.STARTED,
+                
+                )
                 s = generate_engaging_update(section)
                 if s:
                     print("inserting")
@@ -233,12 +340,40 @@ def process_earning_call_summary(file_name):
                     i = insert_management_intel(file=file_name, key=takeaway_key, document=s)
                     status["takeaway"] = 'COMPLETE'
                     print("inserted")
+                    processing_time = time.time() - start_time
+       
+                    log_pipeline_event(
+                        file_name=file_name,
+                        process_id=process_id,
+                        stage=PipelineStage.TAKEAWAY,
+                        status=ProcessStatus.COMPLETED,
+                        processing_time=processing_time,
+                        metadata={'output':s,'input':''}
+                    )
                 else:
                     print("not takeaway")
             except Exception as e:
+                processing_time = time.time() - start_time
+                log_pipeline_event(
+                file_name=file_name,
+                process_id=process_id,
+                stage=PipelineStage.PARENT_SUMMARY,
+                status=ProcessStatus.FAILED,
+                error_message=f"Error in getting takeaway: {str(e)}",
+                processing_time=processing_time
+                    )
                 print(f"Error processing takeaway: {str(e)}")  # Fixed error message
                 status["takeaway"] = f"ERROR: {str(e)}"
         except Exception as e:
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.PARENT_SUMMARY,
+            status=ProcessStatus.FAILED,
+            error_message=f"Error in getting parent summary: {str(e)}",
+            processing_time=processing_time
+        )
             print(f"Error processing summary: {str(e)}")  # Fixed error message
             status["summary"] = f"ERROR: {str(e)}"
 
@@ -252,29 +387,42 @@ def process_earning_call_summary(file_name):
         return {
             'guidance': f"ERROR: {str(e)}",
             'tags': f"ERROR: {str(e)}",
+            'takeaway': f"ERROR: {str(e)}",
             'summary': f"ERROR: {str(e)}"
         }
 
 def main_process_qa_fx(event,context=None):
     print("Processing ts intel qa section")
+   
     if not isinstance(event,dict):
         request_json = event.get_json()
         file_name = request_json['name']
+        process_id = request_json['process_id']
       
     else:
         file_path = event['name']
+        process_id = event['process_id']
         file_name = Path(file_path).name
 
         print(f"Processing file: {file_name} in _pdf-transcript_ table")
-    qa_proc = process_earnings_call_qa(filename=file_name)
+    
+  
+ 
+    qa_proc = process_earnings_call_qa(filename=file_name,
+                                       process_id=process_id)
     
     if qa_proc['status']=='success':
-        summ_proc = process_earning_call_summary(file_name=file_name)
+        summ_proc = process_earning_call_summary(file_name=file_name,
+                                                 process_id=process_id)
         if not summ_proc:
             res = 'summary-failure'
+         
+
         else:
             res = 'summary-success'
         qa_proc["status_addn"] = res
+       
+
         return qa_proc
        
 if __name__=='__main__':

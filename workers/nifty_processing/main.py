@@ -12,14 +12,44 @@ def update_ltd(x:str ):
         return x
 nifty_code  = {'MARUTI':4470,
                'HINDUNILVR':369,
-                'ULTRACEMCO':   4499,
+                'ULTRACEMCO':4499,
                 'BAJAJ-AUTO':4946, 
                 'EICHERMOT': 697,
                 'BHARTIARTL':4438,
                 'TATAMOTORS':354,
                 'DRREDDY':87,
-                
+                'JSWSTEEL':163,
+                'TATACONSUM':377,
+                'SBIN':79,
+                'COALINDIA':'',
+                'HDFCLIFE':5978,
+                'WIPRO':'',
+                'HINDALCO':319,
+                'BEL':'',
+                'ADANIPORTS':4800,
+                'NESTLE':376,
+                'GRASIM':221,
+                'TCS':4501,
+                'TITAN':81,
+                'LT':348,
+                'BAJFINANCE':23,
+                'TRENT':181,
+                'SUNPHARMA':2757,
+                'POWERGRID':43788,
+
+
                  }
+error_codes = {
+    87: {"status":'failing',"reason":"text not getting extracted","workers": ['pdf_extraction' ],},
+    221: { "status":'garbage',"reason":"extracted intel seems garbage"},
+    79: { "status":'garbage',"reason":"extracted intel has X %"},
+    43788: {"status":'failing',"reason":"text not getting extracted","workers": ['pdf_extraction' ]}
+}
+missing_files_codes = [ 319,]
+missing_codes=  [376, 181]
+
+qa_only_codes = [ 81]
+
 
 def process_nifty_dataframe(path):
     data = pd.read_csv(path)

@@ -5,7 +5,7 @@ import string
 import time
 from typing import Optional, Dict, Any
 
-from  gpt_app.common.supabase_handler import supabase_insert
+from db_supabase import supabase_insert
 
 class PipelineStage(str, Enum):
 
@@ -15,11 +15,6 @@ class PipelineStage(str, Enum):
     TS_EXTRACTION = 'text_extraction'
     QA_GENERATION = 'qa_generation'
     QA_MG_INTEL_GENERATION = 'intel_generation'
-    PARENT_SUMMARY = 'summary'
-    GUIDANCE = 'guidance'
-    TAGS = 'tags'
-    TAKEAWAY = 'takeaway'
-    EXTRA = 'extra'
     EMBEDDING_GENERATION = 'embedding_generation'
 
 

@@ -1,9 +1,28 @@
+from typing import Optional
 from supabase import create_client, Client
 import os
 from utils_ts import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def supabase_insert(table_name: str, data: dict) -> Optional[dict]:
+    """
+    Generic function to insert data into Supabase table and handle response
+    
+    Args:
+        table_name (str): Name of the Supabase table
+        data (dict): Data to insert
+        
+    Returns:
+        Optional[dict]: First record of inserted data if successful, None otherwise
+    """
+    try:
+        result = supabase.table(table_name).insert(data).execute()
+        return result.data[0] if result.data else None
+    except Exception as e:
+        print(f"Supabase insert error for table {table_name}: {str(e)}")
+        return None
+    
 def check_pdf_exist(company_name, quarter,date, financial_year, doc_type):
     existing_ts = supabase.table('pdf-transcripts') \
                           .select('*') \

@@ -5,7 +5,8 @@ import string
 import time
 from typing import Optional, Dict, Any
 
-from  gpt_app.common.supabase_handler import supabase_insert
+from handler_supabase import supabase_insert
+
 
 class PipelineStage(str, Enum):
 
@@ -60,8 +61,8 @@ def log_pipeline_event(
             'user_email': 'getstockrabit@gmail.com'
         }
         
-        if error_message:
-            data['error_message'] = error_message
+       
+        data['error_message'] = error_message if error_message else ''
         if processing_time:
             data['processing_time'] = processing_time
         if metadata:

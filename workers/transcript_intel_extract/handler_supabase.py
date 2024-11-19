@@ -1,3 +1,4 @@
+from typing import Optional
 from supabase import create_client, Client
 import os
 from config_qa import SUPABASE_URL ,SUPABASE_SERVICE_KEY
@@ -5,6 +6,27 @@ from config_qa import SUPABASE_URL ,SUPABASE_SERVICE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+
+
+def supabase_insert(table_name: str, data: dict) -> Optional[dict]:
+    """
+    Generic function to insert data into Supabase table and handle response
+    
+    Args:
+        table_name (str): Name of the Supabase table
+        data (dict): Data to insert
+        
+    Returns:
+        Optional[dict]: First record of inserted data if successful, None otherwise
+    """
+    try:
+        result = supabase.table(table_name).insert(data).execute()
+        return result.data[0] if result.data else None
+    except Exception as e:
+        print(f"Supabase insert error for table {table_name}: {str(e)}")
+        return None
+    
+    
 def get_files_without_tags():
     print("Querying for files without management tags...")
     query = supabase.table('transcripts-intel') \
@@ -39,36 +61,36 @@ def get_distinct_transcript_files():
 
 
 def get_pdf_chunks_transcript(file_name):
-    print("running supabase query...")
+    print("running supabase query...to get pdf chunks")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
-        print("documents supp")
+        print("documents fetched")
         # print(rows.data)
         return rows.data[0]['extracted_transcript']
     
  
 def get_pdf_transcript_and_meta(file_name):
-    print("running supabase query...")
+    print("running supabase query to get transcript & meta...")
     rows =  supabase.table('pdf-transcripts').select('extracted_transcript,addn_meta').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
-        print("documents supp")
+        # print("documents supp")
         # print(rows.data)
         return rows.data[0]
     
 def get_itdoc_mg_guidance(file_name,key='overview'):
-    print("running supabase query...")
+    print("running supabase query...to get mg guidance")
     rows =  supabase.table('transcripts-intel').select('management_data').eq('file_name', f'{file_name}').execute()
     if not rows.data:
         print("no rows found")
         return False
     else:
-        print("documents supp",key)
+        # print("documents supp",key)
         # print(rows.data)
         return rows.data[0]['management_data'][key] if rows.data[0]['management_data'] else False
 

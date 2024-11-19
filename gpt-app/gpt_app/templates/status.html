@@ -210,21 +210,30 @@
         const stages = [
             'upload',
             'classification',
-            // 'metadata',
+            'metadata',
             'text_extraction',
-            // 'qa_generation',
-            // 'intel_generation',
-            // 'embedding_generation'
+            'qa_generation',
+            'intel_generation',
+            'guidance',
+            'tags',
+            'summary',
+            'takeaway',
+            'extra',
+            'embedding_generation'
         ];
     
         const stageNames = {
             'upload': 'File Upload',
             'classification': 'Document Classification',
-            // 'metadata': 'Metadata Extraction',
+            'metadata': 'Metadata Extraction',
             'text_extraction': 'Text Extraction',
-            // 'qa_generation': 'QA Generation',
-            // 'intel_generation': 'Intel Generation',
-            // 'embedding_generation': 'Embedding Generation'
+            'qa_generation': 'QA Generation',
+            'summary': 'Summary Generation',
+            'guidance': 'Guidance Generation',
+            'intel_generation': 'Intel Generation',
+            'tags':"Tags",
+            'extra':"Extra",
+            'embedding_generation': 'Embedding Generation'
         };
     
         function updateProgress(completed, total) {

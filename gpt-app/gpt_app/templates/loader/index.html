@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Loader Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .dot-pattern {
+            background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('loaderApp', () => ({
+                processes: {{ initial_data.processes | tojson | safe }},
+                stages: {{ initial_data.stages | tojson | safe }},
+                statuses: {{ initial_data.statuses | tojson | safe }},
+                selectedProcesses: [],
+                selectedStages: [],
+                expandedProcesses: new Set(),
+                jsonDiffModal: {
+                    isOpen: false,
+                    input: null,
+                    output: null
+                },
+
+                init() {
+                    // Any initialization logic
+                },
+
+                toggleProcess(processId) {
+                    if (this.expandedProcesses.has(processId)) {
+                        this.expandedProcesses.delete(processId);
+                    } else {
+                        this.expandedProcesses.add(processId);
+                        this.loadProcessDetails(processId);
+                    }
+                },
+
+                async loadProcessDetails(processId) {
+                    try {
+                        const response = await fetch(`/gflow/process/${processId}`);
+                        const data = await response.json();
+                        const process = this.processes.find(p => p.process_id === processId);
+                        if (process) {
+                            process.stages = data;
+                        }
+                    } catch (error) {
+                        console.error('Error loading process details:', error);
+                    }
+                },
+
+                toggleProcessFilter(processId) {
+                    const index = this.selectedProcesses.indexOf(processId);
+                    if (index === -1) {
+                        this.selectedProcesses.push(processId);
+                    } else {
+                        this.selectedProcesses.splice(index, 1);
+                    }
+                },
+
+                toggleStageFilter(stage) {
+                    const index = this.selectedStages.indexOf(stage);
+                    if (index === -1) {
+                        this.selectedStages.push(stage);
+                    } else {
+                        this.selectedStages.splice(index, 1);
+                    }
+                },
+
+                showJsonDiff(input, output) {
+                    this.jsonDiffModal.input = input;
+                    this.jsonDiffModal.output = output;
+                    this.jsonDiffModal.isOpen = true;
+                },
+
+                filteredProcesses() {
+                    return this.processes.filter(process => {
+                        if (this.selectedProcesses.length === 0) return true;
+                        return this.selectedProcesses.includes(process.process_id);
+                    });
+                }
+            }))
+        })
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div x-data="loaderApp" class="flex h-screen" x-cloak>
+        <!-- Process List Sidebar -->
+        <div class="w-64 border-r bg-white flex flex-col">
+            <div class="p-4 border-b">
+                <h2 class="font-semibold">Processes</h2>
+            </div>
+            <div class="flex-1 overflow-auto">
+                <template x-for="process in processes" :key="process.process_id">
+                    <div 
+                        @click="toggleProcessFilter(process.process_id)"
+                        :class="{'bg-blue-50': selectedProcesses.includes(process.process_id)}"
+                        class="p-4 border-b hover:bg-gray-50 cursor-pointer"
+                    >
+                        <div class="font-medium" x-text="process.process_id"></div>
+                        <div class="text-sm text-gray-500" x-text="process.file_name"></div>
+                        <div class="text-xs mt-1">
+                            <span 
+                                :class="{
+                                    'bg-green-100 text-green-800': process.latest_status === 'completed',
+                                    'bg-blue-100 text-blue-800': process.latest_status === 'started',
+                                    'bg-red-100 text-red-800': process.latest_status === 'failed'
+                                }"
+                                class="px-2 py-1 rounded"
+                                x-text="process.latest_status"
+                            ></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col">
+            <!-- Filter Bar -->
+            <div class="bg-white border-b p-4">
+                <div class="flex items-center mb-2">
+                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    <span class="font-medium">Filter by Stage</span>
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <template x-for="stage in stages" :key="stage">
+                        <button
+                            @click="toggleStageFilter(stage)"
+                            :class="{
+                                'bg-blue-600 text-white': selectedStages.includes(stage),
+                                'bg-white text-gray-700 border-gray-300': !selectedStages.includes(stage)
+                            }"
+                            class="px-3 py-1 rounded text-sm border hover:bg-blue-50 transition-colors"
+                            x-text="stage"
+                        ></button>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Processes and Visualizations -->
+            <div class="flex-1 overflow-auto">
+                <template x-for="process in filteredProcesses()" :key="process.process_id">
+                    <div>
+                        <div 
+                            @click="toggleProcess(process.process_id)"
+                            class="flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b"
+                        >
+                            <svg 
+                                class="h-4 w-4 mr-2 transition-transform duration-200" 
+                                :class="{ 'transform rotate-90': expandedProcesses.has(process.process_id) }"
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                            <div>
+                                <div class="font-medium" x-text="process.process_id"></div>
+                                <div class="text-sm text-gray-500" x-text="process.file_name"></div>
+                            </div>
+                        </div>
+
+                        <!-- Visualization Area -->
+                        <div 
+                            x-show="expandedProcesses.has(process.process_id)"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            class="border-t h-96 relative"
+                        >
+                            <div class="absolute inset-0 dot-pattern"></div>
+                            <div class="relative p-4 flex flex-wrap gap-4">
+                                <template x-for="stage in process.stages" :key="stage.id">
+                                    <div 
+                                        @click="showJsonDiff(stage.metadata, stage.metadata)"
+                                        class="w-64 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow cursor-pointer p-4"
+                                    >
+                                        <div class="flex justify-between items-center">
+                                            <h3 class="font-medium" x-text="stage.stage"></h3>
+                                            <svg class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                            </svg>
+                                        </div>
+                                        <div class="mt-2 text-sm text-gray-500">
+                                            <span x-text="'Status: ' + stage.status"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- JSON Diff Modal -->
+        <div 
+            x-show="jsonDiffModal.isOpen"
+            x-transition
+            @click.away="jsonDiffModal.isOpen = false"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+            <div class="bg-white w-full max-w-6xl max-h-screen m-4 rounded-lg flex flex-col">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h2 class="text-lg font-semibold">Input/Output Comparison</h2>
+                    <button @click="jsonDiffModal.isOpen = false" class="text-gray-500 hover:text-gray-700">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex-1 flex overflow-hidden">
+                    <div class="flex-1 border-r p-4 overflow-auto">
+                        <h3 class="text-sm font-medium mb-2">Input</h3>
+                        <pre class="text-xs bg-gray-50 p-4 rounded" x-text="JSON.stringify(jsonDiffModal.input, null, 2)"></pre>
+                    </div>
+                    <div class="flex-1 p-4 overflow-auto">
+                        <h3 class="text-sm font-medium mb-2">Output</h3>
+                        <pre class="text-xs bg-gray-50 p-4 rounded" x-text="JSON.stringify(jsonDiffModal.output, null, 2)"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
