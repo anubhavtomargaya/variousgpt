@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import time
 from flask import jsonify
 import requests
 
@@ -7,6 +8,7 @@ from google.cloud import storage
 from extract_pdf_metadata import service_extract_pdf_metadata
 from process_pdf_text import service_extract_transcript_texts
 from dirs import PDF_DIR
+from worker_logging import PipelineStage, ProcessStatus, log_pipeline_event
 
 #utils.py
 def _make_file_path(direcotry:Path,
@@ -57,19 +59,46 @@ def download_pdf_from_pdf_bucket(file_name, dir=PDF_DIR,format='pdf',bytes=False
         destination_file_path = os.path.join('/tmp', file_name)
         return download_gcs_file(source_blob_name,destination_file_name=destination_file_path)
     
-def process_stage_one(file_name):
+def process_stage_one(file_name,process_id):
+    start_time = time.time()
     print("file name",file_name)
     fname = download_pdf_from_pdf_bucket(file_name)
     try:
         # row_id = service_extract_pdf_metadata(fname)
         # if row_id:
-        print("fname",fname)
+        print("fname",file_name)
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.TS_EXTRACTION,
+            status=ProcessStatus.STARTED,
+        
+        )
         final_ = service_extract_transcript_texts(fname)
         print("final donw",type(final_))
         print(final_)
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.TS_EXTRACTION,
+            status=ProcessStatus.COMPLETED,
+            processing_time=processing_time,
+            metadata={'output':final_,'input':''}
+        )
         return True
     except Exception as e:
         print("error in processing pdf",e)
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file_name ,
+            process_id=process_id,
+            stage=PipelineStage.TS_EXTRACTION,
+            status=ProcessStatus.FAILED,
+            error_message=str(e),
+            processing_time=processing_time
+        )
         return False
 
 def process_qa_mg_intel(filename):
@@ -97,12 +126,15 @@ def process_valid_pdf(event, context=None):
     if not isinstance(event,dict):
         request_json = event.get_json()
         file_name = request_json['name']
+        process_id = request_json['process_id']
     else:
         file_path = event['name']
         file_name = Path(file_path).name
         bucket_name = event['bucket']
+        process_id = event['process_id']
         print(f"Processing file: {file_name} in bucket: {bucket_name}")
-    pdf_to_ts = process_stage_one(file_name)
+    pdf_to_ts = process_stage_one(file_name,process_id)
+
     if not pdf_to_ts:
         raise Exception("unable to process stage one %s",pdf_to_ts)
     print('processed pdf to ts ')

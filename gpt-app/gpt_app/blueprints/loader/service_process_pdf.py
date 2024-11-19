@@ -35,10 +35,10 @@ def process_pdf_input_v2(file_name,
     pass 
 import requests
 
-def run_classifier(name):
+def run_classifier(name,process_id):
     url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_classify_pdf_metadata"
     headers = {"Content-Type": "application/json"}
-    data = {"name": name}
+    data = {"name": name,'process_id':process_id}
     print("url",url)
     response = requests.post(url, headers=headers, json=data)
     print("response clasifer", response.__dict__)
@@ -49,45 +49,45 @@ def run_classifier(name):
 
 
 def run_extract_pdf_transcript(name,process_id):
-    start_time = time.time()
+    # start_time = time.time()
     try:
 
         # url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_transcript_intel"
         url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_pdf_extract_main_http"
         headers = {"Content-Type": "application/json"}
-        data = {"name": name}
-        log_pipeline_event(
-            file_name=name,
-            process_id=process_id,
-            stage=PipelineStage.TS_EXTRACTION,
-            status=ProcessStatus.STARTED,
-        )
+        data = {"name": name,'process_id':process_id}
+        # log_pipeline_event(
+        #     file_name=name,
+        #     process_id=process_id,
+        #     stage=PipelineStage.TS_EXTRACTION,
+        #     status=ProcessStatus.STARTED,
+        # )
         response = requests.post(url, headers=headers, json=data)
         print("response extact", response.__dict__)
         data = response.json()
         if response.status_code == 200:
-            processing_time = time.time() - start_time
-            log_pipeline_event(
-                file_name=name,
-                process_id=process_id,
-                stage=PipelineStage.TS_EXTRACTION,
-                status=ProcessStatus.COMPLETED,
-                processing_time=processing_time,
-                metadata=data
-            )
+            # processing_time = time.time() - start_time
+            # log_pipeline_event(
+            #     file_name=name,
+            #     process_id=process_id,
+            #     stage=PipelineStage.TS_EXTRACTION,
+            #     status=ProcessStatus.COMPLETED,
+            #     processing_time=processing_time,
+            #     metadata=data
+            # )
             return response.json()  # Assuming the response is in JSON format
         else:
             return {"error": response.status_code, "message": response.text}
     except Exception as e:
-        processing_time = time.time() - start_time
-        log_pipeline_event(
-            file_name=name ,
-            process_id=process_id,
-            stage=PipelineStage.TS_EXTRACTION,
-            status=ProcessStatus.FAILED,
-            error_message=str(e),
-            processing_time=processing_time
-        )
+        # processing_time = time.time() - start_time
+        # log_pipeline_event(
+        #     file_name=name ,
+        #     process_id=process_id,
+        #     stage=PipelineStage.TS_EXTRACTION,
+        #     status=ProcessStatus.FAILED,
+        #     error_message=str(e),
+        #     processing_time=processing_time
+        # )
         return {"error": "fatal", "message": str(e)}
 
 
@@ -120,37 +120,38 @@ def process_pdf_to_doc(file,added_by=None):
     #         print("earning call NOT detected! response", classificaiton) 
     #         return False 
     try:
-        log_pipeline_event(
-            file_name=file,
-            process_id=process_id,
-            stage=PipelineStage.CLASSIFICATION,
-            status=ProcessStatus.STARTED,
-        )
-        classification = run_classifier(file)
+        # log_pipeline_event(
+        #     file_name=file,
+        #     process_id=process_id,
+        #     stage=PipelineStage.CLASSIFICATION,
+        #     status=ProcessStatus.STARTED,
+        # )
+        classification = run_classifier(file,process_id)
         if not classification:
             raise Exception("ClassifierError: Returned None",classification)
-        processing_time = time.time() - start_time
-        log_pipeline_event(
-            file_name=file,
-            process_id=process_id,
-            stage=PipelineStage.CLASSIFICATION,
-            status=ProcessStatus.COMPLETED,
-            processing_time=processing_time,
-            metadata={'valid':None}
-        )
+        # processing_time = time.time() - start_time
+        # log_pipeline_event(
+        #     file_name=file,
+        #     process_id=process_id,
+        #     stage=PipelineStage.CLASSIFICATION,
+        #     status=ProcessStatus.COMPLETED,
+        #     processing_time=processing_time,
+        #     metadata={'valid':None}
+        # )
         # file_name = json.loads(classification).__dict__['_content']
         print('classf',classification)
         print('file name',classification.split('/')[-1])
     except Exception as e:
-        processing_time = time.time() - start_time
-        log_pipeline_event(
-            file_name=file,
-            process_id=process_id,
-            stage=PipelineStage.CLASSIFICATION,
-            status=ProcessStatus.FAILED,
-            error_message=str(e),
-            processing_time=processing_time
-        )
+        # processing_time = time.time() - start_time
+        # log_pipeline_event(
+        #     file_name=file,
+        #     process_id=process_id,
+        #     stage=PipelineStage.CLASSIFICATION,
+        #     status=ProcessStatus.FAILED,
+        #     error_message=str(e),
+        #     processing_time=processing_time
+        # )
+        print("error in classifying pdf",e)
 
     if classification:
         
@@ -179,15 +180,15 @@ def process_pdf_to_doc(file,added_by=None):
                     "etc":extract_transcript
                     }
         else:
-            processing_time = time.time() - start_time
-            log_pipeline_event(
-            file_name=file,
-            process_id=process_id,
-            stage=PipelineStage.TS_EXTRACTION,
-            status=ProcessStatus.FAILED,
-            error_message=str(e),
-            processing_time=processing_time
-        )
+        #     processing_time = time.time() - start_time
+        #     log_pipeline_event(
+        #     file_name=file,
+        #     process_id=process_id,
+        #     stage=PipelineStage.TS_EXTRACTION,
+        #     status=ProcessStatus.FAILED,
+        #     error_message=str(e),
+        #     processing_time=processing_time
+        # )
             return {"url":"unable to extract transcript from Document"}
         
         

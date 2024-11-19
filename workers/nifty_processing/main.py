@@ -12,7 +12,7 @@ def update_ltd(x:str ):
         return x
 nifty_code  = {'MARUTI':4470,
                'HINDUNILVR':369,
-                'ULTRACEMCO':   4499,
+                'ULTRACEMCO':4499,
                 'BAJAJ-AUTO':4946, 
                 'EICHERMOT': 697,
                 'BHARTIARTL':4438,
