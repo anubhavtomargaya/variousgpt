@@ -1,6 +1,7 @@
 
 import json
 from pathlib import Path
+import time
 from typing import Any, Dict
 from utils_qa import get_openai_client,count_tokens, insert_qa_section, load_ts_section_management
 from handler_supabase import ( 
@@ -13,6 +14,7 @@ from generate_concall_management_guidance import extract_management_insights
 from generate_concall_management_tags import identify_transcript_tags
 from generate_concall_summary_parent import generate_structured_summary
 from generate_concall_summary_takeaway import generate_engaging_update
+from worker_logging import log_pipeline_event,PipelineStage,ProcessStatus
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -252,29 +254,62 @@ def process_earning_call_summary(file_name):
         return {
             'guidance': f"ERROR: {str(e)}",
             'tags': f"ERROR: {str(e)}",
+            'takeaway': f"ERROR: {str(e)}",
             'summary': f"ERROR: {str(e)}"
         }
 
 def main_process_qa_fx(event,context=None):
     print("Processing ts intel qa section")
+    start_time = time.time()
     if not isinstance(event,dict):
         request_json = event.get_json()
         file_name = request_json['name']
+        process_id = request_json['process_id']
       
     else:
         file_path = event['name']
+        process_id = event['process_id']
         file_name = Path(file_path).name
 
         print(f"Processing file: {file_name} in _pdf-transcript_ table")
+    
+  
+    log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.QA_MG_INTEL_GENERATION,
+            status=ProcessStatus.STARTED,
+        
+        )
     qa_proc = process_earnings_call_qa(filename=file_name)
     
     if qa_proc['status']=='success':
         summ_proc = process_earning_call_summary(file_name=file_name)
         if not summ_proc:
             res = 'summary-failure'
+            processing_time = time.time() - start_time
+            log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.QA_MG_INTEL_GENERATION,
+            status=ProcessStatus.FAILED,
+            error_message=summ_proc,
+            processing_time=processing_time
+        )
+
         else:
             res = 'summary-success'
         qa_proc["status_addn"] = res
+        processing_time = time.time() - start_time
+        log_pipeline_event(
+            file_name=file_name,
+            process_id=process_id,
+            stage=PipelineStage.QA_MG_INTEL_GENERATION,
+            status=ProcessStatus.COMPLETED,
+            processing_time=processing_time,
+            metadata={'output':qa_proc,'input':''}
+        )
+
         return qa_proc
        
 if __name__=='__main__':

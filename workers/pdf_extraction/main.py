@@ -101,13 +101,14 @@ def process_stage_one(file_name,process_id):
         )
         return False
 
-def process_qa_mg_intel(filename):
+def process_qa_mg_intel(filename,process_id):
     url = "https://asia-southeast1-gmailapi-test-361320.cloudfunctions.net/process_qa_mg_intel_http"
     headers = {
         "Content-Type": "application/json"
     }
     data = {
-        "name": filename
+        "name": filename,
+        "process_id":process_id
     }
 
     response = requests.post(url, headers=headers, json=data)
@@ -138,7 +139,7 @@ def process_valid_pdf(event, context=None):
     if not pdf_to_ts:
         raise Exception("unable to process stage one %s",pdf_to_ts)
     print('processed pdf to ts ')
-    ts_intel = process_qa_mg_intel(file_name)
+    ts_intel = process_qa_mg_intel(file_name,process_id)
     print("ts intel output",ts_intel)
     print("fil name type",type(file_name))
     print("ts intel type",type(ts_intel))
