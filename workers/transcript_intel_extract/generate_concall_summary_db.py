@@ -11,27 +11,28 @@ openai_client = get_openai_client()
 
 # summary structured
 from store_prompts.create_prompts import prompt_manager
-def generate_structured_summary(transcript_json: Dict) -> Dict:
+def generate_content_with_prompt(context_json: Dict,
+                                prompt_name ="earnings_call_summary",
+                                prompt_version=1) -> Dict:
     """
-    Generate a streamlined earnings call summary optimized for UI presentation.
-    Handles missing/unavailable metrics appropriately.
+    Generate output based on prompt
     
     Args:
-        transcript_json: Dictionary containing management commentary
+        transcript_json: Dictionary containing text section to be processed 
         
     Returns:
         Dictionary with structured summaries optimized for UI rendering
     """
     
-    prompt = prompt_manager.get_prompt("earnings_call_summary")
+    prompt = prompt_manager.get_prompt(prompt_name) # add version here later on
     if not prompt:
-        raise ValueError("Earnings call summary prompt not found in database")
+        raise ValueError(f"Required prompt not found in database: {prompt_name} v{prompt_version}")
 
 
     def create_summary(transcript: Dict) -> Dict:
         # Build the complete prompt using stored components
         summary_prompt = f"""
-        Transcript:
+        Context:
         {json.dumps(transcript, indent=2)}
 
         Instructions:
@@ -190,7 +191,7 @@ def generate_structured_summary(transcript_json: Dict) -> Dict:
         return summary
 
     try:
-        summary = create_summary(transcript_json)
+        summary = create_summary(context_json)
         validated_summary = validate_summary(summary)
         return validated_summary
 
@@ -210,12 +211,12 @@ if __name__ =='__main__':
    
     def test_management_struct_summary():
         section = load_ts_section_management(f)
-        return generate_structured_summary(section)
+        return generate_content_with_prompt(section)
     
     def test_insert_management_summary():
         key = 'struct_summary'
         section = load_ts_section_management(f)
-        s = generate_structured_summary(section)
+        s = generate_content_with_prompt(section)
         if s:
             print("inserting")
             return insert_management_intel(f,key,s)

@@ -146,7 +146,8 @@ def update_transcript_intel_entry(file_name,
                                   mg_data=None,
                                   adn_meta=None ):
     meta = {
-        'management_data':mg_data
+        'management_data':mg_data,
+        'addn_meta':adn_meta
     }
 
     result = supabase.table('transcripts-intel').update(meta).eq('file_name', file_name).execute()
@@ -158,6 +159,12 @@ def fetch_management_data(file_name: str) -> dict:
     if not result.data:
         raise ValueError(f"No entry found for file_name: {file_name}")
     return result.data[0]['management_data'] or {}
+
+def fetch_addn_metadata(file_name: str) -> dict:
+    result = supabase.table('transcripts-intel').select('addn_meta').eq('file_name', file_name).execute()
+    if not result.data:
+        raise ValueError(f"No entry found for file_name: {file_name}")
+    return result.data[0]['addn_meta'] or {}
 
 def update_transcript_intel(file_name: str, meta: dict) -> str:
     result = supabase.table('transcripts-intel').update(meta).eq('file_name', file_name).execute()

@@ -15,6 +15,7 @@ from generate_concall_management_tags import identify_transcript_tags
 from generate_concall_summary_parent import generate_structured_summary
 from generate_concall_summary_takeaway import generate_engaging_update
 from worker_logging import log_pipeline_event,PipelineStage,ProcessStatus
+from generate_concall_summary_db import generate_content_with_prompt
 
 QA_START_MODEL = 'gpt-4o-mini'
 openai_client = get_openai_client()
@@ -210,6 +211,10 @@ def process_earning_call_summary(file_name,process_id):
             'summary': "NONE",
             'takeaway':'NONE'
         }
+        PROMPT_NAME_SUMMARY = 'earnings_call_summary'
+        PROMPT_NAME_TAKWAWAY = 'earnings_call_takeaway'
+        PROMPT_NAME_GUIDANCE = 'earnings_call_guidance'
+        PROMPT_NAME_TAGS = 'earnings_call_tags'
         
         guidance_key = 'structured_guidance'
         summary_key = 'struct_summary'
@@ -222,6 +227,7 @@ def process_earning_call_summary(file_name,process_id):
             process_id=process_id,
             stage=PipelineStage.GUIDANCE,
             status=ProcessStatus.STARTED,
+         
         
         )
             print("Extracting Guidance .... ")
@@ -304,13 +310,15 @@ def process_earning_call_summary(file_name,process_id):
                 process_id=process_id,
                 stage=PipelineStage.PARENT_SUMMARY,
                 status=ProcessStatus.STARTED,
+                metadata={'input':section}
             
             )
-            s = generate_structured_summary(section)
+            prompt_version=2
+            s = generate_content_with_prompt(section,prompt_name=PROMPT_NAME_SUMMARY,prompt_version=prompt_version)
             if s:
                 print("inserting")
                 # Fixed: Changed 'f' to 'file_name' and added missing named parameters
-                i = insert_management_intel(file=file_name, key=summary_key, document=s)
+                i = insert_management_intel(file=file_name, key=summary_key, document=s,prompt=PROMPT_NAME_SUMMARY,prompt_version=prompt_version)
                 status["summary"] = 'COMPLETE'
                 print("inserted")
                 processing_time = time.time() - start_time
@@ -321,7 +329,7 @@ def process_earning_call_summary(file_name,process_id):
                     stage=PipelineStage.PARENT_SUMMARY,
                     status=ProcessStatus.COMPLETED,
                     processing_time=processing_time,
-                    metadata={'output':s,'input':''}
+                    metadata={'output':s,'input':PROMPT_NAME_SUMMARY}
                 )
             else:
                 print("not summary")
@@ -428,9 +436,9 @@ def main_process_qa_fx(event,context=None):
 if __name__=='__main__':
     # f = 'fy-2022_q3_earnings_call_transcript_pcbl_limited.pdf'
     # f = 'fy25_q1_earnings_call_transcript_zomato_limited_zomato.pdf'
-    # f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
-    f = 'fy-2024_q4_Earnings_Conference_Raymond Limited.pdf'
-    f = 'fy2025_q2_adf_foods_limited_quarterly_earnings_call_transcript_adffoods.pdf'
+    f = 'fy-2024_q1_earnings_call_transcript_neuland_laboratories_524558.pdf'
+    # f = 'fy-2024_q4_Earnings_Conference_Raymond Limited.pdf'
+    # f = 'fy2025_q2_adf_foods_limited_quarterly_earnings_call_transcript_adffoods.pdf'
 
     def test_get_ts_chunks():
         ts =  get_pdf_chunks_transcript(f)
@@ -473,12 +481,12 @@ if __name__=='__main__':
         return insert_qa_section(f,processed_qa)
         
     def test_pipeline_v2():
-        return process_earning_call_summary(f)
+        return process_earning_call_summary(f,process_id='test123')
        
 
     #main -tests
     def test_pipeline():
-        return process_earnings_call_qa(f)
+        return process_earnings_call_qa(f,process_id='test123')
     # print(test_get_ts_chunks())
     # print(test_get_qa_start())
     
