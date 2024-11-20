@@ -225,3 +225,5 @@ workers/pdf_classification/sa_gcs.json
 workers/ticker_info_pull/env.json
 workers/ticker_info_pull/sa_gcs.json
 dsa.py
+workers/store_prompts/env.json
+workers/transcript_intel_extract/store_prompts/env.json
