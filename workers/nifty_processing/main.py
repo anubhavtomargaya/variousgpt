@@ -36,9 +36,13 @@ nifty_code  = {'MARUTI':4470,
                 'TRENT':181,
                 'SUNPHARMA':2757,
                 'POWERGRID':43788,
-
+                'HDFCBANK':129,
+                'IDEA':4708,
+                'GMRINFRA':4643,
+                'INDHOTEL':382
 
                  }
+tslugs = {'IDEA':'idea-cellular-limited'}
 error_codes = {
     87: {"status":'failing',"reason":"text not getting extracted","workers": ['pdf_extraction' ],},
     221: { "status":'garbage',"reason":"extracted intel seems garbage"},
