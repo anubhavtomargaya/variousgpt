@@ -210,7 +210,7 @@ def get_process_logs(process_id):
                         # filtered_logs.append(value['input']) 
     # print("logs", filtered_logs)
     # names = list(set(filtered_logs))
-    # print("names",names)
+    # print("names",logs[0].items())
     # prompts_mapping = get_prompt_by_name()
     return jsonify(logs)
 

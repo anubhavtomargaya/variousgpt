@@ -216,6 +216,10 @@ def process_earning_call_summary(file_name,process_id):
         PROMPT_NAME_GUIDANCE = 'earnings_call_guidance'
         PROMPT_NAME_TAGS = 'earnings_call_tags'
         
+        prompt_version_guidance=1
+        prompt_version_summary=1
+        prompt_version_takeaway=1
+
         guidance_key = 'structured_guidance'
         summary_key = 'struct_summary'
         tags_key = 'tags'
@@ -231,11 +235,16 @@ def process_earning_call_summary(file_name,process_id):
         
         )
             print("Extracting Guidance .... ")
-            s = extract_management_insights(section)
+            s = generate_content_with_prompt(section,prompt_name=PROMPT_NAME_GUIDANCE,prompt_version=prompt_version_guidance)
             if s:
                 print("inserting")
                 # Fixed: Changed 'f' to 'file_name'
-                i = insert_management_intel(file=file_name, key=guidance_key, document=s)
+                i = insert_management_intel(file=file_name, 
+                                            key=guidance_key, 
+                                            document=s,
+                                            prompt=PROMPT_NAME_GUIDANCE,
+                                            prompt_version=prompt_version_summary)
+                
                 status["guidance"] = 'COMPLETE'
                 processing_time = time.time() - start_time
                 log_pipeline_event(
@@ -244,7 +253,7 @@ def process_earning_call_summary(file_name,process_id):
                     stage=PipelineStage.GUIDANCE,
                     status=ProcessStatus.COMPLETED,
                     processing_time=processing_time,
-                    metadata={'output':s,'input':''}
+                    metadata={'output':s,'input':PROMPT_NAME_GUIDANCE}
                 )
             else:
                 print("not guidance")
@@ -256,7 +265,8 @@ def process_earning_call_summary(file_name,process_id):
             stage=PipelineStage.GUIDANCE,
             status=ProcessStatus.FAILED,
             error_message=str("Error in getting qa section"),
-            processing_time=processing_time
+            processing_time=processing_time,
+            metadata={'input':PROMPT_NAME_GUIDANCE,'output':str(e)}
         )
             print(f"Error processing guidance: {str(e)}")
             # Don't suppress the error silently
@@ -313,9 +323,9 @@ def process_earning_call_summary(file_name,process_id):
                 metadata={'input':section}
             
             )
-            prompt_version_summary=1
-            prompt_version_takeaway=1
+           
             s = generate_content_with_prompt(section,prompt_name=PROMPT_NAME_SUMMARY,prompt_version=prompt_version_summary)
+           
             if s:
                 print("inserting")
                 # Fixed: Changed 'f' to 'file_name' and added missing named parameters
@@ -498,7 +508,7 @@ if __name__=='__main__':
 
     #main -tests
     def test_pipeline():
-        return process_earnings_call_qa(f,process_id='test123')
+        return process_earnings_call_qa(f,process_id='test23')
     # print(test_get_ts_chunks())
     # print(test_get_qa_start())
     

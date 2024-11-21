@@ -192,8 +192,8 @@ def generate_content_with_prompt(context_json: Dict,
 
     try:
         summary = create_summary(context_json)
-        validated_summary = validate_summary(summary)
-        return validated_summary
+        # validated_summary = validate_summary(summary)
+        return summary
 
     except Exception as e:
         print(f"Error in summary generation: {str(e)}")

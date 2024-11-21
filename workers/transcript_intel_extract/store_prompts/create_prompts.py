@@ -128,69 +128,67 @@ prompt_manager = PromptManager(supabase_client=supabase)
 
 def store_earnings_prompt(user_id: str):
     prompt_data = PromptData(
-        name="earnings_call_takeaway",
-        display_name="Earnings Call Takeaway Summary Generator",
-        description="Generates structured short summary from earnings call parent summary in structure format focusing on a CTA & hook",
+        name="earnings_call_guidance",
+        display_name="Earnings Call Guidance Summary Generator",
+        description="Generates structured guidance summary from earnings call transcript of management section focusing on a quotes & sentiment",
         category=PromptCategory.SUMMARIZATION,
         status=PromptStatus.ACTIVE,
-        system_prompt="""You are a strategic business analyst creating \
-                        visual-first earnings summaries. Focus on key metrics and \
-                        transformational narratives that work well in a modern UI.""",
+        system_prompt="""You are a financial analyst specializing in earnings call analysis. \
+                        Focus on extracting meaningful quotes and insights from management commentary.""",
     
     main_prompt="""
-        Transform this quarterly financial data into an engaging narrative by identifying:
+       Analyze this earnings call transcript and extract key management quotes and insights. 
+        Focus on direct statements from management that provide strategic insights, future outlook, or important context.
 
-        1. Core Story:
-           - What's the dominant theme this quarter?
-           - What single narrative thread connects the numbers?
-           - How does performance reflect company's journey?
-           - What makes this update newsworthy?
+        For each section, identify the most impactful direct quotes or paraphrased statements that:
+        - Reveal management's strategic thinking and sentiment
+        - Provide meaningful context about performance or outlook
+        - Indicate significant changes or developments
+        - Show management's response to challenges or opportunities
 
-        2. Supporting Evidence:
-           - Which metric best illustrates the main story?
-           - What achievements reinforce this narrative?
-           - How do the numbers support our story?
-
-        3. Future Momentum:
-           - Which initiatives show most promise?
-           - What developments signal future growth?
-           - How is the company positioning for tomorrow?
-
-        Narrative Guidelines:
-        - Lead with impact - what matters most?
-        - Connect performance to potential
-        - Make numbers tell a story
-        - Focus on momentum and direction
-        - Keep language crisp and engaging
-        - Keep the CTA as a 1-2 words or 3-4 words MAXIMUM. IT SHOULD BE LIKE A Call to Action.
+        Guidelines for quote selection:
+        1. Prioritize actual quotes that sound natural and conversational
+        2. Include relevant context and implications
+        3. Identify the speaker role (CEO, CFO, etc.) when clear
+        4. Note the topic and its broader implications
+        5. Assess the sentiment and confidence level in the statement
         """,
 
     output_format=
-        {
-            "story": {
-                "headline": {
-                    "main": "string (impactful 4-5 word statement)",
-                    "supporting": "string (context, max 8 words)"
+       {
+            "sections": {
+                "financial_performance": {
+                    "revenue_profits_margins": [
+                        {
+                            "quote": "string (the actual management quote or paraphrased statement)",
+                            "speaker": "string (role of the speaker, e.g., CEO, CFO)",
+                            "context": "string (additional context or implications)",
+                            "topic_tags": ["string"],
+                            "sentiment": "positive/neutral/negative",
+                            "confidence_level": "high/moderate/low",
+                            "key_metrics": {
+                                "metric_name": "value",
+                                "trend": "up/down/stable"
+                            }
+                        }
+                    ]
                 },
-                "key_theme": "string (one sentence narrative)",
-                "tone": "string (growth/resilience/transformation)"
-            },
-            "evidence": {
-                "primary_metric": {
-                    "label": "string (metric name)",
-                    "value": "string (with comparison)",
-                    "significance": "string (why this matters)"
+                "business_operations": {
+                    "core_metrics": [],
+                    "market_position": []
                 },
-                "supporting_points": [
-                    {
-                        "text": "string (forward-looking achievement)",
-                        "category": "string (growth/strategy/innovation)"
-                    }
-                ]
-            },
-            "engagement": {
-                "hook": "string (why readers should care)",
-                "cta": "string (action prompt)"
+                "growth_initiatives": {
+                    "expansion_plans": [],
+                    "new_launches": []
+                },
+                "market_dynamics": {
+                    "industry_trends": [],
+                    "competition": []
+                },
+                "future_outlook": {
+                    "guidance": [],
+                    "challenges": []
+                }
             }
         }
     ,
@@ -200,22 +198,36 @@ def store_earnings_prompt(user_id: str):
         "properties": {
             "parent_summary_json": {
                 "type": "object",
-                "description": "Dictionary containing structured summary extracted from management commentary"
+                "description": "Dictionary containing structured management section transcript extracted from pdf"
             }
         }
     },
 
     guidelines=[
-        'Make every word count - grab attention fast',
-        'Build narrative momentum',
-        'Connect present results to future potential',
-        'Keep language accessible yet impactful'
+        """ For each quote, identify:
+           - Main topic or theme
+           - Broader business implications
+           - Level of certainty in statements
+           - Any specific metrics or targets mentioned
+           """,
+        """ Focus on quotes that:
+           - Provide strategic insights
+           - Discuss future plans or guidance
+           - Address key challenges or opportunities
+           - Explain important changes or trends
+        """,
+        """ When paraphrasing:
+           - Maintain the original tone and intent
+           - Keep management's perspective clear
+           - Include essential numbers and metrics
+           - Preserve important qualifiers and context
+        """
     ],
 
   
     notes="",
     
-    tags=["earnings", "financial","short", "metrics", "summarization"],
+    tags=["earnings", "financial","quotes", "sentiment", "summarization"],
     
 
 )
