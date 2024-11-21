@@ -4,7 +4,7 @@ from typing import List, Dict, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 import json
-from gpt_app.common.supabase_handler import supabase as supabase_client
+from gpt_app.common.supabase_handler import supabase as supabase_client, get_prompts_by_name
 
 loader_bp = Blueprint('gflow', __name__, url_prefix='/gflow')
 
@@ -197,6 +197,21 @@ def get_stages():
 def get_process_logs(process_id):
     """Get all logs for a specific process"""
     logs = repo.get_logs_by_process(process_id)
+    # print("logs",[row.items() for row in logs ])
+ 
+    for row in logs:
+        if row['status']=='completed':
+            for key, value in row.items():
+                if key == 'metadata' and isinstance(value, dict) and 'input' in value:
+                    if value['input'] != '':
+                        row['metadata']['input'] =  get_prompts_by_name(value['input'],prompt_version=1)
+                        print("prompts name adding")
+                        # print(get_prompts_by_name(value['input'],prompt_version=1))
+                        # filtered_logs.append(value['input']) 
+    # print("logs", filtered_logs)
+    # names = list(set(filtered_logs))
+    # print("names",names)
+    # prompts_mapping = get_prompt_by_name()
     return jsonify(logs)
 
 @loader_bp.route('/process/<process_id>/summary', methods=['GET'])

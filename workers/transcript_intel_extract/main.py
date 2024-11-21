@@ -313,7 +313,7 @@ def process_earning_call_summary(file_name,process_id):
                 metadata={'input':section}
             
             )
-            prompt_version_summary=2
+            prompt_version_summary=1
             prompt_version_takeaway=1
             s = generate_content_with_prompt(section,prompt_name=PROMPT_NAME_SUMMARY,prompt_version=prompt_version_summary)
             if s:

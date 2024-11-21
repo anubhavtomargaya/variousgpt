@@ -1,5 +1,6 @@
 
 from enum import Enum
+import json
 from typing import Dict, Optional, List
 from dataclasses import dataclass
 from datetime import datetime
@@ -121,109 +122,22 @@ class PromptManager:
         }).eq('name', name).execute()
         
         return result.data[0]
+    
+def get_prompt_string(context,prompt:dict):
+    return f"""
+        Context:
+        {json.dumps(context, indent=2)}
 
-# Example usage for your earnings call prompt
-from .supabase_client import supabase
+        Instructions:
+        {prompt['main_prompt']}
+
+        Output Format:
+        always return JSON
+        {json.dumps(prompt['output_format'], indent=2)}
+
+        Additional Guidelines:
+        {json.dumps(prompt['guidelines'], indent=2)}
+        """
+
+from supabase_handler import supabase
 prompt_manager = PromptManager(supabase_client=supabase)
-
-def store_earnings_prompt(user_id: str):
-    prompt_data = PromptData(
-        name="earnings_call_takeaway",
-        display_name="Earnings Call Takeaway Summary Generator",
-        description="Generates structured short summary from earnings call parent summary in structure format focusing on a CTA & hook",
-        category=PromptCategory.SUMMARIZATION,
-        status=PromptStatus.ACTIVE,
-        system_prompt="""You are a strategic business analyst creating \
-                        visual-first earnings summaries. Focus on key metrics and \
-                        transformational narratives that work well in a modern UI.""",
-    
-    main_prompt="""
-        Transform this quarterly financial data into an engaging narrative by identifying:
-
-        1. Core Story:
-           - What's the dominant theme this quarter?
-           - What single narrative thread connects the numbers?
-           - How does performance reflect company's journey?
-           - What makes this update newsworthy?
-
-        2. Supporting Evidence:
-           - Which metric best illustrates the main story?
-           - What achievements reinforce this narrative?
-           - How do the numbers support our story?
-
-        3. Future Momentum:
-           - Which initiatives show most promise?
-           - What developments signal future growth?
-           - How is the company positioning for tomorrow?
-
-        Narrative Guidelines:
-        - Lead with impact - what matters most?
-        - Connect performance to potential
-        - Make numbers tell a story
-        - Focus on momentum and direction
-        - Keep language crisp and engaging
-        - Keep the CTA as a 1-2 words or 3-4 words MAXIMUM. IT SHOULD BE LIKE A Call to Action.
-        """,
-
-    output_format=
-        {
-            "story": {
-                "headline": {
-                    "main": "string (impactful 4-5 word statement)",
-                    "supporting": "string (context, max 8 words)"
-                },
-                "key_theme": "string (one sentence narrative)",
-                "tone": "string (growth/resilience/transformation)"
-            },
-            "evidence": {
-                "primary_metric": {
-                    "label": "string (metric name)",
-                    "value": "string (with comparison)",
-                    "significance": "string (why this matters)"
-                },
-                "supporting_points": [
-                    {
-                        "text": "string (forward-looking achievement)",
-                        "category": "string (growth/strategy/innovation)"
-                    }
-                ]
-            },
-            "engagement": {
-                "hook": "string (why readers should care)",
-                "cta": "string (action prompt)"
-            }
-        }
-    ,
-
-    input_schema={
-        "type": "object",
-        "properties": {
-            "parent_summary_json": {
-                "type": "object",
-                "description": "Dictionary containing structured summary extracted from management commentary"
-            }
-        }
-    },
-
-    guidelines=[
-        'Make every word count - grab attention fast',
-        'Build narrative momentum',
-        'Connect present results to future potential',
-        'Keep language accessible yet impactful'
-    ],
-
-  
-    notes="",
-    
-    tags=["earnings", "financial","short", "metrics", "summarization"],
-    
-
-)
-
-# Save the prompt
-    prompt_manager.save_prompt(prompt_data, user_id)
-
-
-if __name__ == '__main__':
-    print(store_earnings_prompt('test@gmail.com'))
-    

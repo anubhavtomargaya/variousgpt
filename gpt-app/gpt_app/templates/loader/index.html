@@ -180,7 +180,7 @@
                             <div class="relative p-4 flex flex-wrap gap-4">
                                 <template x-for="stage in process.stages" :key="stage.id">
                                     <div 
-                                        @click="showJsonDiff(stage.metadata, stage.metadata)"
+                                        @click="showJsonDiff(stage.metadata?.input, stage.metadata?.output)"
                                         class="w-64 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow cursor-pointer p-4"
                                     >
                                         <div class="flex justify-between items-center">

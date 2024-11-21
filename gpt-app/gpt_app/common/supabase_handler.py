@@ -193,7 +193,25 @@ def get_pdf_chunks_transcript(file_name):
         return False
     else:
         print("documents supp")
-        print(rows.data)
+        # print(rows.data)
+        return rows.data[0]
+    
+def get_prompts_by_name(prompt_name, prompt_version):
+    print("running supabase query...to get prompt data")
+    filters = {'name': prompt_name}
+    if prompt_version:
+        filters['version'] = prompt_version
+            
+    result = supabase.table('prompts').select("*").match(filters).execute()
+        # result = self.supabase.table('prompts').select("*").eq('name', name).execute()
+
+    if not result.data:
+        print("no rows found")
+        return False
+    else:
+        print("documents supp")
+        # print(result.data)
+        return result.data[0] 
         return rows.data[0]
     
 def get_file_meta(file_name):
@@ -571,10 +589,14 @@ if __name__=='__main__':
     def test_get_latest_files():
         return get_latest_transcripts()
     
+    def test_get_prompt_names():
+        return get_prompts_by_name(prompt_name='earnings_call_takeaway',prompt_version=1)
+    
 
     
     # print(test_get_qa_section())
     # print(test_get_content_top_qa())
-    print(test_get_struct_summary())
+    # print(test_get_struct_summary())
+    print(test_get_prompt_names())
     # print(test_get_intel_files())
     # print(test_get_latest_files())
