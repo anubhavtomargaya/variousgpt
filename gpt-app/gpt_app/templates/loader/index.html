@@ -202,35 +202,53 @@
                     <pre class="text-xs bg-gray-50 p-4 rounded" x-text="jsonDiffModal.stageData?.started?.input ? JSON.stringify(jsonDiffModal.stageData.started.input, null, 2) : 'No data'"></pre>
                 </div>
 
-                <!-- Enhanced Completed Input Panel -->
+                <!-- Enhanced Completed/Failed Input Panel -->
                 <div class="flex-1 p-4 overflow-auto">
-                    <h3 class="text-sm font-medium mb-2 text-green-600">Input/COMPLETED</h3>
-                    <template x-if="jsonDiffModal.stageData?.completed?.input">
+                    <h3 class="text-sm font-medium mb-2" 
+                        :class="{
+                            'text-green-600': jsonDiffModal.stageData?.completed,
+                            'text-red-600': jsonDiffModal.stageData?.failed
+                        }"
+                        x-text="jsonDiffModal.stageData?.completed ? 'Input/COMPLETED' : 'Input/FAILED'"
+                    ></h3>
+
+                    <template x-if="jsonDiffModal.stageData?.failed?.error_message">
+                        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+                            <div class="font-medium mb-1">Error Message:</div>
+                            <div x-text="jsonDiffModal.stageData.failed.error_message"></div>
+                        </div>
+                    </template>
+
+                    <template x-if="jsonDiffModal.stageData?.completed?.input || jsonDiffModal.stageData?.failed?.input">
                         <div class="space-y-6">
                             <!-- Config Details -->
                             <div class="bg-gray-50 p-4 rounded">
                                 <div class="grid grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <span class="font-medium">ID:</span>
-                                        <span x-text="jsonDiffModal.stageData.completed.input.id"></span>
+                                        <span x-text="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.id"></span>
                                     </div>
                                     <div>
                                         <span class="font-medium">Version:</span>
-                                        <span x-text="jsonDiffModal.stageData.completed.input.version"></span>
+                                        <span x-text="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.version"></span>
                                     </div>
                                     <div>
                                         <span class="font-medium">Status:</span>
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded" x-text="jsonDiffModal.stageData.completed.input.status"></span>
+                                        <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded" 
+                                              x-text="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.status"></span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="font-medium">Active:</span>
-                                        <span class="w-4 h-4 rounded-full" :class="jsonDiffModal.stageData.completed.input.is_active ? 'bg-green-500' : 'bg-red-500'"></span>
+                                        <span class="w-4 h-4 rounded-full" 
+                                              :class="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.is_active ? 'bg-green-500' : 'bg-red-500'"></span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="font-medium">Favorite:</span>
-                                        <svg class="w-4 h-4" :class="jsonDiffModal.stageData.completed.input.is_favorite ? 'text-yellow-400 fill-current' : 'text-gray-300 fill-current'" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4" 
+                                             :class="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.is_favorite ? 'text-yellow-400 fill-current' : 'text-gray-300 fill-current'" 
+                                             viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
+                                        </svg>
                                     </div>
                                 </div>
                             </div>
@@ -238,20 +256,22 @@
                             <!-- System Prompt -->
                             <div>
                                 <h4 class="font-medium text-sm mb-2">System Prompt</h4>
-                                <div class="bg-gray-50 p-4 rounded text-sm whitespace-pre-wrap" x-text="jsonDiffModal.stageData.completed.input.system_prompt"></div>
+                                <div class="bg-gray-50 p-4 rounded text-sm whitespace-pre-wrap" 
+                                     x-text="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.system_prompt"></div>
                             </div>
 
                             <!-- Main Prompt -->
                             <div>
                                 <h4 class="font-medium text-sm mb-2">Main Prompt</h4>
-                                <div class="bg-gray-50 p-4 rounded text-sm whitespace-pre-wrap" x-text="jsonDiffModal.stageData.completed.input.main_prompt"></div>
+                                <div class="bg-gray-50 p-4 rounded text-sm whitespace-pre-wrap" 
+                                     x-text="(jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.main_prompt"></div>
                             </div>
 
                             <!-- Guidelines -->
                             <div>
                                 <h4 class="font-medium text-sm mb-2">Guidelines</h4>
                                 <ul class="list-disc list-inside bg-gray-50 p-4 rounded text-sm space-y-1">
-                                    <template x-for="guideline in jsonDiffModal.stageData.completed.input.guidelines" :key="guideline">
+                                    <template x-for="guideline in (jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.guidelines" :key="guideline">
                                         <li x-text="guideline"></li>
                                     </template>
                                 </ul>
@@ -261,18 +281,22 @@
                             <div>
                                 <h4 class="font-medium text-sm mb-2">Output Format</h4>
                                 <div class="bg-gray-50 p-4 rounded">
-                                    <pre class="text-xs" x-text="JSON.stringify(jsonDiffModal.stageData.completed.input.output_format, null, 2)"></pre>
+                                    <pre class="text-xs" x-text="JSON.stringify((jsonDiffModal.stageData.completed || jsonDiffModal.stageData.failed).input.output_format, null, 2)"></pre>
                                 </div>
                             </div>
                         </div>
                     </template>
-                    <div x-show="!jsonDiffModal.stageData?.completed?.input" class="text-gray-500">No data</div>
+                    <div x-show="!jsonDiffModal.stageData?.completed?.input && !jsonDiffModal.stageData?.failed?.input" class="text-gray-500">No data</div>
                 </div>
 
-                <!-- Output Panel (stays the same) -->
+                <!-- Output Panel -->
                 <div class="flex-1 p-4 overflow-auto">
                     <h3 class="text-sm font-medium mb-2 text-purple-600">Output</h3>
-                    <pre class="text-xs bg-gray-50 p-4 rounded" x-text="jsonDiffModal.stageData?.completed?.output ? JSON.stringify(jsonDiffModal.stageData.completed.output, null, 2) : 'No data'"></pre>
+                    <div x-show="jsonDiffModal.stageData?.failed" class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-700">
+                        No output available due to failure
+                    </div>
+                    <pre x-show="!jsonDiffModal.stageData?.failed" class="text-xs bg-gray-50 p-4 rounded" 
+                         x-text="jsonDiffModal.stageData?.completed?.output ? JSON.stringify(jsonDiffModal.stageData.completed.output, null, 2) : 'No data'"></pre>
                 </div>
             </div>
         </div>
