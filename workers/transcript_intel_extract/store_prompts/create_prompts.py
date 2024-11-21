@@ -123,163 +123,94 @@ prompt_manager = PromptManager(supabase_client=supabase)
 
 def store_earnings_prompt(user_id: str):
     prompt_data = PromptData(
-        name="earnings_call_summary",
-        display_name="Earnings Call Summary Generator",
-        description="Generates structured summaries from earnings call transcripts with financial metrics and key highlights",
+        name="earnings_call_takeaway",
+        display_name="Earnings Call Takeaway Summary Generator",
+        description="Generates structured short summary from earnings call parent summary in structure format focusing on a CTA & hook",
         category=PromptCategory.SUMMARIZATION,
         status=PromptStatus.ACTIVE,
-        system_prompt="""You are a precise summarizer focused on creating UI-friendly content...""",
+        system_prompt="""You are a strategic business analyst creating \
+                        visual-first earnings summaries. Focus on key metrics and \
+                        transformational narratives that work well in a modern UI.""",
     
     main_prompt="""
-         Create a clear, UI-friendly summary of this earnings call with the following structure:
+        Transform this quarterly financial data into an engaging narrative by identifying:
 
-        1. Highlights Section:
-           - Performance rating (one clear statement, indicate if assessment limited by data)
-           - 3-4 most important metrics with YoY/QoQ changes
-             * For each metric, ONLY include if explicitly mentioned with specific numbers
-             * If a metric is discussed but exact numbers aren't provided, note as "Details not provided"
-             * If YoY/QoQ changes aren't specified, note as "Comparison not available"
-           - Executive summary (2-3 sentences capturing key narrative)
-           - Management tone indicator
+        1. Core Story:
+           - What's the dominant theme this quarter?
+           - What single narrative thread connects the numbers?
+           - How does performance reflect company's journey?
+           - What makes this update newsworthy?
 
-        2. Main Sections (each with clear narrative and supporting points):
+        2. Supporting Evidence:
+           - Which metric best illustrates the main story?
+           - What achievements reinforce this narrative?
+           - How do the numbers support our story?
 
-           Performance Overview:
-           - Key financial metrics with comparisons
-             * ONLY include metrics explicitly stated in the transcript
-             * For any referenced metric without specific numbers, note as "Details not provided"
-             * For any metric without comparison data, note as "Comparison not available"
-           - Segment performance highlights (only include explicitly stated results)
-           - Notable variances or one-time items
-           - Include relevant management quotes on performance
+        3. Future Momentum:
+           - Which initiatives show most promise?
+           - What developments signal future growth?
+           - How is the company positioning for tomorrow?
 
-           Business Progress:
-           - Operational developments (specific achievements only)
-           - Product/market achievements (concrete results only)
-           - Strategic initiatives status (specific updates only)
-           - Customer/market dynamics (verified trends only)
-           
-           Future Outlook:
-           - Management guidance (only specific, stated projections)
-           - Growth initiatives and timelines (concrete plans only)
-           - Risk factors and mitigation
-           - Strategic priorities
-
-        3. Supporting Data:
-           - Industry context (verified trends only)
-           - Key performance indicators (only explicitly stated metrics)
-           - Risk factors
-           - Strategic initiatives
-
-        Guidelines:
-        - NEVER generate or estimate numbers - only use explicitly stated metrics
-        - For any referenced metric without specific numbers, mark as "Details not provided"
-        - For any metric without comparison data, mark as "Comparison not available"
-        - Use clear, direct language
-        - Include brief relevant management quotes
-        - Focus on material information
-        - Maintain data integrity - no placeholder percentages or metrics
+        Narrative Guidelines:
+        - Lead with impact - what matters most?
+        - Connect performance to potential
+        - Make numbers tell a story
+        - Focus on momentum and direction
+        - Keep language crisp and engaging
+        - Keep the CTA as a 1-2 words or 3-4 words MAXIMUM. IT SHOULD BE LIKE A Call to Action.
         """,
 
-    output_format={
-        "highlights": {
-            "rating": "string (clear performance assessment, well chosen brevity is key)",
-            "key_metrics": [
-                {
-                    "metric": "string (metric name)",
-                    "value": "string (exact value with comparison or 'Details not provided')"
-                }
-            ],
-            "summary": "string (2-3 sentence narrative)",
-            "management_tone": "string (one word)"
-        },
-        "sections": [
-            {
-                "title": "Performance Overview",
-                "narrative": "string (main story)",
-                "metrics": {
-                    "metric_name": {
-                        "value": "string (exact value or 'Details not provided')",
-                        "comparison": "string (specific change or 'Comparison not available')"
-                    }
+    output_format=
+        {
+            "story": {
+                "headline": {
+                    "main": "string (impactful 4-5 word statement)",
+                    "supporting": "string (context, max 8 words)"
                 },
-                "highlights": ["string (key points with data)"],
-                "management_quotes": ["string (relevant quote with attribution)"]
+                "key_theme": "string (one sentence narrative)",
+                "tone": "string (growth/resilience/transformation)"
             },
-            {
-                "title": "Business Progress",
-                "narrative": "string (main developments)",
-                "achievements": ["string (specific, verified developments only)"],
-                "strategic_updates": ["string (specific initiative updates only)"]
-            },
-            {
-                "title": "Future Outlook",
-                "narrative": "string (forward looking summary)",
-                "guidance": [
+            "evidence": {
+                "primary_metric": {
+                    "label": "string (metric name)",
+                    "value": "string (with comparison)",
+                    "significance": "string (why this matters)"
+                },
+                "supporting_points": [
                     {
-                        "metric": "string (metric name)",
-                        "projection": "string (specific projection or 'Details not provided')"
+                        "text": "string (forward-looking achievement)",
+                        "category": "string (growth/strategy/innovation)"
                     }
-                ],
-                "risks": ["string (risk factors)"],
-                "priorities": ["string (strategic priorities)"]
-            }
-        ],
-        "context": {
-            "category_tags": ["string (industry/sector/segment tags)"],
-            "industry": ["string (verified trends only)"],
-            "kpis": {
-                "metric_name": {
-                    "value": "string (exact value or 'Details not provided')",
-                    "context": "string (context or 'Context not available')"
-                }
+                ]
             },
-            "risk_factors": ["string (key risks)"],
-            "initiatives": ["string (ongoing initiatives)"]
+            "engagement": {
+                "hook": "string (why readers should care)",
+                "cta": "string (action prompt)"
+            }
         }
-    },
+    ,
 
     input_schema={
         "type": "object",
         "properties": {
-            "transcript_json": {
+            "parent_summary_json": {
                 "type": "object",
-                "description": "Dictionary containing management commentary"
+                "description": "Dictionary containing structured summary extracted from management commentary"
             }
         }
     },
 
     guidelines=[
-        "Always indicate when specific data is not available",
-        "Never generate placeholder metrics",
-        "Include relevant management quotes for key points",
-        "Focus on material information"
+        'Make every word count - grab attention fast',
+        'Build narrative momentum',
+        'Connect present results to future potential',
+        'Keep language accessible yet impactful'
     ],
 
-    example_input='''
-    {
-        "speaker": "CEO",
-        "content": "Our Q4 revenue grew 15% year-over-year..."
-    }
-    ''',
-
-    example_output='''
-    {
-        "highlights": {
-            "rating": "Strong Performance amidst...",
-            "key_metrics": [
-                {
-                    "metric": "Revenue",
-                    "value": "+15% YoY"
-                }
-            ]
-        }
-    }
-    ''',
-
-    notes="Updated to include management tone analysis",
+  
+    notes="",
     
-    tags=["earnings", "financial", "metrics", "summarization"],
+    tags=["earnings", "financial","short", "metrics", "summarization"],
     
 
 )
