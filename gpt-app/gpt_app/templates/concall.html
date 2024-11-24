@@ -534,12 +534,6 @@
     padding: 2rem 0 1.5rem;
 }
 
-.title-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .company-title {
     color: var(--primary-purple);
     font-size: 1.75rem;
@@ -1979,6 +1973,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
             padding: 8px;
             color: #6b7280;
             font-size: 12px;
@@ -2067,89 +2062,39 @@
         display: inline-block;
     }
     
-    .company-name {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin: 0 0 0.5rem 0;
-    }
-    
+  
     .meta-info {
         display: flex;
         gap: 0.75rem;
         align-items: center;
     }
     
-    .date-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #64748b;
-    }
-    
-    .clock-icon {
-        width: 1rem;
-        height: 1rem;
-        color: #64748b;
-    }
-    
-    .ticker-badge {
-        color: #6366f1;
-        font-weight: 500;
-        font-size: 0.875rem;
-    }
+ 
+  
+
     
     .period-badge, .date-badge {
         color: #64748b;
         font-size: 0.875rem;
     }
     
-   
-
-.metrics-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-}
-
-.metric-box {
-    flex: 1;
-    width: 100%;
-    min-width: 180px;
-    padding: 1rem;
-    background: #ffffff;
-    border-radius: 8px;
+    .metrics-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background-color: #e2e8f0;
+    margin-top: 2rem;
     border: 1px solid #e2e8f0;
-    transition: all 0.2s ease;
-    position: relative;
+    border-radius: 8px;
     overflow: hidden;
 }
 
-.metric-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    border-radius: 4px 0 0 4px;
-}
-
-.metric-box.margin::before {
-    background: #8b5cf6;
-}
-
-.metric-box.growth::before {
-    background: #3b82f6;
-}
-
-.metric-box.volume::before {
-    background: #10b981;
-}
-
-.metric-box.other::before {
-    background: #6b7280;
+.metric-box {
+    background: #ffffff;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .metric-label {
@@ -2157,45 +2102,47 @@
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.025em;
 }
 
 .metric-value {
     font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.metric-value.positive {
+    color: #16a34a;
+}
+
+.metric-value.negative {
+    color: #dc2626;
 }
 
 .metric-context {
     font-size: 0.75rem;
     color: #64748b;
-    margin-top: 0.25rem;
     line-height: 1.4;
 }
 
-.metric-change {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    margin-top: 0.5rem;
+@media (max-width: 768px) {
+    .metrics-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .metric-box {
+        padding: 1rem;
+    }
+    
+    .metric-value {
+        font-size: 1.25rem;
+    }
 }
 
-.metric-change.positive {
-    background: #f0fdf4;
-    color: #10b981;
-}
-
-.metric-change.negative {
-    background: #fef2f2;
-    color: #ef4444;
+@media (max-width: 480px) {
+    .metrics-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 .metric-change svg {
@@ -2209,15 +2156,7 @@
     }
 }
 
-@media (max-width: 640px) {
-    .metric-box {
-        min-width: 100%;
-    }
 
-    .metric-value {
-        font-size: 1.25rem;
-    }
-}
 
     
     .action-section {
@@ -2270,16 +2209,7 @@
             width: 100%;
         }
     
-        .metrics-row {
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-    
-        .metric-box {
-            min-width: 120px;
-            flex: 1;
-        }
-    
+        
         .action-section {
             width: 100%;
         }
@@ -2306,10 +2236,6 @@
             gap: 0.25rem;
         }
     
-        .metric-value {
-            font-size: 1rem;
-        }
-        
         .action-link {
             font-size: 0.75rem;
         }
@@ -2320,6 +2246,112 @@
         }
     }
     </style>
+<style>
+    .title-section {
+        background-color: #f8fafc;
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        /* max-width: 800px; */
+    }
+    
+    .title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    .company-name {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+    
+    .tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .category-tag {
+        background-color: #f0f9ff;
+        color: #0284c7;
+        padding: 0.25rem 0.625rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border: 1px solid #e0f2fe;
+        white-space: nowrap;
+    }
+    
+    .company-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        justify-content: space-between;
+    }
+    
+    .ticker-badge {
+        color: #6366f1;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    
+    .date-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+        font-size: 0.9375rem;
+    }
+    
+    .clock-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .title-section {
+            padding: 1rem;
+            width: 100%;
+        }
+    
+        .title-row {
+            gap: 0.75rem;
+        }
+    
+        .company-name {
+            font-size: 1.25rem;
+        }
+    
+        .company-meta {
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+    
+        .category-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .title-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+    
+        .tag-container {
+            margin-top: 0.25rem;
+        }
+    }
+    </style>
+    
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -2373,52 +2405,43 @@
                 <div class="header-container">
                     <!-- Left side with company box -->
                     <div class="company-section">
-                        <div class="company-box">
-                            <h1 class="company-name">{{ company_name|title }}</h1>
-                            <div class="meta-info">
-                                <span class="ticker-badge">{{ ticker }}</span>
-                                <div class="date-info">
-                                    <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12 6 12 12 16 14"/>
-                                    </svg>
-                                    <span class="period-badge">{{ quarter }} {{ financial_year }}</span>
-                                    <span class="date-badge">{{ cc_date if cc_date else '' }}</span>
+                        <!-- <div class="company-box"> -->
+                            <div class="title-section">
+                                <div class="title-row">
+                                    <h1 class="company-name">{{ company_name }}</h1>
+                                    <div class="tag-container">
+                                        {% for tag in structured_summary.context.category_tags %}
+                                        <span class="category-tag">{{ tag }}</span>
+                                        {% endfor %}
+                                        
+                                    </div>
+                                </div>
+                                <div class="company-meta">
+                                    <span class="ticker-badge">{{ ticker }}</span>
+                                    <div class="date-info">
+                                        <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12 6 12 12 16 14"/>
+                                        </svg>
+                                        <span>{{ quarter }} {{ financial_year }}</span>
+                                        <span class="date-separator">•</span>
+                                        <span class="actual-date">{{ cc_date if cc_date else '' }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-            
-   <!-- Metrics Row -->
-<div class="metrics-row">
+                        <!-- </div> -->
+                        
+      <!-- Metrics Row -->
+<div class="metrics-container">
     {% for metric in structured_summary.highlights.key_metrics %}
-        <div class="metric-box {% if 'margin' in metric.metric.lower() %}margin
-                              {% elif 'growth' in metric.metric.lower() %}growth
-                              {% elif 'volume' in metric.metric.lower() %}volume
-                              {% else %}other{% endif %}">
+        <div class="metric-box">
             <div class="metric-label">{{ metric.metric }}</div>
-            <div class="metric-value">
+            <div class="metric-value {% if metric.value|float < 0 %}negative{% else %}positive{% endif %}">
                 {{ metric.value }}
             </div>
-            
             {% if structured_summary.context.kpis[metric.metric|lower|replace(' ', '_')] %}
                 <div class="metric-context">
                     {{ structured_summary.context.kpis[metric.metric|lower|replace(' ', '_')].context }}
-                </div>
-            {% endif %}
-
-            {% if metric.value|float < 0 %}
-                <div class="metric-change negative">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 9l6 6 6-6"/>
-                    </svg>
-                    {{ metric.value }}
-                </div>
-            {% else %}
-                <div class="metric-change positive">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 15l-6-6-6 6"/>
-                    </svg>
-                    {{ metric.value }}
                 </div>
             {% endif %}
         </div>
@@ -2432,6 +2455,12 @@
                         <div class="action-links">
                             <a href="#" class="action-link">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M7 20l4-16m2 16l4-16"/>
+                                </svg>
+                                Compare
+                            </a>
+                            <a href="#" class="action-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                     <polyline points="7 10 12 15 17 10"/>
                                     <line x1="12" y1="15" x2="12" y2="3"/>
@@ -2443,20 +2472,15 @@
                                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                                     <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                                 </svg>
-                                Get Notified
+                                Follow Earnings
                             </a>
                             <a href="#" class="action-link">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                 </svg>
-                                Star
+                                Bookmark
                             </a>
-                            <a href="#" class="action-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M7 20l4-16m2 16l4-16"/>
-                                </svg>
-                                Compare
-                            </a>
+                          
                         </div>
                     </div>
                 </div>
@@ -3551,12 +3575,12 @@
                 ticking = false;
             }
     
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(updateScroll);
-                    ticking = true;
-                }
-            });
+            // window.addEventListener('scroll', () => {
+            //     if (!ticking) {
+            //         window.requestAnimationFrame(updateScroll);
+            //         ticking = true;
+            //     }
+            // });
     
             // if (window.location.hash) {
             //     const id = window.location.hash.substring(1);
