@@ -336,49 +336,183 @@
         }
 
         .company-tabs-container {
-            background-color: var(--background-color);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid var(--border-color);
-            width: 100%;
-            padding: 10px 0;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
+    background-color: #ffffff;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    border-bottom: none;
+    width: 100%;
+    padding: 0;
+    margin: 1rem 0 2rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: relative;
+}
 
-        .company-tabs {
-            display: inline-flex;
-            padding: 0;
-            margin: 0;
-            list-style-type: none;
-        }
+.company-tabs-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(203, 213, 225, 0.6) 15%,
+        rgba(203, 213, 225, 0.6) 85%,
+        transparent 100%
+    );
+}
 
-        .company-tabs .nav-link {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 15px;
-            position: relative;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
+.company-tabs-container::-webkit-scrollbar {
+    display: none;
+}
 
-        .company-tabs .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary-green);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
+.company-tabs {
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    gap: 2rem;
+}
 
-        .company-tabs .nav-link.active::after {
-            transform: scaleX(1);
-        }
+.company-tabs .nav-item {
+    position: relative;
+}
 
+.company-tabs .nav-link {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 1rem 0.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+/* Update icons in tabs to be more subtle */
+.company-tabs .nav-link svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.company-tabs .nav-link:hover {
+    color: #334155;
+}
+
+.company-tabs .nav-link:hover svg {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.company-tabs .nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #18994e, #6a198a);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    border-radius: 2px;
+}
+
+.company-tabs .nav-link.active {
+    color: #18994e;
+    font-weight: 600;
+}
+
+.company-tabs .nav-link.active svg {
+    opacity: 1;
+    color: #18994e;
+}
+
+.company-tabs .nav-link.active::before {
+    transform: scaleX(1);
+}
+
+/* Add subtle hover effect */
+.company-tabs .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #18994e20, #6a198a20);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 2px;
+}
+
+.company-tabs .nav-link:hover::after {
+    opacity: 1;
+}
+
+/* Enhance tab indicators */
+.tab-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #18994e, #6a198a);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Add scroll shadows for better UX */
+.company-tabs-container::before,
+.company-tabs-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.company-tabs-container::before {
+    left: 0;
+    background: linear-gradient(90deg, #fff, transparent);
+}
+
+.company-tabs-container::after {
+    right: 0;
+    background: linear-gradient(-90deg, #fff, transparent);
+}
+
+.company-tabs-container.has-overflow::before,
+.company-tabs-container.has-overflow::after {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .company-tabs-container {
+        margin: 0.5rem 0 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .company-tabs {
+        gap: 1.5rem;
+    }
+
+    .company-tabs .nav-link {
+        font-size: 0.85rem;
+        padding: 0.75rem 0.25rem;
+    }
+}
         .company-info {
             position: absolute;
             left: 50%;
@@ -1062,7 +1196,9 @@
 
     
  <style>
+    #floatingInfo { display: none; }
     .floating-info {
+        /* display: none; */
         position: relative;
         margin: 0.75rem .1rem;
         padding: 12px 20px;
@@ -1902,15 +2038,295 @@
     }
 </style>
 
+<style>
+    .earnings-header {
+        background-color: #ffffff;
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        width: 100%;
+    }
+    
+    .header-container {
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
+        padding: 0 1rem;
+        gap: 1rem;
+        flex-direction: column;
+    }
+    .company-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .company-box {
+        background-color: #f8fafc;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        display: inline-block;
+    }
+    
+    .company-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0 0 0.5rem 0;
+    }
+    
+    .meta-info {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+    
+    .date-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+    }
+    
+    .clock-icon {
+        width: 1rem;
+        height: 1rem;
+        color: #64748b;
+    }
+    
+    .ticker-badge {
+        color: #6366f1;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+    
+    .period-badge, .date-badge {
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    
+   
 
+.metrics-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
 
+.metric-box {
+    flex: 1;
+    width: 100%;
+    min-width: 180px;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+}
+
+.metric-box.margin::before {
+    background: #8b5cf6;
+}
+
+.metric-box.growth::before {
+    background: #3b82f6;
+}
+
+.metric-box.volume::before {
+    background: #10b981;
+}
+
+.metric-box.other::before {
+    background: #6b7280;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.metric-context {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+.metric-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.metric-change.positive {
+    background: #f0fdf4;
+    color: #10b981;
+}
+
+.metric-change.negative {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.metric-change svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+@media (max-width: 768px) {
+    .metric-box {
+        min-width: calc(50% - 0.5rem);
+    }
+}
+
+@media (max-width: 640px) {
+    .metric-box {
+        min-width: 100%;
+    }
+
+    .metric-value {
+        font-size: 1.25rem;
+    }
+}
+
+    
+    .action-section {
+        padding-top: 0.5rem;
+    }
+    
+    .action-links {
+        display: flex;
+        gap: 1.5rem;
+    }
+    
+    .action-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s ease;
+    }
+    
+    .action-link:hover {
+        color: #1e293b;
+    }
+    
+    .action-link svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+    
+    @media (max-width: 1024px) {
+        .action-links {
+            gap: 1rem;
+        }
+        
+        .action-link {
+            font-size: 0.8125rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .header-container {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0;
+        }
+    
+        .company-section {
+            gap: 1rem;
+            width: 100%;
+        }
+    
+        .metrics-row {
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+    
+        .metric-box {
+            min-width: 120px;
+            flex: 1;
+        }
+    
+        .action-section {
+            width: 100%;
+        }
+        
+        .action-links {
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .earnings-header {
+            padding: 1rem 0.75rem;
+        }
+    
+        .company-name {
+            font-size: 1.125rem;
+        }
+    
+        .meta-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+    
+        .metric-value {
+            font-size: 1rem;
+        }
+        
+        .action-link {
+            font-size: 0.75rem;
+        }
+        
+        .action-link svg {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
             <img src="/static/images/logo-stbit.png" alt="stockrabit logo" class="w-1 h-1 object-contain" style="height: 30px; width: 35px; margin-right: .25rem;">
             <a class="navbar-brand" href="/">stockrabit</a>
-            <div class="company-info d-none">
+            <div class="company-info d-none ">
                 <h1 class="company-title">{{ company_name|title }}</h1>
                 <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
             </div>
@@ -1935,14 +2351,14 @@
     </nav>
   
     <div class="container main-content">
-        <nav aria-label="breadcrumb">
+        <!-- <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url_for('company_app.historical', company_name=company_name) }}#earning-calls">{{ company_name|title }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ quarter }} {{ financial_year }}</li>
             </ol>
-        </nav>
+        </nav> -->
     
-        <div class="content-wrapper">
+        <!-- <div class="content-wrapper">
             <div class="page-header">
                 <div class="title-section">
                     <h1 class="company-title">{{ company_name|title }}</h1>
@@ -1950,37 +2366,162 @@
                 </div>
             </div>
             
-            <div class="horizontal-line"></div>
+            <div class="horizontal-line"></div> -->
         
 
-         
+            <div class="earnings-header">
+                <div class="header-container">
+                    <!-- Left side with company box -->
+                    <div class="company-section">
+                        <div class="company-box">
+                            <h1 class="company-name">{{ company_name|title }}</h1>
+                            <div class="meta-info">
+                                <span class="ticker-badge">{{ ticker }}</span>
+                                <div class="date-info">
+                                    <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    <span class="period-badge">{{ quarter }} {{ financial_year }}</span>
+                                    <span class="date-badge">{{ cc_date if cc_date else '' }}</span>
+                                </div>
+                            </div>
+                        </div>
+            
+   <!-- Metrics Row -->
+<div class="metrics-row">
+    {% for metric in structured_summary.highlights.key_metrics %}
+        <div class="metric-box {% if 'margin' in metric.metric.lower() %}margin
+                              {% elif 'growth' in metric.metric.lower() %}growth
+                              {% elif 'volume' in metric.metric.lower() %}volume
+                              {% else %}other{% endif %}">
+            <div class="metric-label">{{ metric.metric }}</div>
+            <div class="metric-value">
+                {{ metric.value }}
+            </div>
+            
+            {% if structured_summary.context.kpis[metric.metric|lower|replace(' ', '_')] %}
+                <div class="metric-context">
+                    {{ structured_summary.context.kpis[metric.metric|lower|replace(' ', '_')].context }}
+                </div>
+            {% endif %}
+
+            {% if metric.value|float < 0 %}
+                <div class="metric-change negative">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                    {{ metric.value }}
+                </div>
+            {% else %}
+                <div class="metric-change positive">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                    {{ metric.value }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+                    </div>
+            
+                    <!-- Right side with actions -->
+                    <div class="action-section">
+                        <div class="action-links">
+                            <a href="#" class="action-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Download Transcript
+                            </a>
+                            <a href="#" class="action-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
+                                Get Notified
+                            </a>
+                            <a href="#" class="action-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                Star
+                            </a>
+                            <a href="#" class="action-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M7 20l4-16m2 16l4-16"/>
+                                </svg>
+                                Compare
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
 
             <div class="company-tabs-container">
                 <ul class="company-tabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link {% if active_section == 'structured_summary' %}active{% endif %}" 
-                           href="{{ url_for('view_app.concall', file_name=file_name, section='structured_summary') }}">
-                            📈 Summary
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='structured_summary') }}"
+                           role="tab">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20V10"/>
+                                <path d="M18 20V4"/>
+                                <path d="M6 20v-4"/>
+                            </svg>
+                            Summary
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}">
-                            ✨ Top Questions
+                        <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" 
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}"
+                           role="tab">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                            Top Questions
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'transcript' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}">
-                            📄 Transcript
+                        <a class="nav-link {% if active_section == 'transcript' %}active{% endif %}" 
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}"
+                           role="tab">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                            Transcript
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'qa_section' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}">
-                            🎙 Analyst Q&A 
+                        <a class="nav-link {% if active_section == 'qa_section' %}active{% endif %}" 
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}"
+                           role="tab">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Analyst Q&A
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}">
-                            🗣️ Management Commentary
+                        <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" 
+                           href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}"
+                           role="tab">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                            </svg>
+                            Management Commentary
                         </a>
                     </li>
                 </ul>
@@ -2033,9 +2574,9 @@
                    <!-- add new section here -->
             <div class="summary-container">
                 <div class="summary-header">
-                    <div class="header-quote">
+                    <!-- <div class="header-quote">
                         {{ structured_summary.sections[0].management_quotes[0] }}
-                    </div>
+                    </div> -->
                     <div class="section-content">
                         {{ structured_summary.highlights.summary }}
                     </div>
@@ -2066,7 +2607,7 @@
     </div>
 
     <div class="content-section active" id="content-overview">
-        <div class="quarter-section">
+        <!-- <div class="quarter-section">
             <div class="section-title">
                 <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
@@ -2077,7 +2618,7 @@
             <div class="section-content">
                 {{ structured_summary.sections[0].narrative }}
             </div>
-        </div>
+        </div> -->
 
         <div class="highlight-box">
             <div class="highlight-title">Financial Highlights</div>
@@ -2831,6 +3372,67 @@
             });
         });
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+    const tabsContainer = document.querySelector('.company-tabs-container');
+    const tabs = document.querySelector('.company-tabs');
+
+    // Check for scroll overflow
+    function checkOverflow() {
+        const hasOverflow = tabs.scrollWidth > tabsContainer.clientWidth;
+        tabsContainer.classList.toggle('has-overflow', hasOverflow);
+    }
+
+    // Initialize
+    checkOverflow();
+    
+    // Check on resize
+    window.addEventListener('resize', checkOverflow);
+
+    // Smooth scroll to active tab
+    function scrollToActiveTab() {
+        const activeTab = tabs.querySelector('.nav-link.active');
+        if (activeTab) {
+            const containerWidth = tabsContainer.offsetWidth;
+            const tabWidth = activeTab.offsetWidth;
+            const tabLeft = activeTab.offsetLeft;
+            const scrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+            
+            tabsContainer.scrollTo({
+                left: scrollLeft,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Scroll to active tab on load and tab change
+    scrollToActiveTab();
+    
+    // Add click handlers to tabs
+    const tabLinks = tabs.querySelectorAll('.nav-link');
+    tabLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // Remove active class from all tabs
+            tabLinks.forEach(tab => tab.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            link.classList.add('active');
+            
+            // Scroll the active tab into view
+            scrollToActiveTab();
+        });
+    });
+
+    // Add touch scroll momentum for mobile
+    let isScrolling;
+    tabsContainer.addEventListener('scroll', () => {
+        window.clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+            checkOverflow();
+        }, 66);
+    });
+});
+        </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.company-tabs .nav-link');
@@ -2949,12 +3551,12 @@
                 ticking = false;
             }
     
-            // window.addEventListener('scroll', () => {
-            //     if (!ticking) {
-            //         window.requestAnimationFrame(updateScroll);
-            //         ticking = true;
-            //     }
-            // });
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateScroll);
+                    ticking = true;
+                }
+            });
     
             // if (window.location.hash) {
             //     const id = window.location.hash.substring(1);
