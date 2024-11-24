@@ -125,7 +125,10 @@
         }
         #content-section {
             max-height: 90vh;
+            border-top: 2px dashed rgba(0, 0, 0, 0.02) ;
             overflow-y: auto;
+            padding-top: .5rem;
+            margin-top: 0;
             padding-right: 1.5rem; /* Space between content and scrollbar */
             /* margin-bottom: 4rem; */
             
@@ -559,7 +562,7 @@
         var(--primary-green),
         transparent
     );
-    margin: .1rem 0 0rem;
+    margin: 1rem 0 ;
     opacity: 0.2;
 }
 
@@ -2052,7 +2055,7 @@
     .company-section {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: .5rem;
     }
     
     .company-box {
@@ -2352,6 +2355,377 @@
     }
     </style>
     
+<style>
+    /* Navigation Elements */
+    .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: .2rem 1.5rem;
+}
+
+.command-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #64748b;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.command-trigger:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.command-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.3);
+    display: none;
+    justify-content: center;
+    padding-top: 5rem;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.command-overlay.active {
+    display: flex;
+}
+
+.command-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 0 1rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.command-overlay.active .command-container {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.search-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: white;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.search-pill input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.9375rem;
+    color: #0f172a;
+}
+
+.key-hint {
+    padding: 0.25rem 0.5rem;
+    background-color: #f1f5f9;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.suggestion-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+}
+
+.suggestion-pill {
+    padding: 0.5rem 0.75rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.suggestion-pill:hover {
+    background-color: white;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    .command-container {
+        padding: 0 0.5rem;
+    }
+    
+    .suggestion-pills {
+        justify-content: center;
+    }
+}
+    .nav-icon-btn {
+        position: relative;
+        padding: 0.5rem;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+    
+    .nav-icon-btn:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
+        background-color: #ef4444;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+    }
+    
+    /* Modal Base Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 4rem;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+    
+    .modal {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        width: 100%;
+        max-width: 480px;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: all 0.2s ease;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+    }
+    
+    .modal-overlay.active .modal {
+        opacity: 1;
+        transform: scale(1);
+    }
+    
+    /* Notification Modal Styles */
+    .notification-modal {
+        max-height: 600px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .modal-header h3 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0;
+    }
+    
+    .close-btn {
+        padding: 0.5rem;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .notification-tabs {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .tab-btn {
+        padding: 0.375rem 0.75rem;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+    
+    .tab-btn.active {
+        background-color: #f1f5f9;
+        color: #0f172a;
+    }
+    
+    .notifications-list {
+        padding: 0.5rem;
+        overflow-y: auto;
+        max-height: 400px;
+    }
+    
+    .notification-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .notification-item:hover {
+        background-color: #f8fafc;
+    }
+    
+    .notification-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        margin-top: 6px;
+    }
+    
+    .notification-icon {
+        color: #64748b;
+        padding: 0.5rem;
+        background-color: #f1f5f9;
+        border-radius: 6px;
+    }
+    
+    .notification-details {
+        flex: 1;
+    }
+    
+    .notification-details p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #0f172a;
+        line-height: 1.4;
+    }
+    
+    .notification-time {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+    
+    /* Command Menu Styles */
+    .command-modal {
+        max-width: 640px;
+    }
+    
+    .command-search {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .command-search input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 0.9375rem;
+        color: #0f172a;
+        background: transparent;
+    }
+    
+    .command-hint {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        padding: 0.25rem 0.5rem;
+        background-color: #f1f5f9;
+        border-radius: 4px;
+    }
+    
+    .command-results {
+        padding: 0.5rem;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .command-group-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .command-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #0f172a;
+        font-size: 0.875rem;
+    }
+    
+    .command-item:hover {
+        background-color: #f8fafc;
+    }
+    
+    .command-shortcut {
+        margin-left: auto;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        padding: 0.125rem 0.375rem;
+        background-color: #f1f5f9;
+        border-radius: 4px;
+    }
+    
+    @media (max-width: 640px) {
+        .modal {
+            margin: 1rem;
+            max-height: calc(100vh - 2rem);
+        }
+    }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -2362,22 +2736,84 @@
                 <h1 class="company-title">{{ company_name|title }}</h1>
                 <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> -->
             <!-- <div>  -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/other-links">Other Links</a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-sign-up" href="/signup">Sign Up</a>
-                    </li>
-                </ul>
+            <!-- <div class="collapse navbar-collapse" id="navbarNav"> -->
+                <!-- Replace the sign up button with these elements -->
+<div class="nav-actions">
+    <button class="nav-icon-btn" id="notificationBtn" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="notification-badge"></span>
+    </button>
+    <button class="command-trigger" id="commandTrigger">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <span>Press /</span>
+    </button>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal-overlay" id="notificationModal">
+    <div class="modal notification-modal">
+        <div class="modal-header">
+            <h3>Notifications</h3>
+            <button class="close-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="notification-content">
+            <div class="notification-tabs">
+                <button class="tab-btn active">All</button>
+                <button class="tab-btn">Unread</button>
+            </div>
+            <div class="notifications-list">
+                <!-- Placeholder notifications -->
+                <div class="notification-item unread">
+                    <div class="notification-dot"></div>
+                    <div class="notification-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <div class="notification-details">
+                        <p>New earnings call summary available</p>
+                        <span class="notification-time">2 hours ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Command Menu Modal -->
+<div class="command-overlay" id="commandOverlay">
+    <div class="command-container">
+        <div class="search-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input type="text" id="commandInput" placeholder="Ask anything..." autofocus>
+            <span class="key-hint">esc</span>
+        </div>
+        
+        <div class="suggestion-pills">
+            <button class="suggestion-pill">Compare with previous quarter</button>
+            <button class="suggestion-pill">Show revenue growth trend</button>
+            <button class="suggestion-pill">Key management quotes</button>
+            <button class="suggestion-pill">Analyst questions summary</button>
+        </div>
+    </div>
+</div>
             </div> 
         </div>
     </nav>
@@ -2430,7 +2866,38 @@
                                 </div>
                             </div>
                         <!-- </div> -->
-                        
+                        <div class="action-section">
+                            <div class="action-links">
+                                <a href="#" class="action-link">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M7 20l4-16m2 16l4-16"/>
+                                    </svg>
+                                    Compare
+                                </a>
+                                <a href="#" class="action-link">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Download Transcript
+                                </a>
+                                <a href="#" class="action-link">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                    </svg>
+                                    Follow Earnings
+                                </a>
+                                <a href="#" class="action-link">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    Bookmark
+                                </a>
+                              
+                            </div>
+                        </div>
       <!-- Metrics Row -->
 <div class="metrics-container">
     {% for metric in structured_summary.highlights.key_metrics %}
@@ -2448,41 +2915,10 @@
     {% endfor %}
 </div>
 
-                    </div>
+                    <!-- </div> -->
             
                     <!-- Right side with actions -->
-                    <div class="action-section">
-                        <div class="action-links">
-                            <a href="#" class="action-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M7 20l4-16m2 16l4-16"/>
-                                </svg>
-                                Compare
-                            </a>
-                            <a href="#" class="action-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="7 10 12 15 17 10"/>
-                                    <line x1="12" y1="15" x2="12" y2="3"/>
-                                </svg>
-                                Download Transcript
-                            </a>
-                            <a href="#" class="action-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                                </svg>
-                                Follow Earnings
-                            </a>
-                            <a href="#" class="action-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                </svg>
-                                Bookmark
-                            </a>
-                          
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
             
@@ -2587,7 +3023,7 @@
 </div>
 {% endif %}
             
-
+            
             <div id="content-section">
                 <!-- Add this to your existing styles section -->
 
@@ -3626,7 +4062,110 @@
             // adjustTabsContainer(); // Initial adjustment
         });
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const commandTrigger = document.getElementById('commandTrigger');
+        const commandOverlay = document.getElementById('commandOverlay');
+        const commandInput = document.getElementById('commandInput');
+        const suggestionPills = document.querySelectorAll('.suggestion-pill');
+    
+        function openCommandMenu() {
+            commandOverlay.classList.add('active');
+            setTimeout(() => {
+                commandInput.focus();
+            }, 100);
+        }
+    
+        function closeCommandMenu() {
+            commandOverlay.classList.remove('active');
+        }
+    
+        // Click trigger
+        commandTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCommandMenu();
+        });
+    
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && !commandOverlay.classList.contains('active')) {
+                e.preventDefault();
+                openCommandMenu();
+            }
+            if (e.key === 'Escape') {
+                closeCommandMenu();
+            }
+        });
+    
+        // Close when clicking outside
+        commandOverlay.addEventListener('click', (e) => {
+            if (e.target === commandOverlay) {
+                closeCommandMenu();
+            }
+        });
+    
+        // Handle suggestion pills
+        suggestionPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                commandInput.value = pill.textContent;
+                commandInput.focus();
+            });
+        });
+    });
+    </script>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificationBtn = document.getElementById('notificationBtn');
+       
+        const notificationModal = document.getElementById('notificationModal');
+    
+        const closeButtons = document.querySelectorAll('.close-btn');
+    
+        // Function to open modal
+        function openModal(modal) {
+            modal.classList.add('active');
+            if (modal === commandModal) {
+                commandInput.focus();
+            }
+        }
+    
+        // Function to close modal
+        function closeModal(modal) {
+            modal.classList.remove('active');
+        }
+    
+        // Event listeners
+        notificationBtn.addEventListener('click', () => openModal(notificationModal));
+      
+    
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                closeModal(notificationModal);
+               
+            });
+        });
+    
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          
+            if (e.key === 'Escape') {
+                closeModal(notificationModal);
+               
+            }
+        });
+    
+        // Close modals when clicking outside
+        [notificationModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        });
+    });
+    </script>
 <script>
     function showContent(section) {
         // Update active tab
