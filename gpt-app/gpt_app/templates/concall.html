@@ -373,8 +373,9 @@
 }
 
 .company-tabs {
-    display: inline-flex;
+    display: flex;
     padding: 0;
+    justify-content: space-around;
     margin: 0;
     list-style-type: none;
     gap: 2rem;
@@ -2083,21 +2084,22 @@
     
     .metrics-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1px;
-    background-color: #e2e8f0;
-    margin-top: 2rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .metric-box {
     background: #ffffff;
     padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .metric-label {
@@ -2106,12 +2108,22 @@
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.025em;
+    margin-bottom: 0.5rem;
 }
 
 .metric-value {
     font-size: 1.5rem;
     font-weight: 600;
-    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.4;
+    color: #0f172a;
+}
+
+/* New style for text-based metrics */
+.metric-value-text {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: #1e293b;
+    font-weight: 500;
 }
 
 .metric-value.positive {
@@ -2122,23 +2134,23 @@
     color: #dc2626;
 }
 
-.metric-context {
-    font-size: 0.75rem;
-    color: #64748b;
-    line-height: 1.4;
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .metrics-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
     }
-    
+
     .metric-box {
         padding: 1rem;
     }
-    
+
     .metric-value {
         font-size: 1.25rem;
+    }
+
+    .metric-value-text {
+        font-size: 1rem;
     }
 }
 
@@ -2148,32 +2160,40 @@
     }
 }
 
-.metric-change svg {
-    width: 1rem;
-    height: 1rem;
+/* Add animation for better UX */
+.metric-box {
+    animation: fadeIn 0.3s ease-out;
 }
 
-@media (max-width: 768px) {
-    .metric-box {
-        min-width: calc(50% - 0.5rem);
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
-
 
 
     
     .action-section {
-        padding-top: 0.5rem;
+        padding: 0.5rem;
+        background-color:#dddddd4d;
+        border-radius: 5px;
     }
     
     .action-links {
         display: flex;
+        justify-content: space-between;
         gap: 1.5rem;
     }
     
     .action-link {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 0.5rem;
         color: #64748b;
         text-decoration: none;
@@ -2218,7 +2238,7 @@
         }
         
         .action-links {
-            justify-content: flex-start;
+            justify-content: space-between;
             flex-wrap: wrap;
             gap: 0.75rem;
         }
@@ -2493,6 +2513,13 @@
         background-color: #f1f5f9;
         color: #0f172a;
     }
+    .command-trigger {
+        padding: 0.5rem;  /* Make it square */
+    }
+    
+    .command-text {
+        display: none;  /* Hide the text */
+    }
     
     .notification-badge {
         position: absolute;
@@ -2755,7 +2782,7 @@
             <circle cx="11" cy="11" r="8"/>
             <path d="M21 21l-4.35-4.35"/>
         </svg>
-        <span>Press /</span>
+        <span class="command-text">Press /</span>
     </button>
 </div>
 
@@ -2868,6 +2895,7 @@
                         <!-- </div> -->
                         <div class="action-section">
                             <div class="action-links">
+                                <div style="display: flex; gap: 1rem;"> 
                                 <a href="#" class="action-link">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M7 20l4-16m2 16l4-16"/>
@@ -2882,6 +2910,9 @@
                                     </svg>
                                     Download Transcript
                                 </a>
+                            </div>
+                            <div style="display: flex; gap: 1rem;"> 
+                                <!-- <div style="min-width: 44px;" > <span style="display: none;"> </span></div> -->
                                 <a href="#" class="action-link">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -2895,25 +2926,30 @@
                                     </svg>
                                     Bookmark
                                 </a>
-                              
+                            </div>
                             </div>
                         </div>
       <!-- Metrics Row -->
-<div class="metrics-container">
-    {% for metric in structured_summary.highlights.key_metrics %}
-        <div class="metric-box">
-            <div class="metric-label">{{ metric.metric }}</div>
-            <div class="metric-value {% if metric.value|float < 0 %}negative{% else %}positive{% endif %}">
-                {{ metric.value }}
-            </div>
-            {% if structured_summary.context.kpis[metric.metric|lower|replace(' ', '_')] %}
-                <div class="metric-context">
-                    {{ structured_summary.context.kpis[metric.metric|lower|replace(' ', '_')].context }}
+      <div class="metrics-container">
+        {% if structured_summary.highlights and structured_summary.highlights.key_metrics %}
+            {% for metric in structured_summary.highlights.key_metrics %}
+                <div class="metric-box">
+                    <div class="metric-label">METRIC</div>
+                    {% if metric is string %}
+                        <!-- Handle string metrics with better formatting -->
+                        <div class="metric-value metric-value-text">
+                            {{ metric }}
+                        </div>
+                    {% else %}
+                        <!-- Handle object metrics -->
+                        <div class="metric-value {% if metric.value|float < 0 %}negative{% else %}positive{% endif %}">
+                            {{ metric.value if metric.value is defined else metric }}
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-    {% endfor %}
-</div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
                     <!-- </div> -->
             
