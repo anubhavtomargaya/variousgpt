@@ -1131,6 +1131,12 @@
             padding-top: 0.75rem;
             border-top: 1px solid #e2e8f0;
         }
+        .metric-context {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
 
         .metric-info {
             display: flex;
@@ -2092,6 +2098,9 @@
 .metric-box {
     background: #ffffff;
     padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -2934,17 +2943,33 @@
         {% if structured_summary.highlights and structured_summary.highlights.key_metrics %}
             {% for metric in structured_summary.highlights.key_metrics %}
                 <div class="metric-box">
-                    <div class="metric-label">METRIC</div>
+                    <div class="metric-label">
+                        {% if metric is string %}
+                            <!-- For string metrics, extract a sensible label -->
+                            {% set words = metric.split(' ') %}
+                            {{ words[0:3]|join(' ')|upper }}
+                        {% else %}
+                            <!-- For object metrics, use the metric name -->
+                            {{ metric.metric|default('METRIC')|upper }}
+                        {% endif %}
+                    </div>
                     {% if metric is string %}
-                        <!-- Handle string metrics with better formatting -->
                         <div class="metric-value metric-value-text">
                             {{ metric }}
                         </div>
                     {% else %}
-                        <!-- Handle object metrics -->
                         <div class="metric-value {% if metric.value|float < 0 %}negative{% else %}positive{% endif %}">
                             {{ metric.value if metric.value is defined else metric }}
                         </div>
+                        <!-- Add back the context if available -->
+                        {% if structured_summary.context and structured_summary.context.kpis %}
+                            {% set metric_key = metric.metric|default('')|lower|replace(' ', '_') %}
+                            {% if metric_key in structured_summary.context.kpis %}
+                                <div class="metric-context">
+                                    {{ structured_summary.context.kpis[metric_key].context }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                 </div>
             {% endfor %}
