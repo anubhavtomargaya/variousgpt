@@ -4,6 +4,8 @@ from gpt_app.common.session_manager import get_user_email, login_required
 from gpt_app.common.supabase_handler import get_content_top_questions,  get_file_meta, get_itdoc_mg_guidance, get_itdoc_mg_tags, get_itdoc_qa_secrion, get_itdoc_structured_summary, get_pdf_chunks_transcript, get_qa_records
 from gpt_app.common.supabase_handler import get_company_transcript_data, get_pdf_chunks_transcript, get_qa_records
 from . import view_app
+from flask_mobility.decorators import mobile_template
+
 
 @view_app.route('/')
 # #@login_required
@@ -99,7 +101,8 @@ def chat(file_name):
 #         file_name = args.get('title') or None
         
     
-#     else:raise HTTPException("Invalid Method")
+#     else:raise HTTPExceptfrom flask_mobility.decorators import mobile_template
+# ion("Invalid Method")
     
 #     return redirect(url_for('view_app.embed'))
 
@@ -284,7 +287,8 @@ def process_transcript(raw_transcript):
 
 @view_app.route('/concall/<file_name>')
 @view_app.route('/concall/<file_name>/questions/<question_slug>')
-def concall(file_name, question_slug=None):
+@mobile_template('{mobile/}concall.html')  # This will look for templates in mobile/ subdirectory for mobile devices
+def concall(template, file_name, question_slug=None):
     try:
         print(f"\nAccessing with file_name: {file_name}, question_slug: {question_slug}")
         
@@ -300,8 +304,6 @@ def concall(file_name, question_slug=None):
                             file_name=file_name,
                             section=section,
                             _external=True)
-        # If accessing via question URL, force section to be top_questions
-       
         
         # Define info content for each section
         info_contents = {
@@ -348,12 +350,15 @@ def concall(file_name, question_slug=None):
             content = get_itdoc_qa_secrion(file_name)
         elif section == 'management_guidance':
             content = get_itdoc_mg_guidance(file_name, key='structured_guidance')
-        # elif section == 'structured_summary':
         else:
             content = {}
 
         struct_content = get_itdoc_structured_summary(file_name)
-        return render_template('concall.html',
+
+        # Now template will automatically be either:
+        # - 'mobile/concall.html' for mobile devices
+        # - 'concall.html' for desktop devices
+        return render_template(template,
                             company_name=details['company_name'],
                             canonical_url=canonical_url,
                             quarter=details['quarter'],
@@ -369,7 +374,8 @@ def concall(file_name, question_slug=None):
                             transcript_keys=tags,
                             qa_section=content if content and section == 'qa_section' else '',
                             management_guidance=content if content and section == 'management_guidance' else '',
-                            structured_summary=struct_content )
+                            structured_summary=struct_content)
+                            
     except Exception as e:
         print(f"Error: {str(e)}")
         return f"Error: {str(e)}", 500

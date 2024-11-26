@@ -15,6 +15,7 @@ from gpt_app.blueprints.company import company_app
 from gpt_app.blueprints.gflow.routes import loader_bp
 from gpt_app.blueprints.loader import loader_app
 from gpt_app.common.session_manager import *
+from flask_mobility import Mobility
 
 
 import logging
@@ -23,6 +24,7 @@ logging.basicConfig(level=logging.INFO)
 def create_app():
     
     app = Flask(__name__)
+    Mobility(app)
     app.config['PREFERRED_URL_SCHEME'] = 'https'
     # app.logger.addHandler(file_handler)
     # app.logger.addHandler(fh)
