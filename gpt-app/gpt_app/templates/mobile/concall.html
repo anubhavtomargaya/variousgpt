@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo-stbit.png') }}" type="image/x-icon">
     <title>{{ company_name|title }} - Earning Call - {{ quarter }} {{ financial_year }} - {{active_section}} | stockrabit</title>
+
+    <!-- Meta tags -->
     <meta name="description" content="{{ company_name|title }} Earnings Call - {{ quarter }} {{ financial_year }} {{ active_section}}">
     <link rel="canonical" href="{{ canonical_url }}" />
-
-    <!-- Add these enhanced meta tags -->
     <meta name="robots" content="index, follow">
     <meta name="keywords" content="{{ company_name }}, earnings call, {{ quarter }}, {{ financial_year }}, financial results, investor relations">
     
@@ -23,9 +22,8 @@
     <meta name="twitter:title" content="{{ company_name|title }} {{ quarter }} Earnings Call">
     <meta name="twitter:description" content="Key insights from {{ company_name }}'s earnings call">
 
-   
-  <!-- Article schema with speakable -->
-<script type="application/ld+json">
+    <!-- Schema.org markup -->
+    <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "AnalysisNewsArticle",
@@ -49,14 +47,10 @@
           "@type": "ImageObject",
           "url": "https://stockrabit.com/static/images/logo-stbit.png"
         }
-      },
-      "speakable": {
-        "@type": "SpeakableSpecification",
-        "cssSelector": [".company-title" ]
       }
     }
     </script>
-    
+
     <!-- FAQ schema -->
     <script type="application/ld+json">
     {
@@ -77,18 +71,12 @@
     }
     </script>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DF5GL4LB5"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-5DF5GL4LB5');
-    </script>
-    <meta name="description" content="{{ company_name|title }} Earnings Call - {{ quarter }} {{ financial_year }} {{ active_section}}">
+    <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
+        /* Root Variables */
         :root {
             --primary-green: #18994e;
             --primary-purple: #6a198a;
@@ -99,1871 +87,29 @@
             --border-color: #e0e0e0;
         }
 
+        /* Base Styles */
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            /* transform: translateZ(0); */
-            backface-visibility: hidden;
             background-color: var(--background-color);
             color: var(--text-color);
             padding-top: 60px;
+            padding-bottom: 80px; /* Space for bottom nav */
         }
 
         .navbar {
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
             height: 60px;
         }
-        
 
         .navbar-brand {
             font-weight: 700;
             color: var(--primary-green) !important;
-            transition: all 0.3s ease;
         }
-        #content-section {
-            max-height: 90vh;
-            border-top: 2px dashed rgba(0, 0, 0, 0.02) ;
-            overflow-y: auto;
-            padding-top: .5rem;
-            margin-top: 0;
-            padding-right: 1.5rem; /* Space between content and scrollbar */
-            /* margin-bottom: 4rem; */
-            
-        }
-
-        .btn-sign-up {
-            background-color: var(--primary-green);
-            color: white;
-            border-radius: 20px;
-            padding: 0.375rem 1rem;
-        }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            min-height: calc(100vh - 60px);
-        }
-
-        .content-wrapper {
-            width: 100%;
-            
-        }
-
-        .card {
-            background-color: var(--card-background);
-            border: none;
-            border-radius: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-        }
-
-        .card-title {
-            color: var(--primary-purple);
-            font-weight: 600;
-        }
-
-        .card-subtitle {
-            color: var(--secondary-text-color);
-            font-size: 1.1rem;
-        }
-
-        .btn-primary, .btn-secondary, .btn-info {
-            border-radius: none;
-            padding: 0.375rem 1rem;
-        }
-
-        .btn-link {
-            text-align: left;
-            color: var(--primary-green);
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-green);
-            border-color: var(--primary-green);
-        }
-
-        .btn-secondary, .btn-info {
-            background-color: white;
-            border-color: var(--primary-green);
-            color: var(--primary-green);
-        }
-
-        .accordion-button:not(.collapsed) {
-            background-color: rgba(46, 204, 113, 0.1);
-            color: var(--primary-green);
-        }
-
-        .accordion-button:focus {
-            box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.25);
-        }
-        .breadcrumb {
-            font-size: 0.9rem;
-            padding: 0.25rem 0;
-            margin-top: .5rem;
-            /* margin-left: .5rem; */
-            margin-bottom: .1rem;
-        }
-
-        .breadcrumb-item {
-            display: inline-block;
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .breadcrumb-item.active {
-            max-width: 150px;
-        }
-
-        @media (max-width: 575.98px) {
-            .breadcrumb-item {
-                max-width: 120px;
-            }
-
-            .breadcrumb-item.active {
-                max-width: 100px;
-            }
-        }
-
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: "›";
-            color: var(--secondary-text-color);
-        }
-
-        .breadcrumb-item a {
-            color: var(--primary-green);
-            text-decoration: none;
-        }
-
-        .breadcrumb-item.active {
-            color: var(--secondary-text-color);
-        }
-        #guidanceBody { text-align: left; }
-        .filter-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-    margin-left: 1rem;
-    margin-right: 1rem;
-}
-
-.filter-btn {
-    background-color: var(--background-color);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 5px 10px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    background-color: var(--primary-green);
-    color: white;
-}
-
-.filter-count {
-    background-color: var(--primary-purple);
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 0.8rem;
-    margin-left: 5px;
-}
-
-.filter-btn:hover .filter-count, .filter-btn.active .filter-count {
-    background-color: white;
-    color: var(--primary-green);
-}
-
-        .transcript-container {
-            height: 70vh;
-            overflow-y: auto;
-            scroll-behavior: smooth;
-        }
-        .transcript-entry.highlight {
-            background-color: rgba(24, 153, 78, 0.1);
-        }
-        .transcript-container {
-            height: 70vh; /* or any appropriate height */
-            overflow-y: auto;
-            position: relative;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 3rem;
-            background-color: var(--card-background);
-        }
-
-        .transcript-entry {
-            margin-bottom: 20px;
-        }
-
-        .transcript-speaker {
-            font-weight: bold;
-            color: var(--primary-purple);
-            margin-bottom: 5px;
-        }
-
-        .transcript-text {
-            line-height: 1.6;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        footer {
-            background-color: #ffffff;
-            border-top: 1px solid var(--border-color);
-            padding: 1rem 0;
-            position: relative;
-            z-index: 1000;
-            width: 100%;
-        }
-
-        .company-tabs-container {
-    background-color: #ffffff;
-    z-index: 1000;
-    transition: all 0.3s ease;
-    border-bottom: none;
-    width: 100%;
-    padding: 0;
-    margin: 1rem 0 2rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    position: relative;
-}
-
-.company-tabs-container::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(203, 213, 225, 0.6) 15%,
-        rgba(203, 213, 225, 0.6) 85%,
-        transparent 100%
-    );
-}
-
-.company-tabs-container::-webkit-scrollbar {
-    display: none;
-}
-
-.company-tabs {
-    display: flex;
-    padding: 0;
-    justify-content: space-around;
-    margin: 0;
-    list-style-type: none;
-    gap: 2rem;
-}
-
-.company-tabs .nav-item {
-    position: relative;
-}
-
-.company-tabs .nav-link {
-    color: #64748b;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 1rem 0.5rem;
-    position: relative;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
-}
-
-/* Update icons in tabs to be more subtle */
-.company-tabs .nav-link svg {
-    width: 16px;
-    height: 16px;
-    stroke-width: 2;
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
-
-.company-tabs .nav-link:hover {
-    color: #334155;
-}
-
-.company-tabs .nav-link:hover svg {
-    opacity: 1;
-    transform: scale(1.1);
-}
-
-.company-tabs .nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, #18994e, #6a198a);
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s ease;
-    border-radius: 2px;
-}
-
-.company-tabs .nav-link.active {
-    color: #18994e;
-    font-weight: 600;
-}
-
-.company-tabs .nav-link.active svg {
-    opacity: 1;
-    color: #18994e;
-}
-
-.company-tabs .nav-link.active::before {
-    transform: scaleX(1);
-}
-
-/* Add subtle hover effect */
-.company-tabs .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #18994e20, #6a198a20);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 2px;
-}
-
-.company-tabs .nav-link:hover::after {
-    opacity: 1;
-}
-
-/* Enhance tab indicators */
-.tab-indicator {
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #18994e, #6a198a);
-    transition: all 0.3s ease;
-    border-radius: 2px;
-}
-
-/* Add scroll shadows for better UX */
-.company-tabs-container::before,
-.company-tabs-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.company-tabs-container::before {
-    left: 0;
-    background: linear-gradient(90deg, #fff, transparent);
-}
-
-.company-tabs-container::after {
-    right: 0;
-    background: linear-gradient(-90deg, #fff, transparent);
-}
-
-.company-tabs-container.has-overflow::before,
-.company-tabs-container.has-overflow::after {
-    opacity: 1;
-}
-
-@media (max-width: 768px) {
-    .company-tabs-container {
-        margin: 0.5rem 0 1.5rem;
-        padding: 0 1rem;
-    }
-
-    .company-tabs {
-        gap: 1.5rem;
-    }
-
-    .company-tabs .nav-link {
-        font-size: 0.85rem;
-        padding: 0.75rem 0.25rem;
-    }
-}
-        .company-info {
-            position: absolute;
-            left: 50%;
-            
-            transform: translateX(-50%);
-            text-align: center;
-            width: 100%;
-            max-width: 300px;
-            transition: all 0.3s ease;
-        }
-
-        .content-wrapper {
-    max-width: 1200px;
-    /* margin: 0 auto; */
-    /* padding: 0 1.5rem; */
-}
-
-.page-header {
-    padding: 2rem 0 1.5rem;
-}
-
-.company-title {
-    color: var(--primary-purple);
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-    margin: 0;
-}
-
-.event-title {
-    color: #64748b;
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.horizontal-line {
-    height: 1px;
-    background: linear-gradient(90deg, 
-        var(--primary-purple),
-        var(--primary-green),
-        transparent
-    );
-    margin: 1rem 0 ;
-    opacity: 0.2;
-}
-
-@media (max-width: 768px) {
-    .content-wrapper {
-        padding: 0 1rem;
-    }
-
-    .page-header {
-        padding: 1.5rem 0 1rem;
-    }
-
-    .company-title {
-        font-size: 1.5rem;
-    }
-
-    .event-title {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .content-wrapper {
-        padding: 0 0.75rem;
-    }
-
-    .page-header {
-        padding: 1rem 0 0.75rem;
-    }
-
-    .company-title {
-        font-size: 1.25rem;
-    }
-
-    .event-title {
-        font-size: 0.9rem;
-    }
-}
-
-        .company-title.scrolled
-        { 
-
-            font-size: 0.8rem;
-            margin-bottom: 0;
-        } 
-        .event-title.scrolled {
-            font-size: 0.8rem;
-            margin-bottom: 0;
-            display: none;
-        }
-
-
-        @media (max-width: 767.98px) {
-            .company-tabs .nav-link {
-                padding: 8px 10px;
-                font-size: 0.8rem;
-            }
-        }
-    </style>
-   <style>
-    .accordion-item {
-        border: none;
-        background-color: var(--card-background);
-        /* border-radius: 8px; */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: box-shadow 0.3s ease;
-    }
-
-    .accordion-item:hover {
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .accordion-button {
-        padding: 1.25rem;
-        background-color: var(--card-background);
-        border: none;
-        /* border-radius: 8px !important; */
-    }
-
-    .accordion-button:not(.collapsed) {
-        color: var(--primary-green);
-        background-color: rgba(24, 153, 78, 0.1);
-        border-bottom-left-radius: 0 !important;
-        border-bottom-right-radius: 0 !important;
-    }
-
-    /* Speakers summary section styles */
-    .speakers-summary {
-        background-color: var(--card-background);
-        border-radius: 8px;
-        padding: 1.5rem;
-        max-width: 1200px;
-        margin-left: 1rem;
-        margin-right: 1rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    #topQaAccordion {
-        max-height: 60vh;
-        max-width: 1200px;
-        /* margin-left: 1rem;
-        margin-right: 1rem;
-        margin-bottom: 2rem; */
-    }
-
-    .speakers-scroll-container {
-        position: relative;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        margin: -10px;
-        padding: 10px;
-    }
-
-    /* Custom scrollbar styling */
-    .speakers-scroll-container::-webkit-scrollbar {
-        height: 6px;
-    }
-
-    .speakers-scroll-container::-webkit-scrollbar-track {
-        background: var(--background-color);
-        border-radius: 3px;
-    }
-
-    .speakers-scroll-container::-webkit-scrollbar-thumb {
-        background: var(--primary-purple);
-        border-radius: 3px;
-    }
-
-
-    .featured-analysts-header {
-        position: relative;
-        padding-bottom: 0.5rem;
-    }
-
-    .summary-title {
-        font-size: 1.35rem;
-        color: var(--primary-purple);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        letter-spacing: 0.02em;
-    }
-
-    .header-icon {
-    width: 24px;
-    height: 24px;
-    color: var(--primary-purple);
-    opacity: 0.9;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-    .title-underline {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(
-        90deg, 
-        var(--primary-purple) 0%, 
-        var(--primary-green) 100%
-    );
-    border-radius: 2px;
-}
-
-
-
-    .speakers-grid {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 280px;
-        gap: 1rem;
-        padding-bottom: 5px; /* Space for scrollbar */
-    }
-
-    .speaker-card {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        background-color: var(--background-color);
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        min-width: 280px; /* Ensure minimum width */
-    }
-
-    .speaker-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .speaker-avatar {
-        width: 48px;
-        height: 48px;
-        background-color: var(--primary-purple);
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-right: 1rem;
-        font-size: 1.1rem;
-    }
-
-    .speaker-details {
-        flex: 1;
-    }
-
-    .speaker-name {
-        color: var(--primary-green);
-        font-weight: 600;
-        text-decoration: none;
-        font-size: 1.1rem;
-        display: block;
-        margin-bottom: 0.25rem;
-    }
-
-    .speaker-name:hover {
-        color: var(--primary-purple);
-    }
-
-   
-
-  
-    /* Updated Featured Analysts Section */
-    .speakers-summary {
-        background-color: transparent;
-        padding: 0;
-        box-shadow: none;
-    }
-
-    .featured-analysts-header {
-        margin-bottom: 1rem;
-    }
-
-    .summary-title {
-        font-size: 1.1rem;
-        color: #2d3748;
-    }
-
-    .speakers-grid {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 220px; /* Reduced from 280px */
-        gap: 0.75rem;
-    }
-
-    .speaker-card {
-        background-color: white;
-        padding: 0.75rem;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        min-width: 220px;
-    }
-
-    .speaker-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-
-    .speaker-avatar {
-        width: 36px;
-        height: 36px;
-        font-size: 0.9rem;
-    }
-
-    .speaker-name {
-        font-size: 0.95rem;
-        margin-bottom: 0.2rem;
-    }
-
-    .speaker-title {
-        font-size: 0.8rem;
-        color: #718096;
-    }
-
-    .question-count {
-        font-size: 0.75rem;
-        color: #718096;
-    }
-
-    .speaker-link {
-        color: var(--primary-green);
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-    .speaker-link:hover {
-        color: var(--primary-purple);
-    }
-
-    @media (max-width: 768px) {
-        .speakers-grid {
-            grid-auto-columns: 260px; /* Slightly smaller on mobile */
-        }
-
-        .speaker-card {
-            min-width: 260px;
-            padding: 0.875rem;
-        }
-
-        .speaker-avatar {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-        }
-
-        .speaker-name {
-            font-size: 1rem;
-        }
-
-        .speaker-title {
-            font-size: 0.8rem;
-        }
-
-        .question-count {
-            font-size: 0.75rem;
-        }
-        .summary-title {
-            font-size: 1.25rem;
-        }
-
-        .header-icon {
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    /* Add fade effect to indicate more content */
-    @media (min-width: 769px) {
-        .speakers-grid {
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        }
-    }
-</style>
-<style>
-    .insights-container,
-#qaAccordion{
-    max-width: 1200px;
-    margin-left: 1rem;
-    max-height:60vh ;
-    margin-right: 1rem;
-    padding-top: 0.5rem; /* Consistent spacing from floating bar */
-}
-    
-    .insight-section {
-        background-color: var(--card-background);
-        border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 1.5rem;
-    }
-    
-    .section-header {
-        display: flex;  /* Added to ensure proper alignment */
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid #f1f5f9;
-        position: relative;
-    }
-
-    .section-icon {
-    width: 24px;
-    height: 24px;
-    padding: 4px;
-    border-radius: 6px;
-    background: linear-gradient(45deg, #6a198a, #18994e);
-    color: white;
-    flex-shrink: 0;
-}
-    .section-header::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(
-            90deg, 
-            var(--primary-purple) 0%, 
-            var(--primary-green) 100%
-        );
-        border-radius: 2px;
-    }
-    .section-title {
-        font-size: 1.1rem;
-        color: var(--primary-purple);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        letter-spacing: 0.02em;
-        margin: 0;
-    }
-
-   
-
-    
-    .quote-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.25rem;
-    }
-    
-    .quote-card {
-        background: #f8fafc;
-         position: relative;
-        border-radius: 8px;
-        padding: 1.5rem;
-        position: relative;
-        transition: transform 0.2s ease;
-    }
-    
-    .quote-card:hover {
-        transform: translateY(-2px);
-    }
-    
-    
-    .quote-card {
-        position: relative;
-        padding: 1.5rem 1.5rem 1rem;
-    }
-
-    .quote-icon {
-        position: absolute;
-        top: -25px;
-        left: 12px;
-        font-family: 'Playfair Display', 'Didot', 'Times New Roman', serif;
-        font-size: 85px;
-        font-style: italic;
-        font-weight: 700;
-        color: #000;
-        opacity: 0.12;
-        pointer-events: none;
-        user-select: none;
-        background: none;
-        border: none;
-        box-shadow: none;
-        width: auto;
-        height: auto;
-        display: none;
-        line-height: 1;
-    }
-
-    /* Import Playfair Display font */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap');
-
-    /* Fallback if Playfair Display doesn't load */
-    @font-face {
-        font-family: 'Playfair Display';
-        font-style: italic;
-        font-weight: 700;
-        font-display: swap;
-        src: local('Georgia');
-    }
-
-    
-    .topic-tag {
-        display: none;
-        /* display: inline-block; */
-        padding: 0.25rem 0.75rem;
-        background: #e2e8f0;
-        color: #475569;
-        border-radius: 16px;
-        font-size: 0.875rem;
-        margin-bottom: 0.75rem;
-    }
-    
-    .quote-content {
-        color: var(--primary-purple);
-        margin-bottom: 0.75rem;
-        line-height: 1.6;
-        font-size: 0.95rem;
-        font-style: italic;
-        position: relative;
-        padding-left: 1rem;
-    }
-
-    .quote-content::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: linear-gradient(
-            to bottom,
-            var(--primary-purple) 0%,
-            var(--primary-green) 100%
-        );
-        border-radius: 2px;
-        opacity: 0.4;
-    }
-    
-    .quote-context {
-        color: #4a5568;
-        font-size: 0.875rem;
-        padding: 0.75rem;
-        border-radius: 4px;
-        background-color: rgba(0, 0, 0, 0.02);
-        margin-bottom: 1rem;
-        line-height: 1.6;
-        font-family: 'system-ui', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    .quote-context::before {
-        content: '→';
-        color: #718096;
-        margin-right: 0.5rem;
-        font-weight: 500;
-    }
-    
-    .meta-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: auto;
-    }
-    
-    .sentiment-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 16px;
-        font-size: 0.75rem;
-        font-weight: 500;
-    }
-    
-    .sentiment-positive {
-        background: #dcfce7;
-        color: #166534;
-    }
-    
-    .sentiment-negative {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-    
-    .sentiment-neutral {
-        background: #f1f5f9;
-        color: #475569;
-    }
-    
-    .topic-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .speaker-info {
-            font-size: 0.9rem;
-            color: var(--primary-purple);
-            margin-bottom: 0.5rem;
-        }
-
-        .meta-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0.75rem 0;
-            padding-top: 0.75rem;
-            border-top: 1px solid #e2e8f0;
-        }
-        .metric-context {
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            color: #64748b;
-            line-height: 1.4;
-        }
-
-        .metric-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .metric-trend {
-            font-weight: bold;
-        }
-
-        .metric-trend.up { color: var(--success-color); }
-        .metric-trend.down { color: var(--challenge-color); }
-
-        .confidence-level {
-            font-size: 0.8rem;
-            color: #64748b;
-            display: none;
-            padding: 2px 8px;
-            background: #f1f5f9;
-            border-radius: 12px;
-        }
-
-        .quote-content {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #1e293b;
-            margin-bottom: 0.75rem;
-        }
-
-    
-    
-    
-    @media (max-width: 768px) {
-        .quote-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .insights-container {
-            margin-left: 0.5rem;
-        }
-        
-        .insight-section {
-            padding: 1rem;
-        }
-        .section-header {
-            padding-bottom: 0.5rem;
-        }
-        .section-title {
-            font-size: 1.1rem;
-        }
-
-        .section-icon {
-            width: 28px;
-            height: 28px;
-        }
-    
-    }
-    </style>
-
-    
- <style>
-    #floatingInfo { display: none; }
-    .floating-info {
-        /* display: none; */
-        position: relative;
-        margin: 0.75rem .1rem;
-        padding: 12px 20px;
-        background: linear-gradient(
-            135deg, 
-            #f8f9fa 0%,
-            rgba(106, 25, 138, 0.03) 50%,
-            rgba(106, 25, 138, 0.08) 100%
-        );
-        border-radius: 6px;
-        
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        display: flex;
-        /* margin-bottom: 1.5rem; */
-        align-items: center;
-        gap: 14px;
-        max-width: 1200px;  /* Match content max-width */
-        border-left: 3px solid var(--primary-green);
-        transition: all 0.3s ease;
-        opacity: 1;
-        transform: translateY(0);
-        height: 44px;
-    }
-
-    .floating-info::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-            45deg,
-            transparent 0%,
-            rgba(106, 25, 138, 0.02) 30%,
-            rgba(106, 25, 138, 0) 100%
-        );
-        filter: blur(10px);
-        pointer-events: none;
-        border-radius: inherit;
-    }
-
-   
-    .floating-info:hover {
-        background: linear-gradient(
-            135deg, 
-            #f8f9fa 0%,
-            rgba(106, 25, 138, 0.05) 50%,
-            rgba(106, 25, 138, 0.1) 100%
-        );
-    }
-
-    .info-logo {
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
-    }
-
-    .info-content {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        font-size: 0.9rem;
-        color: #4a5568;
-        line-height: 1.4;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .info-text {
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .info-link {
-        color: var(--primary-purple);
-        font-size: 0.85rem;
-        font-weight: 500;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-        padding-left: 12px;
-        position: relative;
-    }
-
-    .info-link::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        height: 16px;
-        width: 1px;
-        background: rgba(106, 25, 138, 0.2);
-    }
-
-    .info-link:hover {
-        color: var(--primary-green);
-    }
-
-    .close-button {
-        padding: 4px;
-        color: var(--secondary-text-color);
-        background: none;
-        border: none;
-        cursor: pointer;
-        opacity: 0.6;
-        transition: opacity 0.2s ease;
-        margin-left: 4px;
-    }
-
-    .close-button:hover {
-        opacity: 1;
-    }
-    #content-section,
-    .insights-container,
-    #qaAccordion,
-    .speakers-summary {
-        transition: transform 0.3s ease;
-    }
-
-    .floating-info.hidden {
-        margin-top: -44px;
-        display: none;
-        margin-bottom: 0;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .content-shifted {
-        transform: translateY(-.15rem); /* Accounts for floating info height + margin */
-    }
-    @media (max-width: 768px) {
-        
-        .floating-info,.speakers-summary {
-            margin: 0.5rem;
-            padding: 8px 12px;
-            margin-bottom: 1.5rem;
-            height: auto;
-            font-size: xx-small;
-            min-height: 44px;
-            
-            flex-wrap: wrap;  /* Allow content to wrap on mobile */
-        }
-        #content-section {
-        padding-right: 1rem;
-    }
-    .content-shifted {
-        transform: translateY(-1rem); /* Accounts for floating info height + margin */
-    }
-
-        .info-content {
-            font-size: 0.85rem;
-            white-space: normal;  /* Allow text to wrap */
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .info-text {
-            white-space: normal;
-        }
-
-        .info-link {
-            padding-left: 8px;
-            font-size: 0.8rem;
-        }
-    }
-
-</style>
-<style>
-    /* Modern scrollbar styles for Webkit browsers (Chrome, Safari, Edge) */
-    ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-        background-color: transparent;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
-        transition: background-color 0.2s ease;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Firefox scrollbar styles */
-    * {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-    }
-    
-    /* Custom styles for specific containers */
-    .transcript-container {
-        scrollbar-gutter: stable;
-        scroll-behavior: smooth;
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
-    
-    .transcript-container::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    .transcript-container::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
-    }
-    
-    .transcript-container::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.25);
-    }
-    
-    /* Speakers scroll container styles */
-    .speakers-scroll-container::-webkit-scrollbar {
-        height: 4px;
-    }
-    
-    .speakers-scroll-container::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
-    }
-    
-    .speakers-scroll-container::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.25);
-    }
-    
-    /* Content section scrollbar */
-    #content-section::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    #content-section::-webkit-scrollbar-track {
-        margin: 4px 0;
-    }
-    
-    #content-section::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        min-height: 40px;
-    }
-    
-    #content-section::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.25);
-    }
-    
-    /* Dark mode adjustments */
-    @media (prefers-color-scheme: dark) {
-        ::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .transcript-container::-webkit-scrollbar-thumb,
-        .speakers-scroll-container::-webkit-scrollbar-thumb,
-        #content-section::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-        
-        .transcript-container::-webkit-scrollbar-thumb:hover,
-        .speakers-scroll-container::-webkit-scrollbar-thumb:hover,
-        #content-section::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(255, 255, 255, 0.25);
-        }
-    }
-    </style>
- 
-
-
-
-
-
-
-
-<style>
-/* Base layout styles */
-/* .tab-section {
-    margin: 0 1rem;
-} */
-
-.tab-row {
-    display: flex;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 1.5rem;
-    gap: 1.5rem;
-}
-
-.tab-item {
-    padding: 0.75rem 0;
-    color: #6b7280;
-    cursor: pointer;
-    position: relative;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-/* Section layouts */
-.quarter-section {
-    background: linear-gradient(to right, #f8fafc, #ffffff);
-    border-radius: 8px;
-    border-left: 3px solid #18994e;
-    padding: 1.25rem;
-    margin-bottom: 1.25rem;
-}
-
-.highlight-box {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 1.25rem;
-    margin: 1rem 0;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    position: relative;
-}
-
-/* Headers and titles */
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #1a1a1a;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px dashed #e5e7eb;
-}
-
-.highlight-title {
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-}
-
-/* Icons */
-.section-icon {
-    width: 24px;
-    height: 24px;
-    padding: 4px;
-    border-radius: 6px;
-    background: linear-gradient(45deg, #6a198a, #18994e);
-    color: white;
-}
-
-/* Lists and content */
-.bullet-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.bullet-list li {
-    position: relative;
-    padding-left: 1.75rem;
-    margin-bottom: 0.75rem;
-    color: #4a4a4a;
-    line-height: 1.5;
-    font-size: 0.9rem;
-}
-
-.bullet-list li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.5rem;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #18994e, #6a198a);
-}
-
-/* Metrics grid */
-.metrics-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-}
-
-.metric-item {
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.metric-label {
-    font-size: 0.875rem;
-    color: #6b7280;
-}
-
-.metric-value {
-    font-weight: 600;
-    color: #18994e;
-}
-
-/* Management quote */
-.management-quote {
-    background: linear-gradient(to right, #f0f9ff, #ffffff);
-    border-left: 3px solid #6a198a;
-    padding: 1.25rem;
-    margin: 1rem 0;
-    font-style: italic;
-    color: #4a4a4a;
-    position: relative;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
-
-.management-quote::before {
-    content: '"';
-    position: absolute;
-    top: -5px;
-    left: 10px;
-    font-size: 3rem;
-    color: #6a198a;
-    opacity: 0.2;
-    font-family: serif;
-}
-
-/* Active states and transitions */
-.tab-item:hover {
-    color: #18994e;
-}
-
-.tab-item.active {
-    color: #1a1a1a;
-    font-weight: 600;
-}
-
-.tab-item.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #18994e, #6a198a);
-}
-
-.content-section {
-    display: none;
-    animation: fadeIn 0.3s ease;
-}
-
-.content-section.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Header section */
-/* .summary-header { */
-    /* margin: 0 1rem 1.5rem; */
-    /* padding-bottom: 1rem; */
-/* } */
-
-.header-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.75rem;
-    border-radius: 16px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    gap: 0.4rem;
-}
-
-.pill svg {
-    width: 16px;
-    height: 16px;
-}
-
-.pill-success {
-    background: rgba(24, 153, 78, 0.1);
-    color: #18994e;
-}
-
-.pill-purple {
-    background: rgba(106, 25, 138, 0.1);
-    color: #6a198a;
-}
-
-.header-quote {
-    background: linear-gradient(to right, #f8fafc, #ffffff);
-    border-left: 3px solid #6a198a;
-    padding: 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-style: italic;
-    color: #4a4a4a;
-    /* margin-bottom: 1rem; */
-    line-height: 1.6;
-}
-
-/* Gradients and dividers */
-.highlight-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #18994e, #6a198a);
-    opacity: 0.7;
-}
-
-.horizontal-divider {
-    height: 1px;
-    background: linear-gradient(90deg, #f0f0f0, #e5e7eb, #f0f0f0);
-    margin: 1.5rem 0;
-}
-
-.tab-content-container {
-    position: relative;
-    min-height: 600px; /* Adjust based on your content */
-    margin-bottom: 2rem;
-}
-
-.content-section {
-    position: absolute;
-    width: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease;
-}
-
-.content-section.active {
-    position: relative;
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Consistent section styling */
-.overview-box {
-    background: linear-gradient(to right, #f8fafc, #ffffff);
-    border-radius: 8px;
-    border-left: 3px solid #18994e;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #1a1a1a;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px dashed #e5e7eb;
-}
-
-.section-content {
-    color: #4a4a4a;
-    line-height: 1.6;
-    font-size: 0.9rem;
-}
-
-@media (max-width: 768px) {
-    .summary-header {
-        margin: 0 0.5rem 1rem;
-    }
-    
-    .header-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        width: 100%;
-    }
-    
-    .pill {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.7rem;
-        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9);
-        white-space: nowrap;
-        flex: 0 1 auto;
-        max-width: calc(50% - 0.25rem); /* Ensures 2 pills per row with gap */
-        min-width: max-content;
-    }
-
-    .pill-success {
-        background: linear-gradient(145deg, rgba(24, 153, 78, 0.15), rgba(24, 153, 78, 0.08));
-        box-shadow: inset 0 1px 2px rgba(24, 153, 78, 0.1);
-    }
-
-    .pill-purple {
-        background: linear-gradient(145deg, rgba(106, 25, 138, 0.15), rgba(106, 25, 138, 0.08));
-        box-shadow: inset 0 1px 2px rgba(106, 25, 138, 0.1);
-    }
-
-    .pill svg {
-        width: 12px;
-        height: 12px;
-    }
-}
-/* Base pill transitions */
-.pill {
-    transition: all 0.2s ease;
-}
-
-.pill:active {
-    transform: scale(0.98);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Tablet styles */
-@media (max-width: 768px) {
-    .summary-header {
-        margin: 0 0.5rem 1rem;
-    }
-    
-    .header-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-bottom: 1rem;
-    }
-    
-    .pill {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.7rem;
-        white-space: nowrap;
-        align-items: center;
-    }
-
-    .pill svg {
-        width: 12px;
-        height: 12px;
-    }
-
-    .tab-section {
-        margin: 0 0.5rem;
-    }
-    
-    .tab-row {
-        gap: 1rem;
-    }
-    
-    .quarter-section,
-    .highlight-box {
-        padding: 1rem;
-    }
-    
-    .metrics-list {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Mobile styles */
-@media (max-width: 480px) {
-    .header-pills {
-        display: flex;
-        align-items: flex-start;
-        overflow-x: auto;
-        padding-bottom: 0.25rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .header-pills::-webkit-scrollbar {
-        display: none;
-    }
-
-    .pill {
-        font-size: 0.65rem;
-        padding: 0.25rem 0.5rem;
-    }
-
-    .pill svg {
-        width: 10px;
-        height: 10px;
-    }
-    
-    .tab-row {
-        gap: 0.75rem;
-    }
-    
-    .section-title {
-        font-size: 0.95rem;
-    }
-}
-.summary-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.summary-header {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.section-content {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #4a4a4a;
-}
-
-@media (max-width: 768px) {
-    .summary-container {
-        padding: 1rem;
-        /* margin: 0 0.5rem; */
-        border-radius: 6px;
-    }
-
-    .summary-header {
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .summary-container {
-        padding: 0.75rem;
-        margin: 0 0.25rem;
-    }
-}
-</style>
-<style> 
-     .mobile-nav {
-        display: none;
-    }
 
-    @media (max-width: 768px) {
+        /* Mobile Navigation */
         .mobile-nav {
             display: flex;
             position: fixed;
@@ -1972,7 +118,7 @@
             right: 0;
             background: white;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 50;
+            z-index: 1000;
             height: 64px;
             padding-bottom: env(safe-area-inset-bottom);
         }
@@ -1991,7 +137,7 @@
         }
 
         .mobile-nav-item.active {
-            color: #18994e;
+            color: var(--primary-green);
         }
 
         .mobile-nav-icon {
@@ -2000,116 +146,120 @@
             margin-bottom: 4px;
         }
 
-        /* Adjust main content for mobile */
-        #content-section {
-            margin-bottom: 80px !important;
-            padding-bottom: 0 !important;
+        /* Header Styles */
+        .earnings-header {
+            background-color: #ffffff;
+            padding: 0.75rem;
         }
 
-        /* Hide desktop navigation on mobile */
-        .company-tabs-container {
-            display: none !important;
+        .header-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-        /* Adjust header for mobile */
-        .page-header {
-            padding: 1rem 0 0.5rem !important;
+        .title-section {
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
         }
 
-        .company-title {
-            font-size: 1.25rem !important;
+        .company-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
         }
 
-        .event-title {
-            font-size: 0.9rem !important;
-        }
-
-        /* Mobile-specific content adjustments */
-        .insights-container,
-        .speakers-summary,
-        #qaAccordion,
-        .transcript-container {
-            margin-left: 0.5rem !important;
-            margin-right: 0.5rem !important;
-            margin-bottom: 4rem !important;
-        }
-
-        /* Adjust floating info for mobile */
-        .floating-info {
-            margin: 0.5rem;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-        }
-    }
-</style>
-
-<style>
-    .earnings-header {
-        background-color: #ffffff;
-        padding: 1.25rem 1rem;
-        border-bottom: 1px solid #f1f5f9;
-        width: 100%;
-    }
-    
-    .header-container {
+        .company-meta {
         display: flex;
-        justify-content: stretch;
-        align-items: stretch;
-        padding: 0 1rem;
-        gap: 1rem;
-        flex-direction: column;
-    }
-    .company-section {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-    }
-    
-    .company-box {
-        background-color: #f8fafc;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        display: inline-block;
-    }
-    
-  
-    .meta-info {
-        display: flex;
-        gap: 0.75rem;
         align-items: center;
+        gap: 1.5rem;
+        justify-content: space-between;
     }
     
- 
-  
-
+    .ticker-badge {
+        color: #6366f1;
+        font-weight: 500;
+        font-size: 1rem;
+    }
     
-    .period-badge, .date-badge {
+    .date-info {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
         color: #64748b;
-        font-size: 0.875rem;
+        font-size: 0.7rem;
     }
     
-    .metrics-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
+    .clock-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+    
+
+        /* Content Section Styles */
+        #content-section {
+            padding: 0.5rem;
+            margin-bottom: 64px;
+        }
+
+        /* Metrics Grid */
+        .metrics-section {
+    position: relative;
+    margin: 8px;
 }
 
-.metric-box {
-    background: #ffffff;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.metrics-handle {
+    background: rgb(248, 241, 249);
+    padding: 12px 16px;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-bottom: 8px;
 }
 
-.metric-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.metrics-handle-text {
+    font-size: 14px;
+    color: #4a5568;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
+.metrics-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.metrics-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: white;
+    border-radius: 8px;
+}
+
+.metrics-container.expanded {
+    max-height: 1000px; /* Adjust based on your content */
+    transition: max-height 0.3s ease-in;
+}
+
+.metrics-handle.expanded .metrics-icon {
+    transform: rotate(180deg);
+}
+
+        .metric-box {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
 
 .metric-label {
     font-size: 0.75rem;
@@ -2117,11 +267,11 @@
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.025em;
-    margin-bottom: 0.5rem;
+    /* margin-bottom: 0.5rem; */
 }
 
 .metric-value {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
     line-height: 1.4;
     color: #0f172a;
@@ -2143,51 +293,26 @@
     color: #dc2626;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .metrics-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-    }
-
-    .metric-box {
-        padding: 1rem;
-    }
-
-    .metric-value {
-        font-size: 1.25rem;
-    }
-
-    .metric-value-text {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .metrics-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Add animation for better UX */
 .metric-box {
-    animation: fadeIn 0.3s ease-out;
+    background: #ffffff;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.metric-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
-
-
-    
-    .action-section {
+.command-text { 
+    display: none;
+}
+ 
+.action-section {
         padding: 0.5rem;
         background-color:#dddddd4d;
         border-radius: 5px;
@@ -2218,177 +343,438 @@
         width: 1.25rem;
         height: 1.25rem;
     }
-    
-    @media (max-width: 1024px) {
-        .action-links {
-            gap: 1rem;
+
+        /* Summary Section */
+        .summary-container {
+            padding: 0.75rem;
+            background: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
-        
-        .action-link {
-            font-size: 0.8125rem;
+
+        /* Questions Accordion */
+        .accordion-item {
+            border: none;
+            background-color: var(--card-background);
+            margin-bottom: 0.75rem;
         }
-    }
-    
-    @media (max-width: 768px) {
-        .header-container {
-            flex-direction: column;
-            gap: 1rem;
-            padding: 0;
-        }
-    
-        .company-section {
-            gap: 1rem;
-            width: 100%;
-        }
-    
-        
-        .action-section {
-            width: 100%;
-        }
-        
-        .action-links {
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-    }
-    
-    @media (max-width: 640px) {
-        .earnings-header {
-            padding: 1rem 0.75rem;
-        }
-    
-        .company-name {
-            font-size: 1.125rem;
-        }
-        .meta-info {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.25rem;
-        }
-    
-        .action-link {
-            font-size: 0.75rem;
-        }
-        
-        .action-link svg {
-            width: 1rem;
-            height: 1rem;
-        }
-    }
-    </style>
-<style>
-    .title-section {
-        background-color: #f8fafc;
-        padding: 1.25rem 1.5rem;
-        border-radius: 12px;
-        /* max-width: 800px; */
-    }
-    
-    .title-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1.5rem;
-        margin-bottom: 0.75rem;
-        flex-wrap: wrap;
-    }
-    
-    .company-name {
-        font-size: 1.75rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin: 0;
-    }
-    
-    .tag-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    
-    .category-tag {
-        background-color: #f0f9ff;
-        color: #0284c7;
-        padding: 0.25rem 0.625rem;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        border: 1px solid #e0f2fe;
-        white-space: nowrap;
-    }
-    
-    .company-meta {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        justify-content: space-between;
-    }
-    
-    .ticker-badge {
-        color: #6366f1;
-        font-weight: 500;
-        font-size: 1rem;
-    }
-    
-    .date-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #64748b;
-        font-size: 0.9375rem;
-    }
-    
-    .clock-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-    
-    @media (max-width: 768px) {
-        .title-section {
+
+        .accordion-button {
             padding: 1rem;
-            width: 100%;
+            font-size: 0.9rem;
         }
-    
-        .title-row {
-            gap: 0.75rem;
+
+        /* Transcript Section */
+        .transcript-container {
+            margin: 0.5rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
         }
-    
-        .company-name {
-            font-size: 1.25rem;
+
+        .transcript-entry {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
         }
-    
-        .company-meta {
-            flex-wrap: wrap;
-            gap: 0.75rem;
+
+        .transcript-speaker {
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin-bottom: 0.25rem;
         }
-    
-        .category-tag {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
+
+        /* Q&A Section */
+        .speakers-summary {
+            /* padding: 0.75rem; */
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
-        .command-text {
-        display: none;  /* Hide the text */
-    }
-    }
-    
-    @media (max-width: 480px) {
-        .title-row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
+
+        .speaker-card {
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
         }
-    
-        .tag-container {
-            margin-top: 0.25rem;
+
+        /* Floating Info (Mobile Optimized) */
+        .floating-info {
+            margin: 0.5rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.85rem;
         }
-    }
+
+        /* Mobile-specific Adjustments */
+        @media (max-width: 480px) {
+            .metrics-container {
+                grid-template-columns: 1fr;
+            }
+
+            .company-name {
+                font-size: 1.1rem;
+            }
+
+            .accordion-button {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+        }
     </style>
-    
-<style>
-    /* Navigation Elements */
-    .nav-actions {
+    <style>
+        .accordion-item {
+          background: white;
+          border-radius: 8px;
+          margin-bottom: 0.75rem;
+          overflow: hidden;
+          border: 1px solid var(--gray-200);
+      }
+      
+      .accordion-button {
+          padding: 1rem;
+          font-weight: 500;
+          color: var(--gray-700);
+          background: white;
+      }
+      
+      .accordion-button:not(.collapsed) {
+          color: var(--primary-green);
+          background: var(--light-green);
+      }
+      
+      .accordion-body {
+          padding: 1rem;
+          color: var(--gray-600);
+          line-height: 1.6;
+          background: var(--gray-50);
+      }
+      
+      
+          .accordion-item:hover {
+              box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+          }
+      
+          .accordion-button {
+              padding: 1.25rem;
+              background-color: var(--card-background);
+              border: none;
+              /* border-radius: 8px !important; */
+          }
+      
+          .accordion-button:not(.collapsed) {
+              color: var(--primary-green);
+              background-color: rgba(24, 153, 78, 0.1);
+              border-bottom-left-radius: 0 !important;
+              border-bottom-right-radius: 0 !important;
+          }
+      
+          /* Speakers summary section styles */
+          .speakers-summary {
+              background-color: var(--card-background);
+              border-radius: 8px;
+              /* padding: 1.5rem; */
+              max-width: 1200px;
+              margin-left: 1rem;
+              margin-right: 1rem;
+              margin-bottom: 2rem;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          #topQaAccordion {
+              max-height: 60vh;
+              max-width: 1200px;
+              /* margin-left: 1rem;
+              margin-right: 1rem;
+              margin-bottom: 2rem; */
+          }
+      
+          .speakers-scroll-container {
+              position: relative;
+              overflow-x: auto;
+              -webkit-overflow-scrolling: touch;
+              scrollbar-width: thin;
+              margin: -10px;
+              padding: 10px;
+          }
+      
+          /* Custom scrollbar styling */
+          .speakers-scroll-container::-webkit-scrollbar {
+              height: 6px;
+          }
+      
+          .speakers-scroll-container::-webkit-scrollbar-track {
+              background: var(--background-color);
+              border-radius: 3px;
+          }
+      
+          .speakers-scroll-container::-webkit-scrollbar-thumb {
+              background: var(--primary-purple);
+              border-radius: 3px;
+          }
+      
+      
+          .featured-analysts-header {
+              position: relative;
+              padding-bottom: 0.5rem;
+          }
+      
+          .summary-title {
+              font-size: 1.35rem;
+              color: var(--primary-purple);
+              font-weight: 600;
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              letter-spacing: 0.02em;
+          }
+      
+          .header-icon {
+          width: 24px;
+          height: 24px;
+          color: var(--primary-purple);
+          opacity: 0.9;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+      }
+      
+.header-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    gap: 0.4rem;
+}
+
+.pill svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pill-success {
+    background: rgba(24, 153, 78, 0.1);
+    color: #18994e;
+}
+
+.pill-purple {
+    background: rgba(106, 25, 138, 0.1);
+    color: #6a198a;
+}
+          .title-underline {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: linear-gradient(
+              90deg, 
+              var(--primary-purple) 0%, 
+              var(--primary-green) 100%
+          );
+          border-radius: 2px;
+      }
+      
+      
+      
+          .speakers-grid {
+              display: grid;
+              grid-auto-flow: column;
+              grid-auto-columns: 280px;
+              gap: 1rem;
+              padding-bottom: 5px; /* Space for scrollbar */
+          }
+      
+          .speaker-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          }
+      
+          .speaker-avatar {
+              width: 48px;
+              height: 48px;
+              background-color: var(--primary-purple);
+              color: white;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 600;
+              margin-right: 1rem;
+              font-size: 1.1rem;
+          }
+      
+          .speaker-details {
+              flex: 1;
+          }
+      
+          .speaker-name {
+              color: var(--primary-green);
+              font-weight: 600;
+              text-decoration: none;
+              font-size: 1.1rem;
+              display: block;
+              margin-bottom: 0.25rem;
+          }
+      
+          .speaker-name:hover {
+              color: var(--primary-purple);
+          }
+      
+         
+      
+        
+          /* Updated Featured Analysts Section */
+          .speakers-summary {
+              background-color: transparent;
+              padding: 0;
+              box-shadow: none;
+          }
+      
+          .featured-analysts-header {
+              margin-bottom: 1rem;
+          }
+      
+          .summary-title {
+              font-size: 1.1rem;
+              color: #2d3748;
+          }
+      
+          .speakers-grid {
+              display: grid;
+              grid-auto-flow: column;
+              grid-auto-columns: 220px; /* Reduced from 280px */
+              gap: 0.75rem;
+          }
+      
+          .speakers-summary {
+          background: white;
+          border-radius: 12px;
+          margin: 0.75rem;
+          /* padding: 1rem; */
+      }
+      
+      .speaker-card {
+          background: var(--gray-50);
+          border-radius: 8px;
+          padding: 1rem;
+          margin-bottom: 0.75rem;
+          border: 1px solid var(--gray-200);
+      }
+      
+      .question-text {
+          color: var(--gray-800);
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+          /* background-color: #e7ecd7; */
+      }
+      
+      .speaker-info {
+          color: var(--primary-purple);
+          font-size: 0.875rem;
+          margin-bottom: 0.75rem;
+      }
+      
+      .answer-text {
+          color: var(--gray-700);
+          font-size: 0.9375rem;
+          line-height: 1.5;
+      }
+      
+      
+          .speaker-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+          }
+      
+          .speaker-avatar {
+              width: 36px;
+              height: 36px;
+              font-size: 0.9rem;
+          }
+      
+          .speaker-name {
+              font-size: 0.95rem;
+              margin-bottom: 0.2rem;
+          }
+      
+          .speaker-title {
+              font-size: 0.8rem;
+              color: #718096;
+          }
+      
+          .question-count {
+              font-size: 0.75rem;
+              color: #718096;
+          }
+      
+          .speaker-link {
+              color: var(--primary-green);
+              text-decoration: none;
+              transition: color 0.3s ease;
+          }
+      
+          .speaker-link:hover {
+              color: var(--primary-purple);
+          }
+      
+          @media (max-width: 768px) {
+              .speakers-grid {
+                  grid-auto-columns: 260px; /* Slightly smaller on mobile */
+              }
+      
+              .speaker-card {
+                  min-width: 260px;
+                  padding: 0.875rem;
+              }
+      
+              .speaker-avatar {
+                  width: 40px;
+                  height: 40px;
+                  font-size: 1rem;
+              }
+      
+              .speaker-name {
+                  font-size: 1rem;
+              }
+      
+              .speaker-title {
+                  font-size: 0.8rem;
+              }
+      
+              .question-count {
+                  font-size: 0.75rem;
+              }
+              .summary-title {
+                  font-size: 1.25rem;
+              }
+      
+              .header-icon {
+                  width: 20px;
+                  height: 20px;
+              }
+          }
+      
+          /* Add fade effect to indicate more content */
+          @media (min-width: 769px) {
+              .speakers-grid {
+                  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+              }
+          }
+      </style>
+      <style>
+
+.nav-actions {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -2499,609 +885,144 @@
     border-color: #cbd5e1;
     transform: translateY(-1px);
 }
-
-@media (max-width: 640px) {
-    .command-container {
-        padding: 0 0.5rem;
-    }
-    
-    .suggestion-pills {
-        justify-content: center;
-    }
-}
-    .nav-icon-btn {
-        position: relative;
-        padding: 0.5rem;
-        background: transparent;
-        border: none;
-        color: #64748b;
-        cursor: pointer;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-    }
-    
-    .nav-icon-btn:hover {
-        background-color: #f1f5f9;
-        color: #0f172a;
-    }
-    .command-trigger {
-        padding: 0.5rem;  /* Make it square */
-    }
-    
-   
-    
-    .notification-badge {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        width: 8px;
-        height: 8px;
-        background-color: #ef4444;
-        border-radius: 50%;
-        border: 2px solid #ffffff;
-    }
-    
-    /* Modal Base Styles */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.4);
-        display: none;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 4rem;
-        z-index: 1000;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-    }
-    
-    .modal {
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        width: 100%;
-        max-width: 480px;
-        opacity: 0;
-        transform: scale(0.95);
-        transition: all 0.2s ease;
-    }
-    
-    .modal-overlay.active {
-        display: flex;
-    }
-    
-    .modal-overlay.active .modal {
-        opacity: 1;
-        transform: scale(1);
-    }
-    
-    /* Notification Modal Styles */
-    .notification-modal {
-        max-height: 600px;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    .modal-header h3 {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #0f172a;
-        margin: 0;
-    }
-    
-    .close-btn {
-        padding: 0.5rem;
-        background: transparent;
-        border: none;
-        color: #64748b;
-        cursor: pointer;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .notification-tabs {
-        display: flex;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    .tab-btn {
-        padding: 0.375rem 0.75rem;
-        background: transparent;
-        border: none;
-        color: #64748b;
-        cursor: pointer;
-        border-radius: 6px;
-        font-size: 0.875rem;
-        transition: all 0.2s ease;
-    }
-    
-    .tab-btn.active {
-        background-color: #f1f5f9;
-        color: #0f172a;
-    }
-    
-    .notifications-list {
-        padding: 0.5rem;
-        overflow-y: auto;
-        max-height: 400px;
-    }
-    
-    .notification-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-    
-    .notification-item:hover {
-        background-color: #f8fafc;
-    }
-    
-    .notification-dot {
-        width: 6px;
-        height: 6px;
-        background-color: #3b82f6;
-        border-radius: 50%;
-        margin-top: 6px;
-    }
-    
-    .notification-icon {
-        color: #64748b;
-        padding: 0.5rem;
-        background-color: #f1f5f9;
-        border-radius: 6px;
-    }
-    
-    .notification-details {
-        flex: 1;
-    }
-    
-    .notification-details p {
-        margin: 0;
-        font-size: 0.875rem;
-        color: #0f172a;
-        line-height: 1.4;
-    }
-    
-    .notification-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-    
-    /* Command Menu Styles */
-    .command-modal {
-        max-width: 640px;
-    }
-    
-    .command-search {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    .command-search input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 0.9375rem;
-        color: #0f172a;
-        background: transparent;
-    }
-    
-    .command-hint {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        padding: 0.25rem 0.5rem;
-        background-color: #f1f5f9;
-        border-radius: 4px;
-    }
-    
-    .command-results {
-        padding: 0.5rem;
-        max-height: 400px;
-        overflow-y: auto;
-    }
-    
-    .command-group-title {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 0.5rem 0.75rem;
-    }
-    
-    .command-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 0.75rem;
-        border-radius: 6px;
-        cursor: pointer;
-        color: #0f172a;
-        font-size: 0.875rem;
-    }
-    
-    .command-item:hover {
-        background-color: #f8fafc;
-    }
-    
-    .command-shortcut {
-        margin-left: auto;
-        font-size: 0.75rem;
-        color: #94a3b8;
-        padding: 0.125rem 0.375rem;
-        background-color: #f1f5f9;
-        border-radius: 4px;
-    }
-    
-    @media (max-width: 640px) {
-        .modal {
-            margin: 1rem;
-            max-height: calc(100vh - 2rem);
-        }
-    }
-    </style>
+      </style>
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
-            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" class="w-1 h-1 object-contain" style="height: 30px; width: 35px; margin-right: .25rem;">
+            <img src="/static/images/logo-stbit.png" alt="stockrabit logo" style="height: 30px; width: 35px; margin-right: .25rem;">
             <a class="navbar-brand" href="/">stockrabit</a>
-            <div class="company-info d-none ">
-                <h1 class="company-title">{{ company_name|title }}</h1>
-                <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
-            </div>
-            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button> -->
-            <!-- <div>  -->
-            <!-- <div class="collapse navbar-collapse" id="navbarNav"> -->
-                <!-- Replace the sign up button with these elements -->
-<div class="nav-actions">
-    <button class="nav-icon-btn" id="notificationBtn" title="Notifications">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-        <span class="notification-badge"></span>
-    </button>
-    <button class="command-trigger" id="commandTrigger">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="M21 21l-4.35-4.35"/>
-        </svg>
-        <span class="command-text">Press /</span>
-    </button>
-</div>
-
-<!-- Notification Modal -->
-<div class="modal-overlay" id="notificationModal">
-    <div class="modal notification-modal">
-        <div class="modal-header">
-            <h3>Notifications</h3>
-            <button class="close-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 6L6 18M6 6l12 12"/>
+            <!-- <div class="nav-actions">
+                <button class="nav-icon-btn" id="notificationBtn" title="Notifications">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
+                <span class="notification-badge"></span>
+                </button>
+            <button class="command-trigger" id="commandTrigger">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <span class="command-text">Press /</span>
             </button>
+        </div> -->
         </div>
-        <div class="notification-content">
-            <div class="notification-tabs">
-                <button class="tab-btn active">All</button>
-                <button class="tab-btn">Unread</button>
-            </div>
-            <div class="notifications-list">
-                <!-- Placeholder notifications -->
-                <div class="notification-item unread">
-                    <div class="notification-dot"></div>
-                    <div class="notification-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        
+    </nav>
+
+    <div class="container main-content">
+        <!-- Earnings Header -->
+        <div class="earnings-header">
+            <div class="header-container">
+                <div class="title-section">
+                    <h1 class="company-name">{{ company_name }}</h1>
+                    <div class="company-meta">
+                        <span class="ticker-badge">{{ ticker }}</span>
+                        <div class="date-info">
+                            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>{{ quarter }} {{ financial_year }} </span>
+                            <!-- <span class="date-separator">•</span> -->
+                            <span class="actual-date">{{ cc_date if cc_date else '' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-section">
+                    <div class="action-links">
+                        <div style="display: flex; gap: 1rem;"> 
+                        <a href="#" class="action-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M7 20l4-16m2 16l4-16"/>
+                            </svg>
+                            <span class="command-text"> Compare</span>
+                        </a>
+                        <a href="#" class="action-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            <span class="command-text"> Transcript</span>
+                        </a>
+                    </div>
+                    <div style="display: flex; gap: 1rem;"> 
+                        <!-- <div style="min-width: 44px;" > <span style="display: none;"> </span></div> -->
+                        <a href="#" class="action-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                            </svg>
+                            <span class="command-text"> Follow </span>                                </a>
+                        <a href="#" class="action-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            <span class="command-text"> Bookmark</span>  
+                        </a>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Container -->
+                <div class="metrics-section">
+                    <div class="metrics-handle">
+                        <span class="metrics-handle-text">
+                            <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 17h8M3 17h4m-4-8h8M17 9h4M3 5h4m-4 16h4"/>
+                            </svg>
+                            Key Updates
+                        </span>
+                        <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
                         </svg>
                     </div>
-                    <div class="notification-details">
-                        <p>New earnings call summary available</p>
-                        <span class="notification-time">2 hours ago</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Command Menu Modal -->
-<div class="command-overlay" id="commandOverlay">
-    <div class="command-container">
-        <div class="search-pill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input type="text" id="commandInput" placeholder="Ask anything..." autofocus>
-            <span class="key-hint">esc</span>
-        </div>
-        
-        <div class="suggestion-pills">
-            <button class="suggestion-pill">Compare with previous quarter</button>
-            <button class="suggestion-pill">Show revenue growth trend</button>
-            <button class="suggestion-pill">Key management quotes</button>
-            <button class="suggestion-pill">Analyst questions summary</button>
-        </div>
-    </div>
-</div>
-            </div> 
-        </div>
-    </nav>
-  
-    <div class="container main-content">
-        <!-- <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('company_app.historical', company_name=company_name) }}#earning-calls">{{ company_name|title }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ quarter }} {{ financial_year }}</li>
-            </ol>
-        </nav> -->
-    
-        <!-- <div class="content-wrapper">
-            <div class="page-header">
-                <div class="title-section">
-                    <h1 class="company-title">{{ company_name|title }}</h1>
-                    <h2 class="event-title">Earnings Call - {{ quarter }} {{ financial_year }}</h2>
-                </div>
-            </div>
-            
-            <div class="horizontal-line"></div> -->
-        
-
-            <div class="earnings-header">
-                <div class="header-container">
-                    <!-- Left side with company box -->
-                    <div class="company-section">
-                        <!-- <div class="company-box"> -->
-                            <div class="title-section">
-                                <div class="title-row">
-                                    <h1 class="company-name">{{ company_name }}</h1>
-                                    <div class="tag-container">
-                                        {% for tag in structured_summary.context.category_tags %}
-                                        <span class="category-tag">{{ tag }}</span>
-                                        {% endfor %}
-                                        
-                                    </div>
-                                </div>
-                                <div class="company-meta">
-                                    <span class="ticker-badge">{{ ticker }}</span>
-                                    <div class="date-info">
-                                        <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="10"/>
-                                            <polyline points="12 6 12 12 16 14"/>
-                                        </svg>
-                                        <span>{{ quarter }} {{ financial_year }}</span>
-                                        <span class="date-separator">•</span>
-                                        <span class="actual-date">{{ cc_date if cc_date else '' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- </div> -->
-                        <div class="action-section">
-                            <div class="action-links">
-                                <div style="display: flex; gap: 1rem;"> 
-                                <a href="#" class="action-link">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M7 20l4-16m2 16l4-16"/>
-                                    </svg>
-                                    <span class="command-text"> Compare</span>
-                                </a>
-                                <a href="#" class="action-link">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                        <polyline points="7 10 12 15 17 10"/>
-                                        <line x1="12" y1="15" x2="12" y2="3"/>
-                                    </svg>
-                                    <span class="command-text"> Download Transcript</span>
-                                </a>
-                            </div>
-                            <div style="display: flex; gap: 1rem;"> 
-                                <!-- <div style="min-width: 44px;" > <span style="display: none;"> </span></div> -->
-                                <a href="#" class="action-link">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                                    </svg>
-                                    <span class="command-text"> Follow Future Earnings</span>                                </a>
-                                <a href="#" class="action-link">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                    </svg>
-                                    <span class="command-text"> Bookmark</span>  
-                                </a>
-                            </div>
-                            </div>
-                        </div>
-      <!-- Metrics Row -->
-      <div class="metrics-container">
-        {% if structured_summary.highlights and structured_summary.highlights.key_metrics %}
-            {% for metric in structured_summary.highlights.key_metrics %}
-                <div class="metric-box">
-                    <div class="metric-label">
-                        {% if metric is string %}
-                            <!-- For string metrics, extract a sensible label -->
-                            {% set words = metric.split(' ') %}
-                            {{ words[0:3]|join(' ')|upper }}
-                        {% else %}
-                            <!-- For object metrics, use the metric name -->
-                            {{ metric.metric|default('METRIC')|upper }}
-                        {% endif %}
-                    </div>
-                    {% if metric is string %}
-                        <div class="metric-value metric-value-text">
-                            {{ metric }}
-                        </div>
-                    {% else %}
-                        <div class="metric-value {% if metric.value|float < 0 %}negative{% else %}positive{% endif %}">
-                            {{ metric.value if metric.value is defined else metric }}
-                        </div>
-                        <!-- Add back the context if available -->
-                        {% if structured_summary.context and structured_summary.context.kpis %}
-                            {% set metric_key = metric.metric|default('')|lower|replace(' ', '_') %}
-                            {% if metric_key in structured_summary.context.kpis %}
-                                <div class="metric-context">
-                                    {{ structured_summary.context.kpis[metric_key].context }}
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-                    <!-- </div> -->
-            
-                    <!-- Right side with actions -->
-                   
-                </div>
-            </div>
-            
-            
-
-            <div class="company-tabs-container">
-                <ul class="company-tabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'structured_summary' %}active{% endif %}" 
-                           href="{{ url_for('view_app.concall', file_name=file_name, section='structured_summary') }}"
-                           role="tab">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 20V10"/>
-                                <path d="M18 20V4"/>
-                                <path d="M6 20v-4"/>
-                            </svg>
-                            Summary
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'top_questions' %}active{% endif %}" 
-                           href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}"
-                           role="tab">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                                <line x1="12" y1="17" x2="12.01" y2="17"/>
-                            </svg>
-                            Questions
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'transcript' %}active{% endif %}" 
-                           href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}"
-                           role="tab">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                            </svg>
-                            Transcript
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'qa_section' %}active{% endif %}" 
-                           href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}"
-                           role="tab">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                            </svg>
-                            Analyst Q&A
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {% if active_section == 'management_guidance' %}active{% endif %}" 
-                           href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}"
-                           role="tab">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                            </svg>
-                            Management Commentary
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- <div class="horizontal-line"></div> -->
-           <!-- Updated Floating Info Section -->
-
-
-<!-- Custom Logo SVG for Info Section -->
-{% if info_content %}
-<div class="floating-info" id="floatingInfo">
-    <svg class="info-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background -->
-        <circle cx="16" cy="16" r="14" fill="#18994e"/>
-        <!-- Face -->
-        <path d="M11 14.5C11 12 13 10 16 10C19 10 21 12 21 14.5C21 17.5 19 20 16 20C13 20 11 17.5 11 14.5Z" 
-              fill="white"/>
-        <!-- Ears -->
-        <path d="M13 11L11.5 7.5M19 11L20.5 7.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
-        <!-- Eyes -->
-        <circle cx="13.5" cy="15" r="1.8" fill="#18994e"/>
-        <circle cx="18.5" cy="15" r="1.8" fill="#18994e"/>
-        <!-- Nose -->
-        <circle cx="16" cy="17" r="1.2" fill="#18994e"/>
-    </svg>
-    
-    <div class="info-content">
-        <span class="info-text">{{ info_content[0] }}</span>
-        <!-- <a href="{{ info_content[1] }}" class="info-link">Read more →</a> -->
-    </div>
-    
-    <button class="close-button" onclick="hideFloatingInfo()" aria-label="Close">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-    </button>
-</div>
-{% endif %}
-            
-            
-            <div id="content-section">
-                <!-- Add this to your existing styles section -->
-
-          
-          
-
-                {% if active_section == 'structured_summary' %}
-                   <!-- add new section here -->
-            <div class="summary-container">
-                <div class="summary-header">
-                    <!-- <div class="header-quote">
-                        {{ structured_summary.sections[0].management_quotes[0] }}
-                    </div> -->
-                    <div class="section-content">
-                        {{ structured_summary.highlights.summary }}
-                    </div>
-                
                     
+                    <div class="metrics-container">
+
+            
+                        {% if structured_summary.highlights and structured_summary.highlights.key_metrics %}
+                            {% for metric in structured_summary.highlights.key_metrics %}
+                                <div class="metric-box">
+                                    <div class="metric-label">
+                                        {% if metric is string %}
+                                            {% set words = metric.split(' ') %}
+                                            {{ words[0:3]|join(' ')|upper }}
+                                        {% else %}
+                                            {{ metric.metric|default('METRIC')|upper }}
+                                        {% endif %}
+                                    </div>
+                                    {% if metric is string %}
+                                        <div class="metric-value metric-value-text">
+                                            {{ metric }}
+                                        </div>
+                                    {% else %}
+                                        <div class="metric-value {% if metric.value|float < 0 %}negative{% else %}positive{% endif %}">
+                                            {{ metric.value if metric.value is defined else metric }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+            </div>
+        </div>
+
+        <!-- Main Content Sections -->
+        <div id="content-section">
+            {% if active_section == 'structured_summary' %}
+                <!-- Summary Section -->
+                <div class="summary-container">
+                   
+                    <div class="summary-header">
+                        <div class="section-content">
+                            {{ structured_summary.highlights.summary }}
+                        </div>
+                    </div>
                     <div class="header-pills">
                         <div class="pill pill-success">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3114,122 +1035,49 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                             </svg>
-                            Management Tone: {{ structured_summary.highlights.management_tone }}
+                            Management {{ structured_summary.highlights.management_tone }}
                         </div>
                     </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">Key Achievements</div>
+                        <ul class="bullet-list">
+                            {% for achievement in structured_summary.sections[1].achievements %}
+                            <li>{{ achievement }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+            
+                    <div class="highlight-box">
+                        <div class="highlight-title">Strategic Updates</div>
+                        <ul class="bullet-list">
+                            {% for update in structured_summary.sections[1].strategic_updates %}
+                            <li>{{ update }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Include other summary components -->
                 </div>
-            </div>
-<div class="tab-section">
-    <div class="tab-row">
-        <div class="tab-item active" onclick="showContent('overview')">Performance Overview</div>
-        <div class="tab-item" onclick="showContent('progress')">Business Progress</div>
-        <div class="tab-item" onclick="showContent('outlook')">Future Outlook</div>
-    </div>
 
-    <div class="content-section active" id="content-overview">
-        <!-- <div class="quarter-section">
-            <div class="section-title">
-                <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                Quarter at a Glance
-            </div>
-            <div class="section-content">
-                {{ structured_summary.sections[0].narrative }}
-            </div>
-        </div> -->
-
-        <div class="highlight-box">
-            <div class="highlight-title">Financial Highlights</div>
-            <div class="metrics-list">
-                {% for key, value in structured_summary.sections[0].metrics.items() %}
-                <div class="metric-item">{{ key }}: {{ value }}</div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="highlight-box">
-            <div class="highlight-title">Operational Excellence</div>
-            <ul class="bullet-list">
-                {% for highlight in structured_summary.sections[0].highlights %}
-                <li>{{ highlight }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-      
-    </div>
-
-    <div class="content-section" id="content-progress">
-        <!-- <div class="section-content">
-            {{ structured_summary.sections[1].narrative }}
-        </div> -->
-
-        <div class="highlight-box">
-            <div class="highlight-title">Key Achievements</div>
-            <ul class="bullet-list">
-                {% for achievement in structured_summary.sections[1].achievements %}
-                <li>{{ achievement }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="highlight-box">
-            <div class="highlight-title">Strategic Updates</div>
-            <ul class="bullet-list">
-                {% for update in structured_summary.sections[1].strategic_updates %}
-                <li>{{ update }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    <div class="content-section" id="content-outlook">
-        <!-- <div class="section-content">
-            {{ structured_summary.sections[2].narrative }}
-        </div> -->
-
-        <div class="highlight-box">
-            <div class="highlight-title">Future Guidance</div>
-            <ul class="bullet-list">
-                {% for item in structured_summary.sections[2].guidance %}
-                <li>{{ item }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="highlight-box">
-            <div class="highlight-title">Strategic Priorities</div>
-            <ul class="bullet-list">
-                {% for priority in structured_summary.sections[2].priorities %}
-                <li>{{ priority }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="highlight-box">
-            <div class="highlight-title">Risk Factors</div>
-            <ul class="bullet-list">
-                {% for risk in structured_summary.sections[2].risks %}
-                <li>{{ risk }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</div>
-
-                {% elif active_section == 'top_questions' %}
-                <div class="accordion " id="topQaAccordion">
+            {% elif active_section == 'top_questions' %}
+                <!-- Questions Section -->
+                <div class="accordion" id="topQaAccordion">
                     {% for question, answer in top_questions.items() %}
                     {% set slug = question|slugify %}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="{{ slug }}">
-                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ slug }}" aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" aria-controls="collapse-{{ slug }}">
+                            <button class="accordion-button {% if slug == question_slug %}active{% else %}collapsed{% endif %}" 
+                                    type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse-{{ slug }}" 
+                                    aria-expanded="{% if slug == question_slug %}true{% else %}false{% endif %}" 
+                                    aria-controls="collapse-{{ slug }}">
                                 {{ question }}
                             </button>
                         </h2>
-                        <div id="collapse-{{ slug }}" class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" aria-labelledby="{{ slug }}" data-bs-parent="#faqAccordion">
+                        <div id="collapse-{{ slug }}" 
+                             class="accordion-collapse collapse {% if slug == question_slug %}show{% endif %}" 
+                             aria-labelledby="{{ slug }}" 
+                             data-bs-parent="#topQaAccordion">
                             <div class="accordion-body">
                                 {{ answer }}
                             </div>
@@ -3237,21 +1085,9 @@
                     </div>
                     {% endfor %}
                 </div>
-                {% elif active_section == 'transcript' %}
-                <div class="filter-container">
-                    {% for filter_name, keys in transcript_keys.items() %}
-                    {% if keys is string %}
-                        <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys }}">
-                            {{ filter_name }}
-                        </button>
-                    {% else %}
-                        <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys[0] }}">
-                            {{ filter_name|upper }}
-                            <span class="filter-count">1</span>
-                        </button>
-                    {% endif %}
-                    {% endfor %}
-                </div>
+
+            {% elif active_section == 'transcript' %}
+                <!-- Transcript Section -->
                 <div class="transcript-container">
                     {% for entry in transcript %}
                         <div class="transcript-entry" id="entry-{{ entry.key }}" data-key="{{ entry.key }}">
@@ -3260,564 +1096,49 @@
                         </div>
                     {% endfor %}
                 </div>
-                {% elif active_section == 'qa_section' %}
-                <div class="speakers-summary mb-4">
-                    <div class="featured-analysts-header mb-4">
-                        <h3 class="summary-title">
-                            <svg xmlns="http://www.w3.org/2000/svg" 
-                            viewBox="0 0 24 24" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            stroke-width="2" 
-                            class="header-icon">
-                           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                           <circle cx="9" cy="7" r="4"/>
-                           <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                           <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                       </svg>
-                            Featured Analysts
-                        </h3>
-                        <div class="title-underline"></div>
-                    </div>
-                    <div class="speakers-scroll-container">
-                        <div class="speakers-grid">
-                            {%- set speaker_counts = {} -%}
-                        {%- for qa in qa_section -%}
-                            {%- set speaker = qa['question']['speaker'] -%}
-                            {%- if speaker['name'] not in speaker_counts -%}
-                                {%- set _ = speaker_counts.update({
-                                    speaker['name']: {
-                                        'count': 1,
-                                        'title': speaker['title']
-                                    }
-                                }) -%}
-                            {%- else -%}
-                                {%- set current_count = speaker_counts[speaker['name']]['count'] -%}
-                                {%- set _ = speaker_counts.update({
-                                    speaker['name']: {
-                                        'count': current_count + 1,
-                                        'title': speaker['title']
-                                    }
-                                }) -%}
-                            {%- endif -%}
-                        {%- endfor -%}
-                        
-                        {%- set displayed_count = namespace(value=0) -%}
-                        {%- set speakers = [] -%}
-                        {%- for name, info in speaker_counts.items() -%}
-                            {%- set _ = speakers.append((name, info, info.count)) -%}
-                        {%- endfor -%}
-                        
-                        {%- for name, info, count in (speakers|sort(attribute='2', reverse=true))[:4] -%}
-                        <div class="speaker-card">
-                            <div class="speaker-avatar">
-                                {{ name[:2].upper() }}
-                            </div>
-                            <div class="speaker-details">
-                                <!-- <a href="/anal/yst/{{ name|lower|replace(' ', '-') }}" class="speaker-name"> -->
-                                <a href="#" class="speaker-name">
-                                    {{ name }}
-                                </a>
-                                <div class="speaker-title">{{ info.title }}</div>
-                                <div class="question-count">
-                                    {{ info.count }} question{% if info.count > 1 %}s{% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        {%- endfor -%}
-                    </div>
-                </div>
-            </div>
-                <!-- Q&A Section Container -->
-                <div class="accordion mt-4" id="qaAccordion">
+
+            {% elif active_section == 'qa_section' %}
+                <!-- Q&A Section -->
+                <div class="speakers-summary">
                     {% for qa in qa_section %}
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header" id="heading{{ loop.index }}">
-                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" 
-                                    data-bs-toggle="collapse" 
-                                    data-bs-target="#collapse{{ loop.index }}" 
-                                    aria-expanded="{{ 'true' if loop.first else 'false' }}" 
-                                    aria-controls="collapse{{ loop.index }}">
-                                <div class="w-100">
-                                    <div class="question-text mb-2">{{ qa['question']['text'] }}</div>
-                                    <div class="speaker-info">
-                                        <small class="text-muted">
-                                            {{ qa['question']['speaker']['name'] }} • {{ qa['question']['speaker']['title'] }}
-                                        </small>
-                                    </div>
+                        <div class="speaker-card">
+                            <div class="question-text">{{ qa['question']['text'] }}</div>
+                            <div class="speaker-info">{{ qa['question']['speaker']['name'] }} • {{ qa['question']['speaker']['title'] }}</div>
+                            <div class="answer-text">{{ qa['answer']['text'] }}  </div>
+                            <div class="speaker-info">
+                                <small class="text-muted">
+                                    {{ qa['answer']['speaker']['name'] }} • {{ qa['answer']['speaker']['title'] }}
+                                </small>
                                 </div>
-                            </button>
-                        </h2>
-                
-                        <div id="collapse{{ loop.index }}" 
-                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
-                             aria-labelledby="heading{{ loop.index }}" 
-                             data-bs-parent="#qaAccordion">
-                            <div class="accordion-body">
-                                <div class="answer-content">
-                                    <p class="answer-text mb-3">{{ qa['answer']['text'] }}</p>
-                                    <div class="speaker-info text-end">
-                                        <small class="text-muted">
-                                            {{ qa['answer']['speaker']['name'] }} • {{ qa['answer']['speaker']['title'] }}
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
-                <!-- {# Replace the existing management guidance section with this #} -->
-                {% elif active_section == 'management_guidance' %}
-                <div class="insights-container">
-                    {% if management_guidance %}
-                        {% set sections = management_guidance.sections %}
-                        
-                        <!-- Financial Performance Section -->
-                        {% if sections.financial_performance %}
-                        <div class="insight-section">
-                            <div class="section-header">
-                                <div class="section-icon">📊</div>
-                                <h2 class="section-title">Financial Performance</h2>
-                            </div>
-                            <div class="quote-grid">
-                                {% if sections.financial_performance.revenue_profits_margins %}
-                                    {% for insight in sections.financial_performance.revenue_profits_margins %}
-                                    <div class="quote-card">
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-icon">"</div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-            
-                        <!-- Business Operations Section -->
-                        {% if sections.business_operations %}
-                        <div class="insight-section">
-                            <div class="section-header">
-                                <div class="section-icon">⚙️</div>
-                                <h2 class="section-title">Business Operations</h2>
-                            </div>
-                            <div class="quote-grid">
-                                <!-- Core Metrics -->
-                                {% if sections.business_operations.core_metrics %}
-                                    {% for insight in sections.business_operations.core_metrics %}
-                                    <div class="quote-card">
-                                        <div class="quote-icon">"</div>
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-            
-                                <!-- Market Position -->
-                                {% if sections.business_operations.market_position %}
-                                    {% for insight in sections.business_operations.market_position %}
-                                    <div class="quote-card">
-                                        <div class="quote-icon">"</div>
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-            
-                        <!-- Growth Initiatives Section -->
-                        {% if sections.growth_initiatives %}
-                        <div class="insight-section">
-                            <div class="section-header">
-                                <div class="section-icon">🚀</div>
-                                <h2 class="section-title">Growth Initiatives</h2>
-                            </div>
-                            <div class="quote-grid">
-                                <!-- New Launches -->
-                                {% if sections.growth_initiatives.new_launches %}
-                                    {% for insight in sections.growth_initiatives.new_launches %}
-                                    <div class="quote-card">
-                                        <div class="quote-icon">"</div>
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-            
-                                <!-- Expansion Plans -->
-                                {% if sections.growth_initiatives.expansion_plans %}
-                                    {% for insight in sections.growth_initiatives.expansion_plans %}
-                                    <div class="quote-card">
-                                        <div class="quote-icon">"</div>
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-            
-                        <!-- Market Dynamics Section -->
-                        {% if sections.market_dynamics %}
-                        <div class="insight-section">
-                            <div class="section-header">
-                                <div class="section-icon">🌐</div>
-                                <h2 class="section-title">Market Dynamics</h2>
-                            </div>
-                            <div class="quote-grid">
-                                <!-- Competition -->
-                                {% if sections.market_dynamics.competition %}
-                                    {% for insight in sections.market_dynamics.competition %}
-                                    <div class="quote-card">
-                                        <div class="quote-icon">"</div>
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-            
-                                <!-- Industry Trends -->
-                                {% if sections.market_dynamics.industry_trends %}
-                                    {% for insight in sections.market_dynamics.industry_trends %}
-                                    <div class="quote-card">
-                                        <div class="quote-icon">"</div>
-                                        <div class="topic-tags">
-                                            {% for tag in insight.topic_tags %}
-                                            <span class="topic-tag">{{ tag }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="quote-content">{{ insight.quote }}</div>
-                                        {% if insight.context %}
-                                        <div class="quote-context">{{ insight.context }}</div>
-                                        {% endif %}
-                                        <div class="meta-info">
-                                            <div class="speaker-info">
-                                                <span class="speaker-name">{{ insight.speaker }}</span>
-                                            </div>
-                                            {% if insight.key_metrics %}
-                                            <div class="metric-info">
-                                                <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                                <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                                    {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="meta-row">
-                                            <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                                {{ insight.sentiment|title }}
-                                            </span>
-                                            <span class="confidence-level">
-                                                {{ insight.confidence_level|title }} Confidence
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-            
-          <!-- Future Outlook Section -->
-          {% if sections.future_outlook %}
-          <div class="insight-section">
-              <div class="section-header">
-                  <div class="section-icon">🎯</div>
-                  <h2 class="section-title">Future Outlook</h2>
-              </div>
-              <div class="quote-grid">
-                  <!-- Guidance -->
-                  {% if sections.future_outlook.guidance %}
-                      {% for insight in sections.future_outlook.guidance %}
-                      <div class="quote-card">
-                          <div class="quote-icon">"</div>
-                          <div class="topic-tags">
-                              {% for tag in insight.topic_tags %}
-                              <span class="topic-tag">{{ tag }}</span>
-                              {% endfor %}
-                          </div>
-                          <div class="quote-content">{{ insight.quote }}</div>
-                          {% if insight.context %}
-                          <div class="quote-context">{{ insight.context }}</div>
-                          {% endif %}
-                          <div class="meta-info">
-                              <div class="speaker-info">
-                                  <span class="speaker-name">{{ insight.speaker }}</span>
-                              </div>
-                              {% if insight.key_metrics %}
-                              <div class="metric-info">
-                                  <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                  <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                      {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                  </span>
-                              </div>
-                              {% endif %}
-                          </div>
-                          <div class="meta-row">
-                              <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                  {{ insight.sentiment|title }}
-                              </span>
-                              <span class="confidence-level">
-                                  {{ insight.confidence_level|title }} Confidence
-                              </span>
-                          </div>
-                      </div>
-                      {% endfor %}
-                  {% endif %}
-
-                  <!-- Challenges -->
-                  {% if sections.future_outlook.challenges %}
-                      {% for insight in sections.future_outlook.challenges %}
-                      <div class="quote-card">
-                          <div class="quote-icon">"</div>
-                          <div class="topic-tags">
-                              {% for tag in insight.topic_tags %}
-                              <span class="topic-tag">{{ tag }}</span>
-                              {% endfor %}
-                          </div>
-                          <div class="quote-content">{{ insight.quote }}</div>
-                          {% if insight.context %}
-                          <div class="quote-context">{{ insight.context }}</div>
-                          {% endif %}
-                          <div class="meta-info">
-                              <div class="speaker-info">
-                                  <span class="speaker-name">{{ insight.speaker }}</span>
-                              </div>
-                              {% if insight.key_metrics %}
-                              <div class="metric-info">
-                                  <span class="metric-name">{{ insight.key_metrics.metric_name }}</span>
-                                  <span class="metric-trend {{ insight.key_metrics.trend }}">
-                                      {% if insight.key_metrics.trend == 'up' %}↑{% else %}↓{% endif %}
-                                  </span>
-                              </div>
-                              {% endif %}
-                          </div>
-                          <div class="meta-row">
-                              <span class="sentiment-badge sentiment-{{ insight.sentiment }}">
-                                  {{ insight.sentiment|title }}
-                              </span>
-                              <span class="confidence-level">
-                                  {{ insight.confidence_level|title }} Confidence
-                              </span>
-                          </div>
-                      </div>
-                      {% endfor %}
-                  {% endif %}
-              </div>
-          </div>
-          {% endif %}
-      {% else %}
-          <div class="alert alert-info">
-              No management guidance available for this earnings call.
-          </div>
-      {% endif %}
-  </div>
-{% endif %}
-            </div>
-            <!-- <div> add related concalls </div> -->
+            {% endif %}
         </div>
     </div>
-    
-    <footer class="bg-dark">
-        <div id="madeWithLove" class="text-center bg-dark">
-            <a href="/about" class="text-decoration-none text-white">
-                Made with ❤️ in the ❤️ of India
-            </a>
-        </div>
-    </footer>
-    <div class="mobile-nav" x-data="{ activeTab: '{{ active_section }}' }">
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
         <a href="{{ url_for('view_app.concall', file_name=file_name, section='structured_summary') }}" 
-           class="mobile-nav-item" 
-           :class="{ 'active': activeTab === 'structured_summary' }">
+           class="mobile-nav-item {% if active_section == 'structured_summary' %}active{% endif %}">
             <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/>
-                <polyline points="16 5 21 5 21 10"/>
-                <line x1="14" y1="7" x2="21" y2="14"/>
+                <path d="M12 20V10"/>
+                <path d="M18 20V4"/>
+                <path d="M6 20v-4"/>
             </svg>
             <span>Summary</span>
         </a>
+        
         <a href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}"
-        class="mobile-nav-item"
-        :class="{ 'active': activeTab === 'qa_section' }">
-         <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-         </svg>
-         <span>Q&A</span>
-     </a>
+           class="mobile-nav-item {% if active_section == 'qa_section' %}active{% endif %}">
+            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>Q&A</span>
+        </a>
+
         <a href="{{ url_for('view_app.concall', file_name=file_name, section='top_questions') }}"
-           class="mobile-nav-item"
-           :class="{ 'active': activeTab === 'top_questions' }">
+           class="mobile-nav-item {% if active_section == 'top_questions' %}active{% endif %}">
             <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -3825,17 +1146,17 @@
             </svg>
             <span>Questions</span>
         </a>
-        <a href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}"
-        class="mobile-nav-item"
-        :class="{ 'active': activeTab === 'management_guidance' }">
-         <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-             <path d="M12 20v-6M6 20V10M18 20V4"/>
-         </svg>
-         <span>Guidance</span>
-     </a>
+        
+        <!-- <a href="{{ url_for('view_app.concall', file_name=file_name, section='management_guidance') }}"
+           class="mobile-nav-item {% if active_section == 'management_guidance' %}active{% endif %}">
+            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20v-6M6 20V10M18 20V4"/>
+            </svg>
+            <span>Guidance</span>
+        </a> -->
+
         <a href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}"
-           class="mobile-nav-item"
-           :class="{ 'active': activeTab === 'transcript' }">
+           class="mobile-nav-item {% if active_section == 'transcript' %}active{% endif %}">
             <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
@@ -3845,43 +1166,132 @@
             </svg>
             <span>Transcript</span>
         </a>
-    
-      
-    
-        
     </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
-     <!-- Scripts -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
-     <!-- Keep only mobile-relevant scripts -->
-     <script>
-         document.addEventListener('DOMContentLoaded', () => {
-             // Handle mobile navigation highlighting
-             const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
-             mobileNavItems.forEach(item => {
-                 item.addEventListener('click', (e) => {
-                     mobileNavItems.forEach(navItem => navItem.classList.remove('active'));
-                     item.classList.add('active');
-                 });
-             });
- 
-             // Handle transcript filtering if in transcript section
-             if (document.querySelector('.transcript-container')) {
-                 const filterButtons = document.querySelectorAll('.filter-btn');
-                 const transcriptEntries = document.querySelectorAll('.transcript-entry');
- 
-                 filterButtons.forEach(button => {
-                     button.addEventListener('click', () => {
-                         const filterKey = button.getAttribute('data-filter');
-                         const targetEntry = document.querySelector(`[data-key="${filterKey}"]`);
-                         if (targetEntry) {
-                             targetEntry.scrollIntoView({ behavior: 'smooth' });
-                         }
-                     });
-                 });
-             }
-         });
-     </script>
- </body>
- </html>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle mobile navigation active states
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    mobileNavItems.forEach(navItem => navItem.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Handle transcript section if active
+            if (document.querySelector('.transcript-container')) {
+                const transcriptContainer = document.querySelector('.transcript-container');
+                const transcriptEntries = document.querySelectorAll('.transcript-entry');
+                const filterButtons = document.querySelectorAll('.filter-btn');
+
+                // Filter functionality
+                filterButtons?.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const filterName = button.getAttribute('data-filter');
+                        const keys = button.getAttribute('data-keys').split(',');
+
+                        let targetKey;
+                        if (keys.length > 1) {
+                            const currentIndex = parseInt(button.getAttribute('data-current-index') || '0');
+                            targetKey = keys[currentIndex];
+                            const nextIndex = (currentIndex + 1) % keys.length;
+                            button.setAttribute('data-current-index', nextIndex.toString());
+                        } else {
+                            targetKey = keys[0];
+                        }
+
+                        const targetElement = Array.from(transcriptEntries).find(entry => {
+                            const entryKey = parseInt(entry.getAttribute('data-key'));
+                            return entryKey >= parseInt(targetKey);
+                        });
+
+                        if (targetElement && transcriptContainer) {
+                            transcriptEntries.forEach(entry => entry.classList.remove('highlight'));
+                            targetElement.classList.add('highlight');
+
+                            const containerRect = transcriptContainer.getBoundingClientRect();
+                            const targetRect = targetElement.getBoundingClientRect();
+                            const scrollTop = targetRect.top - containerRect.top + transcriptContainer.scrollTop;
+
+                            transcriptContainer.scrollTo({
+                                top: scrollTop,
+                                behavior: 'smooth'
+                            });
+
+                            filterButtons.forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                        }
+                    });
+                });
+            }
+
+            // Handle Q&A section if active
+            if (document.getElementById('qaAccordion')) {
+                const accordionItems = document.querySelectorAll('.accordion-item');
+                accordionItems.forEach(item => {
+                    const header = item.querySelector('.accordion-header');
+                    const content = item.querySelector('.accordion-collapse');
+                    
+                    header.addEventListener('click', () => {
+                        const isExpanded = content.classList.contains('show');
+                        
+                        // Close all other items
+                        accordionItems.forEach(otherItem => {
+                            if (otherItem !== item) {
+                                otherItem.querySelector('.accordion-collapse').classList.remove('show');
+                                otherItem.querySelector('.accordion-button').classList.add('collapsed');
+                            }
+                        });
+                        
+                        // Toggle current item
+                        content.classList.toggle('show', !isExpanded);
+                        header.querySelector('.accordion-button').classList.toggle('collapsed', isExpanded);
+                    });
+                });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const metricsHandle = document.querySelector('.metrics-handle');
+            const metricsContainer = document.querySelector('.metrics-container');
+            
+            // Handle click on metrics handle
+            metricsHandle.addEventListener('click', () => {
+                metricsContainer.classList.toggle('expanded');
+                metricsHandle.classList.toggle('expanded');
+                
+                // Update text based on state
+                const handleText = metricsHandle.querySelector('.metrics-handle-text');
+                if (metricsContainer.classList.contains('expanded')) {
+                    handleText.innerHTML = `
+                        <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 17h8M3 17h4m-4-8h8M17 9h4M3 5h4m-4 16h4"/>
+                        </svg>
+                        Hide Key Updates
+                    `;
+                } else {
+                    handleText.innerHTML = `
+                        <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 17h8M3 17h4m-4-8h8M17 9h4M3 5h4m-4 16h4"/>
+                        </svg>
+                        View Key Updates
+                    `;
+                }
+            });
+            
+            // Hide metrics when switching tabs
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    metricsContainer.classList.remove('expanded');
+                    metricsHandle.classList.remove('expanded');
+                });
+            });
+        });
+        </script>
+</body>
+</html>

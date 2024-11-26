@@ -97,6 +97,21 @@
             --background-color: #f8f9fa;
             --card-background: #ffffff;
             --border-color: #e0e0e0;
+            --light-green: #e6f4eb;
+            --light-purple: #f3e8f7;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success-light: #dcfce7;
+            --success-dark: #166534;
+            --warning-light: #fef9c3;
+            --warning-dark: #854d0e;
         }
 
         body {
@@ -624,13 +639,33 @@
         }
     </style>
    <style>
-    .accordion-item {
-        border: none;
-        background-color: var(--card-background);
-        /* border-radius: 8px; */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: box-shadow 0.3s ease;
-    }
+  .accordion-item {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+}
+
+.accordion-button {
+    padding: 1rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    background: white;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--primary-green);
+    background: var(--light-green);
+}
+
+.accordion-body {
+    padding: 1rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    background: var(--gray-50);
+}
+
 
     .accordion-item:hover {
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -742,16 +777,6 @@
         padding-bottom: 5px; /* Space for scrollbar */
     }
 
-    .speaker-card {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        background-color: var(--background-color);
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        min-width: 280px; /* Ensure minimum width */
-    }
-
     .speaker-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -814,14 +839,39 @@
         gap: 0.75rem;
     }
 
-    .speaker-card {
-        background-color: white;
-        padding: 0.75rem;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        min-width: 220px;
-    }
+    .speakers-summary {
+    background: white;
+    border-radius: 12px;
+    margin: 0.75rem;
+    padding: 1rem;
+}
+
+.speaker-card {
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--gray-200);
+}
+
+.question-text {
+    color: var(--gray-800);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.speaker-info {
+    color: var(--primary-purple);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.answer-text {
+    color: var(--gray-700);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
 
     .speaker-card:hover {
         transform: translateY(-2px);
@@ -1716,6 +1766,32 @@
     background: rgba(106, 25, 138, 0.1);
     color: #6a198a;
 }
+.bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bullet-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: #4a4a4a;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.bullet-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #18994e, #6a198a);
+}
+
 
 .header-quote {
     background: linear-gradient(to right, #f8fafc, #ffffff);
