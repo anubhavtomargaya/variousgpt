@@ -207,7 +207,7 @@
         /* Metrics Grid */
         .metrics-section {
     position: relative;
-    margin: 8px;
+    /* margin: 8px; */
 }
 
 .metrics-handle {
@@ -219,7 +219,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
 }
 
 .metrics-handle-text {
@@ -243,6 +243,9 @@
     transition: max-height 0.3s ease-out;
     background: white;
     border-radius: 8px;
+    display: flex;
+    gap: .5rem;
+    flex-direction: column;
 }
 
 .metrics-container.expanded {
@@ -256,7 +259,7 @@
 
         .metric-box {
             background: white;
-            padding: 0.75rem;
+            padding: 0.5rem;
             border-radius: 6px;
             border: 1px solid var(--border-color);
         }
@@ -370,6 +373,7 @@
             padding: 0.75rem;
             background: white;
             border-radius: 8px;
+            
         }
 
         .transcript-entry {
@@ -377,7 +381,15 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
         }
+        .transcript-container {
+    height: 80vh;  /* Or any fixed height */
+    overflow-y: auto;
+}
 
+.transcript-entry.highlight {
+    background: #f3f4f6;
+    border-left: 4px solid #2563eb;
+}
         .transcript-speaker {
             font-weight: 600;
             color: var(--primary-purple);
@@ -886,6 +898,167 @@
     transform: translateY(-1px);
 }
       </style>
+      <style>
+        .hook {
+    /* margin: 1.5rem 0; */
+    padding: 0.75rem 1rem;
+    border-left: 3px solid #e5e7eb;
+    transition: all 0.2s ease-in-out;
+}
+
+.hook a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.hook a::after {
+    content: "→";
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+/* Specific hook styles */
+.hook.transcript {
+    border-left-color: #818cf8;
+    background-color: #eef2ff;
+}
+
+.hook.analysts-qa {
+    border-left-color: #34d399;
+    background-color: #ecfdf5;
+}
+
+/* Hover effects */
+.hook:hover {
+    transform: translateX(4px);
+    background-color: #f9fafb;
+}
+
+.hook:hover a {
+    color: #1f2937;
+}
+
+.hook:hover a::after {
+    transform: translateX(4px);
+}
+
+/* Hook positioning within highlight boxes */
+.highlight-box .hook {
+    margin: 1rem -1rem;
+    border-left: none;
+    border-right: none;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Example highlight box styling for context */
+.highlight-box {
+    background: white;
+    border-radius: 8px;
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+    padding: .5rem;
+    /* margin-bottom: 1.5rem; */
+}
+
+.highlight-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+      </style>
+      <style>
+        /* Filter button styling */
+        .filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 5px;
+    margin-top: 15px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.filter-btn {
+    padding: 0.3rem 1.0rem;
+    border-radius: 9999px;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    min-height: 2rem;
+}
+
+.filter-btn.active {
+    background-color: var(--primary-green);
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+/* Back to top button styling */
+.back-to-top {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 20;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Add a subtle hover effect */
+.back-to-top:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Hide scrollbar but maintain functionality */
+.filter-container::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Highlighted transcript styling */
+.transcript-entry.highlight {
+    background: #f8fafc;
+    border-left: 3px solid #2563eb;
+    padding-left: calc(1rem - 3px);
+}
+
+/* Container styling */
+.transcript-container {
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem;
+}
+      </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -932,7 +1105,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="action-section">
+                <!-- <div class="action-section">
                     <div class="action-links">
                         <div style="display: flex; gap: 1rem;"> 
                         <a href="#" class="action-link">
@@ -950,9 +1123,9 @@
                             <span class="command-text"> Transcript</span>
                         </a>
                     </div>
-                    <div style="display: flex; gap: 1rem;"> 
+                    <div style="display: flex; gap: 1rem;">  -->
                         <!-- <div style="min-width: 44px;" > <span style="display: none;"> </span></div> -->
-                        <a href="#" class="action-link">
+                        <!-- <a href="#" class="action-link">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -966,7 +1139,7 @@
                         </a>
                     </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Metrics Container -->
                 <div class="metrics-section">
@@ -975,7 +1148,7 @@
                             <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M13 17h8M3 17h4m-4-8h8M17 9h4M3 5h4m-4 16h4"/>
                             </svg>
-                            Key Updates
+                            Key updates from the concall event
                         </span>
                         <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"/>
@@ -1046,7 +1219,7 @@
                             {% endfor %}
                         </ul>
                     </div>
-            
+                    
                     <div class="highlight-box">
                         <div class="highlight-title">Strategic Updates</div>
                         <ul class="bullet-list">
@@ -1054,8 +1227,19 @@
                             <li>{{ update }}</li>
                             {% endfor %}
                         </ul>
-                    </div>
+                        </div>  
 
+                        <div class="hook transcript"><a href="{{ url_for('view_app.concall', file_name=file_name, section='transcript') }}"> Full Management Commentary </a></div>
+                        <div class="highlight-box">
+                        <div class="highlight-title">Operational Updates</div>
+                        <ul class="bullet-list">
+                            {% for highlight in structured_summary.sections[0].highlights %}
+                            <li>{{ highlight }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="hook analysts-qa"><a href="{{ url_for('view_app.concall', file_name=file_name, section='qa_section') }}"> Jump to the Analysts Questions</a></div>
+                    
                     <!-- Include other summary components -->
                 </div>
 
@@ -1086,11 +1270,24 @@
                     {% endfor %}
                 </div>
 
-            {% elif active_section == 'transcript' %}
-                <!-- Transcript Section -->
+                {% elif active_section == 'transcript' %}
+                <div class="filter-container">
+                    {% for filter_name, keys in transcript_keys.items() %}
+                    {% if keys is string %}
+                        <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys }}">
+                            {{ filter_name }}
+                        </button>
+                    {% else %}
+                        <button class="filter-btn" data-filter="{{ filter_name }}" data-keys="{{ keys[0] }}">
+                            {{ filter_name|upper }}
+                            <span class="filter-count">1</span>
+                        </button>
+                    {% endif %}
+                    {% endfor %}
+                </div>
                 <div class="transcript-container">
                     {% for entry in transcript %}
-                        <div class="transcript-entry" id="entry-{{ entry.key }}" data-key="{{ entry.key }}">
+                        <div class="transcript-entry" data-key="{{ entry.key }}">
                             <div class="transcript-speaker">{{ entry.speaker }}</div>
                             <div class="transcript-text">{{ entry.text }}</div>
                         </div>
@@ -1181,54 +1378,7 @@
                     item.classList.add('active');
                 });
             });
-
-            // Handle transcript section if active
-            if (document.querySelector('.transcript-container')) {
-                const transcriptContainer = document.querySelector('.transcript-container');
-                const transcriptEntries = document.querySelectorAll('.transcript-entry');
-                const filterButtons = document.querySelectorAll('.filter-btn');
-
-                // Filter functionality
-                filterButtons?.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const filterName = button.getAttribute('data-filter');
-                        const keys = button.getAttribute('data-keys').split(',');
-
-                        let targetKey;
-                        if (keys.length > 1) {
-                            const currentIndex = parseInt(button.getAttribute('data-current-index') || '0');
-                            targetKey = keys[currentIndex];
-                            const nextIndex = (currentIndex + 1) % keys.length;
-                            button.setAttribute('data-current-index', nextIndex.toString());
-                        } else {
-                            targetKey = keys[0];
-                        }
-
-                        const targetElement = Array.from(transcriptEntries).find(entry => {
-                            const entryKey = parseInt(entry.getAttribute('data-key'));
-                            return entryKey >= parseInt(targetKey);
-                        });
-
-                        if (targetElement && transcriptContainer) {
-                            transcriptEntries.forEach(entry => entry.classList.remove('highlight'));
-                            targetElement.classList.add('highlight');
-
-                            const containerRect = transcriptContainer.getBoundingClientRect();
-                            const targetRect = targetElement.getBoundingClientRect();
-                            const scrollTop = targetRect.top - containerRect.top + transcriptContainer.scrollTop;
-
-                            transcriptContainer.scrollTo({
-                                top: scrollTop,
-                                behavior: 'smooth'
-                            });
-
-                            filterButtons.forEach(btn => btn.classList.remove('active'));
-                            button.classList.add('active');
-                        }
-                    });
-                });
-            }
-
+            
             // Handle Q&A section if active
             if (document.getElementById('qaAccordion')) {
                 const accordionItems = document.querySelectorAll('.accordion-item');
@@ -1254,6 +1404,61 @@
                 });
             }
         });
+    </script>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // First, let's get all the elements we need to work with
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const transcriptContainer = document.querySelector('.transcript-container');
+    const transcriptEntries = document.querySelectorAll('.transcript-entry');
+
+    // Add click handlers to each filter button
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Get the key from the button's data attribute - handle both single and compound keys
+            const keyString = button.getAttribute('data-keys');
+            const targetKey = parseInt(keyString.replace(',', ''));
+
+            // If this button is already active, we'll deactivate it
+            if (button.classList.contains('active')) {
+                button.classList.remove('active');
+                // Remove highlight from all entries
+                transcriptEntries.forEach(entry => {
+                    entry.classList.remove('highlight');
+                });
+                return; // Exit early since we're just deactivating
+            }
+
+            // Otherwise, we're activating this button
+            // First, find the entry we want to scroll to
+            const targetEntry = Array.from(transcriptEntries).find(entry => {
+                const entryKey = parseInt(entry.getAttribute('data-key'));
+                return entryKey >= targetKey;
+            });
+
+            if (targetEntry && transcriptContainer) {
+                // Clear any existing highlights and active states
+                transcriptEntries.forEach(entry => entry.classList.remove('highlight'));
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Add highlight to our target and make this button active
+                targetEntry.classList.add('highlight');
+                button.classList.add('active');
+
+                // Calculate where to scroll
+                const containerRect = transcriptContainer.getBoundingClientRect();
+                const targetRect = targetEntry.getBoundingClientRect();
+                const scrollTop = targetRect.top - containerRect.top + transcriptContainer.scrollTop;
+
+                // Perform the scroll
+                transcriptContainer.scrollTo({
+                    top: scrollTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+});
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
