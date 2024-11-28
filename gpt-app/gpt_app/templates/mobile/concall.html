@@ -202,8 +202,8 @@
         font-weight: 500;
         font-size: .9rem;
         background-color: rgba(99, 102, 241, 0.1);
-    padding: 0.375rem 0.75rem;
-    border-radius: 16px;
+    padding: 0.275rem 0.5rem;
+    border-radius: 10px;
     transition: transform 0.2s ease;
     }
     
@@ -214,8 +214,8 @@
         color: #64748b;
         font-size: 0.8rem;
         background-color: rgba(100, 116, 139, 0.08);
-    padding: 0.375rem 0.75rem;
-    border-radius: 12px;
+    padding: 0.275rem 0.65rem;
+    border-radius: 10px;
     transition: background-color 0.2s ease;
     }
     
@@ -238,7 +238,9 @@
 }
 
 .metrics-handle {
-    background: rgb(248, 241, 249);
+      background: linear-gradient(to right, rgb(248, 241, 249), rgb(252, 246, 253));
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
     padding: 12px 16px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -286,9 +288,11 @@
 
         .metric-box {
             background: white;
-            padding: 0.5rem;
+            padding: 1rem 1.25rem;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    position: relative;
+    overflow: hidden;
             border-radius: 6px;
-            border: 1px solid var(--border-color);
         }
 
 .metric-label {
@@ -1179,7 +1183,7 @@
 
                 <!-- Metrics Container -->
                 <div class="metrics-section">
-                    <div class="metrics-handle">
+                    <div class="metrics-handle" role="button" aria-expanded="false" aria-controls="metrics-content">
                         <span class="metrics-handle-text">
                             <svg class="metrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M13 17h8M3 17h4m-4-8h8M17 9h4M3 5h4m-4 16h4"/>
@@ -1440,6 +1444,9 @@
                 });
             }
         });
+    </script>
+    <script>
+        
     </script>
     <script>
   document.addEventListener('DOMContentLoaded', function() {
